@@ -20,6 +20,7 @@ import logo from "@/assets/_shared_img/logo.jpg";
 import { ModeToggle } from "@/components/mode-toggle";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { signUp } from "@/services/auth.service";
+import { SignUpProps } from "@/types";
 
 const SignUpForm = () => {
   const isLoading = false;
@@ -38,7 +39,10 @@ const SignUpForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
-    await signUp(values)
+    const { nickname, username, email, password } = values;
+    const x: SignUpProps = { nickname, username, email, password };
+
+    await signUp(x)
       .then(() => {
         window.alert("註冊成功，您將被導向登入頁面");
         navigate("/sign-in");
