@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/dark-theme/theme-provider";
 import { Route, Routes } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
@@ -14,7 +14,7 @@ import FormsLayout from "./views/root/FormsLayout";
 const App = () => {
   return (
     <>
-      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           {/* public routes */}
           <Route element={<RootLayout />}>

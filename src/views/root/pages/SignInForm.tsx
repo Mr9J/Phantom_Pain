@@ -50,7 +50,6 @@ const SignInForm = () => {
       <Form {...form}>
         <div className="sm:w-[560px] flex justify-center items-center flex-col m-4 sm:m-0">
           <img src={logo} alt="logo" className="h-[64px]" />
-          <ModeToggle />
           <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl pt-2 sm:pt-4">
             歡迎回到 Mumu
           </h2>
