@@ -17,15 +17,26 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { SignUpValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
-import { ModeToggle } from "@/components/mode-toggle";
 import LoaderSvg from "@/components/shared/LoaderSvg";
-import { signUp } from "@/services/auth.service";
+import { signUp, checkUserExist } from "@/services/auth.service";
 import { SignUpProps } from "@/types";
 
 const SignUpForm = () => {
   const isLoading = false;
   const [errorMsg, setErrorMsg] = useState<string>("");
   const navigate = useNavigate();
+
+  const userExistHandler = async (username: string) => {
+    await checkUserExist(username)
+      .then((res) => {
+        if (res.status !== 200) {
+          setErrorMsg(res.data);
+        }
+      })
+      .catch((e) => {
+        setErrorMsg(e.response.data);
+      });
+  };
 
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),
@@ -66,8 +77,10 @@ const SignUpForm = () => {
           {errorMsg && (
             <Alert variant="destructive" className="my-2">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>錯誤</AlertTitle>
-              <AlertDescription>{errorMsg}</AlertDescription>
+              <AlertTitle className="dark:text-rose-500">錯誤</AlertTitle>
+              <AlertDescription className="dark:text-rose-500">
+                {errorMsg}
+              </AlertDescription>
             </Alert>
           )}
           <form
@@ -83,7 +96,7 @@ const SignUpForm = () => {
                   <FormControl>
                     <Input type="text" className="dark:shad-input" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="dark:text-rose-500" />
                 </FormItem>
               )}
             />
@@ -94,9 +107,16 @@ const SignUpForm = () => {
                 <FormItem>
                   <FormLabel className="text-xl font-bold">帳號</FormLabel>
                   <FormControl>
-                    <Input type="text" className="dark:shad-input" {...field} />
+                    <Input
+                      type="text"
+                      className="dark:shad-input"
+                      {...field}
+                      onChangeCapture={(e) => {
+                        userExistHandler(e.currentTarget.value);
+                      }}
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="dark:text-rose-500" />
                 </FormItem>
               )}
             />
@@ -109,7 +129,7 @@ const SignUpForm = () => {
                   <FormControl>
                     <Input type="text" className="dark:shad-input" {...field} />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="dark:text-rose-500" />
                 </FormItem>
               )}
             />
@@ -126,7 +146,7 @@ const SignUpForm = () => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="dark:text-rose-500" />
                 </FormItem>
               )}
             />
@@ -138,12 +158,12 @@ const SignUpForm = () => {
                   <FormLabel className="text-xl font-bold">確認密碼</FormLabel>
                   <FormControl>
                     <Input
-                      type="password"
+                      type="confirmPassword"
                       className="dark:shad-input"
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="dark:text-rose-500" />
                 </FormItem>
               )}
             />

@@ -10,3 +10,7 @@ export async function signUp(data: SignUpProps) {
 export async function signIn(data: SignInProps) {
   return axios.post(`${URL}/Member/sign-in`, data);
 }
+
+export async function checkUserExist(username: string) {
+  return axios.get(`${URL}/Member/check-username/${username}`);
+}

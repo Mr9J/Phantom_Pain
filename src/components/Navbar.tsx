@@ -61,6 +61,22 @@ const Navbar = () => {
                   <h2 className="text-3xl">關於</h2>
                 </Link>
               </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Link
+                  to="/sign-up"
+                  className={buttonVariants({ variant: "link" })}
+                >
+                  <h2 className="text-3xl">註冊</h2>
+                </Link>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Link
+                  to="/sign-in"
+                  className={buttonVariants({ variant: "link" })}
+                >
+                  <h2 className="text-3xl">登入</h2>
+                </Link>
+              </div>
             </div>
           </SheetContent>
         </Sheet>

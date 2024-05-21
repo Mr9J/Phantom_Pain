@@ -17,7 +17,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { SignInValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
-import { ModeToggle } from "@/components/mode-toggle";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { signIn } from "@/services/auth.service";
 
