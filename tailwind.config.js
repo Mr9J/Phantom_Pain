@@ -18,6 +18,10 @@ export default {
     },
     extend: {
       colors: {
+        "primary-blue": {
+          DEFAULT: "#2B59FF",
+          100: "#F5F8FF",
+        },
         "primary-500": "#877EFF",
         "primary-600": "#5D5FEF",
         red: "#FF5A5A",

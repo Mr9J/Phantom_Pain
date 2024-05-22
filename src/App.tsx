@@ -10,6 +10,7 @@ import {
   Social,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
+import Explore from "./views/root/pages/Explore";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             <Route index element={<Homepage />} />
             <Route path="/social" element={<Social />} />
             <Route path="/about" element={<About />} />
+            <Route path="/explore" element={<Explore />} />
           </Route>
 
           <Route element={<FormsLayout />}>

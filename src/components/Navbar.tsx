@@ -45,7 +45,7 @@ const Navbar = () => {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Link
-                  to="/"
+                  to="/explore"
                   className={`${buttonVariants({
                     variant: "link",
                   })} col-span-4`}
