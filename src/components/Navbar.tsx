@@ -44,37 +44,53 @@ const Navbar = () => {
             </SheetHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Link to="/" className={buttonVariants({ variant: "link" })}>
-                  <h2 className="text-3xl">探索</h2>
+                <Link
+                  to="/"
+                  className={`${buttonVariants({
+                    variant: "link",
+                  })} col-span-4`}
+                >
+                  <p className="text-3xl">探索</p>
                 </Link>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Link to="/" className={buttonVariants({ variant: "link" })}>
-                  <h2 className="text-3xl">社群</h2>
+                <Link
+                  to="/"
+                  className={`${buttonVariants({
+                    variant: "link",
+                  })} col-span-4`}
+                >
+                  <p className="text-3xl">社群</p>
                 </Link>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Link
                   to="/about"
-                  className={buttonVariants({ variant: "link" })}
+                  className={`${buttonVariants({
+                    variant: "link",
+                  })} col-span-4`}
                 >
-                  <h2 className="text-3xl">關於</h2>
+                  <p className="text-3xl">關於</p>
                 </Link>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Link
                   to="/sign-up"
-                  className={buttonVariants({ variant: "link" })}
+                  className={`${buttonVariants({
+                    variant: "link",
+                  })} col-span-4`}
                 >
-                  <h2 className="text-3xl">註冊</h2>
+                  <p className="text-3xl">註冊</p>
                 </Link>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Link
                   to="/sign-in"
-                  className={buttonVariants({ variant: "link" })}
+                  className={`${buttonVariants({
+                    variant: "link",
+                  })} col-span-4`}
                 >
-                  <h2 className="text-3xl">登入</h2>
+                  <p className="text-3xl">登入</p>
                 </Link>
               </div>
             </div>
