@@ -1,5 +1,6 @@
 import { SignUpProps, SignInProps } from "@/types";
 import axios from "axios";
+import { ProjectPhotoProps } from "@/types";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -13,4 +14,11 @@ export async function signIn(data: SignInProps) {
 
 export async function checkUserExist(username: string) {
   return axios.get(`${URL}/Member/check-username/${username}`);
+}
+
+export async function getCurrentUser() {
+  axios.get(`${URL}/Member/current-user`).then((res) => {
+    const result: ProjectPhotoProps = res.data;
+    return result;
+  });
 }

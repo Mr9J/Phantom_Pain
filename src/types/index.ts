@@ -17,3 +17,8 @@ export type ProjectPhotoProps = {
   photographer_url: string;
   imgSrc: string;
 };
+
+export type CurrentUserProps = {
+  username: string;
+  email: string;
+};

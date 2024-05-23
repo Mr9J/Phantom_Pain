@@ -35,7 +35,8 @@ const SignInForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignInValidation>) {
     await signIn(values)
-      .then(() => {
+      .then((res) => {
+        localStorage.setItem("token", res.data.jwt);
         window.alert("登入成功，您將被導向至首頁");
         navigate("/");
       })
