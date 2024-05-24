@@ -1,3 +1,5 @@
+import React from "react";
+
 export type SignUpProps = {
   nickname: string;
   username: string;
@@ -18,7 +20,17 @@ export type ProjectPhotoProps = {
   imgSrc: string;
 };
 
-export type CurrentUserProps = {
+export type ICurrentUser = {
+  id: string;
   username: string;
   email: string;
+};
+
+export type IContextType = {
+  user: ICurrentUser;
+  isLoading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<ICurrentUser>>;
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  checkAuthUser: () => Promise<boolean>;
 };

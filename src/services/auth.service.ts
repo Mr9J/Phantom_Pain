@@ -17,8 +17,9 @@ export async function checkUserExist(username: string) {
 }
 
 export async function getCurrentUser() {
-  axios.get(`${URL}/Member/current-user`).then((res) => {
-    const result: ProjectPhotoProps = res.data;
-    return result;
-  });
+  try {
+    return axios.get(`${URL}/member/current-account`);
+  } catch (error) {
+    console.log(error);
+  }
 }
