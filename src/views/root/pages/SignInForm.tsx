@@ -35,23 +35,24 @@ const SignInForm = () => {
     },
   });
 
+  const setAuthUser = async () => {
+    const isLoggedIn = await checkAuthUser();
+    if (isLoggedIn) {
+      form.reset();
+      navigate("/");
+    } else {
+      return setErrorMsg("帳號或密碼錯誤");
+    }
+  };
+
   const handleSignin = async (values: z.infer<typeof SignInValidation>) => {
     await signIn(values)
       .then((res) => {
-        localStorage.setItem("token", res.data.jwt);
-        async () => {
-          const isLoggedIn = await checkAuthUser();
-
-          if (isLoggedIn) {
-            form.reset();
-            navigate("/");
-          }
-        };
-        // window.alert("登入成功，您將被導向至首頁");
-        // navigate("/");
+        localStorage.setItem("token", res.data);
+        setAuthUser();
       })
-      .catch((err) => {
-        setErrorMsg(err.response.data);
+      .catch((error) => {
+        console.log(error);
       });
   };
 

@@ -39,22 +39,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuthUser = async () => {
     setIsLoading(true);
     try {
-      const currentAccount = await getCurrentUser();
-      if (currentAccount) {
+      const currentUser = await getCurrentUser();
+      if (currentUser) {
         setUser({
-          id: currentAccount.data.id,
-          username: currentAccount.data.username,
-          email: currentAccount.data.email,
+          id: currentUser.data.id,
+          username: currentUser.data.username,
+          email: currentUser.data.email,
         });
+
         setIsAuthenticated(true);
+
         return true;
       }
       return false;
     } catch (error) {
       console.error(error);
+
       return false;
     } finally {
-      console.log("finally");
       setIsLoading(false);
     }
   };

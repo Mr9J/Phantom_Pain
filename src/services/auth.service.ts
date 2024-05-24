@@ -13,6 +13,8 @@ type SignInProps = {
 };
 
 export async function signIn({ username, password }: SignInProps) {
+  // return axios.post(`${URL}/Member/sign-in`, { username, password });
+
   return axios.post(`${URL}/Member/sign-in`, { username, password });
 }
 
@@ -21,14 +23,10 @@ export async function checkUserExist(username: string) {
 }
 
 export async function getCurrentUser() {
-  try {
-    const token = localStorage.getItem("token");
-    return axios.post(`${URL}/member/get-current-user`, token, {
-      headers: {
-        Authorization: token,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  const jwt = localStorage.getItem("token");
+  return axios.post(
+    `${URL}/Member/get-current-user`,
+    { jwt },
+    { params: { jwt }, headers: { Authorization: jwt } }
+  );
 }
