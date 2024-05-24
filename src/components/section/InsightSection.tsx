@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
-import { staggerContainer } from "../utils/motion";
-import { TitleText, TypingText } from "../components/shared/CustomText";
-import { insights } from "../assets/insight_img/index";
-import InsightCard from "./shared/InsightCard";
+import { staggerContainer } from "../../utils/motion";
+import { TitleText, TypingText } from "../shared/CustomText";
+import { insights } from "../../assets/insight_img/index";
+import InsightCard from "../shared/InsightCard";
 
 const InsightSection = () => {
   return (

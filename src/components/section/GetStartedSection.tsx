@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
-import { startingFeatures } from "../constants";
+import { startingFeatures } from "../../constants";
 import { TitleText, TypingText } from "@/components/shared/CustomText";
-import { staggerContainer, fadeIn, planetVariants } from "../utils/motion";
+import { staggerContainer, fadeIn, planetVariants } from "../../utils/motion";
 import getStart from "@/assets/get_start_img/get-started.png";
-import StartSteps from "./shared/StartSteps";
+import StartSteps from "../shared/StartSteps";
 
 const GetStartedSection = () => {
   return (

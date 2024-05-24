@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
-import { TitleText, TypingText } from "../components/shared/CustomText";
-import { fadeIn, staggerContainer } from "../utils/motion";
-import { map, p1, p2, p3 } from "../assets/world_img/index";
+import { TitleText, TypingText } from "../shared/CustomText";
+import { fadeIn, staggerContainer } from "../../utils/motion";
+import { map, p1, p2, p3 } from "../../assets/world_img/index";
 
 const WorldSection = () => {
   return (

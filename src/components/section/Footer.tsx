@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
-import { footerVariants } from "../utils/motion";
+import { footerVariants } from "../../utils/motion";
 import { socials } from "@/assets/footer_img";
 import { RocketIcon } from "lucide-react";
 

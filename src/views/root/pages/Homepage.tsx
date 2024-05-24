@@ -1,13 +1,13 @@
-import AboutSection from "@/components/AboutSection";
-import ExploreSection from "@/components/ExploreSection";
-import GetStartedSection from "@/components/GetStartedSection";
-import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/section/AboutSection";
+import ExploreSection from "@/components/section/ExploreSection";
+import GetStartedSection from "@/components/section/GetStartedSection";
+import HeroSection from "@/components/section/HeroSection";
 import Navbar from "@/components/Navbar";
-import WhatNewSection from "@/components/WhatNewSection";
-import WorldSection from "@/components/WorldSection";
-import InsightSection from "@/components/InsightSection";
-import FeedBackSection from "@/components/FeedBackSection";
-import Footer from "@/components/Footer";
+import WhatNewSection from "@/components/section/WhatNewSection";
+import WorldSection from "@/components/section/WorldSection";
+import InsightSection from "@/components/section/InsightSection";
+import FeedBackSection from "@/components/section/FeedBackSection";
+import Footer from "@/components/section/Footer";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 
 const Homepage = () => {

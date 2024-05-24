@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
-import { fadeIn, staggerContainer, zoomIn } from "../utils/motion";
+import { fadeIn, staggerContainer, zoomIn } from "../../utils/motion";
 import p4 from "@/assets/insight_img/planet-04.png";
 import { SearchIcon } from "lucide-react";
 

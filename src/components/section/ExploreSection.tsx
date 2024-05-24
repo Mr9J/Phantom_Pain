@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import ExploreCard from "./shared/ExploreCard";
+import ExploreCard from "../shared/ExploreCard";
 import { TitleText, TypingText } from "@/components/shared/CustomText";
 import styles from "@/styles";
 import { staggerContainer } from "@/utils/motion";

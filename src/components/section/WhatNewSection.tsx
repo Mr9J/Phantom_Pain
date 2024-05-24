@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
-import { TitleText, TypingText } from "../components/shared/CustomText";
-import NewFeatures from "./shared/NewFeatures";
-import { planetVariants, staggerContainer, fadeIn } from "../utils/motion";
-import { newFeatures } from "../constants";
-import whatNew from "../assets/news_img/whats-new.png";
+import { TitleText, TypingText } from "../shared/CustomText";
+import NewFeatures from "../shared/NewFeatures";
+import { planetVariants, staggerContainer, fadeIn } from "../../utils/motion";
+import { newFeatures } from "../../constants";
+import whatNew from "@/assets/news_img/whats-new.png";
 
 const WhatNewSection = () => {
   return (
