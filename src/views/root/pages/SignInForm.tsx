@@ -19,10 +19,12 @@ import { SignInValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { signIn } from "@/services/auth.service";
+import { useUserContext } from "@/context/AuthContext";
 
 const SignInForm = () => {
   const isLoading = false;
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof SignInValidation>>({
@@ -33,17 +35,25 @@ const SignInForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof SignInValidation>) {
+  const handleSignin = async (values: z.infer<typeof SignInValidation>) => {
     await signIn(values)
       .then((res) => {
         localStorage.setItem("token", res.data.jwt);
-        window.alert("登入成功，您將被導向至首頁");
-        navigate("/");
+        async () => {
+          const isLoggedIn = await checkAuthUser();
+
+          if (isLoggedIn) {
+            form.reset();
+            navigate("/");
+          }
+        };
+        // window.alert("登入成功，您將被導向至首頁");
+        // navigate("/");
       })
       .catch((err) => {
         setErrorMsg(err.response.data);
       });
-  }
+  };
 
   return (
     <section className="flex flex-1 justify-center items-center flex-col py-10">
@@ -64,7 +74,7 @@ const SignInForm = () => {
             </Alert>
           )}
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSignin)}
             className="flex flex-col gap-5 w-full mt-4"
           >
             <FormField

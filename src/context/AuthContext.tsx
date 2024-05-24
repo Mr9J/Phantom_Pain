@@ -1,9 +1,10 @@
+import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { IContextType, ICurrentUser } from "@/types";
+import { ICurrentUser } from "@/types";
 import { getCurrentUser } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
 
-export const INITIAL_USER = {
+const INITIAL_USER = {
   id: "",
   username: "",
   email: "",
@@ -18,38 +19,49 @@ const INITIAL_STATE = {
   checkAuthUser: async () => false as boolean,
 };
 
+type IContextType = {
+  user: ICurrentUser;
+  isLoading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<ICurrentUser>>;
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  checkAuthUser: () => Promise<boolean>;
+};
+
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
 
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<ICurrentUser>(INITIAL_USER);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
+  const [user, setUser] = useState<ICurrentUser>(INITIAL_USER);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const checkAuthUser = async () => {
+    setIsLoading(true);
     try {
-      await getCurrentUser().then((res) => {
-        const currentUser: ICurrentUser = res?.data;
-        if (currentUser) {
-          setUser(currentUser);
-          setIsAuthenticated(true);
-          return true;
-        }
-        return false;
-      });
+      const currentAccount = await getCurrentUser();
+      if (currentAccount) {
+        setUser({
+          id: currentAccount.data.id,
+          username: currentAccount.data.username,
+          email: currentAccount.data.email,
+        });
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return false;
     } finally {
+      console.log("finally");
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (
-      localStorage.getItem("token") === "[]" ||
-      localStorage.getItem("token") === null
-    ) {
+    const token = localStorage.getItem("token");
+    if (token === "[]" || token === null || token === undefined) {
       navigate("/sign-in");
     }
 
@@ -66,8 +78,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-export default AuthProvider;
+}
 
 export const useUserContext = () => useContext(AuthContext);

@@ -1,14 +1,9 @@
 import React from "react";
 
-export type SignUpProps = {
+export type INewUser = {
   nickname: string;
   username: string;
   email: string;
-  password: string;
-};
-
-export type SignInProps = {
-  username: string;
   password: string;
 };
 
@@ -24,13 +19,4 @@ export type ICurrentUser = {
   id: string;
   username: string;
   email: string;
-};
-
-export type IContextType = {
-  user: ICurrentUser;
-  isLoading: boolean;
-  setUser: React.Dispatch<React.SetStateAction<ICurrentUser>>;
-  isAuthenticated: boolean;
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
-  checkAuthUser: () => Promise<boolean>;
 };

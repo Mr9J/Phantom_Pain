@@ -1,15 +1,19 @@
-import { SignUpProps, SignInProps } from "@/types";
+import { INewUser } from "@/types";
 import axios from "axios";
-import { ProjectPhotoProps } from "@/types";
 
 const URL = import.meta.env.VITE_API_URL;
 
-export async function signUp(data: SignUpProps) {
+export async function signUp(data: INewUser) {
   return axios.post(`${URL}/Member/sign-up`, data);
 }
 
-export async function signIn(data: SignInProps) {
-  return axios.post(`${URL}/Member/sign-in`, data);
+type SignInProps = {
+  username: string;
+  password: string;
+};
+
+export async function signIn({ username, password }: SignInProps) {
+  return axios.post(`${URL}/Member/sign-in`, { username, password });
 }
 
 export async function checkUserExist(username: string) {
@@ -18,7 +22,12 @@ export async function checkUserExist(username: string) {
 
 export async function getCurrentUser() {
   try {
-    return axios.get(`${URL}/member/current-account`);
+    const token = localStorage.getItem("token");
+    return axios.post(`${URL}/member/get-current-user`, token, {
+      headers: {
+        Authorization: token,
+      },
+    });
   } catch (error) {
     console.log(error);
   }

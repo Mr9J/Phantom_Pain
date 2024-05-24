@@ -19,7 +19,7 @@ import { SignUpValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { signUp, checkUserExist } from "@/services/auth.service";
-import { SignUpProps } from "@/types";
+import { INewUser } from "@/types";
 
 const SignUpForm = () => {
   const isLoading = false;
@@ -51,7 +51,7 @@ const SignUpForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     const { nickname, username, email, password } = values;
-    const x: SignUpProps = { nickname, username, email, password };
+    const x: INewUser = { nickname, username, email, password };
 
     await signUp(x)
       .then(() => {

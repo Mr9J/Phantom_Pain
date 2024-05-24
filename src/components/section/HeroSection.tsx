@@ -14,9 +14,12 @@ const HeroSection = () => {
         className={`${styles.innerWidth} mx-auto flex flex-col`}
       >
         <div className="flex justify-center items-center flex-col relative z-10">
-          <motion.h1 variants={textVariant(1.1)} className={styles.heroHeading}>
-            <h1 className="text-black dark:text-white">Mumu Empower</h1>
-          </motion.h1>
+          <motion.div
+            variants={textVariant(1.1)}
+            className={styles.heroHeading}
+          >
+            <h2 className="text-black dark:text-white">Mumu Empower</h2>
+          </motion.div>
           <motion.div
             variants={textVariant(1.2)}
             className="flex flex-row justify-center items-center"

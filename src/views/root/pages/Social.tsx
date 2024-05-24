@@ -1,5 +1,11 @@
+import { Button } from "@/components/ui/button";
+
 const Social = () => {
-  return <div>Social</div>;
+  return (
+    <div>
+      <Button>Click</Button>
+    </div>
+  );
 };
 
 export default Social;
