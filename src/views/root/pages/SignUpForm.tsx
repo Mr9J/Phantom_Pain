@@ -20,11 +20,13 @@ import logo from "@/assets/_shared_img/logo.jpg";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { signUp, checkUserExist } from "@/services/auth.service";
 import { INewUser } from "@/types";
+import { useToast } from "@/components/ui/use-toast";
 
 const SignUpForm = () => {
   const isLoading = false;
   const [errorMsg, setErrorMsg] = useState<string>("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const userExistHandler = async (username: string) => {
     await checkUserExist(username)
@@ -59,7 +61,10 @@ const SignUpForm = () => {
         navigate("/sign-in");
       })
       .catch((err) => {
-        setErrorMsg(err.response.data);
+        console.error(err);
+        toast({
+          title: "錯誤，請再試一次",
+        });
       });
   }
 

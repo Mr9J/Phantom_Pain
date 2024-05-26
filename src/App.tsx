@@ -11,6 +11,7 @@ import {
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
+import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
   return (
@@ -35,6 +36,8 @@ const App = () => {
           {/* private routes */}
           <Route element={<AuthLayout />}></Route>
         </Routes>
+
+        <Toaster />
       </ThemeProvider>
     </>
   );
