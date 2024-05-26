@@ -13,19 +13,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { SignInValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
 import LoaderSvg from "@/components/shared/LoaderSvg";
-import { signIn } from "@/services/auth.service";
+import { useToast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";
+import { useSignInAccount } from "@/lib/react-query/queriesAndMutation";
 
 const SignInForm = () => {
-  const isLoading = false;
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { toast } = useToast();
   const navigate = useNavigate();
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { mutateAsync: signIn, isPending } = useSignInAccount();
 
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
@@ -35,25 +34,25 @@ const SignInForm = () => {
     },
   });
 
-  const setAuthUser = async () => {
+  const handleSignin = async (values: z.infer<typeof SignInValidation>) => {
+    const session = await signIn(values);
+
+    if (!session) {
+      toast({ title: "登入失敗，請再試一次" });
+
+      return;
+    }
+
     const isLoggedIn = await checkAuthUser();
+
     if (isLoggedIn) {
       form.reset();
+
       navigate("/");
     } else {
-      return setErrorMsg("帳號或密碼錯誤");
+      toast({ title: "登入失敗，請再試一次" });
+      return;
     }
-  };
-
-  const handleSignin = async (values: z.infer<typeof SignInValidation>) => {
-    await signIn(values)
-      .then((res) => {
-        localStorage.setItem("token", res.data);
-        setAuthUser();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   return (
@@ -67,13 +66,6 @@ const SignInForm = () => {
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             Empower your dreams, build our future
           </p>
-          {errorMsg && (
-            <Alert variant="destructive" className="my-2">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>錯誤</AlertTitle>
-              <AlertDescription>{errorMsg}</AlertDescription>
-            </Alert>
-          )}
           <form
             onSubmit={form.handleSubmit(handleSignin)}
             className="flex flex-col gap-5 w-full mt-4"
@@ -109,9 +101,10 @@ const SignInForm = () => {
               )}
             />
             <Button type="submit" className="shad-button_primary">
-              {isLoading ? (
-                <div className="flex justify-center items-center">
+              {isPending ? (
+                <div className="flex justify-center items-center gap-2">
                   <LoaderSvg />
+                  Loading...
                 </div>
               ) : (
                 <p className="text-lg font-bold">登入</p>
