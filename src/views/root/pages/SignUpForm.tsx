@@ -18,15 +18,24 @@ import { AlertCircle } from "lucide-react";
 import { SignUpValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
 import LoaderSvg from "@/components/shared/LoaderSvg";
-import { signUp, checkUserExist } from "@/services/auth.service";
+import { checkUserExist } from "@/services/auth.service";
 import { INewUser } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  useCreateUserAccountMutation,
+  useSignInAccountMutation,
+} from "@/lib/react-query/queriesAndMutation";
+import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
-  const isLoading = false;
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
+    useCreateUserAccountMutation();
+  const { mutataAsync: signInAccount, isPending: isSigningIn } =
+    useSignInAccountMutation();
 
   const userExistHandler = async (username: string) => {
     await checkUserExist(username)
@@ -54,18 +63,22 @@ const SignUpForm = () => {
   async function onSubmit(values: z.infer<typeof SignUpValidation>) {
     const { nickname, username, email, password } = values;
     const x: INewUser = { nickname, username, email, password };
+    createUserAccount(x);
 
-    await signUp(x)
-      .then(() => {
-        window.alert("註冊成功，您將被導向登入頁面");
-        navigate("/sign-in");
-      })
-      .catch((err) => {
-        console.error(err);
-        toast({
-          title: "錯誤，請再試一次",
-        });
-      });
+    const session = await signInAccount({ username, password });
+
+    if (session.status !== 200) {
+      return toast({ title: "錯誤", description: session.data });
+    }
+
+    const isLoggedIn = await checkAuthUser();
+
+    if (isLoggedIn) {
+      form.reset();
+      navigate("/");
+    } else {
+      return toast({ title: "錯誤", description: "登入失敗" });
+    }
   }
 
   return (
@@ -173,7 +186,7 @@ const SignUpForm = () => {
               )}
             />
             <Button type="submit" className="shad-button_primary">
-              {isLoading ? (
+              {isCreatingAccount ? (
                 <div className="flex justify-center items-center">
                   <LoaderSvg />
                 </div>

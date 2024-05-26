@@ -12,10 +12,8 @@ type SignInProps = {
   password: string;
 };
 
-export async function signIn({ username, password }: SignInProps) {
-  // return axios.post(`${URL}/Member/sign-in`, { username, password });
-
-  return axios.post(`${URL}/Member/sign-in`, { username, password });
+export async function signIn(x: SignInProps) {
+  return axios.post(`${URL}/Member/sign-in`, x);
 }
 
 export async function checkUserExist(username: string) {
