@@ -4,13 +4,10 @@ const PasswordValidation = z
   .string()
   .min(8, { message: "Password must be at least 8 characters long" })
   .max(24, { message: "Password must be at most 24 characters long" })
-  .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]+$/,
-    {
-      message:
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-    }
-  );
+  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$/, {
+    message:
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+  });
 
 export const SignUpValidation = z
   .object({

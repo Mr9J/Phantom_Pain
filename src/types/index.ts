@@ -1,9 +1,12 @@
-import React from "react";
-
-export type INewUser = {
+export type SignUpDTO = {
   nickname: string;
   username: string;
   email: string;
+  password: string;
+};
+
+export type SignInDTO = {
+  username: string;
   password: string;
 };
 
@@ -15,7 +18,7 @@ export type ProjectPhotoProps = {
   imgSrc: string;
 };
 
-export type ICurrentUser = {
+export type CurrentUserDTO = {
   id: string;
   username: string;
   email: string;

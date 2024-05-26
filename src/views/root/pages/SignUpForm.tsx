@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,41 +12,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { SignUpValidation } from "@/lib/validation";
 import logo from "@/assets/_shared_img/logo.jpg";
 import LoaderSvg from "@/components/shared/LoaderSvg";
-import { checkUserExist } from "@/services/auth.service";
-import { INewUser } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  useCreateUserAccountMutation,
-  useSignInAccountMutation,
+  useCreateUserAccount,
+  useSignInAccount,
 } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
-    useCreateUserAccountMutation();
-  const { mutataAsync: signInAccount, isPending: isSigningIn } =
-    useSignInAccountMutation();
-
-  const userExistHandler = async (username: string) => {
-    await checkUserExist(username)
-      .then((res) => {
-        if (res.status !== 200) {
-          setErrorMsg(res.data);
-        }
-      })
-      .catch((e) => {
-        setErrorMsg(e.response.data);
-      });
-  };
+  const navigate = useNavigate();
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { mutateAsync: signUp, isPending: isCreatingAccount } =
+    useCreateUserAccount();
+  const { mutateAsync: signIn, isPending: isSigningInUser } =
+    useSignInAccount();
 
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),
@@ -60,26 +42,43 @@ const SignUpForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof SignUpValidation>) {
-    const { nickname, username, email, password } = values;
-    const x: INewUser = { nickname, username, email, password };
-    createUserAccount(x);
+  const handleSignUp = async (user: z.infer<typeof SignUpValidation>) => {
+    try {
+      const res = await signUp(user);
 
-    const session = await signInAccount({ username, password });
+      if (res !== "註冊成功") {
+        toast({
+          title: "註冊失敗, 請再試一次",
+        });
 
-    if (session.status !== 200) {
-      return toast({ title: "錯誤", description: session.data });
+        return;
+      }
+
+      const session = await signIn({
+        username: user.username,
+        password: user.password,
+      });
+
+      if (!session) {
+        toast({ title: "發生錯誤，請嘗試登入您的帳號" });
+
+        navigate("/sign-in");
+        return;
+      }
+
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        form.reset();
+        navigate("/");
+      } else {
+        toast({ title: "登入失敗, 請再試一次" });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
     }
-
-    const isLoggedIn = await checkAuthUser();
-
-    if (isLoggedIn) {
-      form.reset();
-      navigate("/");
-    } else {
-      return toast({ title: "錯誤", description: "登入失敗" });
-    }
-  }
+  };
 
   return (
     <section className="flex flex-1 items-center flex-col py-10 overflow-auto">
@@ -92,17 +91,8 @@ const SignUpForm = () => {
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             Empower your dreams, build our future
           </p>
-          {errorMsg && (
-            <Alert variant="destructive" className="my-2">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle className="dark:text-rose-500">錯誤</AlertTitle>
-              <AlertDescription className="dark:text-rose-500">
-                {errorMsg}
-              </AlertDescription>
-            </Alert>
-          )}
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSignUp)}
             className="flex flex-col gap-5 w-full mt-4"
           >
             <FormField
@@ -129,9 +119,9 @@ const SignUpForm = () => {
                       type="text"
                       className="dark:shad-input"
                       {...field}
-                      onChangeCapture={(e) => {
-                        userExistHandler(e.currentTarget.value);
-                      }}
+                      // onChangeCapture={(e) => {
+                      //   userExistHandler(e.currentTarget.value);
+                      // }}
                     />
                   </FormControl>
                   <FormMessage className="dark:text-rose-500" />
@@ -176,7 +166,7 @@ const SignUpForm = () => {
                   <FormLabel className="text-xl font-bold">確認密碼</FormLabel>
                   <FormControl>
                     <Input
-                      type="confirmPassword"
+                      type="password"
                       className="dark:shad-input"
                       {...field}
                     />
@@ -186,9 +176,9 @@ const SignUpForm = () => {
               )}
             />
             <Button type="submit" className="shad-button_primary">
-              {isCreatingAccount ? (
-                <div className="flex justify-center items-center">
-                  <LoaderSvg />
+              {isCreatingAccount || isSigningInUser || isUserLoading ? (
+                <div className="flex justify-center items-center gap-2">
+                  <LoaderSvg /> Loading...
                 </div>
               ) : (
                 <p className="text-lg font-bold">註冊</p>

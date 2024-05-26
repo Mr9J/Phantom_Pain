@@ -1,21 +1,15 @@
-import { SignInProps } from "./../../types/index";
-import { INewUser } from "@/types";
+import { SignInDTO, SignUpDTO } from "@/types";
 import { signIn, signUp } from "@/services/auth.service";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
-export const useCreateUserAccountMutation = () => {
+export const useCreateUserAccount = () => {
   return useMutation({
-    mutationFn: (x: INewUser) => signUp(x),
+    mutationFn: (x: SignUpDTO) => signUp(x),
   });
 };
 
-export const useSignInAccountMutation = () => {
+export const useSignInAccount = () => {
   return useMutation({
-    mutationFn: (x: SignInProps) => signIn(x),
+    mutationFn: (x: SignInDTO) => signIn(x),
   });
 };

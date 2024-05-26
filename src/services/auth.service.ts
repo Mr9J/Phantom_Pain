@@ -1,19 +1,33 @@
-import { INewUser } from "@/types";
+import { CurrentUserDTO, SignInDTO, SignUpDTO } from "@/types";
 import axios from "axios";
 
 const URL = import.meta.env.VITE_API_URL;
 
-export async function signUp(data: INewUser) {
-  return axios.post(`${URL}/Member/sign-up`, data);
+export async function signUp(user: SignUpDTO) {
+  try {
+    const res = await axios.post(`${URL}/Member/sign-up`, user);
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
 }
 
-type SignInProps = {
-  username: string;
-  password: string;
-};
+export async function signIn(user: SignInDTO) {
+  try {
+    const res = await axios.post(`${URL}/Member/sign-in`, user);
 
-export async function signIn(x: SignInProps) {
-  return axios.post(`${URL}/Member/sign-in`, x);
+    if (res.status !== 200) throw Error;
+
+    localStorage.setItem("token", res.data);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function checkUserExist(username: string) {
@@ -21,10 +35,21 @@ export async function checkUserExist(username: string) {
 }
 
 export async function getCurrentUser() {
-  const jwt = localStorage.getItem("token");
-  return axios.post(
-    `${URL}/Member/get-current-user`,
-    { jwt },
-    { params: { jwt }, headers: { Authorization: jwt } }
-  );
+  try {
+    const jwt = localStorage.getItem("token");
+    const res = await axios.post(
+      `${URL}/Member/get-current-user`,
+      { jwt },
+      { params: { jwt }, headers: { Authorization: jwt } }
+    );
+
+    const currentUser: CurrentUserDTO = res.data;
+
+    if (!currentUser) throw Error;
+
+    return currentUser;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

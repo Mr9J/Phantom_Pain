@@ -1,8 +1,7 @@
-import React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
-import { ICurrentUser } from "@/types";
-import { getCurrentUser } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from "react";
+import { CurrentUserDTO } from "@/types";
+import { getCurrentUser } from "@/services/auth.service";
 
 const INITIAL_USER = {
   id: "",
@@ -20,9 +19,9 @@ const INITIAL_STATE = {
 };
 
 type IContextType = {
-  user: ICurrentUser;
+  user: CurrentUserDTO;
   isLoading: boolean;
-  setUser: React.Dispatch<React.SetStateAction<ICurrentUser>>;
+  setUser: React.Dispatch<React.SetStateAction<CurrentUserDTO>>;
   isAuthenticated: boolean;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   checkAuthUser: () => Promise<boolean>;
@@ -32,7 +31,7 @@ const AuthContext = createContext<IContextType>(INITIAL_STATE);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const [user, setUser] = useState<ICurrentUser>(INITIAL_USER);
+  const [user, setUser] = useState<CurrentUserDTO>(INITIAL_USER);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,9 +41,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const currentUser = await getCurrentUser();
       if (currentUser) {
         setUser({
-          id: currentUser.data.id,
-          username: currentUser.data.username,
-          email: currentUser.data.email,
+          id: currentUser.id,
+          username: currentUser.username,
+          email: currentUser.email,
         });
 
         setIsAuthenticated(true);
