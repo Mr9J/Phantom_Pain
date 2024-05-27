@@ -1,0 +1,7 @@
+#authentication-modal {
+    z-index: 50; 
+  }
+  
+  #popup-modal {
+    z-index: 60;
+  }
