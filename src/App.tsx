@@ -8,9 +8,14 @@ import {
   SignInForm,
   SignUpForm,
   Social,
+  Dashboard,
+  Projects,
+  Staffs,
+  Orders,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
+import ManuLayout from "./views/root/pages/ManuLayout";
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "./views/root/pages/NotFound";
 
@@ -37,6 +42,16 @@ const App = () => {
 
           {/* private routes */}
           <Route element={<AuthLayout />}></Route>
+          
+         <Route element={<ManuLayout />}>
+          <Route path="/manu/dashboard" element={<Dashboard />} />
+          <Route path="/manu/projects" element={<Projects />} />
+          <Route path="/manu/staffs" element={<Staffs />} />
+          <Route path="/manu/orders" element={<Orders />} />
+          <Route path="/manu" element={<Dashboard />} />
+          </Route>
+
+          <Route path="/manu/dashboard" element={<Dashboard />} />
         </Routes>
 
         <Toaster />
