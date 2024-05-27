@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
-import { HeroTextVariant, staggerContainer, fadeIn } from "@/utils/motion";
+import {
+  HeroTextVariant,
+  staggerContainer,
+  fadeIn,
+  HeroSlider,
+} from "@/utils/motion";
 import hero from "@/assets/hero2_img/hero.png";
 
 const Hero2Section = () => {
@@ -52,10 +57,10 @@ const Hero2Section = () => {
           </motion.div>
         </div>
         <motion.div
-          className="absolute text-[50vh] bottom-[-120px] whitespace-nowrap text-slate-100 dark:text-[#ffffff09] w-1/2 font-bold select-none -z-40"
-          variants={HeroTextVariant}
+          variants={HeroSlider}
           initial="initial"
           animate="animate"
+          className="absolute text-[50vh] bottom-[-120px] whitespace-nowrap text-slate-100 dark:text-[#ffffff09] w-1/2 font-bold select-none -z-40"
         >
           Empower Your Dreams, Build Our Future
         </motion.div>
