@@ -10,8 +10,7 @@ const HeroParallaxSection = () => {
   });
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const backgroundM = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const backgroundMT = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
-  const backgroundR = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const backgroundMT = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
@@ -21,7 +20,7 @@ const HeroParallaxSection = () => {
     >
       <motion.div
         style={{ y: textY }}
-        className="font-bold text-white text-7xl md:text-9xl relative z-10 text-center"
+        className="text-white text-7xl md:text-[200px] font-extrabold relative z-20 text-center "
       >
         MUMU
         <br />
@@ -37,7 +36,7 @@ const HeroParallaxSection = () => {
         }}
       />
       <motion.div
-        className="absolute inset-0 z-20"
+        className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url(${moon})`,
           backgroundPosition: "bottom",
@@ -46,7 +45,7 @@ const HeroParallaxSection = () => {
         }}
       />
       <motion.div
-        className="absolute inset-0 z-20 bottom-[120px]"
+        className="absolute inset-0 z-10 bottom-[120px]"
         style={{
           backgroundImage: `url(${mountain})`,
           backgroundPosition: "bottom",
@@ -54,13 +53,12 @@ const HeroParallaxSection = () => {
           y: backgroundMT,
         }}
       />
-      <motion.div
+      <div
         className="absolute inset-0 z-20"
         style={{
           backgroundImage: `url(${road})`,
           backgroundPosition: "bottom",
           backgroundSize: "cover",
-          y: backgroundR,
         }}
       />
     </section>
