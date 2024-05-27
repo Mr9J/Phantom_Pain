@@ -12,6 +12,7 @@ import {
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
 import { Toaster } from "./components/ui/toaster";
+import NotFound from "./views/root/pages/NotFound";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/social" element={<Social />} />
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
 
           <Route element={<FormsLayout />}>
