@@ -55,7 +55,7 @@ const RootLayout = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset;
+      const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 0);
     };
 
@@ -70,7 +70,7 @@ const RootLayout = () => {
     <>
       <header
         className={`shadow-lg  dark:shadow-light-1 shadow-black w-full ${
-          isScrolled ? "fixed" : "relative"
+          isScrolled ? "fixed" : "hidden"
         } bg-[hsl(0,0%,100%)] dark:bg-[hsl(222.2,84%,4.9%)] z-50`}
       >
         <nav

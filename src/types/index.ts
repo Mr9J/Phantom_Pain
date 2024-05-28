@@ -23,3 +23,9 @@ export type CurrentUserDTO = {
   username: string;
   email: string;
 };
+
+export type PropsTestType = {
+  test1: string;
+  test2: string;
+  testSet: React.Dispatch<React.SetStateAction<string>>;
+};
