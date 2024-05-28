@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import numeral from "numeral";
 import { getProjects } from "@/services/projects.service";
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_URL;
 const projectUrl = import.meta.env.VITE_PROJECT_IMG_URL;
 const productUrl = import.meta.env.VITE_PRODUCT_IMG_URL;
 import "@/css/style.css";
@@ -114,11 +114,11 @@ const Projects = () => {
   const handleConfirmSubmit = () => {
     const url = visibleProductLg
       ? alterText
-        ? `${baseUrl}/api/product/${formData.id}`
-        : `${baseUrl}/api/product`
+        ? `${baseUrl}/product/${formData.id}`
+        : `${baseUrl}/product`
       : alterText
-      ? `${baseUrl}/api/project/${formData.id}`
-      : `${baseUrl}/api/project`;
+      ? `${baseUrl}/project/${formData.id}`
+      : `${baseUrl}/project`;
     const method = alterText ? "PUT" : "POST";
 
     console.log("URL:", url);
@@ -243,26 +243,23 @@ const Projects = () => {
                                   </div>
                                 </td>
                                 <td className="p-2 pr-4">
-                                  <div className="text-base font-semibold text-center">
-                                    {statusMap[1]}
-                                  </div>
-                                  {/* <div className="text-base font-semibold text-center">{statusMap[item.Status]}</div> */}
+                                   <div className="text-base font-semibold text-center">{statusMap[item.statusId]}</div> 
                                 </td>
                                 <td className="p-2">
                                   <div className="grid grid-cols-2">
                                     <div className="text-base">
                                       {Math.floor(
-                                        (item.accumulatedAmount / item.goal) *
+                                        (item.projectAmount / item.projectGoal) *
                                           100
                                       )}
                                       %
                                     </div>
                                     <div className="ms-3 text-end">
                                       <small className="text-base">
-                                        {numeral(item.accumulatedAmount).format(
+                                        {numeral(item.projectAmount).format(
                                           "0,0"
                                         )}
-                                        /{numeral(item.goal).format("0,0")}
+                                        /{numeral(item.projectGoal).format("0,0")}
                                       </small>
                                     </div>
                                   </div>
@@ -270,34 +267,34 @@ const Projects = () => {
                                     className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700"
                                     style={{ width: 400 }}
                                   >
-                                    {item.accumulatedAmount / item.goal >=
+                                    {item.projectAmount / item.projectGoal >=
                                     0.8 ? (
                                       <div
                                         className="bg-green-600 h-2.5 rounded-full dark:bg-green-500"
                                         style={{
                                           width: `${
-                                            item.accumulatedAmount /
-                                              item.goal >=
+                                            item.projectAmount /
+                                              item.projectGoal >=
                                             1
                                               ? 100
-                                              : (item.accumulatedAmount /
-                                                  item.goal) *
+                                              : (item.projectAmount /
+                                                  item.projectGoal) *
                                                 100
                                           }%`,
                                         }}
                                       ></div>
-                                    ) : item.accumulatedAmount / item.goal >=
+                                    ) : item.projectAmount / item.projectGoal >=
                                       0.5 ? (
                                       <div
                                         className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
                                         style={{
                                           width: `${
-                                            item.accumulatedAmount /
-                                              item.goal >=
+                                            item.projectAmount /
+                                              item.projectGoal >=
                                             1
                                               ? 100
-                                              : (item.accumulatedAmount /
-                                                  item.goal) *
+                                              : (item.projectAmount /
+                                                  item.projectGoal) *
                                                 100
                                           }%`,
                                         }}
@@ -307,12 +304,12 @@ const Projects = () => {
                                         className="bg-rose-600 h-2.5 rounded-full dark:bg-rose-500"
                                         style={{
                                           width: `${
-                                            item.accumulatedAmount /
-                                              item.goal >=
+                                            item.projectAmount /
+                                              item.projectGoal >=
                                             1
                                               ? 100
-                                              : (item.accumulatedAmount /
-                                                  item.goal) *
+                                              : (item.projectAmount /
+                                                  item.projectGoal) *
                                                 100
                                           }%`,
                                         }}
@@ -324,12 +321,12 @@ const Projects = () => {
                                   <div className="text-base font-semibold fw-semibold text-nowrap text-center">
                                     {" "}
                                     {calculateRemainingDays(
-                                      item.expireDate,
+                                      item.endDate,
                                       date
                                     ) < 0
                                       ? 0
                                       : calculateRemainingDays(
-                                          item.expireDate,
+                                          item.endDate,
                                           date
                                         )}
                                     天
@@ -349,12 +346,11 @@ const Projects = () => {
                                         //item.thumbnail,
                                         projectUrl + item.thumbnail,
                                         item.projectName,
-                                        item.description,
-                                        // item.Status,
-                                        1,
-                                        item.goal,
-                                        item.date,
-                                        item.expireDate,
+                                        item.projectDescription,
+                                        item.statusId,
+                                        item.projectGoal,
+                                        item.startDate,
+                                        item.endDate,
                                       ]);
                                     }}
                                     className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
@@ -481,27 +477,24 @@ const Projects = () => {
                                         </div>
                                       </td>
                                       <td className="p-2 pr-4">
-                                        <div className="text-base font-semibold text-center">
-                                          {statusMap[1]}
-                                        </div>
-                                        {/* <div className="text-base font-semibold text-center">{statusMap[product.Status]}</div> */}
+                                        <div className="text-base font-semibold text-center">{statusMap[product.statusId]}</div>
                                       </td>
                                       <td className="p-2">
                                         <div className="grid grid-cols-2">
                                           <div className="text-base">
                                             {Math.floor(
-                                              ((product.quantity -
-                                                product.inventory) /
-                                                product.quantity) *
+                                              ((product.initialStock -
+                                                product.currentStock) /
+                                                product.initialStock) *
                                                 100
                                             )}
                                             %
                                           </div>
                                           <div className="ms-3 text-end">
                                             <small className="text-base">
-                                              {product.quantity -
-                                                product.inventory}
-                                              /{product.quantity}
+                                              {product.initialStock -
+                                                product.currentStock}
+                                              /{product.initialStock}
                                             </small>
                                           </div>
                                         </div>
@@ -509,32 +502,32 @@ const Projects = () => {
                                           className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700"
                                           style={{ width: 400 }}
                                         >
-                                          {(product.quantity -
-                                            product.inventory) /
+                                          {(product.initialStock -
+                                            product.currentStock) /
                                             product.quantit >=
                                           0.8 ? (
                                             <div
                                               className="bg-green-600 h-2.5 rounded-full dark:bg-green-500"
                                               style={{
                                                 width: `${
-                                                  ((product.quantity -
-                                                    product.inventory) /
-                                                    product.quantity) *
+                                                  ((product.initialStock -
+                                                    product.currentStock) /
+                                                    product.initialStock) *
                                                   100
                                                 }%`,
                                               }}
                                             ></div>
-                                          ) : (product.quantity -
-                                              product.inventory) /
+                                          ) : (product.initialStock -
+                                              product.currentStock) /
                                               product.quantit >=
                                             0.5 ? (
                                             <div
                                               className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
                                               style={{
                                                 width: `${
-                                                  ((product.quantity -
-                                                    product.inventory) /
-                                                    product.quantity) *
+                                                  ((product.initialStock -
+                                                    product.currentStock) /
+                                                    product.initialStock) *
                                                   100
                                                 }%`,
                                               }}
@@ -544,9 +537,9 @@ const Projects = () => {
                                               className="bg-rose-600 h-2.5 rounded-full dark:bg-rose-500"
                                               style={{
                                                 width: `${
-                                                  ((product.quantity -
-                                                    product.inventory) /
-                                                    product.quantity) *
+                                                  ((product.initialStock -
+                                                    product.currentStock) /
+                                                    product.initialStock) *
                                                   100
                                                 }%`,
                                               }}
@@ -558,12 +551,12 @@ const Projects = () => {
                                         <div className="text-base font-semibold fw-semibold text-nowrap text-center">
                                           {" "}
                                           {calculateRemainingDays(
-                                            item.expireDate,
+                                            item.endDate,
                                             date
                                           ) < 0
                                             ? 0
                                             : calculateRemainingDays(
-                                                item.expireDate,
+                                                item.endDate,
                                                 date
                                               )}
                                           天
@@ -574,7 +567,7 @@ const Projects = () => {
                                         className="text-center"
                                       >
                                         <div className="text-base text-slate-800 dark:text-slate-100 font-semibold">
-                                          {product.inventory}
+                                          {product.currentStock}
                                         </div>
                                       </td>
                                       <td
@@ -595,13 +588,12 @@ const Projects = () => {
                                               productUrl + product.thumbnail,
                                               product.productName,
                                               product.productDescription,
-                                              // product.Status,
-                                              1,
-                                              product.price,
-                                              product.quantity,
-                                              product.inventory,
-                                              product.date,
-                                              product.expireDate,
+                                              product.statusId,
+                                              product.productPrice,
+                                              product.initialStock,
+                                              product.currentStock,
+                                              product.startDate,
+                                              product.endDate,
                                             ]);
                                           }}
                                           className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
@@ -836,7 +828,7 @@ const Projects = () => {
                     <input
                       type="text"
                       required
-                      name="description"
+                      name="projectDescription"
                       defaultValue={
                         alterText ? projectContext[3] : projectDemo[1]
                       }
@@ -849,6 +841,7 @@ const Projects = () => {
                     </span>
                     <select
                       aria-label="Default select example"
+                      name="statusId"
                       defaultValue={
                         alterText ? projectContext[4] : projectDemo[2]
                       }
@@ -865,7 +858,7 @@ const Projects = () => {
                     <input
                       type="text"
                       required
-                      name="goal"
+                      name="projectGoal"
                       defaultValue={
                         alterText ? projectContext[5] : projectDemo[3]
                       }
@@ -879,7 +872,7 @@ const Projects = () => {
                     <input
                       type="date"
                       required
-                      name="date"
+                      name="startDate"
                       defaultValue={
                         alterText ? projectContext[6] : projectDemo[4]
                       }
@@ -893,7 +886,7 @@ const Projects = () => {
                     <input
                       type="date"
                       required
-                      name="expireDate"
+                      name="endDate"
                       defaultValue={
                         alterText ? projectContext[7] : projectDemo[5]
                       }
@@ -904,16 +897,12 @@ const Projects = () => {
                   <input
                     type="hidden"
                     required
-                    name="roleId"
+                    name="memberId"
                     defaultValue="2"
                   />
-                  <input
-                    type="hidden"
-                    required
-                    name="memberId"
-                    defaultValue="41"
-                  />
                   <input type="hidden" name="id" value={projectContext[0]} />
+                  <input type="hidden" name="member" value="" />
+                  <input type="hidden" name="status" value=""  />
                   {/* needtofix */}
                   {alterText ? (
                     <button
@@ -1094,7 +1083,7 @@ const Projects = () => {
                     <input
                       type="text"
                       required
-                      name="price"
+                      name="productPrice"
                       defaultValue={
                         alterText ? productContext[6] : productDemo[3]
                       }
@@ -1109,7 +1098,7 @@ const Projects = () => {
                     <input
                       type="text"
                       required
-                      name="quantity"
+                      name="initialStock"
                       defaultValue={
                         alterText ? productContext[7] : productDemo[4]
                       }
@@ -1123,7 +1112,7 @@ const Projects = () => {
                     <input
                       type="text"
                       required
-                      name="inventory"
+                      name="currentStock"
                       defaultValue={
                         alterText ? productContext[8] : productDemo[4]
                       }
@@ -1138,7 +1127,7 @@ const Projects = () => {
                     <input
                       type="date"
                       required
-                      name="date"
+                      name="startDate"
                       defaultValue={
                         alterText ? productContext[9] : productDemo[5]
                       }
@@ -1152,7 +1141,7 @@ const Projects = () => {
                     <input
                       type="date"
                       required
-                      name="expireDate"
+                      name="endDate"
                       defaultValue={
                         alterText ? productContext[10] : productDemo[6]
                       }
