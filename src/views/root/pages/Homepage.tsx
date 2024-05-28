@@ -1,7 +1,7 @@
 import AboutSection from "@/components/section/AboutSection";
 import ExploreSection from "@/components/section/ExploreSection";
 import GetStartedSection from "@/components/section/GetStartedSection";
-import HeroSection from "@/components/section/HeroSection";
+import Hero2Section from "@/components/section/Hero2Section";
 import Navbar from "@/components/Navbar";
 import WhatNewSection from "@/components/section/WhatNewSection";
 import WorldSection from "@/components/section/WorldSection";
@@ -16,7 +16,7 @@ const Homepage = () => {
       <div className="overflow-hidden">
         <ModeToggle />
         <Navbar />
-        <HeroSection />
+        <Hero2Section />
         <div className="relative">
           <AboutSection />
           <div className="gradient-03 z-0" />
