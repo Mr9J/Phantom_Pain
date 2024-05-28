@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token === "[]" || token === null || token === undefined) {
-      navigate("/sign-in");
+      navigate("/");
     }
 
     checkAuthUser();
