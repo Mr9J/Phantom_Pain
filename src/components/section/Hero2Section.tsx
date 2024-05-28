@@ -31,13 +31,13 @@ const Hero2Section = () => {
               variants={HeroTextVariant}
               className="text-[30px] text-[#663399] tracking-[10px]"
             >
-              Build Our Future
+              MSIT 158
             </motion.h2>
             <motion.h2
               variants={HeroTextVariant}
               className="lg:text-[88px] text-[36px]"
             >
-              Mumu Empower Your Dreams
+              Mumu Empower Your Dreams, Build Our Future
             </motion.h2>
             <motion.div variants={HeroTextVariant}>
               <motion.button
