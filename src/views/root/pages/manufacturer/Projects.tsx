@@ -155,82 +155,292 @@ const Projects = () => {
   };
   return (
     <>
-            <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-              <div className="col-span-full xl:col-span-8 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
-                <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                  <h2 className="font-semibold text-slate-800 dark:text-slate-100">
-                    專案列表
-                  </h2>
-                </header>
-                <div className="p-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setvisibleProjectModal(!visibleProjectLg);
-                      setAlter(false);
-                    }}
-                    className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    <svg
-                      className="w-[15px] h-[15px] fill-[#f2f2f2]"
-                      viewBox="0 0 448 512"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
-                    </svg>
-                    <p className="text-base">新增專案</p>
-                  </button>
-                  {/* Table */}
-                  <div className="overflow-x-auto">
-                    <table className="table-auto w-full dark:text-slate-300">
-                      {/* Table header */}
-                      <thead className="text-xs uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50 rounded-sm">
+      <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+        <div className="col-span-full xl:col-span-8 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
+          <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
+            <h2 className="font-semibold text-slate-800 dark:text-slate-100">
+              專案列表
+            </h2>
+          </header>
+          <div className="p-3">
+            <button
+              type="button"
+              onClick={() => {
+                setvisibleProjectModal(!visibleProjectLg);
+                setAlter(false);
+              }}
+              className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              <svg
+                className="w-[15px] h-[15px] fill-[#f2f2f2]"
+                viewBox="0 0 448 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
+              </svg>
+              <p className="text-base">新增專案</p>
+            </button>
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full dark:text-slate-300">
+                {/* Table header */}
+                <thead className="text-xs uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50 rounded-sm">
+                  <tr>
+                    <th className="pl-1">
+                      <div className="text-sm font-semibold text-left"></div>
+                    </th>
+                    <th className="p-2" style={{ width: 600 }}>
+                      <div className="text-sm font-semibold text-left">
+                        專案名稱
+                      </div>
+                    </th>
+                    <th className="p-2 pr-4">
+                      <div className="text-sm font-semibold text-center">
+                        狀態
+                      </div>
+                    </th>
+                    <th className="p-2" style={{ width: 400 }}>
+                      <div className="text-sm font-semibold text-center">
+                        進度
+                      </div>
+                    </th>
+                    <th className="p-2">
+                      <div className="text-sm font-semibold text-center">
+                        剩餘時間
+                      </div>
+                    </th>
+                    <th style={{ width: 130 }}>
+                      <div className="text-sm font-semibold text-center"></div>
+                    </th>
+                    <th style={{ width: 130 }}>
+                      <div className="text-smfont-semibold text-center"></div>
+                    </th>
+                  </tr>
+                </thead>
+                {/* Table body */}
+                {projects &&
+                  projects.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
+                        {/* Row */}
                         <tr>
-                          <th className="pl-1">
-                            <div className="text-sm font-semibold text-left"></div>
-                          </th>
-                          <th className="p-2" style={{ width: 600 }}>
-                            <div className="text-sm font-semibold text-left">
-                              專案名稱
+                          <td className="pl-1">
+                            {/* <img src={projectUrl+item.thumbnail} alt="" className="rounded-full w-10 h-10"/> */}
+                            <img
+                              src="./src/assets/admin_img/mygo/1.jpg"
+                              alt=""
+                              className="rounded-full w-10 h-10"
+                            />
+                          </td>
+                          <td className="p-2">
+                            <div
+                              className="flex items-center"
+                              style={{ width: 600 }}
+                            >
+                              <div className="text-base text-slate-800 dark:text-slate-100">
+                                {item.projectName}
+                              </div>
                             </div>
-                          </th>
-                          <th className="p-2 pr-4">
-                            <div className="text-sm font-semibold text-center">
-                              狀態
+                          </td>
+                          <td className="p-2 pr-4">
+                            <div className="text-base font-semibold text-center">
+                              {statusMap[item.statusId]}
                             </div>
-                          </th>
-                          <th className="p-2" style={{ width: 400 }}>
-                            <div className="text-sm font-semibold text-center">
-                              進度
+                          </td>
+                          <td className="p-2">
+                            <div className="grid grid-cols-2">
+                              <div className="text-base">
+                                {Math.floor(
+                                  (item.projectAmount / item.projectGoal) * 100
+                                )}
+                                %
+                              </div>
+                              <div className="ms-3 text-end">
+                                <small className="text-base">
+                                  {numeral(item.projectAmount).format("0,0")}/
+                                  {numeral(item.projectGoal).format("0,0")}
+                                </small>
+                              </div>
                             </div>
-                          </th>
-                          <th className="p-2">
-                            <div className="text-sm font-semibold text-center">
-                              剩餘時間
+                            <div
+                              className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700"
+                              style={{ width: 400 }}
+                            >
+                              {item.projectAmount / item.projectGoal >= 0.8 ? (
+                                <div
+                                  className="bg-green-600 h-2.5 rounded-full dark:bg-green-500"
+                                  style={{
+                                    width: `${
+                                      item.projectAmount / item.projectGoal >= 1
+                                        ? 100
+                                        : (item.projectAmount /
+                                            item.projectGoal) *
+                                          100
+                                    }%`,
+                                  }}
+                                ></div>
+                              ) : item.projectAmount / item.projectGoal >=
+                                0.5 ? (
+                                <div
+                                  className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
+                                  style={{
+                                    width: `${
+                                      item.projectAmount / item.projectGoal >= 1
+                                        ? 100
+                                        : (item.projectAmount /
+                                            item.projectGoal) *
+                                          100
+                                    }%`,
+                                  }}
+                                ></div>
+                              ) : (
+                                <div
+                                  className="bg-rose-600 h-2.5 rounded-full dark:bg-rose-500"
+                                  style={{
+                                    width: `${
+                                      item.projectAmount / item.projectGoal >= 1
+                                        ? 100
+                                        : (item.projectAmount /
+                                            item.projectGoal) *
+                                          100
+                                    }%`,
+                                  }}
+                                ></div>
+                              )}
                             </div>
-                          </th>
-                          <th style={{ width: 130 }}>
-                            <div className="text-sm font-semibold text-center"></div>
-                          </th>
-                          <th style={{ width: 130 }}>
-                            <div className="text-smfont-semibold text-center"></div>
-                          </th>
+                          </td>
+                          <td className="p-2">
+                            <div className="text-base font-semibold fw-semibold text-nowrap text-center">
+                              {" "}
+                              {calculateRemainingDays(item.endDate, date) < 0
+                                ? 0
+                                : calculateRemainingDays(item.endDate, date)}
+                              天
+                            </div>
+                          </td>
+                          <td style={{ width: 130 }} className="text-center">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setvisibleProjectModal(!visibleProjectLg);
+                                setAlter(true);
+                                setProjectContext([
+                                  item.projectId,
+                                  //item.thumbnail,
+                                  projectUrl + item.thumbnail,
+                                  item.projectName,
+                                  item.projectDescription,
+                                  item.statusId,
+                                  item.projectGoal,
+                                  item.startDate,
+                                  item.endDate,
+                                ]);
+                              }}
+                              className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
+                            >
+                              <svg
+                                className="w-[20px] h-[20px] fill-[#8e8e8e]"
+                                viewBox="0 0 512 512"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"></path>
+                              </svg>
+                              <div className="text-base font-semibold">
+                                修改
+                              </div>
+                            </button>
+                          </td>
+                          <td style={{ width: 130 }} className="text-center">
+                            <button
+                              type="button"
+                              className="text-gray-900 bg-white hover:bg-gray-100  focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm  text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
+                              onClick={() => productTableClick(item.projectId)}
+                            >
+                              <svg
+                                className="w-[30px] h-[30px] fill-[#262626] dark:fill-[#f2f2f2]"
+                                viewBox="0 0 512 512"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                {productVisible[item.projectId] ? (
+                                  <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM135.1 217.4c-4.5 4.2-7.1 10.1-7.1 16.3c0 12.3 10 22.3 22.3 22.3H208v96c0 17.7 14.3 32 32 32h32c17.7 0 32-14.3 32-32V256h57.7c12.3 0 22.3-10 22.3-22.3c0-6.2-2.6-12.1-7.1-16.3L269.8 117.5c-3.8-3.5-8.7-5.5-13.8-5.5s-10.1 2-13.8 5.5L135.1 217.4z"></path>
+                                ) : (
+                                  <path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3H304V160c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32v96H150.3C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z"></path>
+                                )}
+                              </svg>
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      {/* Table body */}
-                      {projects &&
-                        projects.map((item, index) => (
-                          <React.Fragment key={index}>
-                            <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
+                      </tbody>
+                      {
+                        // #region 產品-----------------------------------------------------------------------------------
+                      }
+                      {productVisible[item.projectId] && (
+                        <React.Fragment>
+                          <thead className="text-xs uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50 rounded-sm">
+                            <tr>
+                              <th className="pl-1">
+                                <div className="text-sm font-semibold text-center">
+                                  項次
+                                </div>
+                              </th>
+                              <th className="p-2" style={{ width: 600 }}>
+                                <div className="text-sm font-semibold text-left">
+                                  產品名稱
+                                </div>
+                              </th>
+                              <th className="p-2 pr-4">
+                                <div className="text-sm font-semibold text-center">
+                                  狀態
+                                </div>
+                              </th>
+                              <th className="p-2" style={{ width: 400 }}>
+                                <div className="text-sm font-semibold text-center">
+                                  進度(售出/目標)
+                                </div>
+                              </th>
+                              <th className="p-2">
+                                <div className="text-sm font-semibold text-center">
+                                  剩餘時間
+                                </div>
+                              </th>
+                              <th style={{ width: 130 }}>
+                                <div className="text-sm font-semibold text-center">
+                                  庫存
+                                </div>
+                              </th>
+                              <th style={{ width: 130 }}>
+                                <div className="text-smfont-semibold text-center">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setVisibleProductModal(!visibleProductLg);
+                                      setAlter(false);
+                                      setProductContext([item.projectId]);
+                                    }}
+                                    className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                  >
+                                    <svg
+                                      className="w-[15px] h-[15px] fill-[#f2f2f2]"
+                                      viewBox="0 0 448 512"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
+                                    </svg>
+                                    <p className="text-base">新增產品</p>
+                                  </button>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          {item.products.map((product, productIndex) => (
+                            <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900 ">
                               {/* Row */}
                               <tr>
                                 <td className="pl-1">
-                                  {/* <img src={projectUrl+item.thumbnail} alt="" className="rounded-full w-10 h-10"/> */}
-                                  <img
-                                    src="./src/assets/admin_img/mygo/1.jpg"
-                                    alt=""
-                                    className="rounded-full w-10 h-10"
-                                  />
+                                  <div className="text-base text-slate-800 dark:text-slate-100 text-center">
+                                    {" "}
+                                    {productIndex + 1}
+                                  </div>
                                 </td>
                                 <td className="p-2">
                                   <div
@@ -238,28 +448,31 @@ const Projects = () => {
                                     style={{ width: 600 }}
                                   >
                                     <div className="text-base text-slate-800 dark:text-slate-100">
-                                      {item.projectName}
+                                      {product.productName}
                                     </div>
                                   </div>
                                 </td>
                                 <td className="p-2 pr-4">
-                                   <div className="text-base font-semibold text-center">{statusMap[item.statusId]}</div> 
+                                  <div className="text-base font-semibold text-center">
+                                    {statusMap[product.statusId]}
+                                  </div>
                                 </td>
                                 <td className="p-2">
                                   <div className="grid grid-cols-2">
                                     <div className="text-base">
                                       {Math.floor(
-                                        (item.projectAmount / item.projectGoal) *
+                                        ((product.initialStock -
+                                          product.currentStock) /
+                                          product.initialStock) *
                                           100
                                       )}
                                       %
                                     </div>
                                     <div className="ms-3 text-end">
                                       <small className="text-base">
-                                        {numeral(item.projectAmount).format(
-                                          "0,0"
-                                        )}
-                                        /{numeral(item.projectGoal).format("0,0")}
+                                        {product.initialStock -
+                                          product.currentStock}
+                                        /{product.initialStock}
                                       </small>
                                     </div>
                                   </div>
@@ -267,35 +480,33 @@ const Projects = () => {
                                     className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700"
                                     style={{ width: 400 }}
                                   >
-                                    {item.projectAmount / item.projectGoal >=
+                                    {(product.initialStock -
+                                      product.currentStock) /
+                                      product.quantit >=
                                     0.8 ? (
                                       <div
                                         className="bg-green-600 h-2.5 rounded-full dark:bg-green-500"
                                         style={{
                                           width: `${
-                                            item.projectAmount /
-                                              item.projectGoal >=
-                                            1
-                                              ? 100
-                                              : (item.projectAmount /
-                                                  item.projectGoal) *
-                                                100
+                                            ((product.initialStock -
+                                              product.currentStock) /
+                                              product.initialStock) *
+                                            100
                                           }%`,
                                         }}
                                       ></div>
-                                    ) : item.projectAmount / item.projectGoal >=
+                                    ) : (product.initialStock -
+                                        product.currentStock) /
+                                        product.quantit >=
                                       0.5 ? (
                                       <div
                                         className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
                                         style={{
                                           width: `${
-                                            item.projectAmount /
-                                              item.projectGoal >=
-                                            1
-                                              ? 100
-                                              : (item.projectAmount /
-                                                  item.projectGoal) *
-                                                100
+                                            ((product.initialStock -
+                                              product.currentStock) /
+                                              product.initialStock) *
+                                            100
                                           }%`,
                                         }}
                                       ></div>
@@ -304,13 +515,10 @@ const Projects = () => {
                                         className="bg-rose-600 h-2.5 rounded-full dark:bg-rose-500"
                                         style={{
                                           width: `${
-                                            item.projectAmount /
-                                              item.projectGoal >=
-                                            1
-                                              ? 100
-                                              : (item.projectAmount /
-                                                  item.projectGoal) *
-                                                100
+                                            ((product.initialStock -
+                                              product.currentStock) /
+                                              product.initialStock) *
+                                            100
                                           }%`,
                                         }}
                                       ></div>
@@ -321,12 +529,12 @@ const Projects = () => {
                                   <div className="text-base font-semibold fw-semibold text-nowrap text-center">
                                     {" "}
                                     {calculateRemainingDays(
-                                      item.endDate,
+                                      product.endDate,
                                       date
                                     ) < 0
                                       ? 0
                                       : calculateRemainingDays(
-                                          item.endDate,
+                                          product.endDate,
                                           date
                                         )}
                                     天
@@ -336,21 +544,32 @@ const Projects = () => {
                                   style={{ width: 130 }}
                                   className="text-center"
                                 >
+                                  <div className="text-base text-slate-800 dark:text-slate-100 font-semibold">
+                                    {product.currentStock}
+                                  </div>
+                                </td>
+                                <td
+                                  style={{ width: 130 }}
+                                  className="text-center"
+                                >
                                   <button
                                     type="button"
                                     onClick={() => {
-                                      setvisibleProjectModal(!visibleProjectLg);
+                                      setVisibleProductModal(!visibleProductLg);
                                       setAlter(true);
-                                      setProjectContext([
+                                      setProductContext([
                                         item.projectId,
-                                        //item.thumbnail,
-                                        projectUrl + item.thumbnail,
-                                        item.projectName,
-                                        item.projectDescription,
-                                        item.statusId,
-                                        item.projectGoal,
-                                        item.startDate,
-                                        item.endDate,
+                                        product.productId,
+                                        //product.thumbnail,
+                                        productUrl + product.thumbnail,
+                                        product.productName,
+                                        product.productDescription,
+                                        product.statusId,
+                                        product.productPrice,
+                                        product.initialStock,
+                                        product.currentStock,
+                                        product.startDate,
+                                        product.endDate,
                                       ]);
                                     }}
                                     className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
@@ -367,267 +586,24 @@ const Projects = () => {
                                     </div>
                                   </button>
                                 </td>
-                                <td
-                                  style={{ width: 130 }}
-                                  className="text-center"
-                                >
-                                  <button
-                                    type="button"
-                                    className="text-gray-900 bg-white hover:bg-gray-100  focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm  text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
-                                    onClick={() =>
-                                      productTableClick(item.projectId)
-                                    }
-                                  >
-                                    <svg
-                                      className="w-[30px] h-[30px] fill-[#262626] dark:fill-[#f2f2f2]"
-                                      viewBox="0 0 512 512"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      {productVisible[item.projectId] ? (
-                                        <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM135.1 217.4c-4.5 4.2-7.1 10.1-7.1 16.3c0 12.3 10 22.3 22.3 22.3H208v96c0 17.7 14.3 32 32 32h32c17.7 0 32-14.3 32-32V256h57.7c12.3 0 22.3-10 22.3-22.3c0-6.2-2.6-12.1-7.1-16.3L269.8 117.5c-3.8-3.5-8.7-5.5-13.8-5.5s-10.1 2-13.8 5.5L135.1 217.4z"></path>
-                                      ) : (
-                                        <path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3H304V160c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32v96H150.3C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z"></path>
-                                      )}
-                                    </svg>
-                                  </button>
-                                </td>
                               </tr>
                             </tbody>
-                            {
-                              // #region 產品-----------------------------------------------------------------------------------
-                            }
-                            {productVisible[item.projectId] && (
-                              <React.Fragment>
-                                <thead className="text-xs uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50 rounded-sm">
-                                  <tr>
-                                    <th className="pl-1">
-                                      <div className="text-sm font-semibold text-center">
-                                        項次
-                                      </div>
-                                    </th>
-                                    <th className="p-2" style={{ width: 600 }}>
-                                      <div className="text-sm font-semibold text-left">
-                                        產品名稱
-                                      </div>
-                                    </th>
-                                    <th className="p-2 pr-4">
-                                      <div className="text-sm font-semibold text-center">
-                                        狀態
-                                      </div>
-                                    </th>
-                                    <th className="p-2" style={{ width: 400 }}>
-                                      <div className="text-sm font-semibold text-center">
-                                        進度(售出/目標)
-                                      </div>
-                                    </th>
-                                    <th className="p-2">
-                                      <div className="text-sm font-semibold text-center">
-                                        剩餘時間
-                                      </div>
-                                    </th>
-                                    <th style={{ width: 130 }}>
-                                      <div className="text-sm font-semibold text-center">
-                                        庫存
-                                      </div>
-                                    </th>
-                                    <th style={{ width: 130 }}>
-                                      <div className="text-smfont-semibold text-center">
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            setVisibleProductModal(
-                                              !visibleProductLg
-                                            );
-                                            setAlter(false);
-                                            setProductContext([item.projectId]);
-                                          }}
-                                          className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                        >
-                                          <svg
-                                            className="w-[15px] h-[15px] fill-[#f2f2f2]"
-                                            viewBox="0 0 448 512"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
-                                          </svg>
-                                          <p className="text-base">新增產品</p>
-                                        </button>
-                                      </div>
-                                    </th>
-                                  </tr>
-                                </thead>
-                                {item.products.map((product, productIndex) => (
-                                  <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900 ">
-                                    {/* Row */}
-                                    <tr>
-                                      <td className="pl-1">
-                                        <div className="text-base text-slate-800 dark:text-slate-100 text-center">
-                                          {" "}
-                                          {productIndex + 1}
-                                        </div>
-                                      </td>
-                                      <td className="p-2">
-                                        <div
-                                          className="flex items-center"
-                                          style={{ width: 600 }}
-                                        >
-                                          <div className="text-base text-slate-800 dark:text-slate-100">
-                                            {product.productName}
-                                          </div>
-                                        </div>
-                                      </td>
-                                      <td className="p-2 pr-4">
-                                        <div className="text-base font-semibold text-center">{statusMap[product.statusId]}</div>
-                                      </td>
-                                      <td className="p-2">
-                                        <div className="grid grid-cols-2">
-                                          <div className="text-base">
-                                            {Math.floor(
-                                              ((product.initialStock -
-                                                product.currentStock) /
-                                                product.initialStock) *
-                                                100
-                                            )}
-                                            %
-                                          </div>
-                                          <div className="ms-3 text-end">
-                                            <small className="text-base">
-                                              {product.initialStock -
-                                                product.currentStock}
-                                              /{product.initialStock}
-                                            </small>
-                                          </div>
-                                        </div>
-                                        <div
-                                          className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700"
-                                          style={{ width: 400 }}
-                                        >
-                                          {(product.initialStock -
-                                            product.currentStock) /
-                                            product.quantit >=
-                                          0.8 ? (
-                                            <div
-                                              className="bg-green-600 h-2.5 rounded-full dark:bg-green-500"
-                                              style={{
-                                                width: `${
-                                                  ((product.initialStock -
-                                                    product.currentStock) /
-                                                    product.initialStock) *
-                                                  100
-                                                }%`,
-                                              }}
-                                            ></div>
-                                          ) : (product.initialStock -
-                                              product.currentStock) /
-                                              product.quantit >=
-                                            0.5 ? (
-                                            <div
-                                              className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
-                                              style={{
-                                                width: `${
-                                                  ((product.initialStock -
-                                                    product.currentStock) /
-                                                    product.initialStock) *
-                                                  100
-                                                }%`,
-                                              }}
-                                            ></div>
-                                          ) : (
-                                            <div
-                                              className="bg-rose-600 h-2.5 rounded-full dark:bg-rose-500"
-                                              style={{
-                                                width: `${
-                                                  ((product.initialStock -
-                                                    product.currentStock) /
-                                                    product.initialStock) *
-                                                  100
-                                                }%`,
-                                              }}
-                                            ></div>
-                                          )}
-                                        </div>
-                                      </td>
-                                      <td className="p-2">
-                                        <div className="text-base font-semibold fw-semibold text-nowrap text-center">
-                                          {" "}
-                                          {calculateRemainingDays(
-                                            item.endDate,
-                                            date
-                                          ) < 0
-                                            ? 0
-                                            : calculateRemainingDays(
-                                                item.endDate,
-                                                date
-                                              )}
-                                          天
-                                        </div>
-                                      </td>
-                                      <td
-                                        style={{ width: 130 }}
-                                        className="text-center"
-                                      >
-                                        <div className="text-base text-slate-800 dark:text-slate-100 font-semibold">
-                                          {product.currentStock}
-                                        </div>
-                                      </td>
-                                      <td
-                                        style={{ width: 130 }}
-                                        className="text-center"
-                                      >
-                                        <button
-                                          type="button"
-                                          onClick={() => {
-                                            setVisibleProductModal(
-                                              !visibleProductLg
-                                            );
-                                            setAlter(true);
-                                            setProductContext([
-                                              item.projectId,
-                                              product.productId,
-                                              //product.thumbnail,
-                                              productUrl + product.thumbnail,
-                                              product.productName,
-                                              product.productDescription,
-                                              product.statusId,
-                                              product.productPrice,
-                                              product.initialStock,
-                                              product.currentStock,
-                                              product.startDate,
-                                              product.endDate,
-                                            ]);
-                                          }}
-                                          className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
-                                        >
-                                          <svg
-                                            className="w-[20px] h-[20px] fill-[#8e8e8e]"
-                                            viewBox="0 0 512 512"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                          >
-                                            <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"></path>
-                                          </svg>
-                                          <div className="text-base font-semibold">
-                                            修改
-                                          </div>
-                                        </button>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                ))}
-                              </React.Fragment>
-                            )}
-                            {
-                              //#endregion
-                            }
-                          </React.Fragment>
-                        ))}
-                    </table>
-                  </div>
-                </div>
-              </div>
+                          ))}
+                        </React.Fragment>
+                      )}
+                      {
+                        //#endregion
+                      }
+                    </React.Fragment>
+                  ))}
+              </table>
             </div>
-          {
-            //#endregion
-          }
+          </div>
+        </div>
+      </div>
+      {
+        //#endregion
+      }
       {
         // #region modal-----------------------------------------------------------------------------------
       }
@@ -680,7 +656,7 @@ const Projects = () => {
                   />
                 </svg>
                 <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                <p>{modalText}</p>
+                  <p>{modalText}</p>
                 </h3>
                 <button
                   type="button"
@@ -793,7 +769,7 @@ const Projects = () => {
                         className="bg-gray-100 text-gray-900 text-base p-1 border border-gray-400"
                         onClick={() => {
                           setProjectDemo([
-                            "Marco的PYthon大補帖",
+                            "Marco的Python大補帖",
                             "不買你明天下午就會後悔",
                             2,
                             8000,
@@ -901,8 +877,7 @@ const Projects = () => {
                     defaultValue="2"
                   />
                   <input type="hidden" name="id" value={projectContext[0]} />
-                  <input type="hidden" name="member" value="" />
-                  <input type="hidden" name="status" value=""  />
+                  <input type="hidden" name="groupId" value="2" />
                   {/* needtofix */}
                   {alterText ? (
                     <button
@@ -1153,7 +1128,7 @@ const Projects = () => {
                     type="hidden"
                     required
                     name="projectId"
-                    value={productContext[0]} 
+                    value={productContext[0]}
                   />
                   <input
                     type="hidden"
