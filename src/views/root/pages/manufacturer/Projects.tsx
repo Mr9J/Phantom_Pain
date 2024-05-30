@@ -225,12 +225,12 @@ const Projects = () => {
                         {/* Row */}
                         <tr>
                           <td className="pl-1">
-                            {/* <img src={projectUrl+item.thumbnail} alt="" className="rounded-full w-10 h-10"/> */}
-                            <img
-                              src="./src/assets/admin_img/mygo/1.jpg"
+                            <img src={item.thumbnail} alt="" className="rounded-full w-10 h-10"/>
+                            {/* <img
+                              src="https://localhost:7150/resources/mumuThumbnail/members_Thumbnail/MemberID-12-ThumbNail.jpg"
                               alt=""
                               className="rounded-full w-10 h-10"
-                            />
+                            /> */}
                           </td>
                           <td className="p-2">
                             <div
@@ -326,8 +326,7 @@ const Projects = () => {
                                 setAlter(true);
                                 setProjectContext([
                                   item.projectId,
-                                  //item.thumbnail,
-                                  projectUrl + item.thumbnail,
+                                  item.thumbnail,
                                   item.projectName,
                                   item.projectDescription,
                                   item.statusId,
@@ -560,8 +559,7 @@ const Projects = () => {
                                       setProductContext([
                                         item.projectId,
                                         product.productId,
-                                        //product.thumbnail,
-                                        productUrl + product.thumbnail,
+                                        product.thumbnail,
                                         product.productName,
                                         product.productDescription,
                                         product.statusId,
@@ -972,7 +970,7 @@ const Projects = () => {
                         />
                       ) : (
                         <img
-                          src={productContext[1]}
+                          src={productContext[2]}
                           alt="Selected"
                           className="max-w-full max-h-full"
                         />
