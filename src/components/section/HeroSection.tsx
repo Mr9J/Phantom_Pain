@@ -7,7 +7,6 @@ import {
   HeroSlider,
 } from "@/utils/motion";
 import star from "@/assets/hero_img/star.jpg";
-import { HeroSlider } from "@/utils/motion";
 
 const HeroSection = () => {
   return (
@@ -38,14 +37,14 @@ const HeroSection = () => {
               DReams
             </h2>
           </motion.div>
-          <motion.div
+          {/* <motion.div
             variants={HeroSlider}
             initial="initial"
             animate="animate"
             className="absolute text-[50vh] bottom-[-120px] whitespace-nowrap text-slate-100 dark:text-slate-800 w-1/2 font-bold select-none -z-50"
           >
             Empower Your Dreams, Build Our Future
-          </motion.div>
+          </motion.div> */}
         </div>
 
         <div className="relative items-center justify-center">
