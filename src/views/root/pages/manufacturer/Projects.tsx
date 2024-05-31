@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import numeral from "numeral";
 import { getProjects } from "@/services/projects.service";
 const baseUrl = import.meta.env.VITE_API_URL;
-const projectUrl = import.meta.env.VITE_PROJECT_IMG_URL;
-const productUrl = import.meta.env.VITE_PRODUCT_IMG_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
@@ -86,30 +84,54 @@ const Projects = () => {
   }, []);
 
   //POST/PUT Modal------------------------------------------------------
+
   const handleFormSubmit = (event) => {
     event.preventDefault(); // 阻止表單默認的提交行為
 
     const formData = new FormData(event.target); // 收集表單數據
 
-    // if (selectedImage) {
-    //   formData.append('Image', selectedImage);
-    // }
-    // 準備要發送的數據，可以對數據進行進一步處理或驗證
-    const jsonData = {};
-    formData.forEach((value, key) => {
-      jsonData[key] = value;
-    });
-    setFormData(jsonData);
-    setModalText(
-      visibleProductLg
-        ? alterText
-          ? "您確認要修改這個產品嗎？"
-          : "您確認要建立這個產品嗎？"
-        : alterText
-        ? "您確認要修改這個專案嗎？"
-        : "您確認要建立這個專案嗎？"
-    );
-    setModalVisible(true);
+    if (selectedImage && selectedImage.file instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = reader.result.split(',')[1]; // 獲取 Base64 編碼的圖片數據
+        formData.append('Thumbnail', base64Image); // 將 Base64 圖片數據添加到 formData 中
+
+        // 準備要發送的數據，可以對數據進行進一步處理或驗證
+        const jsonData = {};
+        formData.forEach((value, key) => {
+          jsonData[key] = value;
+        });
+        setFormData(jsonData);
+        setModalText(
+          visibleProductLg
+            ? alterText
+              ? "您確認要修改這個產品嗎？"
+              : "您確認要建立這個產品嗎？"
+            : alterText
+            ? "您確認要修改這個專案嗎？"
+            : "您確認要建立這個專案嗎？"
+        );
+        setModalVisible(true);
+      };
+      reader.readAsDataURL(selectedImage.file);
+    } else {
+      // 如果沒有選擇圖片，則直接處理其他表單數據
+      const jsonData = {};
+      formData.forEach((value, key) => {
+        jsonData[key] = value;
+      });
+      setFormData(jsonData);
+      setModalText(
+        visibleProductLg
+          ? alterText
+            ? "您確認要修改這個產品嗎？"
+            : "您確認要建立這個產品嗎？"
+          : alterText
+          ? "您確認要修改這個專案嗎？"
+          : "您確認要建立這個專案嗎？"
+      );
+      setModalVisible(true);
+    }
   };
   const handleConfirmSubmit = () => {
     const url = visibleProductLg
@@ -226,11 +248,6 @@ const Projects = () => {
                         <tr>
                           <td className="pl-1">
                             <img src={item.thumbnail} alt="" className="rounded-full w-10 h-10"/>
-                            {/* <img
-                              src="https://localhost:7150/resources/mumuThumbnail/members_Thumbnail/MemberID-12-ThumbNail.jpg"
-                              alt=""
-                              className="rounded-full w-10 h-10"
-                            /> */}
                           </td>
                           <td className="p-2">
                             <div
