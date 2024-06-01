@@ -1056,6 +1056,7 @@ const Projects = () => {
                       狀態
                     </span>
                     <select
+                      name="statusId"
                       aria-label="Default select example"
                       defaultValue={
                         alterText ? productContext[5] : productDemo[2]
