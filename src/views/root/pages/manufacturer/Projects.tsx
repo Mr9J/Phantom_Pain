@@ -174,6 +174,7 @@ const Projects = () => {
       .catch((error) => {
         console.error("提交數據時發生錯誤：", error);
       });
+      //window.location.reload();
   };
   return (
     <>
@@ -238,11 +239,13 @@ const Projects = () => {
                       <div className="text-smfont-semibold text-center"></div>
                     </th>
                   </tr>
-                </thead>
-                {/* Table body */}
+                </thead>      
+                {
+        //#region 專案-----------------------------------------------------------------------------------
+      } 
                 {projects &&
-                  projects.map((item, index) => (
-                    <React.Fragment key={index}>
+                  projects.map((item) => (
+                    <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
                         <tr>
@@ -611,14 +614,14 @@ const Projects = () => {
                       }
                     </React.Fragment>
                   ))}
+                        {
+        //#endregion
+      }
               </table>
             </div>
           </div>
         </div>
       </div>
-      {
-        //#endregion
-      }
       {
         // #region modal-----------------------------------------------------------------------------------
       }
@@ -1151,6 +1154,12 @@ const Projects = () => {
                     required
                     name="id"
                     value={productContext[1]}
+                  />
+                  <input
+                    type="hidden"
+                    required
+                    name="orderBy"
+                    value={1}
                   />
                   {/* needtofix */}
                   {alterText ? (
