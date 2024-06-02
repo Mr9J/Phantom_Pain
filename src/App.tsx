@@ -21,6 +21,7 @@ import NotFound from "./views/root/pages/NotFound";
 import PropsTest from "./views/root/pages/PropsTest";
 import { PropsTestType } from "./types";
 import { useState } from "react";
+import PlayGround from "./views/root/pages/PlayGround";
 
 const App = () => {
   const [test1, setTest1] = useState("test1");
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/PropsTest" element={<PropsTest props={props} />} />
+            <Route path="/playground" element={<PlayGround />} />
           </Route>
 
           <Route element={<FormsLayout />}>
