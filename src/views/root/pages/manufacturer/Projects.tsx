@@ -143,9 +143,10 @@ const Projects = () => {
       : `${baseUrl}/project`;
     const method = alterText ? "PUT" : "POST";
 
-    console.log("URL:", url);
-    console.log("Method:", method);
-    console.log("Data being sent:", formData);
+    //debug用
+    // console.log("URL:", url);
+    // console.log("Method:", method);
+    // console.log("Data being sent:", formData);
 
     fetch(url, {
       method: method,
