@@ -13,3 +13,9 @@ export const useSignInAccount = () => {
     mutationFn: (x: SignInDTO) => signIn(x),
   });
 };
+
+// export const useCreatePost = () => {
+//   return useMutation({
+//     mutationFn: (x: PostDTO) => createPost(x),
+//   });
+// };

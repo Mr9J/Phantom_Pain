@@ -61,8 +61,6 @@ const SignUpForm = () => {
 
       if (!session) {
         toast({ title: "發生錯誤，請嘗試登入您的帳號" });
-
-        navigate("/sign-in");
         return;
       }
 
@@ -70,9 +68,10 @@ const SignUpForm = () => {
 
       if (isLoggedIn) {
         form.reset();
+        window.alert("註冊成功，您將被導向至首頁");
         navigate("/");
       } else {
-        toast({ title: "登入失敗, 請再試一次" });
+        toast({ title: "登入失敗, 請至登入頁面嘗試登入" });
         return;
       }
     } catch (error) {

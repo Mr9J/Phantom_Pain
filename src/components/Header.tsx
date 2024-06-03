@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
+import { ModeSwitch } from "./dark-theme/mode-switch";
 import headerLogo from "@/assets/_shared_img/logo.jpg";
 
 const exploreItems = [
@@ -52,7 +53,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <header
-      className={`shadow-lg  dark:shadow-light-1 shadow-black w-full relative bg-[hsl(0,0%,100%)] dark:bg-[hsl(222.2,84%,4.9%)] z-50`}
+      className={`shadow-lg dark:shadow-slate-800 shadow-black w-full bg-[hsl(0,0%,100%)] dark:bg-[hsl(222.2,84%,4.9%)] z-50`}
     >
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
@@ -96,16 +97,16 @@ const Header = () => {
               leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel
-                className={`absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl shadow-lg ring-1 bg-white ring-gray-900/5`}
+                className={`absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl shadow-lg ring-1 bg-white dark:bg-slate-900 dark:ring-gray-500 ring-gray-900/5`}
               >
                 <div className="p-4">
                   {exploreItems.map((item) => (
                     <div
                       key={item.name}
-                      className={`group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50`}
+                      className={`group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50 dark:hover:bg-slate-800`}
                     >
                       <div
-                        className={`flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white`}
+                        className={`flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-900`}
                       >
                         <item.icon
                           className="h-6 w-6 group-hover:text-indigo-600"
@@ -123,13 +124,13 @@ const Header = () => {
                   ))}
                 </div>
                 <div
-                  className={`grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50`}
+                  className={`grid grid-cols-2 divide-x divide-gray-900/5 dark:divide-gray-50/5 bg-gray-50 dark:bg-slate-800`}
                 >
                   {exploreBottomItems.map((item) => (
                     <Link
                       key={item.name}
                       to={item.to}
-                      className={`flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 hover:bg-gray-100`}
+                      className={`flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 hover:bg-gray-100 dark:hover:bg-slate-700`}
                     >
                       <item.icon
                         className="h-5 w-5 flex-none"
@@ -167,7 +168,7 @@ const Header = () => {
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
       >
-        <div className="fixed inset-0 z-10">
+        <div className="fixed inset-0 z-[60]">
           <Dialog.Panel
             className={`fixed inset-y-0 right-0 z-10 w-full overflow-y-auto px-6 py-6 sm:max-w-sm sm:ring-1 dark:bg-slate-900 bg-white ring-gray-900/10`}
           >
@@ -192,7 +193,7 @@ const Header = () => {
                     {({ open }) => (
                       <>
                         <Disclosure.Button
-                          className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 hover:bg-gray-50`}
+                          className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                         >
                           Explore
                           <ChevronDownIcon
@@ -211,7 +212,7 @@ const Header = () => {
                                 key={item.name}
                                 as={Link}
                                 to={item.to}
-                                className={`block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 hover:bg-gray-50`}
+                                className={`block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                               >
                                 {item.name}
                               </Disclosure.Button>
@@ -223,13 +224,13 @@ const Header = () => {
                   </Disclosure>
                   <Link
                     to="/"
-                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50`}
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                   >
                     Propose
                   </Link>
                   <Link
                     to="/social"
-                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50`}
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                   >
                     Social
                   </Link>
@@ -241,13 +242,13 @@ const Header = () => {
                 <div className="py-6">
                   <Link
                     to="/sign-in"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800"
                   >
                     Sign in
                   </Link>
                 </div>
                 <div className="py-6">
-                  <ModeToggle />
+                  <ModeSwitch />
                 </div>
               </div>
             </div>

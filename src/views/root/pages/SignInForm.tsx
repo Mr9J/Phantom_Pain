@@ -47,7 +47,7 @@ const SignInForm = () => {
 
     if (isLoggedIn) {
       form.reset();
-
+      window.alert("登入成功，您將被導向至首頁");
       navigate("/");
     } else {
       toast({ title: "登入失敗，請再試一次" });

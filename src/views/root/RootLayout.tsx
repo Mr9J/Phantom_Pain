@@ -1,58 +1,59 @@
 import { Outlet } from "react-router-dom";
-import { useEffect, useState, Fragment } from "react";
-import { Link } from "react-router-dom";
-import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon } from "lucide-react";
-import { ModeToggle } from "@/components/dark-theme/mode-toggle";
-import headerLogo from "@/assets/_shared_img/logo.jpg";
-import { ModeSwitch } from "@/components/dark-theme/mode-switch";
+import { useEffect, useState } from "react";
+import Header from "@/components/Header";
+// import { Link } from "react-router-dom";
+// import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon } from "lucide-react";
+// import { ModeToggle } from "@/components/dark-theme/mode-toggle";
+// import headerLogo from "@/assets/_shared_img/logo.jpg";
+// import { ModeSwitch } from "@/components/dark-theme/mode-switch";
 
-const exploreItems = [
-  {
-    name: "Parallax",
-    description: "Just An Item",
-    to: "/parallax",
-    icon: LightbulbIcon,
-  },
-  {
-    name: "Item2",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
-  {
-    name: "Item3",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
-  {
-    name: "Item4",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
-  {
-    name: "Item5",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
-];
-const exploreBottomItems = [
-  { name: "Item6", to: "/", icon: LightbulbIcon },
-  { name: "Item7", to: "/", icon: LightbulbIcon },
-];
+// const exploreItems = [
+//   {
+//     name: "Parallax",
+//     description: "Just An Item",
+//     to: "/parallax",
+//     icon: LightbulbIcon,
+//   },
+//   {
+//     name: "Item2",
+//     description: "Just An Item",
+//     to: "/",
+//     icon: LightbulbIcon,
+//   },
+//   {
+//     name: "Item3",
+//     description: "Just An Item",
+//     to: "/",
+//     icon: LightbulbIcon,
+//   },
+//   {
+//     name: "Item4",
+//     description: "Just An Item",
+//     to: "/",
+//     icon: LightbulbIcon,
+//   },
+//   {
+//     name: "Item5",
+//     description: "Just An Item",
+//     to: "/",
+//     icon: LightbulbIcon,
+//   },
+// ];
+// const exploreBottomItems = [
+//   { name: "Item6", to: "/", icon: LightbulbIcon },
+//   { name: "Item7", to: "/", icon: LightbulbIcon },
+// ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+// function classNames(...classes: string[]) {
+//   return classes.filter(Boolean).join(" ");
+// }
 
 const RootLayout = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,7 +70,7 @@ const RootLayout = () => {
 
   return (
     <>
-      <header
+      {/* <header
         className={`shadow-lg dark:shadow-slate-800 shadow-black w-full ${
           isScrolled ? "fixed" : "hidden"
         } bg-[hsl(0,0%,100%)] dark:bg-[hsl(222.2,84%,4.9%)] z-50`}
@@ -278,7 +279,12 @@ const RootLayout = () => {
             </Dialog.Panel>
           </div>
         </Dialog>
-      </header>
+      </header> */}
+
+      <div className={`${isScrolled ? "fixed" : "relative"} w-full z-50`}>
+        <Header />
+      </div>
+
       <Outlet />
     </>
   );

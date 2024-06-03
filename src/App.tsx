@@ -7,7 +7,6 @@ import {
   Homepage,
   SignInForm,
   SignUpForm,
-  Social,
   Dashboard,
   Projects,
   Staffs,
@@ -18,19 +17,19 @@ import Explore from "./views/root/pages/Explore";
 import ManuLayout from "./views/root/pages/ManuLayout";
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "./views/root/pages/NotFound";
-import PropsTest from "./views/root/pages/PropsTest";
-import { PropsTestType } from "./types";
-import { useState } from "react";
-import PlayGround from "./views/root/pages/PlayGround";
+import {
+  AllUsers,
+  Bookmarks,
+  Browser,
+  CreatePost,
+  EditPost,
+  PostDetails,
+  Profile,
+  Social,
+  UpdateProfile,
+} from "./views/auth/pages";
 
 const App = () => {
-  const [test1, setTest1] = useState("test1");
-  const props: PropsTestType = {
-    test1: test1,
-    test2: "test2",
-    testSet: setTest1,
-  };
-
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -38,12 +37,9 @@ const App = () => {
           {/* public routes */}
           <Route element={<RootLayout />}>
             <Route index element={<Homepage />} />
-            <Route path="/social" element={<Social />} />
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/PropsTest" element={<PropsTest props={props} />} />
-            <Route path="/playground" element={<PlayGround />} />
           </Route>
 
           <Route element={<FormsLayout />}>
@@ -54,7 +50,17 @@ const App = () => {
           {/* public routes */}
 
           {/* private routes */}
-          <Route element={<AuthLayout />}></Route>
+          <Route element={<AuthLayout />}>
+            <Route path="/social" element={<Social />} />
+            <Route path="/browser" element={<Browser />} />
+            <Route path="/all-users" element={<AllUsers />} />
+            <Route path="/bookmarks" element={<Bookmarks />} />
+            <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/update-post/:id" element={<EditPost />} />
+            <Route path="/posts/:id" element={<PostDetails />} />
+            <Route path="/profile/:id/*" element={<Profile />} />
+            <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
+          </Route>
 
           <Route element={<ManuLayout />}>
             <Route path="/manu/dashboard" element={<Dashboard />} />

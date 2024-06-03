@@ -53,3 +53,11 @@ export async function getCurrentUser() {
     return null;
   }
 }
+
+export function signOut() {
+  try {
+    localStorage.removeItem("token");
+  } catch (error) {
+    console.log(error);
+  }
+}
