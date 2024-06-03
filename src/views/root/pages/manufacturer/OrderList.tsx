@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { getMembers } from "@/services/members.service";
-const baseUrl = import.meta.env.VITE_API_URL;
+import { getOrderProjects } from "@/services/orders.service";
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
+const Orders = () => {
+  const [orderProjects, setOrderProjects] = useState(null);
+  const [orderType, setorderType] = useState(1);
+  //載入api
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const fetchedOrderProjects = await getOrderProjects();
+        setOrderProjects(
+          fetchedOrderProjects.map((orderProject) => ({
+            ...orderProject,
+            isEdit: false,
+          }))
+        );
+        //console.log('fetchedOrderProjectLists:', fetchedOrderProjectLists); // 確認資料是否成功加載
+      } catch (error) {
+        console.error("Error fetching orderProjects:", error);
+      }
+    };
 
-
-const Staffs = () => {
-  const [members, setMembers] = useState(null);
-    //載入api
-    useEffect(() => {
-      const fetchMembers = async () => {
-        try {
-          const fetchedProjects = await getMembers();
-          setMembers(
-            fetchedProjects.map((member) => ({
-              ...member,
-              isEdit: false,
-            }))
-          );
-          //console.log('fetchedMembers:', fetchedMembers); // 確認資料是否成功加載
-        } catch (error) {
-          console.error("Error fetching members:", error);
-        }
-      };
-  
-      fetchMembers();
-    }, []);
+    fetchOrders();
+  }, []);
   return (
-<>
+    <>
 <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 <div className="col-span-full xl:col-span-6 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
       <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
@@ -43,24 +42,21 @@ const Staffs = () => {
             <thead className="text-xs font-semibold uppercase text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-700 dark:bg-opacity-50">
               <tr>
                 <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">姓名</div>
+                  <div className="font-semibold text-left">訂單編號</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">帳號</div>
+                  <div className="font-semibold text-left">贊助人</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">Email</div>
+                  <div className="font-semibold text-left">贊助日期</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">電話</div>
-                </th>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-center">職稱</div>
+                  <div className="font-semibold text-left">Donate</div>
                 </th>
               </tr>
             </thead>
             {/* Table body */}
-            <tbody className="text-sm divide-y divide-slate-100 dark:divide-slate-700">
+            {/* <tbody className="text-sm divide-y divide-slate-100 dark:divide-slate-700">
               {
                 members &&members.map((member) => (
                     <tr key={member.id}>
@@ -83,11 +79,10 @@ const Staffs = () => {
                       </td>
                       <td className="p-2 whitespace-nowrap">
                         <div className="text-lg text-center">專案發起人</div>
-                        {/* <div className="text-lg text-center">{member.location}</div> */}
                       </td>
                     </tr>
                 ))}
-            </tbody>
+            </tbody> */}
           </table>
 
         </div>
@@ -96,7 +91,7 @@ const Staffs = () => {
     </div>
     </div>
     </>
-    )
+  );
 };
 
-export default Staffs;
+export default Orders;
