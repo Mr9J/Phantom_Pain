@@ -39,6 +39,7 @@ const EmailVerify = () => {
               className="text-green-400"
             />
           </motion.div>
+
           <TypingText
             title="驗證成功"
             textStyles="text-5xl font-bold mt-5 text-green-400 text-center"
@@ -64,6 +65,7 @@ const EmailVerify = () => {
           <motion.div variants={zoomIn(0.4, 1)}>
             <CircleX width={128} height={128} className="text-red" />
           </motion.div>
+
           <TypingText
             title="驗證失敗"
             textStyles="text-5xl font-bold mt-5 text-red text-center"

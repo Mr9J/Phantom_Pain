@@ -18,7 +18,10 @@ const ExploreSection = () => {
         viewport={{ once: false, amount: 0.25 }}
         className={`${styles.innerWidth} mx-auto flex flex-col`}
       >
-        <TypingText title="| FROM SOFTWARE" textStyles="text-center" />
+        <TypingText
+          title="| FROM SOFTWARE"
+          textStyles="text-center font-normal text-[14px] text-secondary-white"
+        />
         <TitleText
           title={
             <>

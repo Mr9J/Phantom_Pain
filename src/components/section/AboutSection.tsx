@@ -14,7 +14,10 @@ const AboutSection = () => {
         viewport={{ once: false, amount: 0.25 }}
         className={`${styles.innerWidth} mx-auto ${styles.flexCenter} flex-col`}
       >
-        <TypingText title="| About Mumu" textStyles="text-center" />
+        <TypingText
+          title="| About Mumu"
+          textStyles="text-center font-normal text-[14px] text-secondary-white"
+        />
 
         <motion.p
           variants={fadeIn("up", "tween", 0.2, 1)}
