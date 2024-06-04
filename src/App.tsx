@@ -30,6 +30,8 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+import ResetPassword from "./views/root/pages/ResetPassword";
+import SendResetEmail from "./views/root/pages/SendResetEmail";
 
 const App = () => {
   return (
@@ -47,6 +49,8 @@ const App = () => {
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
+            <Route path="/reset-password/:jwt" element={<ResetPassword />} />
+            <Route path="/send-reset-email" element={<SendResetEmail />} />
           </Route>
 
           {/* public routes */}

@@ -1,5 +1,6 @@
 import { CurrentUserDTO, SignInDTO, SignUpDTO } from "@/types";
 import axios from "axios";
+import { Params } from "react-router-dom";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -74,5 +75,21 @@ export async function verifyEmail(username: string, Eid: string) {
   } catch (error) {
     console.error(error);
     return false;
+  }
+}
+
+export async function resetPassword(password: string, jwt: string) {
+  try {
+    const res = await axios.post(
+      `${URL}/Member/change-password`,
+      { password, jwt },
+      { params: { password, jwt }, headers: { Authorization: "Bearer " + jwt } }
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
   }
 }
