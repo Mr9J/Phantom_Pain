@@ -30,6 +30,7 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+import SubHome from "./views/root/pages/SubHome";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
           {/* public routes */}
           <Route element={<RootLayout />}>
             <Route index element={<Homepage />} />
+            <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
