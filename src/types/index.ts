@@ -1,3 +1,6 @@
+import { LucideProps } from "lucide-react";
+import react from "react";
+
 export type SignUpDTO = {
   nickname: string;
   username: string;
@@ -22,4 +25,19 @@ export type CurrentUserDTO = {
   id: string;
   username: string;
   email: string;
+  nickname: string;
+};
+
+export type PropsTestType = {
+  test1: string;
+  test2: string;
+  testSet: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export type INavLink = {
+  icon: react.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & react.RefAttributes<SVGSVGElement>
+  >;
+  to: string;
+  label: string;
 };

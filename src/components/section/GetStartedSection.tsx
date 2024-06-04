@@ -30,7 +30,10 @@ const GetStartedSection = () => {
           variants={fadeIn("left", "tween", 0.2, 1)}
           className="flex-[0.75] flex justify-center flex-col"
         >
-          <TypingText title="| How Mumu Works" textStyles="" />
+          <TypingText
+            title="| How Mumu Works"
+            textStyles="font-normal text-[14px] text-secondary-white"
+          />
           <TitleText
             title={<>Get started with just a few clicks</>}
             textStyles=""
