@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import { Route, Routes } from "react-router-dom";
+import {useParams, Route, Routes } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -12,6 +12,7 @@ import {
   Projects,
   Staffs,
   Orders,
+  OrderList,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/manu/projects" element={<Projects />} />
           <Route path="/manu/staffs" element={<Staffs />} />
           <Route path="/manu/orders" element={<Orders />} />
+          <Route path="/manu/order/:projectId" element={<OrderList/>} />
           <Route path="/manu" element={<Dashboard />} />
           </Route>
 

@@ -143,9 +143,10 @@ const Projects = () => {
       : `${baseUrl}/project`;
     const method = alterText ? "PUT" : "POST";
 
-    console.log("URL:", url);
-    console.log("Method:", method);
-    console.log("Data being sent:", formData);
+    //debug用
+    // console.log("URL:", url);
+    // console.log("Method:", method);
+    // console.log("Data being sent:", formData);
 
     fetch(url, {
       method: method,
@@ -271,13 +272,13 @@ const Projects = () => {
                             <div className="grid grid-cols-2">
                               <div className="text-base">
                                 {Math.floor(
-                                  (item.projectAmount / item.projectGoal) * 100
+                                  (item.totalAmount / item.projectGoal) * 100
                                 )}
                                 %
                               </div>
                               <div className="ms-3 text-end">
                                 <small className="text-base">
-                                  {numeral(item.projectAmount).format("0,0")}/
+                                  {numeral(item.totalAmount).format("0,0")}/
                                   {numeral(item.projectGoal).format("0,0")}
                                 </small>
                               </div>
@@ -286,28 +287,28 @@ const Projects = () => {
                               className="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700"
                               style={{ width: 400 }}
                             >
-                              {item.projectAmount / item.projectGoal >= 0.8 ? (
+                              {item.totalAmount / item.projectGoal >= 0.8 ? (
                                 <div
                                   className="bg-green-600 h-2.5 rounded-full dark:bg-green-500"
                                   style={{
                                     width: `${
-                                      item.projectAmount / item.projectGoal >= 1
+                                      item.totalAmount / item.projectGoal >= 1
                                         ? 100
-                                        : (item.projectAmount /
+                                        : (item.totalAmount /
                                             item.projectGoal) *
                                           100
                                     }%`,
                                   }}
                                 ></div>
-                              ) : item.projectAmount / item.projectGoal >=
+                              ) : item.totalAmount / item.projectGoal >=
                                 0.5 ? (
                                 <div
                                   className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
                                   style={{
                                     width: `${
-                                      item.projectAmount / item.projectGoal >= 1
+                                      item.totalAmount / item.projectGoal >= 1
                                         ? 100
-                                        : (item.projectAmount /
+                                        : (item.totalAmount /
                                             item.projectGoal) *
                                           100
                                     }%`,
@@ -318,9 +319,9 @@ const Projects = () => {
                                   className="bg-rose-600 h-2.5 rounded-full dark:bg-rose-500"
                                   style={{
                                     width: `${
-                                      item.projectAmount / item.projectGoal >= 1
+                                      item.totalAmount / item.projectGoal >= 1
                                         ? 100
-                                        : (item.projectAmount /
+                                        : (item.totalAmount /
                                             item.projectGoal) *
                                           100
                                     }%`,
