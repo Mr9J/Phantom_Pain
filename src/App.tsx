@@ -35,6 +35,7 @@ import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
 import PlayGround from "./views/root/pages/PlayGround";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
+import SubHome from "./views/root/pages/SubHome";
 
 const App = () => {
   return (
@@ -44,6 +45,7 @@ const App = () => {
           {/* public routes */}
           <Route element={<RootLayout />}>
             <Route index element={<Homepage />} />
+            <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
