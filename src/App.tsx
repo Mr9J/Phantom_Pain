@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import {useParams, Route, Routes } from "react-router-dom";
+import { useParams, Route, Routes } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -32,6 +32,7 @@ import {
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
 import PlayGround from "./views/root/pages/PlayGround";
+import ProjectInfo from "./views/root/pages/ProjectInfo";
 
 const App = () => {
   return (
@@ -45,6 +46,7 @@ const App = () => {
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/playground" element={<PlayGround />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} />
           </Route>
 
           <Route element={<FormsLayout />}>
@@ -55,7 +57,6 @@ const App = () => {
           {/* public routes */}
 
           {/* private routes */}
-
 
           <Route element={<LoggedInLayout />}>
             <Route
@@ -81,7 +82,7 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/manu/order/:projectId" element={<OrderList/>} />
+            <Route path="/manu/order/:projectId" element={<OrderList />} />
             <Route path="/manu" element={<Dashboard />} />
           </Route>
 
