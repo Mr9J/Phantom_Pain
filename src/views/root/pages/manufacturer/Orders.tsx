@@ -92,7 +92,7 @@ const Orders = () => {
               {orderProjects &&
                 orderProjects.map((item) => (
                   <div key={item.projectId} className="group relative p-3">
-                    <a href={item.projectId}>
+                    <a href={`order/${item.projectId}`}>
                     <div className="relative h-80 w-full overflow-hidden rounded-t-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
                       <img
                         src={item.thumbnail}

@@ -1,37 +1,69 @@
 import React, { useState, useEffect } from "react";
-import { getOrderProjects } from "@/services/orders.service";
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//import { getOrderList } from "@/services/orders.service";
+import { useParams } from "react-router-dom";
+import axios from 'axios';
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
-const Orders = () => {
-  const [orderProjects, setOrderProjects] = useState(null);
-  const [orderType, setorderType] = useState(1);
-  //載入api
+const baseUrl = import.meta.env.VITE_API_URL;
+
+interface Order {
+  orderId: number;
+  projectId: number;
+  member: {
+    username: string;
+  };
+  shipDate: string;
+  donate: number;
+  thumbnail: string;
+  isEdit?: boolean;
+}
+
+interface OrderListProps {
+  projectId: number;
+}
+
+const OrderList : React.FC<OrderListProps>=() => {
+  const [orderList, setOrderList] = useState<Order[] | null>(null);
+  const { projectId } = useParams();
+
+//載入api
+  const getOrderList = async (projectId:number) => {
+    try {
+      const response = await axios.get(`${baseUrl}/Order/Project/${projectId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching orderProjects:', error);
+      throw error; 
+    }
+  };
+  getOrderList(projectId);
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const fetchedOrderProjects = await getOrderProjects();
-        setOrderProjects(
-          fetchedOrderProjects.map((orderProject) => ({
-            ...orderProject,
+        const fetchedOrderProjects = await getOrderList(projectId);
+        setOrderList(
+          fetchedOrderProjects.map((order: Order) => ({
+            ...order,
             isEdit: false,
           }))
         );
         //console.log('fetchedOrderProjectLists:', fetchedOrderProjectLists); // 確認資料是否成功加載
       } catch (error) {
-        console.error("Error fetching orderProjects:", error);
+        console.error("Error fetching orderList:", error);
       }
     };
 
     fetchOrders();
-  }, []);
+  }, [projectId]);
+
   return (
     <>
 <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 <div className="col-span-full xl:col-span-6 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
       <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-        <h2 className="font-semibold text-slate-800 dark:text-slate-100">Staff名單</h2>
+        <h2 className="font-semibold text-slate-800 dark:text-slate-100">贊助清單</h2>
       </header>
       <div className="p-3">
 
@@ -48,41 +80,52 @@ const Orders = () => {
                   <div className="font-semibold text-left">贊助人</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-left">贊助方案</div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
                   <div className="font-semibold text-left">贊助日期</div>
                 </th>
                 <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">Donate</div>
+                  <div className="font-semibold text-left">Price</div>
+                </th>
+                <th className="p-2 whitespace-nowrap">
+                  <div className="font-semibold text-center">Donate</div>
                 </th>
               </tr>
             </thead>
             {/* Table body */}
-            {/* <tbody className="text-sm divide-y divide-slate-100 dark:divide-slate-700">
+            <tbody className="text-sm divide-y divide-slate-100 dark:divide-slate-700">
               {
-                members &&members.map((member) => (
-                    <tr key={member.id}>
+                orderList &&orderList.map((item) => (
+                    <tr key={item.orderId}>
                       <td className="p-2 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="w-10 h-10 shrink-0 mr-2 sm:mr-3">
-                            <img className="rounded-full w-10 h-10" src={member.thumbnail} loading="lazy"/>
-                          </div>
-                          <div className="font-medium text-slate-800 dark:text-slate-100">{member.nickname}</div>
+                          <div className="font-medium text-slate-800 dark:text-slate-100">{item.orderId}</div>
                         </div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-left">{member.username}</div>
+                      <div className="flex items-center">
+                      <div className="w-10 h-10 shrink-0 mr-2 sm:mr-3">
+                            <img className="rounded-full w-10 h-10" src={item.member.thumbnail} loading="lazy"/>
+                          </div>
+                        <div className="text-left">{item.member.username}</div>
+                        </div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium text-green-500">{member.email}</div>
+                        <div className="text-left font-medium">{item.orderDetails.projectName} X {item.orderDetails.count}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium">{member.phone}</div>
+                        <div className="text-left font-medium text-green-500">{item.orderDate}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">專案發起人</div>
+                        <div className="text-left font-medium">{item.orderDetails.price ?? 0}</div>
+                      </td>
+                      <td className="p-2 whitespace-nowrap">
+                        <div className="text-center font-medium">{item.donate ?? 0}</div>
                       </td>
                     </tr>
                 ))}
-            </tbody> */}
+            </tbody>
           </table>
 
         </div>
@@ -94,4 +137,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrderList;
