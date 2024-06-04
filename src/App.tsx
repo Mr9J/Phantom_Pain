@@ -23,11 +23,13 @@ import {
   Browser,
   CreatePost,
   EditPost,
+  EmailVerify,
   PostDetails,
   Profile,
   Social,
   UpdateProfile,
 } from "./views/auth/pages";
+import LoggedInLayout from "./views/auth/LoggedInLayout";
 
 const App = () => {
   return (
@@ -50,6 +52,14 @@ const App = () => {
           {/* public routes */}
 
           {/* private routes */}
+
+          <Route element={<LoggedInLayout />}>
+            <Route
+              path="/email-verify/:username/:Eid/*"
+              element={<EmailVerify />}
+            />
+          </Route>
+
           <Route element={<AuthLayout />}>
             <Route path="/social" element={<Social />} />
             <Route path="/browser" element={<Browser />} />

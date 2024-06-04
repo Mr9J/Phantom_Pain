@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
-import headerLogo from "@/assets/_shared_img/logo.jpg";
+import headerLogo from "@/assets/_shared_img/logo.png";
 
 const exploreItems = [
   {

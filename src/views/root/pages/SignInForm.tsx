@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SignInValidation } from "@/lib/validation";
-import logo from "@/assets/_shared_img/logo.jpg";
+import logo from "@/assets/_shared_img/logo.png";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";

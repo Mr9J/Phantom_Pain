@@ -61,3 +61,18 @@ export function signOut() {
     console.log(error);
   }
 }
+
+export async function verifyEmail(username: string, Eid: string) {
+  try {
+    const res = await axios.get(
+      `${URL}/Verify/verify-email/${username}/${Eid}`
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}

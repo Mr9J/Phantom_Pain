@@ -1,11 +1,12 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import logo from "@/assets/_shared_img/logo.jpg";
+import logo from "@/assets/_shared_img/logo.png";
 import { useUserContext } from "@/context/AuthContext";
 import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
 import { signOut } from "@/services/auth.service";
+import { ModeSwitch } from "./dark-theme/mode-switch";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const LeftSidebar = () => {
           })}
         </ul>
       </div>
+      <ModeSwitch />
       <Button
         variant="ghost"
         className="flex gap-4 items-center justify-start hover:bg-transparent hover:text-gray-400 !important"

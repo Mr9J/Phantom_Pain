@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import logo from "@/assets/_shared_img/logo.jpg";
+import logo from "@/assets/_shared_img/logo.png";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
 import { signOut } from "@/services/auth.service";
