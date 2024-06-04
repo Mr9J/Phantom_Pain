@@ -30,6 +30,7 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+import PlayGround from "./views/root/pages/PlayGround";
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/playground" element={<PlayGround />} />
           </Route>
 
           <Route element={<FormsLayout />}>
