@@ -41,3 +41,9 @@ export type INavLink = {
   to: string;
   label: string;
 };
+
+export type OuterSignIn = {
+  nickname: string;
+  username: string;
+  thumbnail: string;
+};

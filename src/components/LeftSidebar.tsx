@@ -1,6 +1,6 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/_shared_img/logo.png";
-import { INITIAL_USER, useUserContext } from "@/context/AuthContext";
+import { useUserContext } from "@/context/AuthContext";
 import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
 import { Button } from "./ui/button";

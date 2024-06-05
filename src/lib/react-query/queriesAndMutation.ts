@@ -1,8 +1,9 @@
-import { SignInDTO, SignUpDTO } from "@/types";
+import { OuterSignIn, SignInDTO, SignUpDTO } from "@/types";
 import {
   resetPassword,
   sendResetEmail,
   signIn,
+  signInWithOthers,
   signUp,
 } from "@/services/auth.service";
 import { useMutation } from "@tanstack/react-query";
@@ -35,5 +36,11 @@ export const useResetPassword = () => {
 export const useSendResetEmail = () => {
   return useMutation({
     mutationFn: (x: string) => sendResetEmail(x),
+  });
+};
+
+export const useSignInWithOthers = () => {
+  return useMutation({
+    mutationFn: (x: OuterSignIn) => signInWithOthers(x),
   });
 };
