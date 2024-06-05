@@ -19,15 +19,15 @@ function ProjectInfo() {
         console.error(error);
       }
     })();
-  }, [pid, URL]);
+  }, [URL, pid]);
 
   if (!project) return <NotFound></NotFound>;
   console.log(project);
 
   return (
     <>
-      <div className="w-full py-6">
-        <div className="flex flex-wrap lg:-mx-4 justify-center">
+      <div className="w-full pb-32">
+        <div className="flex flex-wrap lg:-mx-4 justify-center py-4">
           {/* 圖片 */}
           <div className=" lg:w-7/12 lg:px-4">
             {project && (
@@ -40,7 +40,7 @@ function ProjectInfo() {
           </div>
 
           {/* 簡介 */}
-          <div className="flex w-full flex-col justify-center px-4 lg:w-3/12">
+          <div className="flex w-full flex-col justify-center px-4  lg:w-3/12">
             <div className="mt-4 text-xs lg:mt-0">
               {/* 提案人 */}
               <div className="text-sm text-gray-500">
@@ -58,7 +58,7 @@ function ProjectInfo() {
 
             {/* 進度條 */}
             <Progress goal={project.projectGoal} value={1234}></Progress>
-            <p className="my-4 text-xs leading-relaxed tracking-wider text-gray-500">
+            <p className="my-4 text-sm leading-relaxed tracking-wider text-gray-500">
               {project.projectDescription}
             </p>
 
@@ -160,8 +160,8 @@ function ProjectInfo() {
             </div>
           </div>
         </div>
+        <ProjectToolBar></ProjectToolBar>
       </div>
-      <ProjectToolBar></ProjectToolBar>
     </>
   );
 }
