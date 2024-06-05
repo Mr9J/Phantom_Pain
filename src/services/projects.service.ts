@@ -26,3 +26,17 @@ export async function getAllProjects() {
     console.error(error);
   }
 }
+
+export const getHomeProjects = async () => {
+  try {
+    const response = await fetch(`${baseUrl}/Home`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    throw error; 
+  }
+};
