@@ -1,21 +1,36 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllProjects } from "@/services/projects.service";
+
+type ProjectProps = {
+  projectId: string;
+  projectName: string;
+  projectDescription: string;
+};
 
 const PlayGround = () => {
-  const [index, setIndex] = useState<number>(1);
+  const [data, setData] = useState<ProjectProps[]>([]);
+
+  const fetchData = async () => {
+    const result = await getAllProjects();
+    setData(result);
+    console.log(data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="flex w-full">
-      <input
-        type="number"
-        onChange={(e) => {
-          setIndex(Number(e.currentTarget.value));
-        }}
-      />
-      <img
-        src={`https://cdn.mumumsit158.com/member_thumbnail%2FMemberID-${index}-ThumbNail.jpg`}
-        alt=""
-        className="w-[500px]"
-      />
+      {data &&
+        data.map((project, index) => {
+          return (
+            <div key={project.projectId + " " + index} className="w-1/3">
+              <h1>{project.projectName}</h1>
+              <p>{project.projectDescription}</p>
+            </div>
+          );
+        })}
     </div>
   );
 };

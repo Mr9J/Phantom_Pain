@@ -45,3 +45,17 @@ export const PostValidation = z.object({
   location: z.string().min(2).max(200),
   tags: z.string(),
 });
+
+export const ResetPasswordValidation = z
+  .object({
+    password: PasswordValidation,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const SendResetEmailValidation = z.object({
+  email: z.string().email({ message: "Email格式不正確" }),
+});

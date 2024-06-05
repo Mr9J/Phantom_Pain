@@ -7,6 +7,7 @@ import Dashboard from "./manufacturer/Dashboard";
 import Projects from "./manufacturer/Projects";
 import Staffs from "./manufacturer/Staffs";
 import Orders from "./manufacturer/Orders";
+import OrderList from "./manufacturer/OrderList";
 
 export {
   Homepage,
@@ -17,4 +18,5 @@ export {
   Projects,
   Staffs,
   Orders,
+  OrderList,
 };

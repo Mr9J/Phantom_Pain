@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import { Route, Routes } from "react-router-dom";
+import { useParams, Route, Routes } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -11,6 +11,7 @@ import {
   Projects,
   Staffs,
   Orders,
+  OrderList,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -30,6 +31,11 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+
+import ResetPassword from "./views/root/pages/ResetPassword";
+import SendResetEmail from "./views/root/pages/SendResetEmail";
+import PlayGround from "./views/root/pages/PlayGround";
+import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 
 const App = () => {
@@ -44,11 +50,15 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/playground" element={<PlayGround />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} />
           </Route>
 
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
+            <Route path="/reset-password/:jwt" element={<ResetPassword />} />
+            <Route path="/send-reset-email" element={<SendResetEmail />} />
           </Route>
 
           {/* public routes */}
@@ -79,6 +89,7 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
+            <Route path="/manu/order/:projectId" element={<OrderList />} />
             <Route path="/manu" element={<Dashboard />} />
           </Route>
 
