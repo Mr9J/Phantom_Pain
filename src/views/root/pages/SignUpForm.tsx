@@ -114,14 +114,7 @@ const SignUpForm = () => {
                 <FormItem>
                   <FormLabel className="text-xl font-bold">帳號</FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      className="dark:shad-input"
-                      {...field}
-                      // onChangeCapture={(e) => {
-                      //   userExistHandler(e.currentTarget.value);
-                      // }}
-                    />
+                    <Input type="text" className="dark:shad-input" {...field} />
                   </FormControl>
                   <FormMessage className="dark:text-rose-500" />
                 </FormItem>

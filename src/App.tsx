@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import {useParams, Route, Routes } from "react-router-dom";
+import { useParams, Route, Routes } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -32,7 +32,12 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+
+import ResetPassword from "./views/root/pages/ResetPassword";
+import SendResetEmail from "./views/root/pages/SendResetEmail";
 import PlayGround from "./views/root/pages/PlayGround";
+import ProjectInfo from "./views/root/pages/ProjectInfo";
+import SubHome from "./views/root/pages/SubHome";
 
 const App = () => {
   return (
@@ -42,21 +47,24 @@ const App = () => {
           {/* public routes */}
           <Route element={<RootLayout />}>
             <Route index element={<Homepage />} />
+            <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/playground" element={<PlayGround />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} />
           </Route>
 
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
+            <Route path="/reset-password/:jwt" element={<ResetPassword />} />
+            <Route path="/send-reset-email" element={<SendResetEmail />} />
           </Route>
 
           {/* public routes */}
 
           {/* private routes */}
-
 
           <Route element={<LoggedInLayout />}>
             <Route
@@ -84,6 +92,7 @@ const App = () => {
             <Route path="/manu/orders" element={<Orders />} />
             <Route path="/manu/order/:projectId" element={<OrderList projectId={0}/>} />
             <Route path="/manu" element={<Remind />} />
+
           </Route>
 
         </Routes>
