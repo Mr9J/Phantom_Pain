@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "@/assets/_shared_img/logo.png";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
-import { signOut } from "@/services/auth.service";
+import { signOutNative } from "@/services/auth.service";
 import { useUserContext } from "@/context/AuthContext";
 
 const Topbar = () => {
@@ -10,7 +10,7 @@ const Topbar = () => {
   const { user } = useUserContext();
 
   const signOutHandler = () => {
-    signOut();
+    signOutNative();
     navigate("/");
   };
 

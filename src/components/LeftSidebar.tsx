@@ -5,7 +5,7 @@ import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
-import { signOut } from "@/services/auth.service";
+import { signOutNative } from "@/services/auth.service";
 import { ModeSwitch } from "./dark-theme/mode-switch";
 
 const LeftSidebar = () => {
@@ -14,7 +14,7 @@ const LeftSidebar = () => {
   const { user } = useUserContext();
 
   const signOutHandler = () => {
-    signOut();
+    signOutNative();
     navigate("/");
   };
 

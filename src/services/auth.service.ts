@@ -65,7 +65,7 @@ export async function getCurrentUser() {
   }
 }
 
-export function signOut() {
+export function signOutNative() {
   try {
     localStorage.removeItem("token");
   } catch (error) {
