@@ -33,6 +33,8 @@ import {
 import LoggedInLayout from "./views/auth/LoggedInLayout";
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
+import PlayGround from "./views/root/pages/PlayGround";
+import ProjectInfo from "./views/root/pages/ProjectInfo";
 
 const App = () => {
   return (
@@ -46,6 +48,7 @@ const App = () => {
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/playground" element={<PlayGround />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} />
           </Route>
 
           <Route element={<FormsLayout />}>
