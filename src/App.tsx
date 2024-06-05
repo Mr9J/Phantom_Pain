@@ -31,6 +31,7 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
 import PlayGround from "./views/root/pages/PlayGround";
