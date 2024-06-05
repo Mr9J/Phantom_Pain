@@ -26,3 +26,26 @@ export async function getAllProjects() {
     console.error(error);
   }
 }
+
+export async function getProjectCounts() {
+  try {
+    const res = await axios.get(`${baseUrl}/Project/Count`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const getHomeProjects = async () => {
+  try {
+    const response = await fetch(`${baseUrl}/Home`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    throw error; 
+  }
+};
