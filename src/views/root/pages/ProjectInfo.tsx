@@ -24,14 +24,14 @@ function ProjectInfo() {
   console.log(project);
 
   return (
-    <div className="w-full lg:my-8">
+    <div className="w-full py-6">
       <div className="flex flex-wrap lg:-mx-4">
         {/* 圖片 */}
         <div className="w-full lg:w-7/12 lg:px-4">
           {project && (
             <img
               className="w-full max-w-2xl"
-              src={project.thumbnail}
+              src={project.projectThumbnail}
               alt="Project Thumbnail"
             />
           )}
@@ -157,64 +157,6 @@ function ProjectInfo() {
             </button>
           </div>
         </div>
-      </div>
-      <div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos,
-        doloremque id optio fugiat voluptatibus porro tempora quibusdam
-        laudantium, molestiae cumque debitis nesciunt ipsam exercitationem atque
-        natus modi officiis eum animi molestias, magni officia nam architecto
-        voluptas odio? Eveniet quaerat sit explicabo. Aliquam pariatur tempore
-        possimus porro magnam nisi repudiandae quis? Explicabo, molestiae
-        nesciunt! Repellat quis quos nulla doloremque totam quia delectus natus
-        ullam, incidunt, provident eum, omnis dolorem! Mollitia magni maxime
-        maiores atque nesciunt voluptas optio, perspiciatis, quis obcaecati
-        repudiandae aperiam dolorem amet omnis quidem vero enim veniam aliquam
-        necessitatibus eos ullam adipisci rem. Neque delectus dolore aliquid,
-        nesciunt facilis explicabo doloremque. Ut quidem quasi suscipit veniam
-        voluptates? Ab alias fugit molestias quisquam quaerat facilis ex.
-        Doloremque eius sequi iure, repudiandae ipsa id beatae obcaecati ab
-        maxime nulla qui, sunt molestias voluptas animi aspernatur odio eligendi
-        ex cumque. Eos quisquam aperiam eius! Perspiciatis eius deserunt soluta
-        maiores eum cum nostrum! Explicabo non error eaque vitae aperiam
-        necessitatibus suscipit doloribus fugit, iure velit architecto eum animi
-        illum consequatur vero laudantium ipsa obcaecati nesciunt repudiandae,
-        officia voluptas harum tenetur quidem omnis! Expedita non doloribus, sed
-        qui veniam labore voluptate. Blanditiis ullam perspiciatis eius amet
-        dignissimos explicabo at doloremque aspernatur debitis eos possimus cum
-        quae aliquid, esse officiis distinctio unde libero exercitationem
-        provident voluptate. Illum dolorum ipsa eaque molestiae non. Et, vel,
-        quia consequuntur nesciunt odio nobis mollitia pariatur suscipit
-        delectus ipsum a magni officiis cupiditate consectetur! Ut, repudiandae
-        veniam fuga error consequatur voluptates voluptas voluptatum eum
-        voluptatem ex nesciunt veritatis exercitationem illum soluta sapiente id
-        in ipsa asperiores voluptatibus labore velit quam. Repellat maxime,
-        repudiandae beatae officia numquam quisquam cum, enim adipisci illo
-        voluptatibus delectus repellendus magnam dolore dolor voluptatum ipsam
-        doloribus soluta id nesciunt nemo deleniti explicabo. Quibusdam
-        necessitatibus explicabo ratione in iste reprehenderit rerum distinctio
-        aliquam velit eos placeat alias, porro nisi, corporis, nostrum dolore
-        asperiores fugiat fuga ut. Obcaecati consequuntur possimus quidem ullam
-        qui unde? Nobis rem, dolor vero dicta accusamus aperiam nostrum ipsum
-        excepturi exercitationem quos magnam eius, voluptas in sit rerum itaque
-        veniam repellat laborum hic delectus esse officiis modi perspiciatis.
-        Eligendi praesentium nostrum assumenda neque reiciendis possimus
-        obcaecati cupiditate temporibus vero eius. Repellat iusto eius, ipsam
-        quasi debitis, soluta qui esse voluptatum a sed non consectetur
-        voluptates. Ex reprehenderit maiores dolores est sequi atque quam unde,
-        minima a, omnis consequuntur vero repellat corporis quos dolorem ab
-        neque aperiam veritatis minus quasi commodi quod! Necessitatibus facilis
-        iure non doloremque sequi aut, nesciunt fugiat. Aspernatur rem veritatis
-        excepturi? Sint ullam obcaecati harum laborum veritatis voluptatibus
-        assumenda id aliquid aliquam error soluta culpa, sapiente corporis
-        incidunt beatae totam repellat architecto molestias inventore dolorum
-        nisi et iusto laboriosam asperiores! Cumque incidunt similique delectus
-        neque unde odio alias quis dicta odit. Tempora blanditiis repellat
-        dignissimos. Accusantium, officia vero nisi corporis laboriosam ab
-        tempora. Deserunt tempora quisquam dolorem quam aperiam maiores ipsum
-        beatae corrupti, nam suscipit est mollitia temporibus aliquam nisi.
-        Laborum ab veniam, laboriosam, tempora magni reprehenderit doloremque
-        voluptatum fuga, voluptatibus pariatur expedita praesentium voluptate.
-        Doloremque voluptas id dolorem ut illum.
       </div>
     </div>
   );
