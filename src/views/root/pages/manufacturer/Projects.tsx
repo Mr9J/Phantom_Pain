@@ -32,6 +32,7 @@ const Projects = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [projects, setProjects] = useState(null);
   const [formData, setFormData] = useState({});
+  const [orderType, setorderType] = useState(1);
   //下拉式選單
   const productTableClick = (itemId: string) => {
     setProductVisible((prevState) => ({
@@ -186,14 +187,69 @@ const Projects = () => {
               專案列表
             </h2>
           </header>
-          <div className="p-3">
+          <div className="p-3" >
+            {orderType === 1 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  全部
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(1);
+                  }}
+                >
+                  全部
+                </button>
+              )}
+              {orderType === 2 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  進行中
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(2);
+                  }}
+                >
+                  進行中
+                </button>
+              )}
+              {orderType === 3 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  已下架
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(3);
+                  }}
+                >
+                  已下架
+                </button>
+              )}
+              <div style={{ display: 'flex' }}>
             <button
               type="button"
               onClick={() => {
                 setvisibleProjectModal(!visibleProjectLg);
                 setAlter(false);
               }}
-              className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               <svg
                 className="w-[15px] h-[15px] fill-[#f2f2f2]"
@@ -204,6 +260,7 @@ const Projects = () => {
               </svg>
               <p className="text-base">新增專案</p>
             </button>
+            </div>
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="table-auto w-full dark:text-slate-300">

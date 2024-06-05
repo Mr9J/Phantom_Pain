@@ -12,16 +12,24 @@ interface Order {
   projectId: number;
   member: {
     username: string;
+    
   };
   shipDate: string;
   donate: number;
   thumbnail: string;
   isEdit?: boolean;
+  orderDetails:{
+  projectName: string;
+  thumbnail: string;
+
+  };
 }
 
 interface OrderListProps {
   projectId: number;
 }
+
+
 
 const OrderList : React.FC<OrderListProps>=() => {
   const [orderList, setOrderList] = useState<Order[] | null>(null);
@@ -37,12 +45,16 @@ const OrderList : React.FC<OrderListProps>=() => {
       throw error; 
     }
   };
-  getOrderList(projectId);
+ 
+  if (projectId !== undefined && !isNaN(Number(projectId))) {
+    getOrderList(Number(projectId));
+}
+  
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const fetchedOrderProjects = await getOrderList(projectId);
+        const fetchedOrderProjects = await getOrderList(Number(projectId));
         setOrderList(
           fetchedOrderProjects.map((order: Order) => ({
             ...order,
