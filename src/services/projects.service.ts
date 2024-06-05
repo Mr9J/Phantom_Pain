@@ -27,6 +27,15 @@ export async function getAllProjects() {
   }
 }
 
+export async function getProjectCounts() {
+  try {
+    const res = await axios.get(`${baseUrl}/Project/Count`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const getHomeProjects = async () => {
   try {
     const response = await fetch(`${baseUrl}/Home`);

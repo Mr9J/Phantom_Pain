@@ -8,6 +8,7 @@ import Projects from "./manufacturer/Projects";
 import Staffs from "./manufacturer/Staffs";
 import Orders from "./manufacturer/Orders";
 import OrderList from "./manufacturer/OrderList";
+import Remind from "./manufacturer/Remind";
 
 export {
   Homepage,
@@ -19,4 +20,5 @@ export {
   Staffs,
   Orders,
   OrderList,
+  Remind,
 };
