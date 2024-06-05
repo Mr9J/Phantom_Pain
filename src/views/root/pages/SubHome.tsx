@@ -1,8 +1,11 @@
-import { CarouselDemo } from "@/components/HomeCarousel"
+import { HomeCarousel } from "@/components/HomeCarousel";
 
-function SubHome(){
-    return(
-            <CarouselDemo/>
-    )
+function SubHome() {
+  return (
+    <>
+      <HomeCarousel />
+
+    </>
+  );
 }
-export default SubHome
+export default SubHome;
