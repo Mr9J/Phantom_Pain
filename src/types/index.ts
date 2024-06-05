@@ -46,4 +46,5 @@ export type OuterSignIn = {
   nickname: string;
   username: string;
   thumbnail: string;
+  uid: string;
 };

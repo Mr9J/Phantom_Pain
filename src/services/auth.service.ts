@@ -33,7 +33,10 @@ export async function signIn(user: SignInDTO) {
 export async function signInWithOthers(user: OuterSignIn) {
   try {
     const res = await axios.post(`${URL}/Member/sign-in-with-others`, user);
+
     if (res.status !== 200) throw Error;
+
+    localStorage.setItem("token", res.data);
 
     return res.data;
   } catch (error) {
@@ -44,8 +47,6 @@ export async function signInWithOthers(user: OuterSignIn) {
 export async function getCurrentUser() {
   try {
     const jwt = localStorage.getItem("token");
-
-    console.log("get called ");
 
     if (!jwt) throw Error;
 

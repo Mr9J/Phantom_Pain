@@ -44,14 +44,15 @@ const SignInForm = () => {
 
       const user: OuterSignIn = {
         nickname: result.user.displayName!,
-        username: result.user.email!,
+        username: result.user.email! + "," + result.providerId!,
         thumbnail: result.user.photoURL!,
+        uid: result.user.uid!,
       };
 
       const session = await signInWithOthers(user);
 
       if (!session) {
-        toast({ title: "發生錯誤，請稍後再試" });
+        toast({ title: "發生錯誤，請稍後再試 session" });
         return;
       }
 
