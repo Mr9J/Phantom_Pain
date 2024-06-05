@@ -15,7 +15,10 @@ const InsightSection = () => {
         viewport={{ once: false, amount: 0.25 }}
         className={`${styles.innerWidth} mx-auto flex flex-col`}
       >
-        <TypingText title="| Insight" textStyles="text-center" />
+        <TypingText
+          title="| Insight"
+          textStyles="text-center font-normal text-[14px] text-secondary-white"
+        />
         <TitleText title={<>Insight about mumu</>} textStyles="text-center" />
         <div className="mt-[50px] flex flex-col gap-[30px]">
           {insights.map((item, index) => (

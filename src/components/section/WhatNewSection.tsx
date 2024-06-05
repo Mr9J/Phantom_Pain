@@ -20,7 +20,10 @@ const WhatNewSection = () => {
           variants={fadeIn("right", "tween", 0.2, 1)}
           className="flex-[0.95] flex justify-center flex-col"
         >
-          <TypingText title="| Whats new?" textStyles="" />
+          <TypingText
+            title="| Whats new?"
+            textStyles="font-normal text-[14px] text-secondary-white"
+          />
           <TitleText title={<>What's new about Mumu?</>} textStyles="" />
           <div className="mt-[48px] flex flex-wrap justify-between gap-[24px]">
             {newFeatures.map((feature) => (

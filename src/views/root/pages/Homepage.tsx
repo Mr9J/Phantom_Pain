@@ -1,20 +1,18 @@
 import AboutSection from "@/components/section/AboutSection";
 import ExploreSection from "@/components/section/ExploreSection";
 import GetStartedSection from "@/components/section/GetStartedSection";
-import HeroSection from "@/components/section/HeroSection";
 import Navbar from "@/components/Navbar";
 import WhatNewSection from "@/components/section/WhatNewSection";
 import WorldSection from "@/components/section/WorldSection";
 import InsightSection from "@/components/section/InsightSection";
 import FeedBackSection from "@/components/section/FeedBackSection";
 import Footer from "@/components/section/Footer";
-import { ModeToggle } from "@/components/dark-theme/mode-toggle";
+import HeroSection from "@/components/section/HeroSection";
 
 const Homepage = () => {
   return (
     <>
       <div className="overflow-hidden">
-        <ModeToggle />
         <Navbar />
         <HeroSection />
         <div className="relative">

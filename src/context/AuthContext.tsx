@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
 import { CurrentUserDTO } from "@/types";
 import { getCurrentUser } from "@/services/auth.service";
@@ -7,6 +6,7 @@ const INITIAL_USER = {
   id: "",
   username: "",
   email: "",
+  nickname: "",
 };
 
 const INITIAL_STATE = {
@@ -30,7 +30,6 @@ type IContextType = {
 const AuthContext = createContext<IContextType>(INITIAL_STATE);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
   const [user, setUser] = useState<CurrentUserDTO>(INITIAL_USER);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           id: currentUser.id,
           username: currentUser.username,
           email: currentUser.email,
+          nickname: currentUser.nickname,
         });
 
         setIsAuthenticated(true);
@@ -63,10 +63,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token === "[]" || token === null || token === undefined) {
-      navigate("/sign-in");
+      // window.alert("請先登入");
+      // navigate("/sign-in");
     }
 
-    checkAuthUser();
+    checkAuthUser().then((res) => {
+      setIsAuthenticated(res);
+    });
   }, []);
 
   const value = {
