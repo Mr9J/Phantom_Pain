@@ -12,6 +12,7 @@ import {
   Staffs,
   Orders,
   OrderList,
+  Remind,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -81,11 +82,10 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/manu/order/:projectId" element={<OrderList/>} />
-            <Route path="/manu" element={<Dashboard />} />
+            <Route path="/manu/order/:projectId" element={<OrderList projectId={0}/>} />
+            <Route path="/manu" element={<Remind />} />
           </Route>
 
-          <Route path="/manu/dashboard" element={<Dashboard />} />
         </Routes>
 
         <Toaster />

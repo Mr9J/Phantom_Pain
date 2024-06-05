@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-//import { getOrderList } from "@/services/orders.service";
 import { useParams } from "react-router-dom";
+import numeral from "numeral";
 import axios from 'axios';
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
@@ -57,6 +57,7 @@ const OrderList : React.FC<OrderListProps>=() => {
 
     fetchOrders();
   }, [projectId]);
+  
 
   return (
     <>
@@ -118,10 +119,10 @@ const OrderList : React.FC<OrderListProps>=() => {
                         <div className="text-left font-medium text-green-500">{item.orderDate}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium">{item.orderDetails.price ?? 0}</div>
+                        <div className="text-left font-medium">{numeral(item.orderDetails.price).format("0,0")}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-center font-medium">{item.donate ?? 0}</div>
+                        <div className="text-center font-medium">{numeral(item.donate).format("0,0")}</div>
                       </td>
                     </tr>
                 ))}

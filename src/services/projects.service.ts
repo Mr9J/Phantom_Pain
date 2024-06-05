@@ -26,3 +26,12 @@ export async function getAllProjects() {
     console.error(error);
   }
 }
+
+export async function getProjectCounts() {
+  try {
+    const res = await axios.get(`${baseUrl}/Project/Count`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
