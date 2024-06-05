@@ -30,10 +30,6 @@ export async function signIn(user: SignInDTO) {
   }
 }
 
-export async function checkUserExist(username: string) {
-  return axios.get(`${URL}/Member/check-username/${username}`);
-}
-
 export async function getCurrentUser() {
   try {
     const jwt = localStorage.getItem("token");
@@ -80,8 +76,24 @@ export async function verifyEmail(username: string, Eid: string) {
 
 export async function resetPassword(password: string, jwt: string) {
   try {
-    const res = await axios.post(`${URL}/Member/change-password`, password, {
-      headers: { Authorization: "Bearer " + jwt },
+    const res = await axios.post(
+      `${URL}/Member/change-password`,
+      { password },
+      { params: { password }, headers: { Authorization: "Bearer " + jwt } }
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function sendResetEmail(email: string) {
+  try {
+    const res = await axios.post(`${URL}/Member/reset-password`, email, {
+      params: { email },
     });
 
     if (res.status !== 200) throw Error;
