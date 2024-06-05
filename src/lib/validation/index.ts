@@ -55,3 +55,7 @@ export const ResetPasswordValidation = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const SendResetEmailValidation = z.object({
+  email: z.string().email({ message: "Email格式不正確" }),
+});
