@@ -30,18 +30,15 @@ export async function signIn(user: SignInDTO) {
   }
 }
 
-export async function checkUserExist(username: string) {
-  return axios.get(`${URL}/Member/check-username/${username}`);
-}
-
 export async function getCurrentUser() {
   try {
     const jwt = localStorage.getItem("token");
-    const res = await axios.post(
-      `${URL}/Member/get-current-user`,
-      { jwt },
-      { params: { jwt }, headers: { Authorization: jwt } }
-    );
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/get-current-user`, {
+      headers: { Authorization: jwt },
+    });
 
     const currentUser: CurrentUserDTO = res.data;
 
@@ -74,5 +71,35 @@ export async function verifyEmail(username: string, Eid: string) {
   } catch (error) {
     console.error(error);
     return false;
+  }
+}
+
+export async function resetPassword(password: string, jwt: string) {
+  try {
+    const res = await axios.post(
+      `${URL}/Member/change-password`,
+      { password },
+      { params: { password }, headers: { Authorization: "Bearer " + jwt } }
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function sendResetEmail(email: string) {
+  try {
+    const res = await axios.post(`${URL}/Member/reset-password`, email, {
+      params: { email },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
   }
 }
