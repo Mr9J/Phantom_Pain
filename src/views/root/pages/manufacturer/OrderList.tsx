@@ -2,28 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import numeral from "numeral";
 import axios from 'axios';
+import { Order } from "@/types/index";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
 const baseUrl = import.meta.env.VITE_API_URL;
-
-interface Order {
-  orderId: number;
-  projectId: number;
-  member: {
-    username: string;
-    
-  };
-  shipDate: string;
-  donate: number;
-  thumbnail: string;
-  isEdit?: boolean;
-  orderDetails:{
-  projectName: string;
-  thumbnail: string;
-
-  };
-}
 
 interface OrderListProps {
   projectId: number;
@@ -140,9 +123,7 @@ const OrderList : React.FC<OrderListProps>=() => {
                 ))}
             </tbody>
           </table>
-
         </div>
-
       </div>
     </div>
     </div>

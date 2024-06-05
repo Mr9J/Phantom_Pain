@@ -1,20 +1,21 @@
 import  { useState, useEffect } from "react";
 import { getOrderProjects } from "@/services/orders.service";
 import { getProjectCounts } from "@/services/projects.service";
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+import { OrderProject } from "@/types/index";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
 const Orders = () => {
-  const [orderProjects, setOrderProjects] = useState(null);
+  const [orderProjects, setOrderProjects] = useState<OrderProject[] | null>(null);
   const [orderType, setorderType] = useState(1);
-  const [projectCount, setProjectCount] = useState([]);
+  const [projectCount, setProjectCount] = useState<ProjectCount[]>([]);
   const [projectStatus, setProjectStatus] = useState(-1);
+  type ProjectCount = number[];
   //載入api
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const fetchedOrderProjects = await getOrderProjects();
+        const fetchedOrderProjects: OrderProject[] = await getOrderProjects();
         setOrderProjects(
           fetchedOrderProjects.map((orderProject) => ({
             ...orderProject,
@@ -30,10 +31,11 @@ const Orders = () => {
     fetchOrders();
   }, []);
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchProjectCount = async () => {
       try {
         const fetchedProjectCount = await getProjectCounts();
-        fetchedProjectCount.map((item) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        fetchedProjectCount.map((item: any) => ({
           ...item,
           isEdit: false,
         }));
@@ -44,7 +46,7 @@ const Orders = () => {
       }
     };
 
-    fetchProjects();
+    fetchProjectCount();
   }, []);
   return (
     <>
@@ -125,7 +127,6 @@ const Orders = () => {
                             <div className="relative h-80 w-full overflow-hidden rounded-t-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
                               <img
                                 src={item.thumbnail}
-                                alt={item.imageAlt}
                                 className="h-full w-full object-cover object-center"
                               />
                             </div>
@@ -153,7 +154,6 @@ const Orders = () => {
                           <div className="relative h-80 w-full overflow-hidden rounded-t-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
                             <img
                               src={item.thumbnail}
-                              alt={item.imageAlt}
                               className="h-full w-full object-cover object-center"
                             />
                           </div>
