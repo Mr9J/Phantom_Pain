@@ -15,7 +15,7 @@ const Hero2Section = () => {
       initial="hidden"
       whileInView="show"
       viewport={{ once: false, amount: 0.25 }}
-      className="w-screen h-screen"
+      className="w-screen"
     >
       <div
         className="overflow-hidden relative"

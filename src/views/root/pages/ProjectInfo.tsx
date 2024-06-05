@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NotFound from "./NotFound";
 import Progress from "@/components/explore/Progress";
+import ProjectToolBar from "@/components/explore/ProjectToolBar";
 
 function ProjectInfo() {
   const { pid } = useParams();
@@ -160,11 +161,7 @@ function ProjectInfo() {
           </div>
         </div>
       </div>
-      <div>
-        <Progress goal={100} value={80}></Progress>
-        <Progress goal={100} value={80}></Progress>
-        <Progress goal={100} value={80}></Progress>
-      </div>
+      <ProjectToolBar></ProjectToolBar>
     </>
   );
 }
