@@ -34,6 +34,8 @@ export async function getCurrentUser() {
   try {
     const jwt = localStorage.getItem("token");
 
+    console.log("get called ");
+
     if (!jwt) throw Error;
 
     const res = await axios.get(`${URL}/Member/get-current-user`, {

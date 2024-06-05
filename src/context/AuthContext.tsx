@@ -2,14 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { CurrentUserDTO } from "@/types";
 import { getCurrentUser } from "@/services/auth.service";
 
-const INITIAL_USER = {
+export const INITIAL_USER = {
   id: "",
   username: "",
   email: "",
   nickname: "",
 };
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   user: INITIAL_USER,
   isLoading: false,
   isAuthenticated: false,
@@ -63,8 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token === "[]" || token === null || token === undefined) {
-      // window.alert("請先登入");
-      // navigate("/sign-in");
+      return;
     }
 
     checkAuthUser().then((res) => {
