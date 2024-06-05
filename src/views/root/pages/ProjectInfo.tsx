@@ -4,11 +4,17 @@ import axios from "axios";
 import NotFound from "./NotFound";
 import Progress from "@/components/explore/Progress";
 import ProjectToolBar from "@/components/explore/ProjectToolBar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function ProjectInfo() {
   const { pid } = useParams();
   const URL = import.meta.env.VITE_API_URL;
-  const [project, setProject] = useState();
+  const [project, setProject] = useState<{
+    projectThumbnail: string;
+    projectName: string;
+    projectGoal: number;
+    projectDescription: string;
+  } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -161,6 +167,23 @@ function ProjectInfo() {
           </div>
         </div>
         <ProjectToolBar></ProjectToolBar>
+
+        {/* 下半部 */}
+        <div className="w-full lg:-mx-4 flex justify-center">
+          <div className="lg:w-7/12 lg:px-4">
+            <Tabs defaultValue="details" className="w-[400px]">
+              <TabsList>
+                <TabsTrigger value="details">專案內容</TabsTrigger>
+                <TabsTrigger value="qa">常見問答</TabsTrigger>
+                <TabsTrigger value="comments">留言</TabsTrigger>
+              </TabsList>
+              <TabsContent value="details">放專案內容</TabsContent>
+              <TabsContent value="qa">放 Q&A</TabsContent>
+              <TabsContent value="comments">放留言</TabsContent>
+            </Tabs>
+          </div>
+          <div className="lg:w-3/12 lg:px-4">放商品卡片</div>
+        </div>
       </div>
     </>
   );
