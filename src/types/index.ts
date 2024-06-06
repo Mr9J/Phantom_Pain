@@ -42,6 +42,35 @@ export type INavLink = {
   to: string;
   label: string;
 };
+export type Order = {
+  orderId: number;
+  projectId: number;
+  member: {
+    username: string;
+    thumbnail: string;
+  };
+  orderDate: string;
+  shipDate: string;
+  donate: number;
+  thumbnail: string;
+  isEdit?: boolean;
+  orderDetails: {
+    projectName: string;
+    thumbnail: string;
+    count: number;
+    price: number;
+  };
+};
+export type OrderProject = {
+  orderId: number;
+  projectId: number;
+  projectName: string;
+  thumbnail: string;
+  statusId: number;
+  orderCount: number;
+  sponsorCount: number;
+  isEdit?: boolean;
+};
 
 export type OuterSignIn = {
   nickname: string;

@@ -12,6 +12,7 @@ import {
   Staffs,
   Orders,
   OrderList,
+  Remind,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -31,9 +32,12 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
+
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
 import Users from "./views/root/pages/Users";
+import ProjectInfo from "./views/root/pages/ProjectInfo";
+import SubHome from "./views/root/pages/SubHome";
 
 const App = () => {
   return (
@@ -43,10 +47,13 @@ const App = () => {
           {/* public routes */}
           <Route element={<RootLayout />}>
             <Route index element={<Homepage />} />
+            <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:username" element={<Users />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} />
+
           </Route>
 
           <Route element={<FormsLayout />}>
@@ -84,11 +91,11 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/manu/order/:projectId" element={<OrderList />} />
-            <Route path="/manu" element={<Dashboard />} />
+            <Route path="/manu/order/:projectId" element={<OrderList projectId={0}/>} />
+            <Route path="/manu" element={<Remind />} />
+
           </Route>
 
-          <Route path="/manu/dashboard" element={<Dashboard />} />
         </Routes>
 
         <Toaster />
