@@ -13,10 +13,13 @@ import {
   Orders,
   OrderList,
   Remind,
+  AdminProjects,
+  AdminStaffs,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
 import ManuLayout from "./views/root/pages/ManuLayout";
+import AdminLayout from "./views/root/pages/AdminLayout";
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "./views/root/pages/NotFound";
 import {
@@ -92,7 +95,11 @@ const App = () => {
             <Route path="/manu/orders" element={<Orders />} />
             <Route path="/manu/order/:projectId" element={<OrderList projectId={0}/>} />
             <Route path="/manu" element={<Remind />} />
+          </Route>
 
+          <Route element={<AdminLayout />}>
+            <Route path="/admin/projects" element={<AdminProjects />} />
+            <Route path="/admin/staffs" element={<AdminStaffs />} />
           </Route>
 
         </Routes>

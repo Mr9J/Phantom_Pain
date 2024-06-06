@@ -68,7 +68,7 @@ const Projects = () => {
       }
     }
   };
-  //Modal資訊
+  //專案狀態篩選
   useEffect(() => {
     const fetchProjectCount= async () => {
       try {
@@ -158,7 +158,7 @@ const Projects = () => {
   const handleConfirmSubmit = () => {
     const url = visibleProductLg
       ? alterText
-        ? `${baseUrl}/product/${formData.id}`
+        ? `endDate`
         : `${baseUrl}/product`
       : alterText
       ? `${baseUrl}/project/${formData.id}`
