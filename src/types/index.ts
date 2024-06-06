@@ -26,6 +26,7 @@ export type CurrentUserDTO = {
   username: string;
   email: string;
   nickname: string;
+  thumbnail: string;
 };
 
 export type PropsTestType = {

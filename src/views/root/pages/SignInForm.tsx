@@ -17,21 +17,22 @@ import logo from "@/assets/_shared_img/logo.png";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";
+import { useSignInAccount } from "@/lib/react-query/queriesAndMutation";
 import {
-  useSignInAccount,
-  useSignInWithOthers,
-} from "@/lib/react-query/queriesAndMutation";
-import { auth, GoogleProvide } from "@/config/firebase";
+  auth,
+  GoogleProvide,
+  FacebookProvide,
+  GithubProvide,
+} from "@/config/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { OuterSignIn } from "@/types";
+import { signInWithOthers } from "@/services/auth.service";
 
 const SignInForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
   const { mutateAsync: signIn, isPending } = useSignInAccount();
-  const { mutateAsync: signInWithOthers, isPending: isGoogleLoading } =
-    useSignInWithOthers();
 
   const googleHandler = async () => {
     try {
@@ -70,7 +71,79 @@ const SignInForm = () => {
     }
   };
 
-  const facebookHandler = () => {};
+  const facebookHandler = async () => {
+    try {
+      const result = await signInWithPopup(auth, FacebookProvide);
+
+      if (!result) {
+        toast({ title: "登入失敗，請再試一次" });
+        return;
+      }
+
+      const user: OuterSignIn = {
+        nickname: result.user.providerData[0].displayName!,
+        username: result.user.providerData[0].email + "," + result.providerId!,
+        thumbnail: result.user.providerData[0].photoURL!,
+        uid: result.user.uid!,
+      };
+
+      const session = await signInWithOthers(user);
+
+      if (!session) {
+        toast({ title: "發生錯誤，請稍後再試 session" });
+        return;
+      }
+
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        window.alert("登入成功，您將被導向至首頁");
+        navigate("/");
+      } else {
+        toast({ title: "登入失敗，請再試一次" });
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const githubHandler = async () => {
+    try {
+      const result = await signInWithPopup(auth, GithubProvide);
+
+      if (!result) {
+        toast({ title: "登入失敗，請再試一次" });
+        return;
+      }
+
+      const user: OuterSignIn = {
+        nickname: "Guest",
+        username: result.user.providerData[0].email + "," + result.providerId!,
+        thumbnail: result.user.providerData[0].photoURL!,
+        uid: result.user.uid!,
+      };
+
+      const session = await signInWithOthers(user);
+
+      if (!session) {
+        toast({ title: "發生錯誤，請稍後再試 session" });
+        return;
+      }
+
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        window.alert("登入成功，您將被導向至首頁");
+        navigate("/");
+      } else {
+        toast({ title: "登入失敗，請再試一次" });
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const form = useForm<z.infer<typeof SignInValidation>>({
     resolver: zodResolver(SignInValidation),
@@ -176,7 +249,12 @@ const SignInForm = () => {
             >
               Facebook
             </Button>
-            <Button className="flex-1 ml-2 shad-button_primary">X</Button>
+            <Button
+              className="flex-1 ml-2 shad-button_primary"
+              onClick={githubHandler}
+            >
+              GitHub
+            </Button>
           </div>
           <p className="text-center mt-4 text-xl">
             忘記密碼？

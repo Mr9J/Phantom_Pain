@@ -26,7 +26,7 @@ const LeftSidebar = () => {
         </Link>
         <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
           <img
-            src={`https://cdn.mumumsit158.com/Members/MemberID-${user.id}-ThumbNail.jpg`}
+            src={user.thumbnail}
             alt="thumbnail"
             className="h-16 w-16 rounded-full"
           />
@@ -35,7 +35,7 @@ const LeftSidebar = () => {
               {user.nickname}
             </p>
             <p className="text-[14px] font-normal leading-[140%]">
-              @{user.username}
+              @{user.username.split(",")[0]}
             </p>
           </div>
         </Link>

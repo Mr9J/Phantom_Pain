@@ -2,14 +2,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { CurrentUserDTO } from "@/types";
 import { getCurrentUser } from "@/services/auth.service";
 
-export const INITIAL_USER = {
+const INITIAL_USER = {
   id: "",
   username: "",
   email: "",
   nickname: "",
+  thumbnail: "",
 };
 
-export const INITIAL_STATE = {
+const INITIAL_STATE = {
   user: INITIAL_USER,
   isLoading: false,
   isAuthenticated: false,
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           username: currentUser.username,
           email: currentUser.email,
           nickname: currentUser.nickname,
+          thumbnail: currentUser.thumbnail,
         });
 
         setIsAuthenticated(true);
