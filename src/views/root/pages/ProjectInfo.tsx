@@ -171,11 +171,12 @@ function ProjectInfo() {
         {/* 下半部 */}
         <div className="w-full lg:-mx-4 flex justify-center">
           <div className="lg:w-7/12 lg:px-4">
-            <Tabs defaultValue="details" className="w-[400px]">
-              <TabsList>
+            <Tabs defaultValue="details" className="w-full">
+              <TabsList className="w-full justify-around">
                 <TabsTrigger value="details">專案內容</TabsTrigger>
                 <TabsTrigger value="qa">常見問答</TabsTrigger>
                 <TabsTrigger value="comments">留言</TabsTrigger>
+                <div>test</div>
               </TabsList>
               <TabsContent value="details">放專案內容</TabsContent>
               <TabsContent value="qa">放 Q&A</TabsContent>
