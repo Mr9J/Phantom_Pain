@@ -2,15 +2,18 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "@/assets/_shared_img/logo.png";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
-import { signOut } from "@/services/auth.service";
+import { signOutNative } from "@/services/auth.service";
 import { useUserContext } from "@/context/AuthContext";
+import { auth } from "@/config/firebase";
+import { signOut } from "firebase/auth";
 
 const Topbar = () => {
   const navigate = useNavigate();
   const { user } = useUserContext();
 
   const signOutHandler = () => {
-    signOut();
+    signOutNative();
+    signOut(auth);
     navigate("/");
   };
 
@@ -33,7 +36,7 @@ const Topbar = () => {
             className="flex justify-center items-center gap-3"
           >
             <img
-              src={`https://cdn.mumumsit158.com/Members/MemberID-${user.id}-ThumbNail.jpg`}
+              src={user.thumbnail}
               alt="thumbnail"
               className="h-8 w-8 rounded-full"
             />

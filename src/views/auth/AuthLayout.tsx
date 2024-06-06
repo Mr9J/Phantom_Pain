@@ -13,7 +13,7 @@ const AuthLayout = () => {
     checkAuthUser().then((res) => {
       setIsAuth(res);
     });
-  }, [checkAuthUser]);
+  }, []);
 
   return (
     <>

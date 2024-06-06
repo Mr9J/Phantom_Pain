@@ -7,6 +7,7 @@ const INITIAL_USER = {
   username: "",
   email: "",
   nickname: "",
+  thumbnail: "",
 };
 
 const INITIAL_STATE = {
@@ -44,12 +45,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           username: currentUser.username,
           email: currentUser.email,
           nickname: currentUser.nickname,
+          thumbnail: currentUser.thumbnail,
         });
 
         setIsAuthenticated(true);
 
         return true;
       }
+
       return false;
     } catch (error) {
       console.error(error);
@@ -63,8 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token === "[]" || token === null || token === undefined) {
-      // window.alert("請先登入");
-      // navigate("/sign-in");
+      return;
     }
 
     checkAuthUser().then((res) => {
