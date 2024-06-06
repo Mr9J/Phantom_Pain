@@ -26,6 +26,7 @@ export type CurrentUserDTO = {
   username: string;
   email: string;
   nickname: string;
+  thumbnail: string;
 };
 
 export type PropsTestType = {
@@ -48,16 +49,16 @@ export type Order = {
     username: string;
     thumbnail: string;
   };
-  orderDate:string;
+  orderDate: string;
   shipDate: string;
   donate: number;
   thumbnail: string;
   isEdit?: boolean;
-  orderDetails:{
-  projectName: string;
-  thumbnail: string;
-  count : number;
-  price: number;
+  orderDetails: {
+    projectName: string;
+    thumbnail: string;
+    count: number;
+    price: number;
   };
 };
 export type OrderProject = {
@@ -69,6 +70,14 @@ export type OrderProject = {
   orderCount: number;
   sponsorCount: number;
   isEdit?: boolean;
+};
+
+export type OuterSignIn = {
+  nickname: string;
+  username: string;
+  thumbnail: string;
+  uid: string;
+};
 }
 export type ProjectCardDTO={
   projectId:number;
@@ -79,3 +88,4 @@ export type ProjectCardDTO={
   totalAmount:number;
   sponsorCount:number;
 }
+

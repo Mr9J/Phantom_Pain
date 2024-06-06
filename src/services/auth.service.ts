@@ -1,4 +1,4 @@
-import { CurrentUserDTO, SignInDTO, SignUpDTO } from "@/types";
+import { CurrentUserDTO, OuterSignIn, SignInDTO, SignUpDTO } from "@/types";
 import axios from "axios";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -19,6 +19,20 @@ export async function signUp(user: SignUpDTO) {
 export async function signIn(user: SignInDTO) {
   try {
     const res = await axios.post(`${URL}/Member/sign-in`, user);
+
+    if (res.status !== 200) throw Error;
+
+    localStorage.setItem("token", res.data);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function signInWithOthers(user: OuterSignIn) {
+  try {
+    const res = await axios.post(`${URL}/Member/sign-in-with-others`, user);
 
     if (res.status !== 200) throw Error;
 
@@ -51,7 +65,7 @@ export async function getCurrentUser() {
   }
 }
 
-export function signOut() {
+export function signOutNative() {
   try {
     localStorage.removeItem("token");
   } catch (error) {
