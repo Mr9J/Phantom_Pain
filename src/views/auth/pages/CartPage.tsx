@@ -1,17 +1,36 @@
 import { useEffect, useState } from "react";
 import { getLoadCartPage, deleteProductFromCart } from "@/services/Cart.service";
 
+interface CartDetailDTO {
+    projectId: number;
+    projectName?: string | null;
+    thumbnail?: string | null;
+    products?: ProductDataInCartDTO[] | null;
+  }
+  
+  interface ProductDataInCartDTO {
+    thumbnail?: string | null;
+    productId: number;
+    productName?: string | null;
+    productPrice: number;
+    currentStock: number;
+    count?: number | null;
+    isVisible: boolean;
+  }
+  
+
 function CartPage() {
     const testmemberId = 6;
-    const [memberCartData, setCartPageData] = useState(null);
+    const [memberCartData, setCartPageData] = useState<CartDetailDTO[]>();
+
 
     useEffect(() => {
         async function fetchCartData() {
             try {
                 const data = await getLoadCartPage(testmemberId);
-                const updatedData = data.map(item => ({
+                const updatedData = data.map((item:CartDetailDTO) => ({
                     ...item,
-                    products: item.products.map(product => ({
+                    products: item.products&&item.products.map(product => ({
                         ...product,
                         isVisible: true
                     }))
@@ -25,14 +44,14 @@ function CartPage() {
         fetchCartData();
     }, [testmemberId]);
 
-    const deleteProduct = async (productId) => {
+    const deleteProduct = async (productId:number) => {
         console.log(productId);
         try {
             await deleteProductFromCart(productId, testmemberId);
             // 更新 memberCartData 中对应产品的 isVisible 状态为 false
-            const updatedData = memberCartData.map(project => ({
+            const updatedData = memberCartData&&memberCartData.map(project => ({
                 ...project,
-                products: project.products.map(product =>
+                products: project.products&&project.products.map(product =>
                     product.productId === productId
                         ? { ...product, isVisible: false }
                         : product
@@ -59,21 +78,21 @@ function CartPage() {
                         <h1 className='text-3xl font-semibold mb-1'>Mumu 購物車</h1>
                         <hr />
                         {memberCartData && memberCartData.map((item) => {
-                            const visibleProducts = item.products.filter(product => product.isVisible);
-                            if (visibleProducts.length === 0) {
+                            const visibleProducts = item.products&&item.products.filter(product => product.isVisible);
+                            if (visibleProducts&&visibleProducts.length === 0) {
                                 return null; // 不渲染没有可见产品的项目
                             }
                             return (
                                 <div key={item.projectId}>
                                     <div className="border-spacing-8 mx-7 my-6">
-                                        <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail} alt="projectImage" />
+                                        <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         {item.projectName}
                                     </div>
                                     <br></br>
-                                    {visibleProducts.map(product => (
+                                    {visibleProducts&&visibleProducts.map(product => (
                                         <div key={product.productId} className='w-full border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1'>
                                             <div className='float-left w-64'>
-                                                <img className='mx-auto' src={product.thumbnail} alt="productImage" />
+                                                <img className='mx-auto' src={product.thumbnail?.toString()} alt="productImage" />
                                             </div>
                                             <div className='w-4/5 flex flex-col -mt-5'>
                                                 <br></br>

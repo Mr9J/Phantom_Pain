@@ -1,6 +1,6 @@
 // import './App.css';
 import '@/css/productcard.css'
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // import { getProject } from './api/Project.js';
 import { getProjectfromProductId } from '@/services/projects.service';
@@ -14,21 +14,64 @@ import { useNavigate } from 'react-router-dom';
 const  testProjectid = 25;
 const  testmemberId = 6;
 
+interface ProjectCardDTO {
+  projectId: number;
+  memberId: number;
+  projectGoal: number;
+  total: number;
+  projectName?: string;
+  projectDescription?: string;
+  thumbnail?: string;
+  member?: MemberDTO | null;
+  products?: ProductCardDTO[] | null;
+  productInCart?: number[] | null;
+  productInCartCount?: number[] | null;
+}
+
+interface MemberDTO {
+  memberId: number;
+  username: string;
+  nickname?: string | null;
+  thumbnail?: string | null;
+  email?: string | null;
+  address?: string | null;
+  memberIntroduction?: string | null;
+  phone?: string | null;
+  registrationTime?: Date | null;
+}
+
+interface ProductCardDTO {
+  productId: number;
+  productName?: string | null;
+  productDescription?: string | null;
+  initialStock: number;
+  productPrice: number;
+  currentStock: number;
+  startDate: Date;
+  endDate: Date;
+  thumbnail?: string | null;
+}
+
+interface ProductsComponentProps {
+  productsData: ProjectCardDTO[] | null;
+  getSelectProductId: (productId: number) => void;
+}
 
 
-function ProductsComponent(props){
-const {productsData,getSelectProductId} = props
-// const [productCount, setProductCount] = useState(1);
+function ProductsComponent({ productsData, getSelectProductId }: ProductsComponentProps) {
+  if (!productsData) return null;
+// const {productsData,getSelectProductId} = props
+// // const [productCount, setProductCount] = useState(1);
 
 
-ProductsComponent.propTypes = {
-  productsData: PropTypes.array //類型檢查
-};            
+// ProductsComponent.propTypes = {
+//   productsData: PropTypes.array //類型檢查
+// };            
 
-ProductsComponent.propTypes = {
-  getSelectProductId : PropTypes.func.isRequired, // 必需的 onClick 屬性
-  // 其他 PropTypes 定義
-};
+// ProductsComponent.propTypes = {
+//   getSelectProductId : PropTypes.func.isRequired, // 必需的 onClick 屬性
+//   // 其他 PropTypes 定義
+// };
 
 //測試加入購物車(成功)   
 // const ClickaddToCart = (e) =>{
@@ -43,7 +86,7 @@ ProductsComponent.propTypes = {
 
 const listitem = productsData&&productsData.map(item=>(
   <div key={item.projectId} style={{ "display": "flex", "flexGrow": "1" }}>  
-{item.products.map(pjitem=>(
+{item.products&&item.products.map(pjitem=>(
 <div key={pjitem.productId} style={{"width":"380px"}} className="mx-1 cursor-pointer">
 {/* 點擊商品後 href顯示加購及結帳  */}
 {/* <a className="p-4 border-2 border-inherit rounded mb-8 block" href="/paypage"> */}
@@ -118,7 +161,7 @@ function Productpage() {
 
   const navigate = useNavigate();
 
-  const ClickProductToPaypage = (productId) => {
+  const ClickProductToPaypage = (productId:number) => {
     // 點擊按鈕後導航到其他路由
     console.log(productId);
     navigate(`/Paypage?project=${testProjectid}&product=${productId}`);

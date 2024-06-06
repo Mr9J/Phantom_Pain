@@ -460,7 +460,7 @@ return(
         </div>
         <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
           <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap">NT $</div>
-          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min="0"/>
+          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={0}/>
         </div>
         <div className="flex">
           <div className="mt-4 flex-auto"> 
