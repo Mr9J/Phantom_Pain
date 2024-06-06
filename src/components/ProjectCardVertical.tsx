@@ -12,7 +12,7 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
   return (
     <a
       className="inline-block text-primary rounded xs:w-1/4 lg:w-full px-4 pb-4 mb-4 group"
-      href={`/projects/${prj.projectId}`}
+      href={`/project/${prj.projectId}`}
     >
       <div className="bg-secondaryexplore h-full rounded pb-4 flex flex-col group-hover:shadow-md">
         <img
@@ -36,7 +36,7 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
             </div>
 
             <div className="flex items-center space-x-2">
-              <h4 className="text-sm font-semibold flex-1">NT$ {prj.totalAmount}</h4>
+              <h4 className="text-sm font-semibold flex-1">NT$ {prj.totalAmount.toLocaleString()}</h4>
               <h4 className="text-sm font-semibold flex items-center text-zec-green">
                 <UsersRoundIcon className="text-sm text-gray-500 leading-none align-middle mr-px"></UsersRoundIcon>
                 <span className="text-sm inline-block mr-px">{prj.sponsorCount}</span>人
