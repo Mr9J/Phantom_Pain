@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getOrderProjects } from "@/services/orders.service";
 import { getProjectCounts } from "@/services/projects.service";
 import { OrderProject } from "@/types/index";
@@ -6,10 +6,18 @@ import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
 const Orders = () => {
-  const [orderProjects, setOrderProjects] = useState<OrderProject[] | null>(null);
+  const [orderProjects, setOrderProjects] = useState<OrderProject[] | null>(
+    null
+  );
   const [orderType, setorderType] = useState(1);
   const [projectCount, setProjectCount] = useState<ProjectCount[]>([]);
   const [projectStatus, setProjectStatus] = useState(-1);
+
+  const filteredProjects =
+    projectStatus > 0
+      ? orderProjects.filter((item) => item.statusId === projectStatus)
+      : orderProjects;
+
   type ProjectCount = number[];
   //載入api
   useEffect(() => {
@@ -30,6 +38,7 @@ const Orders = () => {
 
     fetchOrders();
   }, []);
+  //data
   useEffect(() => {
     const fetchProjectCount = async () => {
       try {
@@ -115,66 +124,33 @@ const Orders = () => {
             </div>
             <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
               {orderProjects &&
-                (projectStatus > 0
-                  ? orderProjects
-                      .filter((item) => item.statusId === projectStatus)
-                      .map((item) => (
-                        <div
-                          key={item.projectId}
-                          className="group relative p-3"
-                        >
-                          <a href={`order/${item.projectId}`}>
-                            <div className="relative h-80 w-full overflow-hidden rounded-t-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
-                              <img
-                                src={item.thumbnail}
-                                className="h-full w-full object-cover object-center"
-                              />
-                            </div>
-                            <h3 className="mt-6 text-sm">
-                              <div style={{ height: 48 }}>
-                                <p className="text-base font-semibold line-clamp line-clamp-2">
-                                  {item.projectName}
-                                </p>
-                              </div>
-                            </h3>
-                            <div className="flex items-center justify-end">
-                              <p className="text-base font-semibold mr-4">
-                                訂單數量: {item.orderCount}
-                              </p>
-                              <p className="text-base font-semibold">
-                                贊助人次: {item.sponsorCount}
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                      ))
-                  : orderProjects.map((item) => (
-                      <div key={item.projectId} className="group relative p-3">
-                        <a href={`order/${item.projectId}`}>
-                          <div className="relative h-80 w-full overflow-hidden rounded-t-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
-                            <img
-                              src={item.thumbnail}
-                              className="h-full w-full object-cover object-center"
-                            />
-                          </div>
-                          <h3 className="mt-6 text-sm">
-                            <div style={{ height: 48 }}>
-                              <p className="text-base font-semibold line-clamp line-clamp-2">
-                                {item.projectName}
-                              </p>
-                            </div>
-                          </h3>
-                          <div className="flex items-center justify-end">
-                            <p className="text-base font-semibold mr-4">
-                              訂單數量: {item.orderCount}
-                            </p>
-                            <p className="text-base font-semibold">
-                              贊助人次: {item.sponsorCount}
-                            </p>
-                          </div>
-                        </a>
+                filteredProjects.map((item) => (
+                  <div key={item.projectId} className="group relative p-3">
+                    <a href={`order/${item.projectId}`}>
+                      <div className="relative h-80 w-full overflow-hidden rounded-t-lg sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75 sm:h-64">
+                        <img
+                          src={item.thumbnail}
+                          className="h-full w-full object-cover object-center"
+                        />
                       </div>
-                    )))}
+                      <h3 className="mt-6 text-sm">
+                        <div style={{ height: 48 }}>
+                          <p className="text-base font-semibold line-clamp line-clamp-2">
+                            {item.projectName}
+                          </p>
+                        </div>
+                      </h3>
+                      <div className="flex items-center justify-end">
+                        <p className="text-base font-semibold mr-4">
+                          訂單數量: {item.orderCount}
+                        </p>
+                        <p className="text-base font-semibold">
+                          贊助人次: {item.sponsorCount}
+                        </p>
+                      </div>
+                    </a>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
