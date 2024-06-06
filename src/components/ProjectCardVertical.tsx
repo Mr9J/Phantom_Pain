@@ -23,7 +23,7 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
         />
         <div className="flex flex-col flex-1 h-full justify-between px-3">
           <h3 className="my-4 font-bold leading-relaxed line-clamp-3">
-            {prj.projectName.substring(0,35)+'...'}
+            {prj.projectName.length<20?`${prj.projectName}`:prj.projectName.substring(0,40)+'...'}
           </h3>
           <div>
             <div className="flex items-center pb-2 space-x-2">
@@ -32,16 +32,16 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
                 <div className="border-4 border-gray-200 bg-gray-200 rounded"></div> */}
                 <Progress value={progress} className="w-[100%]" />
               </div>
-              <h4 className="text-xs flex-initial text-zec-green">{progress}%</h4>
+              <h4 className="text-xs flex-initial">{progress}%</h4>
             </div>
 
             <div className="flex items-center space-x-2">
               <h4 className="text-sm font-semibold flex-1">NT$ {prj.totalAmount.toLocaleString()}</h4>
-              <h4 className="text-sm font-semibold flex items-center text-zec-green">
+              <h4 className="text-sm font-semibold flex items-center">
                 <UsersRoundIcon className="text-sm text-gray-500 leading-none align-middle mr-px"></UsersRoundIcon>
                 <span className="text-sm inline-block mr-px">{prj.sponsorCount}</span>人
               </h4>
-              <h4 className="font-semibold flex items-center text-zec-green">
+              <h4 className="font-semibold flex items-center">
                 <TimerIcon className="text-sm text-gray-500 leading-none align-middle mr-px"></TimerIcon>
                 <span className="text-sm">{prj.dayLeft} 天</span>
               </h4>

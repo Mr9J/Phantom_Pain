@@ -78,7 +78,7 @@ export type OuterSignIn = {
   thumbnail: string;
   uid: string;
 };
-}
+
 export type ProjectCardDTO={
   projectId:number;
   projectName:string;
