@@ -11,6 +11,9 @@ import Orders from "./manufacturer/Orders";
 import OrderList from "./manufacturer/OrderList";
 import Remind from "./manufacturer/Remind";
 
+import AdminProjects from "./admin/Projects";
+import AdminStaffs from "./admin/Staffs";
+
 export {
   Homepage,
   About,
@@ -23,4 +26,6 @@ export {
   OrderList,
   Users,
   Remind,
+  AdminProjects,
+  AdminStaffs,
 };
