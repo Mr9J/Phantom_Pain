@@ -13,6 +13,7 @@ import {
   Orders,
   OrderList,
   Remind,
+
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -30,6 +31,7 @@ import {
   Profile,
   Social,
   UpdateProfile,
+
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
 
@@ -39,6 +41,9 @@ import Users from "./views/root/pages/Users";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 import ServiceRoute from "./views/root/pages/ServiceRoute";
+import Paypage from "./views/auth/pages/Paypage";
+import Productpage from "./views/auth/pages/Prodouctpage";
+import CartPage from "./views/auth/pages/CartPage";
 const App = () => {
   return (
     <>
@@ -53,6 +58,9 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:username" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
+             <Route path="/Productpage" element={<Productpage/>} />
+        <Route path="/Paypage" element={<Paypage/>} />
+        <Route path="/CartPage" element={<CartPage/>} />
 
           </Route>
 
@@ -86,6 +94,7 @@ const App = () => {
             <Route path="/posts/:id" element={<PostDetails />} />
             <Route path="/profile/:id/*" element={<Profile />} />
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
+           
           </Route>
 
           <Route element={<ManuLayout />}>

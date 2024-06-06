@@ -1,0 +1,22 @@
+
+.aspect-ratio-project-cover {
+    background-position: 50%;
+    background-size:cover;
+    padding-bottom: 56.25%;
+}
+
+.text-zec-blue {
+    --tw-text-opacity: 1;
+    color: rgb(51 102 169 / var(--tw-text-opacity));
+}
+
+
+/*水平翻轉 */
+.scrollbar-top, .scrollbar-top>* {
+    transform: rotate(180deg) scaleX(-1);
+} 
+
+.prevent-hover {
+    pointer-events: none;
+  }
+  
