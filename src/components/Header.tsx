@@ -3,10 +3,21 @@ import { Link } from "react-router-dom";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon,CigaretteIcon } from "lucide-react";
+import {
+  LightbulbIcon,
+  MenuIcon,
+  ChevronDownIcon,
+  XIcon,
+  CigaretteIcon,
+  LogOutIcon,
+} from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
 import headerLogo from "@/assets/_shared_img/logo.png";
+import { signOut } from "firebase/auth";
+import { signOutNative } from "@/services/auth.service";
+import { auth } from "@/config/firebase";
+import { useUserContext } from "@/context/AuthContext";
 
 const exploreItems = [
   {
@@ -51,6 +62,14 @@ function classNames(...classes: string[]) {
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useUserContext();
+
+  const signOutHandler = () => {
+    signOutNative();
+    signOut(auth);
+    window.location.reload();
+  };
+
   return (
     <header
       className={`shadow-lg dark:shadow-slate-800 shadow-black w-full bg-[hsl(0,0%,100%)] dark:bg-[hsl(222.2,84%,4.9%)] z-50`}
@@ -160,11 +179,35 @@ const Header = () => {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <ModeToggle />
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link to="/sign-in" className="text-sm font-semibold leading-6">
-            Sign in <span aria-hidden="true">&rarr;</span>
-          </Link>
-        </div>
+        {user.id ? (
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+            <div className="flex gap-4">
+              <Button
+                variant="ghost"
+                className="flex gap-4 items-center justify-start hover:bg-transparent hover:text-gray-400 !important"
+                onClick={signOutHandler}
+              >
+                <LogOutIcon />
+              </Button>
+              <Link
+                to={`/profile/${user.id}`}
+                className="flex justify-center items-center gap-3"
+              >
+                <img
+                  src={user.thumbnail}
+                  alt="thumbnail"
+                  className="h-10 w-10 rounded-full"
+                />
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+            <Link to="/sign-in" className="text-sm font-semibold leading-6">
+              Sign in <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
+        )}
       </nav>
       <Dialog
         className={`lg:hidden`}
@@ -242,14 +285,38 @@ const Header = () => {
                   <Input type="text" placeholder="Searching..." />
                   <Button type="submit">Search</Button>
                 </div>
-                <div className="py-6">
-                  <Link
-                    to="/sign-in"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800"
-                  >
-                    Sign in
-                  </Link>
-                </div>
+
+                {user.id ? (
+                  <div className="py-6 flex gap-4">
+                    <Button
+                      variant="ghost"
+                      className="flex gap-4 items-center justify-start hover:bg-transparent hover:text-gray-400 !important"
+                      onClick={signOutHandler}
+                    >
+                      <LogOutIcon />
+                    </Button>
+                    <Link
+                      to={`/profile/${user.id}`}
+                      className="flex justify-center items-center gap-3"
+                    >
+                      <img
+                        src={user.thumbnail}
+                        alt="thumbnail"
+                        className="h-10 w-10 rounded-full"
+                      />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="py-6">
+                    <Link
+                      to="/sign-in"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800"
+                    >
+                      Sign in
+                    </Link>
+                  </div>
+                )}
+
                 <div className="py-6">
                   <ModeSwitch />
                 </div>
