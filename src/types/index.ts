@@ -70,3 +70,12 @@ export type OrderProject = {
   sponsorCount: number;
   isEdit?: boolean;
 }
+export type ProjectCardDTO={
+  projectId:number;
+  projectName:string;
+  projectGoal:number;
+  dayLeft:number;
+  thumbnail:string;
+  totalAmount:number;
+  sponsorCount:number;
+}
