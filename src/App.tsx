@@ -35,7 +35,7 @@ import LoggedInLayout from "./views/auth/LoggedInLayout";
 
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
-import PlayGround from "./views/root/pages/PlayGround";
+import Users from "./views/root/pages/Users";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 
@@ -51,6 +51,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/users/:username" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
 
           </Route>

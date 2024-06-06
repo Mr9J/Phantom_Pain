@@ -2,6 +2,7 @@ import Homepage from "./Homepage";
 import About from "./About";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
+import Users from "./Users";
 
 import Dashboard from "./manufacturer/Dashboard";
 import Projects from "./manufacturer/Projects";
@@ -20,5 +21,6 @@ export {
   Staffs,
   Orders,
   OrderList,
+  Users,
   Remind,
 };
