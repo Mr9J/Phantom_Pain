@@ -125,7 +125,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                     <React.Fragment>
                       <NavLink
                         end
-                        to="/manu/projects"
+                        to="/admin/projects"
                         className={`block text-slate-200 truncate transition duration-150 ${
                           pathname.includes("job")
                             ? "hover:text-slate-200"
@@ -187,7 +187,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                     <React.Fragment>
                       <NavLink
                         end
-                        to="/manu/staffs"
+                        to="/admin/staffs"
                         className={`block text-slate-200 truncate transition duration-150 ${
                           pathname.includes("community")
                             ? "hover:text-slate-200"

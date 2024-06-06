@@ -23,6 +23,12 @@ const Projects = () => {
   const [orderType, setorderType] = useState(1);
   const [projectStatus, setProjectStatus] = useState(-1);
   const [projectCount, setProjectCount] = useState([]);
+
+  const filteredProjects = projectStatus > 0 ? projects.filter((item) => item.statusId === projectStatus) : projects;
+  const statusMap = {
+    1: "募資中",
+    2: "下架",
+  };
   //載入api
   useEffect(() => {
     const fetchProjects = async () => {
@@ -72,7 +78,7 @@ const Projects = () => {
       jsonData[key] = value;
     });
     setFormData(jsonData);
-  
+    
     const url = `${baseUrl}/project/${jsonData.id}`;
     const method = "PUT";
     //debug用
@@ -208,7 +214,7 @@ const Projects = () => {
                   //#region 專案-----------------------------------------------------------------------------------
                 }
                 {projects &&
-                  projects.map((item) => (
+                  filteredProjects.map((item) => (
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
@@ -306,7 +312,7 @@ const Projects = () => {
                             </div>
                           </td>
                           <td style={{ width: 260 }} className="text-center">
-                            <button
+                            {item.statusId== 1 &&<button
                               type="button"
                               onClick={() => {
                                 setBanProjectModal(!visibleBanProjectModal);
@@ -330,7 +336,7 @@ const Projects = () => {
                               <div className="text-base font-semibold">
                                 下架
                               </div>
-                            </button>
+                            </button>}
                           </td>
                         </tr>
                       </tbody>
@@ -397,6 +403,8 @@ const Projects = () => {
                     />
                   </svg>
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                    <p>{projectContext[1]}</p>
+                    <br />
                     <p>您確認要下架這個專案嗎？</p>
                   </h3>
                   <input
@@ -417,7 +425,8 @@ const Projects = () => {
                     確認
                   </button>
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={() => setBanProjectModal(false)}
                     className="py-2.5 px-5 ms-3 text-white bg-rose-600 hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
                   >
                     取消
