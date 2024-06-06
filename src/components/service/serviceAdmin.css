@@ -1,0 +1,267 @@
+/* 背景顏色設置 */
+.admin-body {
+  background-color: #1a202c;
+}
+
+/* 容器設置，確保服務管理系統使用全屏顯示 */
+.service-admin-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+/* 左側客戶列表的樣式 */
+.service-admin-sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+}
+
+/* 聊天容器，包括頭部、消息區和腳部 */
+.service-admin-chat-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 聊天標題樣式 */
+.admin-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #3182ce;
+  color: white;
+  padding: 16px;
+  font-size: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 搜尋框樣式 */
+.admin-search-container {
+  display: flex;
+  align-items: center;
+}
+
+.admin-search-input {
+  margin-left: 16px;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  color: black;
+}
+
+/* 搜索導航樣式 */
+.admin-search-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.admin-search-navigation span {
+  margin: 0 10px;
+}
+
+.admin-search-navigation button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.admin-search-navigation button:disabled {
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* 消息列表區域 */
+.admin-chat-messages {
+  flex-grow: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #e3e3e3;
+}
+
+/* 單條消息樣式 */
+.admin-chat-message {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.admin-chat-message.user {
+  align-items: flex-start;
+}
+
+.admin-chat-message.admin {
+  align-items: flex-end;
+}
+
+/* 訊息框樣式 */
+.admin-message-bubble {
+  max-width: 320px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-chat-message.user .admin-message-bubble {
+  background-color: white;
+  color: black;
+}
+
+.admin-chat-message.admin .admin-message-bubble {
+  background-color: #3182ce;
+  color: white;
+}
+
+/* 時間戳樣式 */
+.admin-timestamp {
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: right;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.admin-chat-message.user .admin-timestamp {
+  text-align: right;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.admin-chat-message.admin .admin-timestamp {
+  text-align: left;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 高亮顯示樣式 */
+.admin-highlight {
+  background-color: yellow;
+  color: black;
+  font-weight: bold;
+  padding: 2px;
+}
+
+/* 當前高亮顯示樣式 */
+.admin-current-highlight {
+  background-color: orange;
+}
+
+/* 聊天底部樣式 */
+.admin-chat-footer {
+  background-color: white;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 輸入框樣式 */
+.admin-chat-footer input[type="text"] {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  margin-right: 8px;
+  color: black;
+}
+
+/* 文件輸入框隱藏 */
+.admin-chat-footer input[type="file"] {
+  display: none;
+}
+
+/* 標籤和按鈕樣式 */
+.admin-chat-footer label,
+.admin-chat-footer button {
+  background-color: #3182ce;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background-color 0.3s;
+}
+
+.admin-chat-footer label:hover,
+.admin-chat-footer button:hover {
+  background-color: #2b6cb0;
+}
+
+/* 上傳的圖片樣式 */
+.admin-uploaded-image {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* 客戶列表項目樣式 */
+.admin-customer-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  background-color: white;
+}
+
+.admin-customer-item.selected {
+  background-color: #e2e8f0;
+}
+
+.admin-customer-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.admin-customer-info {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.admin-customer-name {
+  font-weight: bold;
+  display: block;
+}
+
+.admin-customer-last-message {
+  font-size: 0.85em;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-customer-last-message-date {
+  font-size: 0.75em;
+  color: #999;
+}
+
+.admin-customer-message-count {
+  min-width: 20px;
+  height: 20px;
+  background-color: #3182ce;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  padding: 2px 5px;
+  margin-left: auto;
+}
+
+/* 沒有選擇客戶時的提示文字樣式 */
+.no-customer-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.5rem;
+  color: #666;
+  background-color: #f0f2f5;
+}
