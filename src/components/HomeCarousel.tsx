@@ -46,8 +46,7 @@ export function HomeCarousel() {
         const fetchedProjects = await getHomeProjects();
         setProjects(
           fetchedProjects.map((project: HomeProjectDTO) => ({
-            ...project,
-            isEdit: false,
+            ...project
           }))
         );
         //console.log('fetchedProjects:', fetchedProjects); // 確認資料是否成功加載

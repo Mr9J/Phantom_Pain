@@ -38,7 +38,7 @@ import SendResetEmail from "./views/root/pages/SendResetEmail";
 import Users from "./views/root/pages/Users";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
-
+import ServiceRoute from "./views/root/pages/ServiceRoute";
 const App = () => {
   return (
     <>
@@ -55,6 +55,8 @@ const App = () => {
             <Route path="/project/:pid" element={<ProjectInfo />} />
 
           </Route>
+
+          <Route path="/service" element={<ServiceRoute />} /> {/* 修改的部分 */}
 
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />

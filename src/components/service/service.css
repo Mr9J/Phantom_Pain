@@ -1,0 +1,185 @@
+/* 背景顏色設置 */
+body {
+  background-color: #1a202c;
+}
+
+/* 聊天容器樣式 */
+.service-chat-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 聊天標題樣式 */
+.service-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #3182ce;
+  color: white;
+  padding: 16px;
+  font-size: 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 搜尋框樣式 */
+.service-search-container {
+  display: flex;
+  align-items: center;
+}
+
+.service-search-input {
+  margin-left: 16px;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  color: black; /* 修改搜尋框中的文字顏色為黑色 */
+}
+
+/* 搜索導航樣式 */
+.service-search-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px; /* 調整位置 */
+}
+
+.service-search-navigation span {
+  margin: 0 10px;
+}
+
+.service-search-navigation button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.service-search-navigation button:disabled {
+  color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* 聊天訊息列表樣式 */
+.service-chat-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 單條訊息樣式 */
+.service-chat-message {
+  display: flex;
+  flex-direction: column;
+  position: relative; /* 用於定位時間 */
+}
+
+.service-chat-message.user {
+  align-items: flex-end; /* 客戶訊息右對齊 */
+}
+
+.service-chat-message.admin {
+  align-items: flex-start; /* 預設訊息左對齊 */
+}
+
+/* 訊息框樣式 */
+.service-chat-message .service-message-bubble {
+  max-width: 320px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.service-chat-message.user .service-message-bubble {
+  background-color: #3182ce;
+  color: white;
+}
+
+.service-chat-message.admin .service-message-bubble {
+  background-color: white;
+  color: black;
+}
+
+/* 時間戳樣式 */
+.service-timestamp {
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.service-chat-message.user .service-timestamp {
+  text-align: left; /* 客戶訊息的時間顯示在訊息框左邊 */
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.service-chat-message.admin .service-timestamp {
+  text-align: right; /* 預設訊息的時間顯示在訊息框右邊 */
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* 高亮顯示樣式 */
+.service-highlight {
+  background-color: yellow; /* 修改高亮顯示的背景色 */
+  color: black; /* 修改高亮顯示的字體顏色 */
+  font-weight: bold; /* 字體加粗 */
+  padding: 2px; /* 增加內邊距以使字體更明顯 */
+}
+
+/* 當前高亮顯示樣式 */
+.service-current-highlight {
+  background-color: orange;
+}
+
+/* 聊天底部樣式 */
+.service-chat-footer {
+  background-color: white;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 輸入框樣式 */
+.service-chat-footer input[type="text"] {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  margin-right: 8px;
+  color: black;
+}
+
+/* 文件輸入框隱藏 */
+.service-chat-footer input[type="file"] {
+  display: none;
+}
+
+/* 標籤和按鈕樣式 */
+.service-chat-footer label,
+.service-chat-footer button {
+  background-color: #3182ce;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background-color 0.3s;
+}
+
+.service-chat-footer label:hover,
+.service-chat-footer button:hover {
+  background-color: #2b6cb0;
+}
+
+/* 上傳的圖片樣式 */
+.service-uploaded-image {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+}

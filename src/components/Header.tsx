@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon } from "lucide-react";
+import { LightbulbIcon, MenuIcon, ChevronDownIcon, XIcon,CigaretteIcon } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
 import headerLogo from "@/assets/_shared_img/logo.png";
 
 const exploreItems = [
   {
-    name: "Parallax",
-    description: "Just An Item",
-    to: "/parallax",
-    icon: LightbulbIcon,
+    name: "Home",
+    description: "Smoking Area",
+    to: "/Home",
+    icon: CigaretteIcon,
   },
   {
     name: "Item2",
@@ -148,6 +148,9 @@ const Header = () => {
           </Link>
           <Link to="/social" className={`text-sm font-semibold leading-6`}>
             Social
+          </Link>
+          <Link to="/service" className={`text-sm font-semibold leading-6`}>
+            Service
           </Link>
         </Popover.Group>
         <div className="ml-8 hidden lg:flex lg:flex-1 lg:justify-end w-full max-w-sm items-center space-x-2">
