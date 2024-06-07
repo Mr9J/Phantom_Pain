@@ -1,5 +1,27 @@
 const baseUrl = import.meta.env.VITE_API_URL;
 
+export const createOrder = (orderData:object) => {
+  return fetch(`${baseUrl}/Order/CreateOrder`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderData)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          // 无需接收数据，直接返回成功
+          return console.log("成功");
+      })
+      .catch(error => {
+          console.error('There was a problem with your fetch operation:', error);
+          throw error;
+      });
+};
+
+
 export const getOrders = async () => {
   try {
     const response = await fetch(`${baseUrl}/Order`);

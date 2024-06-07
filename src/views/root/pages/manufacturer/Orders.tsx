@@ -14,9 +14,9 @@ const Orders = () => {
   const [projectStatus, setProjectStatus] = useState(-1);
 
   const filteredProjects =
-    projectStatus > 0
+    orderProjects && projectStatus > 0
       ? orderProjects.filter((item) => item.statusId === projectStatus)
-      : orderProjects;
+      : orderProjects || [];
 
   type ProjectCount = number[];
   //載入api

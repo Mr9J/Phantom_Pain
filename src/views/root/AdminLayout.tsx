@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import AdminSidebar from "@/components/admin/partials/AdminSidebar";
 import Header from "@/components/admin/partials/Header";
-import Banner from "@/components/admin/partials/Banner";
 
-const adminLayout = () => {
+const AdminLayout = () => {
 const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -18,11 +17,11 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
           {/*  Site header */}
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <Outlet />
-          <Banner />
+          {/* <Banner /> */}
           </div>
           </div>
         </>
   );
 };
 
-export default adminLayout;
+export default AdminLayout;

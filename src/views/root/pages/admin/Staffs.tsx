@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getMembers } from "@/services/members.service";
-const baseUrl = import.meta.env.VITE_API_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import { MemberDTO} from "@/types/index";
 
 
 
 const Staffs = () => {
-  const [members, setMembers] = useState(null);
+  const [members, setMembers] = useState<MemberDTO[] | null>(null);
     //載入api
     useEffect(() => {
       const fetchMembers = async () => {
         try {
-          const fetchedProjects = await getMembers();
+          const fetchedMembers:MemberDTO[] = await getMembers();
           setMembers(
-            fetchedProjects.map((member) => ({
+            fetchedMembers.map((member) => ({
               ...member,
               isEdit: false,
             }))
@@ -89,9 +89,7 @@ const Staffs = () => {
                 ))}
             </tbody>
           </table>
-
         </div>
-
       </div>
     </div>
     </div>
