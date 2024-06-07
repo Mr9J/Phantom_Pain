@@ -2,7 +2,7 @@ import * as React from "react"
 import { UsersRoundIcon, TimerIcon } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { ProjectCardDTO } from "@/types";
-
+import '@/css/ProjectCardVertical.css'
 export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
     const [progress, setProgress] = React.useState(13)
     React.useEffect(() => {
@@ -14,7 +14,7 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
       className="inline-block text-primary rounded xs:w-1/4 lg:w-full px-4 pb-4 mb-4 group"
       href={`/project/${prj.projectId}`}
     >
-      <div className="bg-secondaryexplore h-full rounded pb-4 flex flex-col group-hover:shadow-md">
+      <div className="bg-secondary explore h-full rounded pb-4 flex flex-col group-hover:shadow-md border">
         <img
           width="1600"
           height="900"
@@ -22,8 +22,8 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
           src={prj.thumbnail}
         />
         <div className="flex flex-col flex-1 h-full justify-between px-3">
-          <h3 className="my-4 font-bold leading-relaxed line-clamp-3">
-            {prj.projectName.length<20?`${prj.projectName}`:prj.projectName.substring(0,40)+'...'}
+          <h3 className="flex-header my-4 font-bold line-clamp-2 h-full">
+            {prj.projectName}
           </h3>
           <div>
             <div className="flex items-center pb-2 space-x-2">
