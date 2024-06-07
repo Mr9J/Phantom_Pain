@@ -116,7 +116,6 @@ export type MemberDTO = {
   registrationTime: string;
   statusId: number;
 };
-
 export type PostDTO = {
   caption: string;
   file: File[];

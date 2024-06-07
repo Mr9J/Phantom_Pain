@@ -66,7 +66,7 @@ const Projects : React.FC = ()=> {
 
     fetchProjectCount();
   }, []);
-
+//Modal
   const handleSubmit = (event) => {
     event.preventDefault(); // 阻止表單默認的提交行為
   
@@ -404,7 +404,7 @@ const Projects : React.FC = ()=> {
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                     <p>{projectContext[1]}</p>
                     <br />
-                    <p>您確認要下架這個專案嗎？</p>
+                    <p>您確定要下架這個專案嗎？</p>
                   </h3>
                   <input
                     type="hidden"
