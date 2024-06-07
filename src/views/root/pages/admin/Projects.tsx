@@ -4,7 +4,9 @@ import { getProjects, getProjectCounts } from "@/services/projects.service";
 const baseUrl = import.meta.env.VITE_API_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
-
+import { ProjectDTO ,ProjectCount,} from "@/types/index";
+import { number } from "zod";
+type ProjectContext = [number, string, number, number, number];
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
   const endDate: Date = new Date(expireDate);
@@ -15,14 +17,15 @@ function calculateRemainingDays(expireDate: string, startDate: string): number {
 }
 const date = new Date();
 
-const Projects = () => {
+const Projects : React.FC = ()=> {
   const [visibleBanProjectModal, setBanProjectModal] = useState(false);
-  const [projectContext, setProjectContext] = useState({});
-  const [projects, setProjects] = useState(null);
+  const [projectContext, setProjectContext] =  useState<ProjectContext>([0, "", 0, 0, 0]);
+  const [projects, setProjects] = useState<ProjectDTO[] | null>(null);
   const [formData, setFormData] = useState({});
   const [orderType, setorderType] = useState(1);
   const [projectStatus, setProjectStatus] = useState(-1);
-  const [projectCount, setProjectCount] = useState([]);
+  const [projectCount, setProjectCount] = useState<ProjectCount>([]);
+
 
   const filteredProjects = projectStatus > 0 ? projects.filter((item) => item.statusId === projectStatus) : projects;
   const statusMap = {
@@ -33,7 +36,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const fetchedProjects = await getProjects();
+        const fetchedProjects: ProjectDTO[] = await getProjects();
         setProjects(
           fetchedProjects.map((project) => ({
             ...project,
@@ -53,11 +56,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjectCount = async () => {
       try {
-        const fetchedProjectCount = await getProjectCounts();
-        fetchedProjectCount.map((item) => ({
-          ...item,
-          isEdit: false,
-        }));
+        const fetchedProjectCount: ProjectCount  = await getProjectCounts();
         setProjectCount(fetchedProjectCount);
         //console.log('fetchedProjectCount:', fetchedProjectCount); // 確認資料是否成功加載
       } catch (error) {
@@ -312,7 +311,7 @@ const Projects = () => {
                             </div>
                           </td>
                           <td style={{ width: 260 }} className="text-center">
-                            {item.statusId== 1 &&<button
+                            {Number(item.statusId) === 1 && <button
                               type="button"
                               onClick={() => {
                                 setBanProjectModal(!visibleBanProjectModal);
