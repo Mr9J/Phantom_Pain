@@ -18,8 +18,8 @@ import {
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
-import ManuLayout from "./views/root/pages/ManuLayout";
-import AdminLayout from "./views/root/pages/AdminLayout";
+import ManuLayout from "./views/root/ManuLayout";
+import AdminLayout from "./views/root/AdminLayout";
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "./views/root/pages/NotFound";
 import {
