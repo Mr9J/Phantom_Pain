@@ -27,6 +27,7 @@ import {
 import { signInWithPopup } from "firebase/auth";
 import { OuterSignIn } from "@/types";
 import { signInWithOthers } from "@/services/auth.service";
+import { ToastAction } from "@/components/ui/toast";
 
 const SignInForm = () => {
   const { toast } = useToast();
@@ -157,6 +158,33 @@ const SignInForm = () => {
 
   const handleSignin = async (values: z.infer<typeof SignInValidation>) => {
     const session = await signIn(values);
+
+    if (session === "帳號已被停權") {
+      toast({
+        variant: "destructive",
+        title: "帳號已被停權",
+        description: "如有疑問請聯絡客服",
+        action: (
+          <ToastAction altText="Contact Us">
+            {/* <Link to="/">聯絡</Link> */}
+            聯絡
+          </ToastAction>
+        ),
+      });
+
+      return;
+    }
+
+    if (session === "帳號或密碼錯誤") {
+      toast({
+        variant: "destructive",
+        title: "錯誤",
+        description: "帳號或密碼錯誤",
+        action: <ToastAction altText="Confirm">確認</ToastAction>,
+      });
+
+      return;
+    }
 
     if (!session) {
       toast({ title: "登入失敗，請再試一次" });

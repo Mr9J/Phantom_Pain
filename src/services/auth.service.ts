@@ -27,6 +27,12 @@ export async function signIn(user: SignInDTO) {
     return res.data;
   } catch (error) {
     console.error(error);
+    if (error.response.data === "帳號已被停權") {
+      return "帳號已被停權";
+    }
+    if (error.response.data === "帳號或密碼錯誤") {
+      return "帳號或密碼錯誤";
+    }
   }
 }
 
