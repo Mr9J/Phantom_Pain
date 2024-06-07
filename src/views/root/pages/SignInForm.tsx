@@ -38,6 +38,8 @@ const SignInForm = () => {
     try {
       const result = await signInWithPopup(auth, GoogleProvide);
 
+      console.log(result);
+
       if (!result) {
         toast({ title: "登入失敗，請再試一次" });
         return;
@@ -45,7 +47,7 @@ const SignInForm = () => {
 
       const user: OuterSignIn = {
         nickname: result.user.displayName!,
-        username: result.user.email! + "," + result.providerId!,
+        username: result.user.providerData[0].uid! + "," + result.providerId!,
         thumbnail: result.user.photoURL!,
         uid: result.user.uid!,
       };
@@ -82,7 +84,7 @@ const SignInForm = () => {
 
       const user: OuterSignIn = {
         nickname: result.user.providerData[0].displayName!,
-        username: result.user.providerData[0].email + "," + result.providerId!,
+        username: result.user.providerData[0].uid + "," + result.providerId!,
         thumbnail: result.user.providerData[0].photoURL!,
         uid: result.user.uid!,
       };
@@ -119,7 +121,7 @@ const SignInForm = () => {
 
       const user: OuterSignIn = {
         nickname: "Guest",
-        username: result.user.providerData[0].email + "," + result.providerId!,
+        username: result.user.providerData[0].uid + "," + result.providerId!,
         thumbnail: result.user.providerData[0].photoURL!,
         uid: result.user.uid!,
       };
