@@ -3,7 +3,7 @@
 export default function HomeCardHorizon({ title,image,id,totalAmount,supporter }: { title: string ,image:string,id:number,totalAmount:number,supporter:number}) {
   return (
     <a
-      className="col-span-4 flex md:col-span-2 rounded shadow border bg-secondary"
+      className="col-span-4 flex md:col-span-2 rounded hover:shadow border bg-secondary dark:hover:shadow-slate-500"
       href={`/project/${id}`}
     >
       <img
