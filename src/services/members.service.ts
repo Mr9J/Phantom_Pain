@@ -1,15 +1,20 @@
+import axios from "axios";
+
 const baseUrl = import.meta.env.VITE_API_URL;
 
-export const getMembers = async () => {
+export async function getMembers() {
   try {
-    const response = await fetch(`${baseUrl}/Member`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch members: ${response.status} ${response.statusText}`);
-    }
-    const data = await response.json();
-    return data;
+    const res = await axios.get(`${baseUrl}/Member`);
+    return res.data;
   } catch (error) {
-    console.error('Error fetching members:', error);
-    throw error; 
+    console.error(error);
   }
-};
+}
+export async function getMemberCounts() {
+  try {
+    const res = await axios.get(`${baseUrl}/Member/Count`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
