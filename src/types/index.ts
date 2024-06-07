@@ -78,14 +78,30 @@ export type OuterSignIn = {
   thumbnail: string;
   uid: string;
 };
-}
-export type ProjectCardDTO={
-  projectId:number;
-  projectName:string;
-  projectGoal:number;
-  dayLeft:number;
-  thumbnail:string;
-  totalAmount:number;
-  sponsorCount:number;
-}
 
+export type ProjectCardDTO = {
+  projectId: number;
+  projectName: string;
+  projectGoal: number;
+  dayLeft: number;
+  thumbnail: string;
+  totalAmount: number;
+  sponsorCount: number;
+};
+
+export type PostDTO = {
+  caption: string;
+  file: File[];
+  location: string;
+  tags: string;
+  userId: string;
+  id: string;
+};
+
+export type NewPostDTO = {
+  caption: string;
+  file: string;
+  location: string;
+  tags: string;
+  userId: string;
+};

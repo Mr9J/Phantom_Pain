@@ -1,4 +1,4 @@
-import { OuterSignIn, SignInDTO, SignUpDTO } from "@/types";
+import { OuterSignIn, SignInDTO, SignUpDTO, PostDTO } from "@/types";
 import {
   resetPassword,
   sendResetEmail,
@@ -7,6 +7,7 @@ import {
   signUp,
 } from "@/services/auth.service";
 import { useMutation } from "@tanstack/react-query";
+import { createPost } from "@/services/post.service";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -20,11 +21,11 @@ export const useSignInAccount = () => {
   });
 };
 
-// export const useCreatePost = () => {
-//   return useMutation({
-//     mutationFn: (x: PostDTO) => createPost(x),
-//   });
-// };
+export const useCreatePost = () => {
+  return useMutation({
+    mutationFn: (x: PostDTO) => createPost(x),
+  });
+};
 
 export const useResetPassword = () => {
   return useMutation({

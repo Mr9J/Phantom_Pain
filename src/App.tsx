@@ -39,6 +39,7 @@ import Users from "./views/root/pages/Users";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 import ServiceRoute from "./views/root/pages/ServiceRoute";
+
 const App = () => {
   return (
     <>
@@ -53,29 +54,23 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:username" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
-
           </Route>
-
-          <Route path="/service" element={<ServiceRoute />} /> {/* 修改的部分 */}
-
+          <Route path="/service" element={<ServiceRoute />} />{" "}
+          {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
             <Route path="/reset-password/:jwt" element={<ResetPassword />} />
             <Route path="/send-reset-email" element={<SendResetEmail />} />
           </Route>
-
           {/* public routes */}
-
           {/* private routes */}
-
           <Route element={<LoggedInLayout />}>
             <Route
               path="/email-verify/:username/:Eid/*"
               element={<EmailVerify />}
             />
           </Route>
-
           <Route element={<AuthLayout />}>
             <Route path="/social" element={<Social />} />
             <Route path="/browser" element={<Browser />} />
@@ -87,17 +82,17 @@ const App = () => {
             <Route path="/profile/:id/*" element={<Profile />} />
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
-
           <Route element={<ManuLayout />}>
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/manu/order/:projectId" element={<OrderList projectId={0}/>} />
+            <Route
+              path="/manu/order/:projectId"
+              element={<OrderList projectId={0} />}
+            />
             <Route path="/manu" element={<Remind />} />
-
           </Route>
-
         </Routes>
 
         <Toaster />

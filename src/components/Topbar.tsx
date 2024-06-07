@@ -14,6 +14,7 @@ const Topbar = () => {
   const signOutHandler = () => {
     signOutNative();
     signOut(auth);
+    window.location.reload();
     navigate("/");
   };
 

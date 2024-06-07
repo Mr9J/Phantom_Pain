@@ -7,6 +7,8 @@ import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
 import { signOutNative } from "@/services/auth.service";
 import { ModeSwitch } from "./dark-theme/mode-switch";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ const LeftSidebar = () => {
 
   const signOutHandler = () => {
     signOutNative();
+    signOut(auth);
+    window.location.reload();
     navigate("/");
   };
 
