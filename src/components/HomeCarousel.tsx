@@ -80,7 +80,7 @@ export function HomeCarousel() {
                       <CardContent className="flex aspect-video items-center justify-center p-6 group">
                         <img
                           src={item.thumbnail}
-                          className="aspect-video rounded group-hover:scale-105 transition-all duration-500 ease-out"
+                          className="aspect-video rounded group-hover:scale-105 transition-all duration-500 ease-out border"
                         />
                       </CardContent>
                       {/* <div className="m-3 mt-0 ml-5 text-pretty line-clamp-1">
