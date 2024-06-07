@@ -73,14 +73,14 @@ export function HomeCarousel() {
               <CarouselItem key={index}>
                 <a
                   href={`/project/${item.projectId}`}
-                  data-click-event="select_content"
+                  className="group"
                 >
                   <div className="p-1">
                     <Card>
-                      <CardContent className="flex aspect-video items-center justify-center p-6 group">
+                      <CardContent className="flex aspect-video items-center justify-center p-6 ">
                         <img
                           src={item.thumbnail}
-                          className="aspect-video rounded group-hover:scale-105 transition-all duration-500 ease-out border"
+                          className="aspect-video rounded group-hover:scale-105 transition-all duration-500 ease-out border w-full"
                         />
                       </CardContent>
                       {/* <div className="m-3 mt-0 ml-5 text-pretty line-clamp-1">
