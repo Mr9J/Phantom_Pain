@@ -73,7 +73,7 @@ function ProductsComponent({ productsData, getSelectProductId }: ProductsCompone
 //   // 其他 PropTypes 定義
 // };
 
-//測試加入購物車(成功)   
+//測試加入購物車(成功) 不要刪  
 // const ClickaddToCart = (e) =>{
 //   //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
 //   e.stopPropagation();
@@ -129,7 +129,7 @@ alt="Description"
 </div>
 
 <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t" >
-
+{/* 不要刪 */}
 {/* {item.productInCart.includes(pjitem.productId) ? (
   <button className="float-right mb-1 rounded-full font-bold text-xs py-1 px-2 bg-gray-600 text-center text-neutral-400 leading-none" disabled value={pjitem.productId}>已加入購物車</button>
   

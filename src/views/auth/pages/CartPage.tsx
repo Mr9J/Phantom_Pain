@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLoadCartPage, deleteProductFromCart } from "@/services/Cart.service";
+import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
 
 interface CartDetailDTO {
     projectId: number;
@@ -21,54 +21,58 @@ interface CartDetailDTO {
 
 function CartPage() {
     const testmemberId = 6;
-    const [memberCartData, setCartPageData] = useState<CartDetailDTO[]>();
+    const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
 
 
     useEffect(() => {
-        async function fetchCartData() {
-            try {
-                const data = await getLoadCartPage(testmemberId);
-                const updatedData = data.map((item:CartDetailDTO) => ({
-                    ...item,
-                    products: item.products&&item.products.map(product => ({
-                        ...product,
-                        isVisible: true
-                    }))
-                }));
-                setCartPageData(updatedData);
-            } catch (error) {
-                console.error('Error fetching project data:', error);
-            }
+        fetchShoppingCart();
+    }, []);
+
+
+
+    const fetchShoppingCart = async () => {
+        try {
+            const data = await getLoadCartPage(testmemberId);
+            setMemberCartData(data);
+        } catch (error) {
+            console.error(error);
         }
+    };
 
-        fetchCartData();
-    }, [testmemberId]);
+    const handleIncrement = async (projectId: number, productId: number , increment :string) => {
+        try{      
+            await putProductFromCart(productId,testmemberId,increment);
+            await fetchShoppingCart();
+        }
+        catch (error) {
+            console.error(error);
+        }
+        console.log(`projectId:${projectId}productId:${productId}`);
+        
+        // 发送增加数量的请求
+    };
 
-    const deleteProduct = async (productId:number) => {
-        console.log(productId);
+    const handleDecrement = async (projectId: number, productId: number,decrement:string) => {
+        try{      
+            await putProductFromCart(productId,testmemberId,decrement);
+            await fetchShoppingCart();
+        }
+        catch (error) {
+            console.error(error);
+        }
+        console.log(`projectId:${projectId}productId:${productId}`);
+        
+    };
+
+   
+    const handleDeleteProduct = async (productId: number) => {
         try {
             await deleteProductFromCart(productId, testmemberId);
-            // 更新 memberCartData 中对应产品的 isVisible 状态为 false
-            const updatedData = memberCartData&&memberCartData.map(project => ({
-                ...project,
-                products: project.products&&project.products.map(product =>
-                    product.productId === productId
-                        ? { ...product, isVisible: false }
-                        : product
-                )
-            }));
-            setCartPageData(updatedData);
+            await fetchShoppingCart();
         } catch (error) {
-            console.error('Error deleting product:', error);
+            console.error(error);
         }
-        if (!memberCartData || memberCartData.length === 0) {
-            return (
-                <div className="container my-8 px-4 mb-8 ml-60">
-                    <h1 className='text-3xl font-semibold mb-1'>購物車是空的</h1>
-                </div>
-            );
-            }
-    }
+    };
 
     return (
         <div className="container my-8 px-4 mb-8 ml-60">
@@ -77,11 +81,8 @@ function CartPage() {
                     <div className='w-full  bg-white py-7 px-5'>
                         <h1 className='text-3xl font-semibold mb-1'>Mumu 購物車</h1>
                         <hr />
-                        {memberCartData && memberCartData.map((item) => {
-                            const visibleProducts = item.products&&item.products.filter(product => product.isVisible);
-                            if (visibleProducts&&visibleProducts.length === 0) {
-                                return null; // 不渲染没有可见产品的项目
-                            }
+                        {memberCartData&&memberCartData.map((item) => {
+
                             return (
                                 <div key={item.projectId}>
                                     <div className="border-spacing-8 mx-7 my-6">
@@ -89,31 +90,32 @@ function CartPage() {
                                         {item.projectName}
                                     </div>
                                     <br></br>
-                                    {visibleProducts&&visibleProducts.map(product => (
+                                    {item.products&&item.products.map(product => (
                                         <div key={product.productId} className='w-full border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1'>
                                             <div className='float-left w-64'>
                                                 <img className='mx-auto' src={product.thumbnail?.toString()} alt="productImage" />
                                             </div>
                                             <div className='w-4/5 flex flex-col -mt-5'>
-                                                <br></br>
-                                                <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
-                                                <p className='text-green-700 font-semibold text-[16px]'>有存貨</p>
-                                                <div className='flex flex-row justify-between mt-2'>
-                                                    <div className='flex items-center justify-center'>
-                                                    <div className="flex items-center justify-center space-x-2 mb-4">
-      <button className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`}>-</button>
-      <span className="font-bold">
-
-    {product.count}
-  
-        </span>  
-      <button className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`}>+</button>
+    <br />
+    <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
+    <div className="flex items-center">
+        <span className='text-green-700 font-semibold text-[16px] flex-2 mr-5'>有存貨</span>
+        <div className="flex items-center justify-center space-x-2 mb-1">
+            {Number(product.count) === 1 ? (
+                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`}>-</button>
+            ) : (
+                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
+            )}
+            <span className="font-bold">{product.count}</span>
+            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
+        </div>
     </div>
-                                                    </div>
-                                                    <span className="flex flex-auto mx-2">NT$ {product.productPrice.toLocaleString()}</span>
-                                                    <button className='text-blue-600' onClick={() => deleteProduct(product.productId)}>刪除</button>
-                                                </div>
-                                            </div>
+    <div className='flex flex-row justify-between mt-2'>
+        <span className="flex flex-auto mx-2 my-0">NT$ {(product.productPrice * Number(product.count)).toLocaleString()}</span>
+        <button className='text-blue-600' onClick={() => handleDeleteProduct(product.productId)}>刪除</button>
+    </div>
+</div>
+
                                         </div>
                                     ))}
                                 </div>

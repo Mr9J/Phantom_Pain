@@ -25,6 +25,29 @@ export const addToCart = (productId:number, projectId:number, memberId:number) =
 };
 
 
+export const putProductFromCart = (productId:number, memberId:number,incrementOrdecrement:string) =>{
+    return fetch(`${baseUrl}/Cart/${productId}/${memberId}/${incrementOrdecrement}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+      
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // 无需接收数据，直接返回成功
+        // return console.log("修改購物車成功");
+    })
+    .catch(error => {
+        console.error('There was a problem with your fetch operation:', error);
+        throw error;
+    });
+}
+
+
+
 export const getLoadCartPage = (memberId:number)=>{
     return fetch(`${baseUrl}/Cart/${memberId}`)
     .then(response =>{
