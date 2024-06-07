@@ -126,6 +126,35 @@ export type ProjectCardDTO = {
   totalAmount: number;
   sponsorCount: number;
 };
+export type ProjectDTO = {
+  projectId: number;
+  projectName: string;
+  ProjectDescription: string;
+  projectGoal: number;
+  startDate: number;
+  endDate: number;
+  memberId: number;
+  groupId: number;
+  thumbnail: string;
+  totalAmount: number;
+  statusId: string;
+};
+export type filteredProjects = ProjectDTO;
+export type ProjectCount = number[];
+export type MemberCount = number[];
+export type MemberDTO = {
+  id: number;
+  memberId: number;
+  username: string;
+  nickname: string;
+  thumbnail: string;
+  email: string;
+  address: string;
+  memberIntroduction: string;
+  phone: number;
+  registrationTime: string;
+  statusId: number;
+};
 
 export type PostDTO = {
   caption: string;

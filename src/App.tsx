@@ -45,6 +45,7 @@ import ServiceRoute from "./views/root/pages/ServiceRoute";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+
 const App = () => {
   return (
     <>
@@ -59,6 +60,9 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:username" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
+            <Route path="/Productpage" element={<Productpage />} />
+            <Route path="/Paypage" element={<Paypage />} />
+            <Route path="/CartPage" element={<CartPage />} />
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
