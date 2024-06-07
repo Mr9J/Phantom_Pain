@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.592.0",
+    "@aws-sdk/s3-request-presigner": "^3.592.0",
     "@headlessui/react": "^2.0.3",
     "@hookform/resolvers": "^3.4.0",
     "@radix-ui/react-dialog": "^1.0.5",
