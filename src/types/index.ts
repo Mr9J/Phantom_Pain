@@ -102,6 +102,7 @@ export type ProjectDTO = {
 };
 export type filteredProjects = ProjectDTO;
 export type ProjectCount = number[];
+export type MemberCount = number[];
 export type MemberDTO = {
   id:number,
   memberId:number,
@@ -113,4 +114,5 @@ export type MemberDTO = {
   memberIntroduction:string,
   phone:number,
   registrationTime:string,
+  statusId:number,
  };
