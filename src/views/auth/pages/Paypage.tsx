@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent} from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent,useRef, useLayoutEffect} from 'react';
 import taiwan_districts from '@/constants/taiwan_districts.json'
 import { getProjectfromProductId } from '@/services/projects.service';
 import { createOrder } from '@/services/orders.service';
@@ -52,6 +52,8 @@ interface ProductCardDTO {
 
 function Paypage() {
 
+  const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+  const inputRefs = useRef<{ [key: string]: HTMLInputElement  | null }>({});
   
   //const { id } = useParams();
   const location = useLocation();
@@ -72,6 +74,7 @@ function Paypage() {
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>({});
   const [selectedProductCount , setSelectedProductCount] = useState(1)
   const [buttonDisabled, setButtonDisabled] = useState<{ [key: string]: boolean }>({}); //radio按鈕
+  const previousProjectAndproductsData = useRef(projectAndproductsData);
   //購買資訊 未帶入memberID 
   const [orderData, setOrderData] = useState({
     memberID:testmemberId,
@@ -86,6 +89,10 @@ function Paypage() {
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setPaymentMethod(value);
+    setOrderData((orderData)=>({
+      ...orderData,
+      paymentMethodID: Number(value) // 將 paymentMethodID 設定為 value
+    }));
   };
  //測試POST
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -111,7 +118,6 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
     ...prevState,
     [productId]: !prevState[productId]
   }));
-  console.log(buttonDisabled);
 
   await setOrderData((orderData) => ({
     ...orderData,
@@ -143,8 +149,38 @@ useEffect(()=>{
     });
 
   },[projectId,testmemberId]);
+//測試購物車傳入頁面先行載入資訊
+useLayoutEffect(() => {
+  console.log('執行幾次')
+  if (JSON.stringify(projectAndproductsData) !== JSON.stringify(previousProjectAndproductsData.current)) {
+    previousProjectAndproductsData.current = projectAndproductsData; // 更新前一个状态的值
+    projectAndproductsData && projectAndproductsData.forEach(async (item) => {
+      if (item.productInCart !== null && item.productInCartCount !== null) {
+        await simulateButtonClick(item.productInCart, item.productInCartCount);
+      }
+    });
+    console.log(buttonRefs.current);
+  }
+}, [projectAndproductsData]);
 
+//模擬按鍵點擊
+const simulateButtonClick = async (productInCart: number[] | undefined, productInCartCount: number[] | undefined) => {
+  if (!productInCart || !productInCartCount) {
+    return;
+  }
 
+  for (let i = 0; i < productInCart.length; i++) {
+    const productId = productInCart[i];
+    const clickCount = productInCartCount[i];
+    if (buttonRefs.current[productId]) {
+      for (let j = 0; j < clickCount; j++) {
+        await new Promise(resolve => setTimeout(resolve, 0)); // 等待前一个点击事件完成
+        buttonRefs.current[productId]?.click();
+      }
+    }
+    inputRefs.current[productId]?.click();
+  }
+};
 
 //主要商品更新數量
   useEffect(() => {
@@ -231,13 +267,13 @@ const handleDecrease = async (e: React.MouseEvent<HTMLButtonElement>, productId:
   await setProductCounts(updatedProductCounts);
 };
 
-  const handleIncrease =async (e: React.MouseEvent<HTMLButtonElement>,productId:number) => {
+const handleIncrease =  (e: React.MouseEvent<HTMLButtonElement>,productId:number) => {
     e.stopPropagation(); 
     e.preventDefault();
     const updatedProductCounts = { ...productCounts };
-    updatedProductCounts[productId] = (updatedProductCounts[productId] || 0) + 1;
-    await  setProductCounts(updatedProductCounts);
-  };
+   updatedProductCounts[productId] = (updatedProductCounts[productId] || 0) + 1;
+     setProductCounts(updatedProductCounts);
+};
   
   const poductlist =projectAndproductsData && projectAndproductsData.map(item=>(
     <div key={item.projectId} style={{ "display": "flex", "flexGrow": "1" }}>  
@@ -249,7 +285,7 @@ return(
   <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1">
   <label className="bg-zinc-100 rounded-md p-4 leading-none block mb-0 mx-0.5">
     {/* value傳商品id */}
-  <input className="mr-4" type="checkbox" value={pjitem.productId} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
+  <input ref={(buttonRef) => { inputRefs.current[pjitem.productId] = buttonRef; }} className="mr-4" type="checkbox" value={pjitem.productId} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
   選擇
   </label>
   {/* 點擊商品後 href顯示加購及結帳  */}
@@ -307,7 +343,7 @@ return(
     {productCounts[pjitem.productId] || 0}
   
         </span>  
-      <button className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 ${
+      <button  ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 ${
     buttonDisabled[pjitem.productId] ? 'opacity-50 cursor-not-allowed pointer-events-none bg-slate-500' : ''
   }`}  disabled={buttonDisabled[pjitem.productId]} value={pjitem.productId}  onClick={(e)=>handleIncrease(e,pjitem.productId)}>+</button>
     </div>
@@ -521,7 +557,7 @@ return(
 {/* 輸入交易資料畫面 */}
 {payment}
 
-<div className={`flex px-4 lg:w-2/3 overflow-x-auto ${isHidden ? 'hidden' : ''}`}>
+<div className={`flex px-4 lg:w-2/3 overflow-x-auto scrollbar-top ${isHidden ? 'hidden' : ''}`}>
 <div style={{ "display": "flex", "flexGrow": "1" }}>  
 
 {/* MAP顯示加購商品 */}

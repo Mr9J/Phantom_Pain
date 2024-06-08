@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 // import { data } from 'autoprefixer';
 //寫死的參數
-const  testProjectid = 25;
+const  testProjectid = 22;
 const  testmemberId = 6;
 
 interface ProjectCardDTO {
@@ -60,18 +60,6 @@ interface ProductsComponentProps {
 
 function ProductsComponent({ productsData, getSelectProductId }: ProductsComponentProps) {
   if (!productsData) return null;
-// const {productsData,getSelectProductId} = props
-// // const [productCount, setProductCount] = useState(1);
-
-
-// ProductsComponent.propTypes = {
-//   productsData: PropTypes.array //類型檢查
-// };            
-
-// ProductsComponent.propTypes = {
-//   getSelectProductId : PropTypes.func.isRequired, // 必需的 onClick 屬性
-//   // 其他 PropTypes 定義
-// };
 
 //測試加入購物車(成功) 不要刪  
 // const ClickaddToCart = (e) =>{
