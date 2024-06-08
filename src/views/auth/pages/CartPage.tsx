@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
+
 
 interface CartDetailDTO {
     projectId: number;
@@ -22,12 +24,18 @@ interface CartDetailDTO {
 function CartPage() {
     const testmemberId = 6;
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchShoppingCart();
     }, []);
+    
 
+    const goToPayPage = (projectId:number,productId:number,fromCartPage:boolean) =>
+    {  
+        navigate(`/Paypage?project=${projectId}&product=${productId}&fromCartPage=${fromCartPage}`);
+
+    }
 
 
     const fetchShoppingCart = async () => {
@@ -88,6 +96,9 @@ function CartPage() {
                                     <div className="border-spacing-8 mx-7 my-6">
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         {item.projectName}
+                                        <button className="float-end bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={()=>goToPayPage(item.projectId,Number(item.products&&item.products[0].productId),true)}>
+前往結帳
+</button>
                                     </div>
                                     <br></br>
                                     {item.products&&item.products.map(product => (
@@ -109,12 +120,18 @@ function CartPage() {
             <span className="font-bold">{product.count}</span>
             <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
         </div>
-    </div>
-    <div className='flex flex-row justify-between mt-2'>
-        <span className="flex flex-auto mx-2 my-0">NT$ {(product.productPrice * Number(product.count)).toLocaleString()}</span>
+        <div className="grow h-14">
+  </div>
+   <div className='flex flex-row justify-between mt-2'>
+        <span className="float-end mx-6 my-0">NT$ {(product.productPrice * Number(product.count)).toLocaleString()}</span>
         <button className='text-blue-600' onClick={() => handleDeleteProduct(product.productId)}>刪除</button>
     </div>
+
+    </div>
+    
+ 
 </div>
+
 
                                         </div>
                                     ))}

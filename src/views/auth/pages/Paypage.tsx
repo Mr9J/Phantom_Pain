@@ -8,6 +8,7 @@ import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 import { useLocation } from 'react-router-dom';
 
 
+
 // import IncreaseDecreaseButtons from './components/Header/button.jsx';
 interface ProjectCardDTO {
   projectId: number;
@@ -60,7 +61,9 @@ function Paypage() {
   const searchParams = new URLSearchParams(location.search);
   const selectedproductId = searchParams.get('product');
   const projectId = searchParams.get('project')
+  const fromCartPage = searchParams.get('fromCartPage') === 'true';
   
+
   const  testmemberId = 6;
 
   const [selectedCity, setSelectedCity] = useState<string>(''); // 用于存储所选的城市
@@ -72,7 +75,7 @@ function Paypage() {
   const [inputDonateValue, setInputValue] = useState<string>('0'); // 将初始值设置为字符串类型
   const [paymentMethod, setPaymentMethod] = useState("1");
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>({});
-  const [selectedProductCount , setSelectedProductCount] = useState(1)
+  const [selectedProductCount, setSelectedProductCount] = useState(fromCartPage ? 0 : 1);
   const [buttonDisabled, setButtonDisabled] = useState<{ [key: string]: boolean }>({}); //radio按鈕
   const previousProjectAndproductsData = useRef(projectAndproductsData);
   //購買資訊 未帶入memberID 
@@ -150,7 +153,11 @@ useEffect(()=>{
 
   },[projectId,testmemberId]);
 //測試購物車傳入頁面先行載入資訊
+
+
 useLayoutEffect(() => {
+  if(!fromCartPage)
+    return;
   console.log('執行幾次')
   if (JSON.stringify(projectAndproductsData) !== JSON.stringify(previousProjectAndproductsData.current)) {
     previousProjectAndproductsData.current = projectAndproductsData; // 更新前一个状态的值
@@ -162,6 +169,7 @@ useLayoutEffect(() => {
     console.log(buttonRefs.current);
   }
 }, [projectAndproductsData]);
+
 
 //模擬按鍵點擊
 const simulateButtonClick = async (productInCart: number[] | undefined, productInCartCount: number[] | undefined) => {
@@ -175,7 +183,7 @@ const simulateButtonClick = async (productInCart: number[] | undefined, productI
     if (buttonRefs.current[productId]) {
       for (let j = 0; j < clickCount; j++) {
         await new Promise(resolve => setTimeout(resolve, 0)); // 等待前一个点击事件完成
-        buttonRefs.current[productId]?.click();
+        await buttonRefs.current[productId]?.click();
       }
     }
     inputRefs.current[productId]?.click();
@@ -410,10 +418,13 @@ return(
         </div>
  
       <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
-      <div className="flex items-center justify-center space-x-2 mb-3">  
+      <div className="flex items-center justify-center space-x-2 mb-3">
       <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount-1)}}>-</button>
-      <span className="font-black">{selectedProductCount}</span>
-      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button>
+      {fromCartPage? <><span className="font-black">{selectedProductCount}</span>
+      <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
+      <><span className="font-black">{selectedProductCount}</span>
+      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
+     
     </div>
       {item.productInCart&&item.productInCart.includes(pjitem.productId) ? (
   <span className={`w-full float-right mb-1 rounded-full font-bold text-xs py-2 px-2 text-center leading-none ${item.productInCartCount&&item.productInCartCount[item.productInCart.indexOf(pjitem.productId)] <= selectedProductCount
@@ -557,7 +568,7 @@ return(
 {/* 輸入交易資料畫面 */}
 {payment}
 
-<div className={`flex px-4 lg:w-2/3 overflow-x-auto scrollbar-top ${isHidden ? 'hidden' : ''}`}>
+<div className={`flex px-4 lg:w-2/3 overflow-x-auto ${isHidden ? 'hidden' : ''}`}>
 <div style={{ "display": "flex", "flexGrow": "1" }}>  
 
 {/* MAP顯示加購商品 */}

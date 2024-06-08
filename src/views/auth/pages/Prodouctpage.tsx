@@ -151,8 +151,8 @@ function Productpage() {
 
   const ClickProductToPaypage = (productId:number) => {
     // 點擊按鈕後導航到其他路由
-    console.log(productId);
-    navigate(`/Paypage?project=${testProjectid}&product=${productId}`);
+    // console.log(productId);
+    navigate(`/Paypage?project=${testProjectid}&product=${productId}&fromCartPage=${false}`);
   };
 
 //後面寫空陣列表示只渲染一次
