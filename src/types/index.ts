@@ -98,7 +98,7 @@ export type ProjectDTO = {
   groupId: number;
   thumbnail: string;
   totalAmount: number;
-  statusId: string;
+  statusId: number;
 };
 export type filteredProjects = ProjectDTO;
 export type ProjectCount = number[];
