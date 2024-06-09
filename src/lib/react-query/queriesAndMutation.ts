@@ -6,8 +6,8 @@ import {
   signInWithOthers,
   signUp,
 } from "@/services/auth.service";
-import { useMutation } from "@tanstack/react-query";
-import { createPost } from "@/services/post.service";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createPost, getRecentPosts } from "@/services/post.service";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -43,5 +43,12 @@ export const useSendResetEmail = () => {
 export const useSignInWithOthers = () => {
   return useMutation({
     mutationFn: (x: OuterSignIn) => signInWithOthers(x),
+  });
+};
+
+export const useGetRecentPosts = () => {
+  return useQuery({
+    queryKey: [],
+    queryFn: getRecentPosts,
   });
 };

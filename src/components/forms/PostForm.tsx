@@ -17,7 +17,8 @@ import { PostValidation } from "@/lib/validation";
 import { useCreatePost } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ToastAction } from "../ui/toast";
 
 type PostFormProps = {
   post?: {
@@ -32,7 +33,6 @@ const PostForm = ({ post }: PostFormProps) => {
   const { mutateAsync: createPost, isPending } = useCreatePost();
   const { user } = useUserContext();
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
@@ -47,6 +47,10 @@ const PostForm = ({ post }: PostFormProps) => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
+    toast({
+      title: "發布中...",
+    });
+
     const newPost = await createPost({
       ...values,
       userId: user.id,
@@ -55,11 +59,22 @@ const PostForm = ({ post }: PostFormProps) => {
 
     if (!newPost) {
       toast({
+        variant: "destructive",
         title: "發布失敗, 請再試一次",
       });
+
+      return;
     }
 
-    navigate("/social");
+    toast({
+      title: "發布成功",
+      description: "您的貼文已經成功發布！",
+      action: (
+        <ToastAction altText="success">
+          <Link to="/social">查看</Link>
+        </ToastAction>
+      ),
+    });
   }
 
   return (

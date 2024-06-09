@@ -51,3 +51,19 @@ export async function createPost(post: PostDTO) {
     console.error(error);
   }
 }
+
+export async function getRecentPosts() {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    const data = await axios.get(`${URL}/Post/get-posts`, {
+      headers: { Authorization: jwt },
+    });
+
+    console.log(data.data);
+
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
