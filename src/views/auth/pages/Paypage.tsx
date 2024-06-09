@@ -78,6 +78,7 @@ function Paypage() {
   const [selectedProductCount, setSelectedProductCount] = useState(fromCartPage ? 0 : 1);
   const [buttonDisabled, setButtonDisabled] = useState<{ [key: string]: boolean }>({}); //radio按鈕
   const previousProjectAndproductsData = useRef(projectAndproductsData);
+  
   //購買資訊 未帶入memberID 
   const [orderData, setOrderData] = useState({
     memberID:testmemberId,
@@ -152,9 +153,7 @@ useEffect(()=>{
     });
 
   },[projectId,testmemberId]);
-//測試購物車傳入頁面先行載入資訊
-
-
+//測試購物車傳入頁面先行載入資訊，fromCartPage判斷是從哪個頁面進入
 useLayoutEffect(() => {
   if(!fromCartPage)
     return;
@@ -168,10 +167,10 @@ useLayoutEffect(() => {
     });
     console.log(buttonRefs.current);
   }
-}, [projectAndproductsData]);
+}, [fromCartPage,projectAndproductsData]);
 
 
-//模擬按鍵點擊
+//從購物車導入時模擬按鍵點擊自動點選購物車內商品
 const simulateButtonClick = async (productInCart: number[] | undefined, productInCartCount: number[] | undefined) => {
   if (!productInCart || !productInCartCount) {
     return;
@@ -189,6 +188,15 @@ const simulateButtonClick = async (productInCart: number[] | undefined, productI
     inputRefs.current[productId]?.click();
   }
 };
+//限制商品詳細字數顯示
+const truncateText = (text:string , maxLength:number)=>{
+  if(text.length>maxLength){
+    return text.substring(0,maxLength)+'...';//截斷並添加省略號
+  }
+  else{
+    return text;
+    }
+}
 
 //主要商品更新數量
   useEffect(() => {
@@ -297,7 +305,7 @@ return(
   選擇
   </label>
   {/* 點擊商品後 href顯示加購及結帳  */}
-  <div className="p-4 border-2 border-inherit rounded mb-8 block">
+  <div className="p-4 border-2 border-inherit rounded mb-8 block" style={{ width: '300px', height: '615px' }}>
   <img
   //  src商品圖片
   src={`${pjitem.thumbnail}`}
@@ -331,7 +339,7 @@ return(
   <div className="text-black text-sm space-y-4 leading-8">
   {/* 加入商品敘述 */}
   <p>
-  {pjitem.productDescription}</p>
+  {truncateText(pjitem.productDescription!,100)}</p>
   </div>
   
   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
@@ -378,7 +386,8 @@ return(
       <>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none" to="#" onClick={() => window.history.back()}>更改回饋</Link>
+      {fromCartPage?<></>:  <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none" to="#" onClick={() => window.history.back()}>更改回饋</Link>}
+     
       {/* 點擊商品後 href顯示加購及結帳 */}
       <img
         // src商品圖片
@@ -466,7 +475,7 @@ return(
   
   const payment = (
     <div className={`px-4 lg:w-2/3 overflow-x-auto ${isHidden ? 'inline-block' : 'hidden'}`}>
-      <button className={`h-auto border-2 border-current rounded p-4 w-full text-left text-neutral-400 hover:text-neutral-600 font-bold ${''}`} type="button" onClick={ClickToHidden}>
+      <button className={`h-auto border-2 border-current rounded p-4 w-full text-left text-neutral-400 hover:text-neutral-600 font-bold ${''} hover:bg-sky-500`} type="button" onClick={ClickToHidden}>
         <span className="align-middle text-sm mr-2"></span>
         顯示品項細節
         <span className="align-middle text-sm ml-2"></span>
@@ -507,7 +516,7 @@ return(
         </div>
         <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
           <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap">NT $</div>
-          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={0}/>
+          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={'0'}/>
         </div>
         <div className="flex">
           <div className="mt-4 flex-auto"> 
@@ -554,11 +563,11 @@ return(
  {/* <header className="py-2 px-4">MuMu</header> */}
       <Projectcard projectData={projectAndproductsData}></Projectcard>
 {/* 原本是px-4 mb-8有另外的div */}
-<div className="container my-8 px-4 mb-8 ml-60">
+<div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
 
 <form method="post" onSubmit={handleSubmit}>
   <div className="flex mb-10 text-sm -mx-4">
-<div className="px-4 lg:w-1/3">
+<div className="px-4 lg:w-1/3 mr-3">
 
   {selectedProduct}
   
@@ -577,7 +586,7 @@ return(
 </div>
 </div>
 </div>
-<button className={`border-2 rounded p-4 text-left font-bold w-full lg:w-1/4 ${isHidden ? 'hidden' : ''}`}
+<button className={`border-2 rounded p-4 text-left font-bold w-full lg:w-1/3 ${isHidden ? 'hidden' : ''} hover:bg-sky-500`}
  type="button" 
 onClick={ClickToHidden}>
 選擇付款方式

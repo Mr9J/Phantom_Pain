@@ -6,12 +6,13 @@ function Projectcard(props) {
     const listitem = projectData&&projectData.map(item => (
       // <div className="container"></div>
   <div key={item.projectName} className="border-2 border-emerald-50" >
-    <div className="container flex">
-      <div className="float-left w-full lg:w-1/3 ml-64">
+    <div className="container flex flex-col lg:flex-row">
+      <div className="float-left w-full lg:w-1/3 mr-4 h-full">
 <img
 //  src商品圖片
 src={`${item.thumbnail}`}
 alt="Description"
+className="w-auto max-w-full"
 />
       </div>
       {/* 原本有flex-1 */}
