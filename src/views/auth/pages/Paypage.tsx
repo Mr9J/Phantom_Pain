@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 
 
 
+
 // import IncreaseDecreaseButtons from './components/Header/button.jsx';
 interface ProjectCardDTO {
   projectId: number;
@@ -49,13 +50,11 @@ interface ProductCardDTO {
 }
 
 
-
-
 function Paypage() {
 
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement  | null }>({});
-  
+  const formRef = useRef<HTMLFormElement>(null); 
   //const { id } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -78,6 +77,32 @@ function Paypage() {
   const [selectedProductCount, setSelectedProductCount] = useState(fromCartPage ? 0 : 1);
   const [buttonDisabled, setButtonDisabled] = useState<{ [key: string]: boolean }>({}); //radio按鈕
   const previousProjectAndproductsData = useRef(projectAndproductsData);
+  const [isConfirming, setIsConfirming] = useState(false);
+
+ 
+  const handleConfirm = (e:React.MouseEvent<HTMLButtonElement>) => {  
+    e.stopPropagation();
+    e.preventDefault()
+    console.log("確認按鈕被點擊");
+     setIsConfirming(true);
+  };
+
+  const handleCancel = () => {
+    setIsConfirming(false);
+  };
+
+  const handleConfirmButtonClick = () => {
+    console.log("確認");
+    // 点击确认按钮时触发提交按钮的点击事件
+    if (formRef.current) {
+      const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      if (submitButton) {
+        submitButton.click();
+      }
+    }
+    setIsConfirming(false);
+  };
+
   
   //購買資訊 未帶入memberID 
   const [orderData, setOrderData] = useState({
@@ -547,13 +572,37 @@ return(
             <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1" type="text" name="order[postcode]"/>
           </div>
         </div>
+      
         <label className="font-bold text-sm text-black mb-4">收件人</label>
         <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500" type="text" name="order[recipient]"/>
         <label className="font-bold text-sm text-black mb-4">連絡電話</label>
         <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500" size={20} type="text" name="order[phone]"/>
-        <button className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500" type="submit">
+        <button className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500" onClick={(e)=>(handleConfirm(e))}>      
           立即預購
         </button>
+          <button type="submit" style={{ display: 'none' }} /> {/* 隱藏的submit */}
+         {/* 確認對話框 */}
+      {isConfirming && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow-lg">
+            <p>確定要進行購買</p>
+            <div className="flex justify-end mt-4">
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-2"
+                onClick={handleCancel}
+              >
+                取消
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={handleConfirmButtonClick}
+              >
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );
@@ -565,7 +614,7 @@ return(
 {/* 原本是px-4 mb-8有另外的div */}
 <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
 
-<form method="post" onSubmit={handleSubmit}>
+  <form ref={formRef} method="post" onSubmit={handleSubmit}>
   <div className="flex mb-10 text-sm -mx-4">
 <div className="px-4 lg:w-1/3 mr-3">
 
