@@ -3,8 +3,8 @@
 const baseUrl = import.meta.env.VITE_API_URL;
 
 
-export const addToCart = (productId:number, projectId:number, memberId:number) => {
-    return fetch(`${baseUrl}/Cart/${productId}/${projectId}/${memberId}`, {
+export const addToCart = (productId:number,productCounts:number, projectId:number, memberId:number) => {
+    return fetch(`${baseUrl}/Cart/${productId}/${productCounts}/${projectId}/${memberId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

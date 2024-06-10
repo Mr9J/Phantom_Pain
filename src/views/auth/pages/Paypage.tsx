@@ -368,13 +368,6 @@ return(
   </div>
   
   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
-  {/* <IncreaseDecreaseButtons
-                productId={pjitem.productId}
-                productCounts={productCounts}
-                buttonDisabled={buttonDisabled}
-                handleDecrease={handleDecrease}
-                handleIncrease={handleIncrease}
-              /> */}
   <div className="flex items-center justify-center space-x-2 mb-4">
       <button className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 ${
     buttonDisabled[pjitem.productId] ? 'opacity-50 cursor-not-allowed pointer-events-none bg-slate-500' : ''
@@ -404,11 +397,11 @@ return(
   ))
   
   const selectedProduct = projectAndproductsData && projectAndproductsData.map(item =>(
-     <>
+     <div key={item.projectId}>
     {item.products&&item.products.map(pjitem=>{
       if(pjitem.productId.toString() == selectedproductId)
         return(
-      <>
+      <div key={pjitem.productId}>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
       {fromCartPage?<></>:  <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none" to="#" onClick={() => window.history.back()}>更改回饋</Link>}
@@ -493,9 +486,9 @@ return(
   </div>
   </div>
   </div>
-  </>
+  </div>
   )})}
- </>
+ </div>
   ))
   
   const payment = (
@@ -585,16 +578,16 @@ return(
       {isConfirming && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-4 rounded shadow-lg">
-            <p>確定要進行購買</p>
-            <div className="flex justify-end mt-4">
+            <p>將前往結帳頁面，確定要進行購買嗎?</p>
+            <div className="flex justify-center mt-4">
               <button
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-2"
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-3"
                 onClick={handleCancel}
               >
                 取消
               </button>
               <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500"
                 onClick={handleConfirmButtonClick}
               >
                 确定
