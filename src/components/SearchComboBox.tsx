@@ -45,7 +45,7 @@ export function SearchComboBox({ onValueChange }: SearchComboBoxProps) {
       <SelectContent>
         <SelectGroup >
           <SelectLabel>主題分類</SelectLabel>
-          <SelectItem value="all">全部</SelectItem>
+          <SelectItem value="0">全部</SelectItem>
           {types &&
             types.map((item: prjTpye ,index:number) => (
               <SelectItem key={index} value={item.projectTypeId.toString()}>

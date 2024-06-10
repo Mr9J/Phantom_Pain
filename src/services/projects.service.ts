@@ -83,3 +83,17 @@ export async function getProjectType() {
     console.error(error);
   }
 }
+export async function getSearching(keyword: string, page: number, type: number): Promise<any> {
+  try {
+    const res = await axios.get(`${baseUrl}/Home/Searching`, {
+      params: {
+        keyword: keyword,
+        page: page,
+        type: type
+      }
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
