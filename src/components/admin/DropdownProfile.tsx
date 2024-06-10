@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Transition from '@/utils/Transition';
-
-import UserAvatar from '@/assets/admin_img/user-avatar-32.png';
+import { useUserContext } from "@/context/AuthContext";
 
 function DropdownProfile({
   align
@@ -12,6 +11,7 @@ function DropdownProfile({
 
   const trigger = useRef(null);
   const dropdown = useRef(null);
+  const { user } = useUserContext();
 
   // close on click outside
   useEffect(() => {
@@ -36,6 +36,7 @@ function DropdownProfile({
 
   return (
     <div className="relative inline-flex">
+       <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
       <button
         ref={trigger}
         className="inline-flex justify-center items-center group"
@@ -43,16 +44,16 @@ function DropdownProfile({
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
       >
-        <img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />
+        <img className="w-8 h-8 rounded-full" src={user.thumbnail} width="32" height="32" alt="User" />
         <div className="flex items-center truncate">
-          <span className="truncate ml-2 text-sm font-medium dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-200">Acme Inc.</span>
-          <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
+          <span className="truncate ml-2 text-sm font-medium dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-200">{user.nickname}</span>
+          {/* <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
             <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
-          </svg>
+          </svg> */}
         </div>
       </button>
-
-      <Transition
+      </Link>
+      {/* <Transition
         className={`origin-top-right z-10 absolute top-full min-w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-1.5 rounded shadow-lg overflow-hidden mt-1 ${align === 'right' ? 'right-0' : 'left-0'}`}
         show={dropdownOpen}
         enter="transition ease-out duration-200 transform"
@@ -92,7 +93,7 @@ function DropdownProfile({
             </li>
           </ul>
         </div>
-      </Transition>
+      </Transition> */}
     </div>
   )
 }

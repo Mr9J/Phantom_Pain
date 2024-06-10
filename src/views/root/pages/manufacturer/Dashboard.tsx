@@ -4,14 +4,7 @@ import '@/css/style.css';
 
 const Dashboard: React.FC = () => {
   return (
-    <div style={{ width: '100%', height: '100vh', position: 'relative' } as React.CSSProperties}>
-      <iframe
-        title="V1"
-        src="https://app.powerbi.com/view?r=eyJrIjoiZWQ1ZGIyZmEtMDAxZi00YzNkLWFhYWQtMTZkNWIxYTc5MDAyIiwidCI6IjM5OTIzMmZiLTE3ZDEtNDVjYS1iZGE2LTViNTQwNDQxYmQ2MiIsImMiOjEwfQ%3D%3D"
-        allowFullScreen={true}
-        style={{ width: '100%', height: '100%', border: 'none' } as React.CSSProperties}
-      ></iframe>
-    </div>
+    <iframe title="V2" width="1600" height="850" src="https://app.powerbi.com/view?r=eyJrIjoiMmFmMGM0MzAtZTYxZS00ZTM0LTkwMzgtMjI0MjhjYjE2M2YwIiwidCI6IjM5OTIzMmZiLTE3ZDEtNDVjYS1iZGE2LTViNTQwNDQxYmQ2MiIsImMiOjEwfQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
   );
 };
 
