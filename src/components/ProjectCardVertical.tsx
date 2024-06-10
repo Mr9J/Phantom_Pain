@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { ProjectCardDTO } from "@/types";
 import '@/css/ProjectCardVertical.css'
 export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
-    const [progress, setProgress] = React.useState(13)
+    const [progress, setProgress] = React.useState(0)
     React.useEffect(() => {
       const timer = setTimeout(() => setProgress(Math.round((prj.totalAmount/prj.projectGoal)*100)>100?100:Math.round((prj.totalAmount/prj.projectGoal)*100)), 1500)
       return () => clearTimeout(timer)
