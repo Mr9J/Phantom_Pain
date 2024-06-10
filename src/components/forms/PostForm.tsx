@@ -14,23 +14,32 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import { PostValidation } from "@/lib/validation";
-import { useCreatePost } from "@/lib/react-query/queriesAndMutation";
+import {
+  useCreatePost,
+  useUpdatePost,
+} from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { Link } from "react-router-dom";
 import { ToastAction } from "../ui/toast";
+import { useEffect } from "react";
 
-type PostFormProps = {
+export type PostFormProps = {
   post?: {
     caption: string;
     file: File[];
     location: string;
-    tags: string[];
+    tags: string;
+    imgUrl: string;
+    postId: string;
   };
+  action: "create" | "update";
 };
 
-const PostForm = ({ post }: PostFormProps) => {
+const PostForm = ({ post, action }: PostFormProps) => {
   const { mutateAsync: createPost, isPending } = useCreatePost();
+  const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
+    useUpdatePost();
   const { user } = useUserContext();
   const { toast } = useToast();
 
@@ -41,12 +50,46 @@ const PostForm = ({ post }: PostFormProps) => {
       caption: post ? post?.caption : "",
       file: [],
       location: post ? post?.location : "",
-      tags: post ? post.tags.join(",") : "",
+      tags: post ? post?.tags : "",
     },
   });
 
+  useEffect(() => {
+    if (post && action === "update") {
+      console.log(post);
+      form.reset({
+        caption: post ? post?.caption : "",
+        file: post ? post.file : [],
+        location: post ? post?.location : "",
+        tags: post ? post?.tags : "",
+      });
+    }
+  }, [post]);
+
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
+    if (post && action === "update") {
+      const session = await updatePost({
+        ...values,
+        userId: user.id,
+        id: Date.now().toString() + user.id,
+        postId: post.postId,
+      });
+
+      console.log(values);
+
+      if (!session) {
+        toast({
+          variant: "destructive",
+          title: "更新失敗, 請再試一次",
+        });
+      }
+
+      console.log(session);
+
+      return;
+    }
+
     toast({
       title: "發布中...",
     });
@@ -54,7 +97,7 @@ const PostForm = ({ post }: PostFormProps) => {
     const newPost = await createPost({
       ...values,
       userId: user.id,
-      id: Date.now().toString(),
+      id: Date.now().toString() + user.id,
     });
 
     if (!newPost) {
@@ -108,7 +151,7 @@ const PostForm = ({ post }: PostFormProps) => {
               <FormControl>
                 <FileUploader
                   fieldChange={field.onChange}
-                  mediaUrl={post?.imageUrl}
+                  mediaUrl={post?.imgUrl}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
@@ -158,7 +201,8 @@ const PostForm = ({ post }: PostFormProps) => {
           </Button>
           <Button
             type="submit"
-            className="shad-button_primary whitespace-nowrap"
+            className="shad-button_dark_4"
+            disabled={isPending || isLoadingUpdate}
           >
             發布
           </Button>

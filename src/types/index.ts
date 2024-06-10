@@ -128,6 +128,25 @@ export type PostDTO = {
   id: string;
 };
 
+export type UpdatePostDTO = {
+  postId: string;
+  caption: string;
+  file: File[];
+  location: string;
+  tags: string;
+  userId: string;
+  id: string;
+};
+
+export type NewUpdatePostDTO = {
+  caption: string;
+  file: string;
+  location: string;
+  tags: string;
+  userId: string;
+  postId: number;
+};
+
 export type NewPostDTO = {
   caption: string;
   file: string;

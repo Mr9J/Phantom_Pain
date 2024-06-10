@@ -2,7 +2,7 @@ import { GetPostDTO } from "@/types";
 import { Link } from "react-router-dom";
 import userThumbnail from "@/assets/admin_img/mygo/6.jpg";
 import moment from "moment";
-import { FilePenLineIcon } from "lucide-react";
+import { FilePenLineIcon, Key } from "lucide-react";
 import { useUserContext } from "@/context/AuthContext";
 import PostStats from "./PostStats";
 
@@ -54,14 +54,17 @@ const PostCard = ({ post }: PostCardProps) => {
           <p>{post.caption}</p>
           <ul className="flex gap-1 mt-2">
             {post.tags &&
-              post.tags.split(",").map((tag: string) => (
-                <li key={tag} className="text-light-3">
+              post.tags.split(",").map((tag: string, index) => (
+                <li key={index} className="text-light-3">
                   #{tag}
                 </li>
               ))}
           </ul>
         </div>
-        {post.imgUrl && post.imgUrl.split(",").map((img) => <img src={img} />)}
+        {post.imgUrl &&
+          post.imgUrl
+            .split(",")
+            .map((img, index) => <img key={index} src={img} />)}
       </Link>
       <PostStats post={post} userId={user.id} />
     </div>

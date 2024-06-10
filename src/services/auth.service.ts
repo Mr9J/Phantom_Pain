@@ -1,5 +1,6 @@
 import { CurrentUserDTO, OuterSignIn, SignInDTO, SignUpDTO } from "@/types";
 import axios from "axios";
+import { Network } from "lucide-react";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -11,8 +12,13 @@ export async function signUp(user: SignUpDTO) {
 
     return res.data;
   } catch (error) {
-    console.log(error);
-    return error;
+    console.error(error);
+    if (error.response.data === "註冊資料格式錯誤") {
+      return "註冊資料格式錯誤";
+    }
+    if (error.response.data === "使用者已存在") {
+      return "使用者已存在";
+    }
   }
 }
 
@@ -29,8 +35,7 @@ export async function signIn(user: SignInDTO) {
     console.error(error);
     if (error.response.data === "帳號已被停權") {
       return "帳號已被停權";
-    }
-    if (error.response.data === "帳號或密碼錯誤") {
+    } else if (error.response.data === "帳號或密碼錯誤") {
       return "帳號或密碼錯誤";
     }
   }
@@ -47,6 +52,12 @@ export async function signInWithOthers(user: OuterSignIn) {
     return res.data;
   } catch (error) {
     console.error(error);
+    if (error.response.data === "錯誤，請聯絡客服") {
+      return "錯誤，請聯絡客服";
+    }
+    if (error.response.data === "帳號已被停權") {
+      return "帳號已被停權";
+    }
   }
 }
 

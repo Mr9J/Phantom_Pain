@@ -1,4 +1,10 @@
-import { OuterSignIn, SignInDTO, SignUpDTO, PostDTO } from "@/types";
+import {
+  OuterSignIn,
+  SignInDTO,
+  SignUpDTO,
+  PostDTO,
+  UpdatePostDTO,
+} from "@/types";
 import {
   resetPassword,
   sendResetEmail,
@@ -7,7 +13,15 @@ import {
   signUp,
 } from "@/services/auth.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createPost, getRecentPosts } from "@/services/post.service";
+import {
+  createPost,
+  getPostById,
+  getRecentPosts,
+  likePost,
+  savePost,
+  updatePost,
+} from "@/services/post.service";
+import { PostFormProps } from "@/components/forms/PostForm";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -50,5 +64,33 @@ export const useGetRecentPosts = () => {
   return useQuery({
     queryKey: [],
     queryFn: getRecentPosts,
+  });
+};
+
+export const useLikePost = () => {
+  return useMutation({
+    mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
+      likePost(postId, userId),
+  });
+};
+
+export const useSavePost = () => {
+  return useMutation({
+    mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
+      savePost(postId, userId),
+  });
+};
+
+export const useGetPostById = (postId: string) => {
+  return useQuery({
+    queryKey: [postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
+  });
+};
+
+export const useUpdatePost = () => {
+  return useMutation({
+    mutationFn: (post: UpdatePostDTO) => updatePost(post),
   });
 };
