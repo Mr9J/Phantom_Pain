@@ -5,8 +5,10 @@ import { sidebarLinks } from "@/constants";
 import { INavLink } from "@/types";
 import { Button } from "./ui/button";
 import { LogOutIcon } from "lucide-react";
-import { signOut } from "@/services/auth.service";
+import { signOutNative } from "@/services/auth.service";
 import { ModeSwitch } from "./dark-theme/mode-switch";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -14,7 +16,9 @@ const LeftSidebar = () => {
   const { user } = useUserContext();
 
   const signOutHandler = () => {
-    signOut();
+    signOutNative();
+    signOut(auth);
+    window.location.reload();
     navigate("/");
   };
 
@@ -26,7 +30,7 @@ const LeftSidebar = () => {
         </Link>
         <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
           <img
-            src={`https://cdn.mumumsit158.com/Members/MemberID-${user.id}-ThumbNail.jpg`}
+            src={user.thumbnail}
             alt="thumbnail"
             className="h-16 w-16 rounded-full"
           />
@@ -35,7 +39,7 @@ const LeftSidebar = () => {
               {user.nickname}
             </p>
             <p className="text-[14px] font-normal leading-[140%]">
-              @{user.username}
+              @{user.username.split(",")[0]}
             </p>
           </div>
         </Link>

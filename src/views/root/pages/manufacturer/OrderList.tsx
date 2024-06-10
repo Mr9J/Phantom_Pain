@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from "react";
-//import { getOrderList } from "@/services/orders.service";
 import { useParams } from "react-router-dom";
+import numeral from "numeral";
 import axios from 'axios';
+import { Order } from "@/types/index";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
-interface Order {
-  orderId: number;
-  projectId: number;
-  member: {
-    username: string;
-  };
-  shipDate: string;
-  donate: number;
-  thumbnail: string;
-  isEdit?: boolean;
-}
-
 interface OrderListProps {
   projectId: number;
 }
+
+
 
 const OrderList : React.FC<OrderListProps>=() => {
   const [orderList, setOrderList] = useState<Order[] | null>(null);
@@ -37,12 +28,16 @@ const OrderList : React.FC<OrderListProps>=() => {
       throw error; 
     }
   };
-  getOrderList(projectId);
+ 
+  if (projectId !== undefined && !isNaN(Number(projectId))) {
+    getOrderList(Number(projectId));
+}
+  
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const fetchedOrderProjects = await getOrderList(projectId);
+        const fetchedOrderProjects = await getOrderList(Number(projectId));
         setOrderList(
           fetchedOrderProjects.map((order: Order) => ({
             ...order,
@@ -57,6 +52,7 @@ const OrderList : React.FC<OrderListProps>=() => {
 
     fetchOrders();
   }, [projectId]);
+  
 
   return (
     <>
@@ -118,18 +114,16 @@ const OrderList : React.FC<OrderListProps>=() => {
                         <div className="text-left font-medium text-green-500">{item.orderDate}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-left font-medium">{item.orderDetails.price ?? 0}</div>
+                        <div className="text-left font-medium">{numeral(item.orderDetails.price).format("0,0")}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-center font-medium">{item.donate ?? 0}</div>
+                        <div className="text-center font-medium">{numeral(item.donate).format("0,0")}</div>
                       </td>
                     </tr>
                 ))}
             </tbody>
           </table>
-
         </div>
-
       </div>
     </div>
     </div>

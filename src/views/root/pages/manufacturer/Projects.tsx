@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import numeral from "numeral";
-import { getProjects } from "@/services/projects.service";
+import { getProjects , getProjectCounts} from "@/services/projects.service";
 const baseUrl = import.meta.env.VITE_API_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
-
-import { Weight } from "lucide-react";
 
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
@@ -32,6 +30,12 @@ const Projects = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [projects, setProjects] = useState(null);
   const [formData, setFormData] = useState({});
+  const [orderType, setorderType] = useState(1);
+  const [projectStatus, setProjectStatus] = useState(-1);
+  const [projectCount, setProjectCount] = useState([]);
+
+  const filteredProjects = projectStatus > 0 ? projects.filter((item) => item.statusId === projectStatus) : projects;
+
   //下拉式選單
   const productTableClick = (itemId: string) => {
     setProductVisible((prevState) => ({
@@ -44,6 +48,7 @@ const Projects = () => {
     1: "募資中",
     2: "下架",
   };
+  //圖片處理
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -63,6 +68,24 @@ const Projects = () => {
       }
     }
   };
+  //專案狀態篩選
+  useEffect(() => {
+    const fetchProjectCount= async () => {
+      try {
+        const fetchedProjectCount = await getProjectCounts();
+        fetchedProjectCount.map((item) => ({
+          ...item,
+          isEdit: false,
+        }));
+        setProjectCount(fetchedProjectCount);
+        //console.log('fetchedProjectCount:', fetchedProjectCount); // 確認資料是否成功加載
+      } catch (error) {
+        console.error("Error fetching projectCount:", error);
+      }
+    };
+
+    fetchProjectCount();
+  }, []);
   //載入api
   useEffect(() => {
     const fetchProjects = async () => {
@@ -84,7 +107,6 @@ const Projects = () => {
   }, []);
 
   //POST/PUT Modal------------------------------------------------------
-
   const handleFormSubmit = (event) => {
     event.preventDefault(); // 阻止表單默認的提交行為
 
@@ -136,13 +158,12 @@ const Projects = () => {
   const handleConfirmSubmit = () => {
     const url = visibleProductLg
       ? alterText
-        ? `${baseUrl}/product/${formData.id}`
+        ? `endDate`
         : `${baseUrl}/product`
       : alterText
       ? `${baseUrl}/project/${formData.id}`
       : `${baseUrl}/project`;
     const method = alterText ? "PUT" : "POST";
-
     //debug用
     // console.log("URL:", url);
     // console.log("Method:", method);
@@ -186,14 +207,72 @@ const Projects = () => {
               專案列表
             </h2>
           </header>
-          <div className="p-3">
+          <div className="p-3" >
+            {orderType === 1 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  全部({projectCount[0]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(1);
+                    setProjectStatus(-1);
+                  }}
+                >
+                  全部({projectCount[0]})
+                </button>
+              )}
+              {orderType === 2 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  進行中({projectCount[1]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(2);
+                    setProjectStatus(1);
+                  }}
+                >
+                  進行中({projectCount[1]})
+                </button>
+              )}
+              {orderType === 3 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  已下架({projectCount[2]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(3);
+                    setProjectStatus(2);
+                  }}
+                >
+                  已下架({projectCount[2]})
+                </button>
+              )}
+              <div style={{ display: 'flex' }}>
             <button
               type="button"
               onClick={() => {
                 setvisibleProjectModal(!visibleProjectLg);
                 setAlter(false);
               }}
-              className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               <svg
                 className="w-[15px] h-[15px] fill-[#f2f2f2]"
@@ -204,6 +283,7 @@ const Projects = () => {
               </svg>
               <p className="text-base">新增專案</p>
             </button>
+            </div>
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="table-auto w-full dark:text-slate-300">
@@ -245,7 +325,7 @@ const Projects = () => {
         //#region 專案-----------------------------------------------------------------------------------
       } 
                 {projects &&
-                  projects.map((item) => (
+                  filteredProjects.map((item) => (
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
@@ -614,7 +694,8 @@ const Projects = () => {
                         //#endregion
                       }
                     </React.Fragment>
-                  ))}
+                  ))
+                  }
                         {
         //#endregion
       }
