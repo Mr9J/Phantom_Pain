@@ -39,6 +39,7 @@ import Users from "./views/root/pages/Users";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 import ServiceRoute from "./views/root/pages/ServiceRoute";
+import SearchProject from "./views/root/pages/SearchProject";
 const App = () => {
   return (
     <>
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:username" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
+            <Route path="/SearchProject" element={<SearchProject />} />
 
           </Route>
 
