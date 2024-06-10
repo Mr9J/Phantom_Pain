@@ -42,6 +42,7 @@ import SendResetEmail from "./views/root/pages/SendResetEmail";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 import ServiceRoute from "./views/auth/pages/ServiceRoute";
+import SearchProject from "./views/root/pages/SearchProject";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
@@ -60,6 +61,7 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:userId" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
+            <Route path="/SearchProject" element={<SearchProject />} />
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />

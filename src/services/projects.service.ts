@@ -99,3 +99,11 @@ export const getHomeCardDayLeft = async () => {
     throw error; 
   }
 };
+export async function getProjectType() {
+  try {
+    const res = await axios.get(`${baseUrl}/Home/ProjectType`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
