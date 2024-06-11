@@ -492,20 +492,20 @@ return(
   
   const payment = (
     <div className={`px-4 lg:w-2/3 overflow-x-auto ${isHidden ? 'inline-block' : 'hidden'}`}>
-      <button className={`h-auto border-2 border-current rounded p-4 w-full text-left text-neutral-400 hover:text-neutral-600 font-bold ${''} hover:bg-sky-500`} type="button" onClick={ClickToHidden}>
+      <button className={`dark:text-slate-200 h-auto border-2 border-current rounded p-4 w-full text-left text-neutral-400 hover:text-neutral-600 font-bold ${''} hover:bg-sky-500`} type="button" onClick={ClickToHidden}>
         <span className="align-middle text-sm mr-2"></span>
         顯示品項細節
         <span className="align-middle text-sm ml-2"></span>
       </button>
       {/* <PaymentMethod></PaymentMethod> */}
       <div className="mt-8">
-        <label className="font-bold text-sm text-black mb-4">付款方式</label>
-        <label className="mb-2 mt-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14">
+        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">付款方式</label>
+        <label className="mb-2 mt-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14 dark:bg-slate-800 dark:hover:bg-slate-600">
           {/* 兩個radio設定同樣name，達成單選效果 */}
           <input className="flex-initial" type="radio" value="1" checked={paymentMethod === "1"} name="paymentmethod" onChange={handlePaymentMethodChange}/>
           <h3 className="ml-2 flex-1">
             <span className="block font-bold">信用卡付款</span>
-            <p className="flex text-xs text-gray-800 mt-1">
+            <p className="flex text-xs text-gray-800 mt-1 dark:text-slate-300">
               <span>台新、玉山享 3 期 / 零利率</span>
               、
               <span>可用銀聯卡</span>
@@ -514,31 +514,31 @@ return(
             </p>
           </h3>
         </label>
-        <label className="mb-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14">
+        <label className="mb-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14 dark:bg-slate-800 dark:hover:bg-slate-600">
           <input className="zec js-payment-method flex-initial" type="radio" checked={paymentMethod === "3"} value="3" name="paymentmethod" onChange={handlePaymentMethodChange}/>
           <h3 className="ml-2 flex-1">
             <span className="block font-bold">ATM 轉帳或銀行臨櫃繳款</span>
-            <span className="mt-2 text-xs text-gray-800">需於指定時間內完成付款，超過時限則會取消交易</span>
+            <span className="mt-2 text-xs text-gray-800 dark:text-slate-300">需於指定時間內完成付款，超過時限則會取消交易</span>
           </h3>
         </label>
   
         <div className="p-4 border mt-2 rounded border-slate-200">
-          <ul className="list-disc m-0 pl-4 text-slate-600">
+          <ul className="list-disc m-0 pl-4 text-slate-600 dark:text-slate-300">
             <li>您了解您的贊助是支持創意專案的一種方式，也了解創意實踐過程中充滿變數，專案不一定能確保回饋。</li>
           </ul>
         </div>
-        <div className="mb-2 mt-4">
-          <label className="font-bold text-sm text-black mb-4">加碼贊助</label>
+        <div className="mb-2 mt-4 dark:text-slate-300">
+          <label className="font-bold text-sm text-black mb-4 dark:text-slate-300 ">加碼贊助</label>
           （選擇）
         </div>
         <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
-          <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap">NT $</div>
-          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={'0'}/>
+          <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap ">NT $</div>
+          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent dark:bg-slate-800" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={'0'}/>
         </div>
         <div className="flex">
           <div className="mt-4 flex-auto"> 
-            <label className="font-bold text-sm text-black mb-4">縣市</label>
-            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100" onChange={CityChange} value={selectedCity}>   
+            <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">縣市</label>
+            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950" onChange={CityChange} value={selectedCity}>   
               <option selected={true}>-選擇-</option>
               {taiwan_districts.map((item) => (
                 <option key={item.name} value={item.name}>{item.name}</option>
@@ -546,8 +546,8 @@ return(
             </select>
           </div>
           <div className="mt-4 flex-auto pl-4">
-            <label className="font-bold text-sm text-black mb-4">鄉鎮市區</label>
-            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100">
+            <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">鄉鎮市區</label>
+            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950">
               <option selected={true}>-選擇-</option>
               {districtsName}
             </select>
@@ -556,19 +556,19 @@ return(
   
         <div className="flex mt-4">
           <div className="flex-auto">
-            <label className="font-bold text-sm text-black mb-4">地址</label>
-            <input required={true} autoComplete="street-address" className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1" type="text" name="order[address]"/>
+            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">地址</label>
+            <input required={true} autoComplete="street-address" className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[address]"/>
           </div>
           <div className="flex-auto pl-10">
-            <label className="font-bold text-sm text-black mb-4">郵遞區號</label>
-            <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1" type="text" name="order[postcode]"/>
+            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">郵遞區號</label>
+            <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[postcode]"/>
           </div>
         </div>
       
-        <label className="font-bold text-sm text-black mb-4">收件人</label>
-        <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500" type="text" name="order[recipient]"/>
-        <label className="font-bold text-sm text-black mb-4">連絡電話</label>
-        <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500" size={20} type="text" name="order[phone]"/>
+        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">收件人</label>
+        <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" type="text" name="order[recipient]"/>
+        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">連絡電話</label>
+        <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" size={20} type="text" name="order[phone]"/>
         <button className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500" onClick={(e)=>(handleConfirm(e))}>      
           立即預購
         </button>
