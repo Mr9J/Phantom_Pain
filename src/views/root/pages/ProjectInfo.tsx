@@ -23,27 +23,25 @@ function ProjectInfo() {
       try {
         const res = await axios.get(`${URL}/ProjectInfo/${pid}`);
         setProject(res.data);
+        console.log(res.data);
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [URL, pid]);
+  }, []);
 
   if (!project) return <NotFound></NotFound>;
-
   return (
     <>
       <div className="w-full pb-32">
         <div className="flex flex-wrap lg:-mx-4 justify-center py-4">
           {/* 圖片 */}
           <div className=" lg:w-7/12 lg:px-4">
-            {project && (
-              <img
-                className="aspect-video w-full min-w-2xl"
-                src={project.projectThumbnail}
-                alt="Project Thumbnail"
-              />
-            )}
+            <img
+              className="aspect-video w-full min-w-2xl"
+              src={project.projectThumbnail}
+              alt="Project Thumbnail"
+            />
           </div>
 
           {/* 上右半 */}
@@ -52,14 +50,13 @@ function ProjectInfo() {
               {/* 提案人 */}
               <div className="text-sm text-gray-500">
                 <span className="text-gray-500">提案人 </span>
-                <a
-                  className="text-zec-green font-bold"
-                  href="/users/2721388?tab=projects"
-                ></a>
+                <a className="text-zec-green font-bold" href="#">
+                  {project.memberName}
+                </a>
               </div>
               {/* 專案名稱 */}
               <h1 className="my-4 text-lg font-bold leading-relaxed tracking-wide">
-                {project && project.projectName}
+                {project.projectName}
               </h1>
             </div>
 
@@ -75,7 +72,8 @@ function ProjectInfo() {
                 募資期間
               </h2>
               <h3 className="inline-block text-xs text-gray-500">
-                2023/10/08 12:00 – 2023/12/01 01:59
+                {project.startDate.replaceAll("-", "/")} –{" "}
+                {project.endDate.replaceAll("-", "/")}
               </h3>
             </div>
 
