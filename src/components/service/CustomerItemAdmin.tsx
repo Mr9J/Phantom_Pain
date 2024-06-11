@@ -7,6 +7,7 @@ type Customer = {
   messageCount: number;
   lastMessage: string;
   lastMessageDate: string;
+  unreadMessages: number;  // 新增這行
 };
 
 type CustomerItemAdminProps = {
@@ -25,8 +26,10 @@ const CustomerItemAdmin: React.FC<CustomerItemAdminProps> = ({ customer, onClick
         <span className="admin-customer-name">{customer.name}</span>
         <span className="admin-customer-last-message">{customer.lastMessage}</span>
         <span className="admin-customer-last-message-date">{customer.lastMessageDate}</span>
-        <span className="admin-customer-message-count">{customer.messageCount}</span>
       </div>
+      {customer.unreadMessages > 0 && (
+        <div className="admin-customer-message-count">{customer.unreadMessages}</div>
+      )}
     </div>
   );
 };

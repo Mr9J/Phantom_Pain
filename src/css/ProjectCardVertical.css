@@ -1,0 +1,5 @@
+.flex-header {
+    flex: 0 1 auto; /* 不允許header縮小到少於兩行的高度 */
+    min-height: 3rem; /* 根據您的字體大小和行高調整 */
+    line-height: 1.5rem; /* 根據您的字體大小調整 */
+  }

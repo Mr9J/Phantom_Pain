@@ -1,17 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-
+import { NavLink, useLocation, useNavigate  } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import headerLogo from "@/assets/_shared_img/logo.png";
+import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "lucide-react";
+import { signOutNative } from "@/services/auth.service";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase";
+
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
-  const location = useLocation();
-  const { pathname } = location;
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const trigger = useRef(null);
   const sidebar = useRef(null);
-
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true');
+
+  const signOutHandler = () => {
+    signOutNative();
+    signOut(auth);
+    window.location.reload();
+    navigate("/");
+  };
 
   // close on click outside
   useEffect(() => {
@@ -330,28 +341,35 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
-                     <NavLink
-                  end
-                  to="/logout"
-                        className={`block text-slate-200 truncate transition duration-150 ${open ? 'hover:text-slate-200' : 'hover:text-white'}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          sidebarExpanded ? handleClick() : setSidebarExpanded(true);
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                              <path className="fill-current text-slate-600" d="M8.07 16H10V8H8.07a8 8 0 110 8z" />
-                              <path className="fill-current text-slate-400" d="M15 12L8 6v5H0v2h8v5z" />
-                            </svg>
-                            <span className="text-base font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Logout
-                            </span>
-                          </div>
+                    <Button
+                       variant="ghost"
+                      className={`block text-slate-200 truncate transition duration-150 ${
+                        open ? "hover:text-slate-200" : "hover:text-white"
+                      }`}
+                      onClick={signOutHandler}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <svg
+                            className="shrink-0 h-6 w-6"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              className="fill-current text-slate-600"
+                              d="M8.07 16H10V8H8.07a8 8 0 110 8z"
+                            />
+                            <path
+                              className="fill-current text-slate-400"
+                              d="M15 12L8 6v5H0v2h8v5z"
+                            />
+                          </svg>
+                          <span className="text-base font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            Logout
+                          </span>
                         </div>
-                      </NavLink>
-                    </React.Fragment>
+                      </div>
+                    </Button>
+                  </React.Fragment>
                   );
                 }}
               </SidebarLinkGroup>

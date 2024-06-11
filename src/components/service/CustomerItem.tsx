@@ -1,31 +1,30 @@
 import React from 'react';
+import { Customer } from '@/components/service/types';
+import '@/components/service/customerItemAdmin.css';
 
-type Customer = {
-  id: number;
-  name: string;
-  image: string;
-  messageCount: number;
-  lastMessage: string;
-  lastMessageDate: string; // 添加消息最后发送日期
-};
-
-type CustomerItemProps = {
+interface CustomerItemAdminProps {
   customer: Customer;
   onClick: () => void;
-};
+  isSelected: boolean;
+}
 
-const CustomerItem: React.FC<CustomerItemProps> = ({ customer, onClick }) => {
+const CustomerItemAdmin: React.FC<CustomerItemAdminProps> = ({ customer, onClick, isSelected }) => {
   return (
-    <div className="customer-item" onClick={onClick}>
+    <div
+      className={`customer-item-admin ${isSelected ? 'selected' : ''}`}
+      onClick={onClick}
+    >
       <img src={customer.image} alt={customer.name} className="customer-image" />
       <div className="customer-info">
-        <span className="customer-name">{customer.name}</span>
-        <span className="customer-last-message">{customer.lastMessage}</span>
-        <span className="customer-last-message-date">{customer.lastMessageDate}</span>
+        <div className="customer-name">{customer.name}</div>
+        <div className="customer-last-message">{customer.lastMessage}</div>
+        <div className="customer-last-message-date">{customer.lastMessageDate}</div>
       </div>
-      <span className="customer-message-count">{customer.messageCount}</span>
+      {customer.unreadMessages > 0 && (
+        <div className="customer-unread-messages">{customer.unreadMessages}</div>
+      )}
     </div>
   );
 };
 
-export default CustomerItem;
+export default CustomerItemAdmin;

@@ -5,9 +5,8 @@ import { HomeCarousel } from "@/components/HomeCarousel";
 function SubHome() {
   return (
     <>
-      <HomeCarousel />
+      <HomeCarousel/>
       <HomeCardField></HomeCardField>
-
     </>
   );
 }
