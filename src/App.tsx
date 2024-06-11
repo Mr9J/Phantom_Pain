@@ -15,6 +15,7 @@ import {
   Remind,
   AdminProjects,
   AdminStaffs,
+  Users,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -38,7 +39,6 @@ import LoggedInLayout from "./views/auth/LoggedInLayout";
 
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
-import Users from "./views/root/pages/Users";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 import ServiceRoute from "./views/root/pages/ServiceRoute";
@@ -58,7 +58,7 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/users/:username" element={<Users />} />
+            <Route path="/users/:userId" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />

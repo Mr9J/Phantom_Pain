@@ -1,5 +1,6 @@
 import { LucideProps } from "lucide-react";
 import react from "react";
+import { string } from "zod";
 
 export type SignUpDTO = {
   nickname: string;
@@ -78,6 +79,7 @@ export type OuterSignIn = {
   thumbnail: string;
   uid: string;
 };
+
 export type ProjectCardDTO = {
   projectId: number;
   projectName: string;
@@ -116,6 +118,7 @@ export type MemberDTO = {
   registrationTime: string;
   statusId: number;
 };
+
 export type PostDTO = {
   caption: string;
   file: File[];
@@ -125,10 +128,48 @@ export type PostDTO = {
   id: string;
 };
 
+export type UpdatePostDTO = {
+  postId: string;
+  caption: string;
+  file: File[];
+  location: string;
+  tags: string;
+  userId: string;
+  id: string;
+};
+
+export type NewUpdatePostDTO = {
+  caption: string;
+  file: string;
+  location: string;
+  tags: string;
+  userId: string;
+  postId: number;
+};
+
 export type NewPostDTO = {
   caption: string;
   file: string;
   location: string;
   tags: string;
   userId: string;
+};
+
+export type GetPostDTO = {
+  postId: string;
+  userId: string;
+  username: string;
+  userImg: string;
+  caption: string;
+  imgUrl: string;
+  location: string;
+  tags: string;
+  postTime: string;
+  isAnonymous: string;
+};
+
+export type ICommentPost = {
+  postId: string;
+  userId: string;
+  comment: string;
 };
