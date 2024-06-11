@@ -46,6 +46,7 @@ import SearchProject from "./views/root/pages/SearchProject";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+import Playground from "./views/root/pages/Playground";
 
 const App = () => {
   return (
@@ -69,7 +70,8 @@ const App = () => {
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
           </Route>
-          
+          <Route path="/playground" element={<Playground />}></Route>
+
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
