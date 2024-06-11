@@ -1,12 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SendHorizontal } from "lucide-react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-// import { AuthContext } from "@/context/AuthContext"; // Replace "@/path/to/AuthContext" with the actual path to the AuthContext file
+import { useUserContext } from "@/context/AuthContext";
 
 function TabComments() {
-  // const { user } = useContext(AuthContext);
+  const { user } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [message, setMessage] = useState<string>("");
 
@@ -17,6 +17,7 @@ function TabComments() {
       MemberId: 1,
     });
   };
+  console.log(user);
   return (
     <>
       <div className="flex w-full max-w-sm items-center space-x-2">
