@@ -11,14 +11,13 @@ const ServiceRoute = () => {
     // 使用假數據模擬 API 請求
     const fetchUserData = async () => {
       try {
-        // 模擬延遲
-        await new Promise(resolve => setTimeout(resolve, 1000));
+       
 
         // 假數據
         const response = {
           data: {
             MemberID: 1,
-            AdminID: 1, // 修改為 1 來測試客服端界面
+            AdminID: null, // 修改為 1 來測試客服端界面
           },
         };
         setUser(response.data); // 設置使用者資料

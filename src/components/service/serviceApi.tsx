@@ -1,15 +1,59 @@
 import axios from 'axios';
 
+// 創建一個 axios 實例，預設基礎 URL 和頭部
 const api = axios.create({
-  baseURL: 'https://localhost:7150/api', // 根據你的後端伺服器地址進行調整
+  baseURL: 'https://localhost:7150/api',
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
+// API 函數
+
 export const getLatestMessages = async () => {
   return await api.get<CustomerMessageDTO[]>('/Service/latest-messages');
 };
+
+export const getMembersNicknames = async () => {
+  return await api.get<{ memberId: number; nickname: string; thumbnail: string }[]>('/Member');
+};
+
+export const getServicesByMemberId = (memberId: number) => {
+  return api.get<ServiceDTO[]>(`/Service/member/${memberId}/services`);
+};
+
+export const getServiceMessages = (serviceId: number) => {
+  return api.get<ServiceMessageDTO[]>(`/Service/service/${serviceId}/messages`);
+};
+
+export const createServiceMessage = (serviceId: number, message: ServiceMessageDTO) => {
+  return api.post<ServiceMessageDTO>(`/Service/${serviceId}/messages`, message);
+};
+
+export const createService = (service: ServiceDTO) => {
+  return api.post<ServiceDTO>('/Service', service);
+};
+
+// export const closeService = (serviceId: number) => {
+//   return api.post<void>(`/Service/${serviceId}/close`);
+// };
+export const closeService = (serviceId: number) => {
+  return api.put<void>(`/Service/${serviceId}/close`); // 使用 PUT 方法來關閉服務
+};
+
+export const getMessagesByMemberId = (memberId: number) => {
+  return api.get<ServiceMessageDTO[]>(`/Service/member/${memberId}/messages`);
+};
+
+export const getLatestServiceIdByMemberId = (memberId: number) => {
+  return api.get<number>(`/Service/member/${memberId}/latest-service-id`);
+};
+
+export const markMessagesAsRead = (memberId: number) => {
+  return api.post<void>(`/Service/mark-as-read/${memberId}`);
+};
+
+// TypeScript 接口定義
 
 export interface ServiceDTO {
   serviceId: number;
@@ -35,13 +79,6 @@ export interface CustomerMessageDTO {
   adminId?: number;
   messageContent: string;
   messageDate: string;
-  messageCount: number; 
+  messageCount: number;
+  unreadMessages: number;
 }
-
-export const getServicesByMemberId = (memberId: number) => api.get<ServiceDTO[]>(`/Service/member/${memberId}/services`);
-export const getServiceMessages = (serviceId: number) => api.get<ServiceMessageDTO[]>(`/Service/service/${serviceId}/messages`);
-export const createServiceMessage = (serviceId: number, message: ServiceMessageDTO) => api.post<ServiceMessageDTO>(`/Service/${serviceId}/messages`, message);
-export const createService = (service: ServiceDTO) => api.post<ServiceDTO>('/Service', service);
-export const closeService = (serviceId: number) => api.post<void>(`/Service/${serviceId}/close`);
-export const getMessagesByMemberId = (memberId: number) => api.get<ServiceMessageDTO[]>(`/Service/member/${memberId}/messages`);
-export const getLatestServiceIdByMemberId = (memberId: number) => api.get<number>(`/Service/member/${memberId}/latest-service-id`);

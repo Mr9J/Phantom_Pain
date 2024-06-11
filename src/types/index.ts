@@ -1,5 +1,6 @@
 import { LucideProps } from "lucide-react";
 import react from "react";
+import { string } from "zod";
 
 export type SignUpDTO = {
   nickname: string;
@@ -79,16 +80,98 @@ export type OuterSignIn = {
   uid: string;
 };
 
-export type ProjectCardDTO={
-  projectId:number;
-  projectName:string;
-  projectGoal:number;
-  dayLeft:number;
-  thumbnail:string;
-  totalAmount:number;
-  sponsorCount:number;
+export type ProjectCardDTO = {
+  projectId: number;
+  projectName: string;
+  projectGoal: number;
+  startDate:string;
+  endDate:string;
+  dayLeft: number;
+  thumbnail: string;
+  totalAmount: number;
+  sponsorCount: number;
+};
+export type ProjectDTO = {
+  projectId: number;
+  projectName: string;
+  ProjectDescription: string;
+  projectGoal: number;
+  startDate: number;
+  endDate: number;
+  memberId: number;
+  groupId: number;
+  thumbnail: string;
+  totalAmount: number;
+  statusId: number;
+};
+export type filteredProjects = ProjectDTO;
+export type ProjectCount = number[];
+export type MemberCount = number[];
+export type MemberDTO = {
+  id: number;
+  memberId: number;
+  username: string;
+  nickname: string;
+  thumbnail: string;
+  email: string;
+  address: string;
+  memberIntroduction: string;
+  phone: number;
+  registrationTime: string;
+  statusId: number;
 };
 
+export type PostDTO = {
+  caption: string;
+  file: File[];
+  location: string;
+  tags: string;
+  userId: string;
+  id: string;
+};
 
+export type UpdatePostDTO = {
+  postId: string;
+  caption: string;
+  file: File[];
+  location: string;
+  tags: string;
+  userId: string;
+  id: string;
+};
 
+export type NewUpdatePostDTO = {
+  caption: string;
+  file: string;
+  location: string;
+  tags: string;
+  userId: string;
+  postId: number;
+};
 
+export type NewPostDTO = {
+  caption: string;
+  file: string;
+  location: string;
+  tags: string;
+  userId: string;
+};
+
+export type GetPostDTO = {
+  postId: string;
+  userId: string;
+  username: string;
+  userImg: string;
+  caption: string;
+  imgUrl: string;
+  location: string;
+  tags: string;
+  postTime: string;
+  isAnonymous: string;
+};
+
+export type ICommentPost = {
+  postId: string;
+  userId: string;
+  comment: string;
+};
