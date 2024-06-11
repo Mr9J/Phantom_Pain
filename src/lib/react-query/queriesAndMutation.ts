@@ -1,4 +1,11 @@
-import { OuterSignIn, SignInDTO, SignUpDTO, PostDTO } from "@/types";
+import {
+  OuterSignIn,
+  SignInDTO,
+  SignUpDTO,
+  PostDTO,
+  UpdatePostDTO,
+  ICommentPost,
+} from "@/types";
 import {
   resetPassword,
   sendResetEmail,
@@ -6,8 +13,18 @@ import {
   signInWithOthers,
   signUp,
 } from "@/services/auth.service";
-import { useMutation } from "@tanstack/react-query";
-import { createPost } from "@/services/post.service";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  commentPost,
+  createPost,
+  deletePost,
+  getCommentsPost,
+  getPostById,
+  getRecentPosts,
+  likePost,
+  savePost,
+  updatePost,
+} from "@/services/post.service";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -43,5 +60,60 @@ export const useSendResetEmail = () => {
 export const useSignInWithOthers = () => {
   return useMutation({
     mutationFn: (x: OuterSignIn) => signInWithOthers(x),
+  });
+};
+
+export const useGetRecentPosts = (page: number) => {
+  return useQuery({
+    queryKey: [page],
+    queryFn: () => getRecentPosts(page),
+  });
+};
+
+export const useLikePost = () => {
+  return useMutation({
+    mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
+      likePost(postId, userId),
+  });
+};
+
+export const useSavePost = () => {
+  return useMutation({
+    mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
+      savePost(postId, userId),
+  });
+};
+
+export const useGetPostById = (postId: string) => {
+  return useQuery({
+    queryKey: [postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
+  });
+};
+
+export const useUpdatePost = () => {
+  return useMutation({
+    mutationFn: (post: UpdatePostDTO) => updatePost(post),
+  });
+};
+
+export const useDeletePost = () => {
+  return useMutation({
+    mutationFn: (postId: string) => deletePost(postId),
+  });
+};
+
+export const useCommentPost = () => {
+  return useMutation({
+    mutationFn: (x: ICommentPost) => commentPost(x),
+  });
+};
+
+export const useGetCommentPost = (postId: string) => {
+  return useQuery({
+    queryKey: [postId],
+    queryFn: () => getCommentsPost(postId),
+    enabled: !!postId,
   });
 };

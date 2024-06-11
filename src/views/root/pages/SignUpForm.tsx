@@ -21,6 +21,7 @@ import {
   useSignInAccount,
 } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
+import { ToastAction } from "@/components/ui/toast";
 
 const SignUpForm = () => {
   const { toast } = useToast();
@@ -46,9 +47,31 @@ const SignUpForm = () => {
     try {
       const res = await signUp(user);
 
-      if (res !== "註冊成功") {
+      if (res === "註冊資料格式錯誤") {
         toast({
-          title: "註冊失敗, 請再試一次",
+          variant: "destructive",
+          title: "錯誤",
+          description: "註冊資料格式錯誤",
+        });
+
+        return;
+      }
+
+      if (res === "使用者已存在") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "使用者已存在",
+        });
+
+        return;
+      }
+
+      if (!res) {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "伺服器錯誤，請稍後再試",
         });
 
         return;
@@ -60,7 +83,12 @@ const SignUpForm = () => {
       });
 
       if (!session) {
-        toast({ title: "發生錯誤，請嘗試登入您的帳號" });
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "發生錯誤，請嘗試登入您的帳號",
+        });
+
         return;
       }
 
@@ -71,7 +99,17 @@ const SignUpForm = () => {
         window.alert("註冊成功，您將被導向至首頁");
         navigate("/");
       } else {
-        toast({ title: "登入失敗, 請至登入頁面嘗試登入" });
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "登入失敗, 請至登入頁面嘗試登入",
+          action: (
+            <ToastAction altText="Sign In">
+              <Link to="/sign-in">登入</Link>
+            </ToastAction>
+          ),
+        });
+
         return;
       }
     } catch (error) {
@@ -80,7 +118,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <section className="flex flex-1 items-center flex-col py-10 overflow-auto">
+    <section className="flex flex-1 items-center flex-col py-10 justify-center overflow-auto">
       <Form {...form}>
         <div className="sm:w-[560px] flex justify-center items-center flex-col m-4 sm:m-0">
           <img src={logo} alt="logo" className="h-[64px]" />
@@ -167,7 +205,11 @@ const SignUpForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="shad-button_primary">
+            <Button
+              type="submit"
+              className="shad-button_primary"
+              disabled={isCreatingAccount || isSigningInUser || isUserLoading}
+            >
               {isCreatingAccount || isSigningInUser || isUserLoading ? (
                 <div className="flex justify-center items-center gap-2">
                   <LoaderSvg /> Loading...
@@ -183,13 +225,6 @@ const SignUpForm = () => {
               </Link>
             </p>
           </form>
-          <div className="flex justify-center items-center w-full mt-4">
-            <Button className="flex-1 mr-2 shad-button_primary">Google</Button>
-            <Button className="flex-1 mx-2 shad-button_primary">
-              Facebook
-            </Button>
-            <Button className="flex-1 ml-2 shad-button_primary">X</Button>
-          </div>
           <Link
             to="/"
             className="text-center mt-4 text-xl text-blue-500 font-bold"

@@ -27,21 +27,25 @@ import {
 import { signInWithPopup } from "firebase/auth";
 import { OuterSignIn } from "@/types";
 import { signInWithOthers } from "@/services/auth.service";
+import { ToastAction } from "@/components/ui/toast";
 
 const SignInForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { checkAuthUser } = useUserContext();
+  const { checkAuthUser, isLoading } = useUserContext();
   const { mutateAsync: signIn, isPending } = useSignInAccount();
 
   const googleHandler = async () => {
     try {
       const result = await signInWithPopup(auth, GoogleProvide);
 
-      console.log(result);
-
       if (!result) {
-        toast({ title: "登入失敗，請再試一次" });
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "登入失敗，請再試一次",
+        });
+
         return;
       }
 
@@ -54,8 +58,33 @@ const SignInForm = () => {
 
       const session = await signInWithOthers(user);
 
+      if (session === "錯誤，請聯絡客服") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "錯誤，請聯絡客服",
+        });
+
+        return;
+      }
+
+      if (session === "帳號已被停權") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "帳號已被停權",
+        });
+
+        return;
+      }
+
       if (!session) {
-        toast({ title: "發生錯誤，請稍後再試 session" });
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "伺服器錯誤，請稍後再試",
+        });
+
         return;
       }
 
@@ -91,8 +120,33 @@ const SignInForm = () => {
 
       const session = await signInWithOthers(user);
 
+      if (session === "錯誤，請聯絡客服") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "錯誤，請聯絡客服",
+        });
+
+        return;
+      }
+
+      if (session === "帳號已被停權") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "帳號已被停權",
+        });
+
+        return;
+      }
+
       if (!session) {
-        toast({ title: "發生錯誤，請稍後再試 session" });
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "伺服器錯誤，請稍後再試",
+        });
+
         return;
       }
 
@@ -128,8 +182,33 @@ const SignInForm = () => {
 
       const session = await signInWithOthers(user);
 
+      if (session === "錯誤，請聯絡客服") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "錯誤，請聯絡客服",
+        });
+
+        return;
+      }
+
+      if (session === "帳號已被停權") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "帳號已被停權",
+        });
+
+        return;
+      }
+
       if (!session) {
-        toast({ title: "發生錯誤，請稍後再試 session" });
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "伺服器錯誤，請稍後再試",
+        });
+
         return;
       }
 
@@ -158,8 +237,39 @@ const SignInForm = () => {
   const handleSignin = async (values: z.infer<typeof SignInValidation>) => {
     const session = await signIn(values);
 
+    if (session === "帳號已被停權") {
+      toast({
+        variant: "destructive",
+        title: "帳號已被停權",
+        description: "如有疑問請聯絡客服",
+        action: (
+          <ToastAction altText="Contact Us">
+            {/* <Link to="/">聯絡</Link> */}
+            聯絡
+          </ToastAction>
+        ),
+      });
+
+      return;
+    }
+
+    if (session === "帳號或密碼錯誤") {
+      toast({
+        variant: "destructive",
+        title: "錯誤",
+        description: "帳號或密碼錯誤",
+        action: <ToastAction altText="Confirm">確認</ToastAction>,
+      });
+
+      return;
+    }
+
     if (!session) {
-      toast({ title: "登入失敗，請再試一次" });
+      toast({
+        variant: "destructive",
+        title: "錯誤",
+        description: "伺服器錯誤，請稍後再試",
+      });
 
       return;
     }
@@ -221,7 +331,11 @@ const SignInForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="shad-button_primary">
+            <Button
+              type="submit"
+              className="shad-button_primary"
+              disabled={isPending || isLoading}
+            >
               {isPending ? (
                 <div className="flex justify-center items-center gap-2">
                   <LoaderSvg />

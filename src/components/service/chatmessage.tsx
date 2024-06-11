@@ -34,6 +34,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
     );
   };
 
+  const formatTime = (timestamp: string | Date) => {
+    const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+    return date.toLocaleTimeString('zh-TW', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }).replace(':', ':').replace('AM', '上午').replace('PM', '下午'); // 顯示 "下午 3:17分" 格式
+  };
+
   return (
     <div className="service-chat-messages">
       {messages.map((message, index) => (
@@ -45,7 +54,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
               <div>{highlightText(message.content, index)}</div>
             )}
             <div className={`service-timestamp ${message.sender}`}>
-              {new Date(message.timestamp).toLocaleTimeString()}
+              {formatTime(message.timestamp)}
             </div>
           </div>
         </div>

@@ -20,6 +20,8 @@ export type Customer = {
   messageCount: number;
   lastMessage: string;
   lastMessageDate: string; // 添加消息最後發送日期
+  messageDate: string; // 用於排序的完整日期時間戳
+  unreadMessages: number; 
 };
 export interface UserType {
   MemberID: number;

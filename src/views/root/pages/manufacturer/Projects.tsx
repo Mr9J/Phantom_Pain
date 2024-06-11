@@ -47,6 +47,7 @@ const Projects = () => {
   const statusMap = {
     1: "募資中",
     2: "下架",
+    3: "待審核",
   };
   //圖片處理
   const handleFileChange = (event) => {
@@ -265,6 +266,25 @@ const Projects = () => {
                   已下架({projectCount[2]})
                 </button>
               )}
+              {orderType === 4 ? (
+              <button
+                type="button"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                待審核({projectCount[3]})
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                onClick={() => {
+                  setorderType(4);
+                  setProjectStatus(3);
+                }}
+              >
+                待審核({projectCount[3]})
+              </button>
+            )}
               <div style={{ display: 'flex' }}>
             <button
               type="button"
@@ -509,7 +529,7 @@ const Projects = () => {
                                 </div>
                               </th>
                               <th style={{ width: 130 }}>
-                                <div className="text-smfont-semibold text-center">
+                                {(orderType === 1 || orderType === 2) && <div className="text-smfont-semibold text-center">
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -528,7 +548,7 @@ const Projects = () => {
                                     </svg>
                                     <p className="text-base">新增產品</p>
                                   </button>
-                                </div>
+                                </div>}
                               </th>
                             </tr>
                           </thead>
@@ -911,7 +931,7 @@ const Projects = () => {
                       className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  <div className="mb-3 flex items-center">
+                  {(orderType === 1 || orderType === 2)&& <div className="mb-3 flex items-center">
                     <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                       狀態
                     </span>
@@ -926,7 +946,7 @@ const Projects = () => {
                       <option value="1">募資中</option>
                       <option value="2">下架</option>
                     </select>
-                  </div>
+                  </div>}
                   <div className="mb-3 flex items-center">
                     <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                       募資目標
@@ -1136,7 +1156,7 @@ const Projects = () => {
                       className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  <div className="mb-3 flex items-center">
+                  {(orderType === 1 || orderType === 2) && <div className="mb-3 flex items-center">
                     <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                       狀態
                     </span>
@@ -1151,7 +1171,7 @@ const Projects = () => {
                       <option value="1">募資中</option>
                       <option value="2">下架</option>
                     </select>
-                  </div>
+                  </div>}
                   <div className="mb-3 flex items-center">
                     <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                       產品金額

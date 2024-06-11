@@ -1,17 +1,17 @@
 // import './App.css';
 import '@/css/productcard.css'
 // import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MouseEvent } from 'react';
 // import { getProject } from './api/Project.js';
 import { getProjectfromProductId } from '@/services/projects.service';
-// import { addToCart } from './api/Project.js';
+import { addToCart } from '@/services/Cart.service';
 // import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 import { useNavigate } from 'react-router-dom';
 
 // import { data } from 'autoprefixer';
 //寫死的參數
-const  testProjectid = 25;
+const  testProjectid = 22;
 const  testmemberId = 6;
 
 interface ProjectCardDTO {
@@ -55,23 +55,50 @@ interface ProductCardDTO {
 interface ProductsComponentProps {
   productsData: ProjectCardDTO[] | null;
   getSelectProductId: (productId: number) => void;
+  setPopupVisible: (isVisible: boolean) => void; 
 }
 
 
-function ProductsComponent({ productsData, getSelectProductId }: ProductsComponentProps) {
-  if (!productsData) return null;
-// const {productsData,getSelectProductId} = props
-// // const [productCount, setProductCount] = useState(1);
+function ProductsComponent({ productsData, getSelectProductId ,setPopupVisible}: ProductsComponentProps) {
+
+   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>({});
+ if (!productsData) return null;
+
+ 
+  const handleDecrease = (e: MouseEvent, productId: number) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if(productCounts[productId]==undefined)
+      return;
+    const updatedCount = Math.max(productCounts[productId] - 1, 0);
+    setProductCounts(prevCounts => ({
+      ...prevCounts,
+      [productId]: updatedCount
+    }));
+  }
+  
+  const handleIncrease = (e: MouseEvent, productId: number) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const updatedCount = (productCounts[productId] || 0) + 1;
+    setProductCounts(prevCounts => ({
+      ...prevCounts,
+      [productId]: updatedCount
+    }));
+
+  
+  }
 
 
-// ProductsComponent.propTypes = {
-//   productsData: PropTypes.array //類型檢查
-// };            
+  const ClickaddToCart = (e: MouseEvent,productId: number) =>{
+    console.log(productCounts[productId])
+   //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
+       e.stopPropagation();
+       
+       addToCart(productId,productCounts[productId] , testProjectid , testmemberId)
+       setPopupVisible(true);
+     }
 
-// ProductsComponent.propTypes = {
-//   getSelectProductId : PropTypes.func.isRequired, // 必需的 onClick 屬性
-//   // 其他 PropTypes 定義
-// };
 
 //測試加入購物車(成功) 不要刪  
 // const ClickaddToCart = (e) =>{
@@ -97,8 +124,8 @@ const listitem = productsData&&productsData.map(item=>(
 src={`${pjitem.thumbnail}`}
 alt="Description"
 />
-<div className="text-gray-600 font-bold mt-4 mb-2">{pjitem.productName}</div>
-<div className="text-black font-bold text-xl items-center">
+<div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+<div className="text-black font-bold text-xl items-center dark:text-white">
 {pjitem.productPrice}
 <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
 <p className="w-full text-gray-500 font-normal text-xs">
@@ -122,7 +149,7 @@ alt="Description"
 
 <div className="overflow-y-auto break-all">
 {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
-<div className="text-black text-sm space-y-4 leading-8">
+<div className="text-black text-sm space-y-4 leading-8 dark:text-white">
 {/* 加入商品敘述 */}
 <p>
 {pjitem.productDescription}</p>
@@ -130,6 +157,15 @@ alt="Description"
 
 <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t" >
 {/* 不要刪 */}
+<button className="px-3 py-2 mr-1 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" onClick={(e) => handleDecrease(e, pjitem.productId)}>-</button>
+    <span className="font-black dark:text-white">{productCounts[pjitem.productId] || 0}</span>
+    <button className="px-3 py-2 ml-1 bg-gray-200 rounded font-black hover:bg-slate-300" onClick={(e) => handleIncrease(e, pjitem.productId)}>+</button>
+    {productCounts[pjitem.productId] === undefined||productCounts[pjitem.productId] === 0 ? (
+  <button className="ml-7 h-10 rounded-full font-bold text-xs py-1 px-2 text-center text-neutral-300 leading-none opacity-50 cursor-not-allowed bg-slate-500" disabled onClick={(e) => e.stopPropagation()}>加入購物車</button>
+) : (
+  <button className={`ml-7 h-10 rounded-full font-bold text-xs py-1 px-2 text-center  bg-orange-600 text-neutral-300 leading-none hover:bg-orange-900 ${productCounts[pjitem.productId] === 0 ? 'opacity-50 cursor-not-allowed pointer-events-none bg-slate-500' : ''}`}  onClick={(e) => ClickaddToCart(e,pjitem.productId)}>加入購物車</button>
+)}
+  
 {/* {item.productInCart.includes(pjitem.productId) ? (
   <button className="float-right mb-1 rounded-full font-bold text-xs py-1 px-2 bg-gray-600 text-center text-neutral-400 leading-none" disabled value={pjitem.productId}>已加入購物車</button>
   
@@ -163,12 +199,24 @@ function Productpage() {
 
   const ClickProductToPaypage = (productId:number) => {
     // 點擊按鈕後導航到其他路由
-    console.log(productId);
-    navigate(`/Paypage?project=${testProjectid}&product=${productId}`);
+    // console.log(productId);
+    navigate(`/Paypage?project=${testProjectid}&product=${productId}&fromCartPage=${false}`);
   };
 
 //後面寫空陣列表示只渲染一次
   const [projectAndproductsData, setProjectData] = useState(null);
+  const [isPopupVisible, setPopupVisible] = useState(false);
+
+  useEffect(() => {
+    if (isPopupVisible) {
+        const timer = setTimeout(() => {
+            setPopupVisible(false); //彈出提示 2秒後關閉
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }
+}, [isPopupVisible]);
+
 
 
     useEffect(()=>{
@@ -198,9 +246,9 @@ function Productpage() {
 <div className="container my-8 px-4 mb-8 ml-60">
   
 {/* 這邊有hidden */}
-<div className="text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest">
+<div className="h-10 text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest dark:bg-slate-700 dark:text-white">
     {/* material-icons*/}
-<span className="material-icons"></span>
+<span className="material-icons font-bold"></span>
 左右捲動看看更多選項
 <span className="material-icons"></span>
 </div>
@@ -209,11 +257,17 @@ function Productpage() {
 <div className="flex overflow-x-auto scrollbar-top">
   {/* 下面的div是每欄商品產生 */}
 
-  <ProductsComponent productsData={projectAndproductsData} getSelectProductId={ClickProductToPaypage}></ProductsComponent>
- 
+  <ProductsComponent productsData={projectAndproductsData} getSelectProductId={ClickProductToPaypage} setPopupVisible={setPopupVisible}></ProductsComponent>
+  
 </div>
+{isPopupVisible && (
+        <div className="fixed top-10 left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
+          <div className="bg-white p-4 rounded shadow-md">
+            <p className="text-center text-lime-500 text-base">加入購物車成功!</p>
+          </div>
+        </div>
+      )}
 </div>
-
 
     </>
   );
