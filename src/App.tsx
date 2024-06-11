@@ -41,7 +41,7 @@ import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
-import ServiceRoute from "./views/root/pages/ServiceRoute";
+import ServiceRoute from "./views/auth/pages/ServiceRoute";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
@@ -67,7 +67,7 @@ const App = () => {
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
           </Route>
-          <Route path="/service" element={<ServiceRoute />} />{" "}
+          
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
@@ -99,6 +99,7 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
+            <Route path="/service" element={<ServiceRoute />} />{" "}
             <Route
               path="/manu/order/:projectId"
               element={<OrderList projectId={0} />}

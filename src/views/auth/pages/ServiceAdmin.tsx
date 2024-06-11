@@ -3,7 +3,16 @@ import ChatHeaderAdmin from '@/components/service/ChatHeaderAdmin';
 import ChatMessagesAdmin from '@/components/service/ChatMessagesAdmin';
 import ChatFooterAdmin from '@/components/service/ChatFooterAdmin';
 import CustomerItemAdmin from '@/components/service/CustomerItemAdmin';
-import { getLatestMessages, getMessagesByMemberId, createServiceMessage, CustomerMessageDTO, ServiceMessageDTO, getLatestServiceIdByMemberId } from '@/components/service/serviceApi';
+import {
+  getLatestMessages,
+  getMessagesByMemberId,
+  createServiceMessage,
+  CustomerMessageDTO,
+  ServiceMessageDTO,
+  getLatestServiceIdByMemberId,
+  markMessagesAsRead,
+  getMembersNicknames
+} from '@/components/service/serviceApi';
 import { Customer, Message } from '@/components/service/types';
 import '@/components/service/serviceAdmin.css';
 
@@ -16,34 +25,60 @@ const ServiceAdmin = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [highlightedIndexes, setHighlightedIndexes] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
+  const [memberNicknames, setMemberNicknames] = useState<{ memberId: number; nickname: string; thumbnail: string }[]>([]);
 
+  useEffect(() => {
+    const fetchMembersNicknames = async () => {
+      try {
+        const response = await getMembersNicknames();
+        console.log('Nicknames fetched:', response.data); // 日誌
+        setMemberNicknames(response.data);
+      } catch (error) {
+        console.error('Failed to fetch member nicknames', error);
+      }
+    };
+  
+    fetchMembersNicknames();
+  }, []);
+  
   useEffect(() => {
     const fetchLatestMessages = async () => {
       try {
         const response = await getLatestMessages();
         const latestMessages: CustomerMessageDTO[] = response.data;
-
-        const customerData: Customer[] = latestMessages.map((message: CustomerMessageDTO) => ({
-          id: message.memberId,
-          name: `客戶 ${message.memberId}`,
-          image: 'https://via.placeholder.com/150',
-          messageCount: message.messageCount, // 正確映射 messageCount
-          lastMessage: message.messageContent,
-          lastMessageDate: new Date(message.messageDate).toLocaleString(),
-        }));
-
-        // 根據最後留言時間進行排序
-        customerData.sort((a, b) => new Date(b.lastMessageDate).getTime() - new Date(a.lastMessageDate).getTime());
-
+  
+        console.log('Latest messages fetched:', latestMessages); // 確認數據
+  
+        const sortedMessages = latestMessages.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
+  
+        const customerData = sortedMessages.map(message => {
+          const memberId = message.memberId; // 使用小寫 memberId
+          const member = memberNicknames.find(m => m.memberId === memberId); // 使用小寫 memberId 和 nickname
+          console.log('Member data for message:', member, 'Message:', message, 'MemberId:', memberId); // 確認數據
+          return {
+            id: message.memberId,
+            name: member ? member.nickname : `廠商 ${message.memberId}`, // 使用小寫 nickname
+            image: member ? member.thumbnail : 'https://via.placeholder.com/150', // 使用真實圖片
+            messageCount: message.messageCount,
+            lastMessage: message.messageContent,
+            lastMessageDate: new Date(message.messageDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            messageDate: message.messageDate,
+            unreadMessages: message.unreadMessages
+          };
+        });
+  
+        console.log('Customer data:', customerData); // 確認數據
         setCustomers(customerData);
       } catch (error) {
         console.error('Failed to fetch latest messages', error);
       }
     };
-
-    fetchLatestMessages();
-  }, []);
-
+  
+    if (memberNicknames.length > 0) {
+      fetchLatestMessages();
+    }
+  }, [memberNicknames]);
+  
   useEffect(() => {
     const fetchMessages = async () => {
       if (selectedCustomerId !== null) {
@@ -56,9 +91,17 @@ const ServiceAdmin = () => {
             adminId: msg.adminId,
             content: msg.messageContent || '',
             timestamp: new Date(msg.messageDate),
-            sender: msg.adminId ? 'admin' : 'user' as 'admin' | 'user',
+            sender: msg.adminId ? 'admin' : 'user',
           }));
           setMessages(fetchedMessages);
+
+          // 將所有訊息標記為已讀
+          await markMessagesAsRead(selectedCustomerId);
+
+          // 更新客戶未讀訊息數量
+          setCustomers(prevCustomers => prevCustomers.map(customer =>
+            customer.id === selectedCustomerId ? { ...customer, unreadMessages: 0 } : customer
+          ));
         } catch (error) {
           console.error('Failed to fetch messages', error);
         }
@@ -69,9 +112,7 @@ const ServiceAdmin = () => {
   }, [selectedCustomerId]);
 
   useEffect(() => {
-    const indexes = messages
-      .map((message, index) => (message.content.includes(searchTerm) ? index : -1))
-      .filter(index => index !== -1);
+    const indexes = messages.map((message, index) => (message.content.includes(searchTerm) ? index : -1)).filter(index => index !== -1);
     setHighlightedIndexes(indexes);
     if (indexes.length > 0) {
       setCurrentIndex(indexes.length - 1);
@@ -93,7 +134,6 @@ const ServiceAdmin = () => {
     event.preventDefault();
     if (message && selectedCustomerId !== null) {
       try {
-        // 找到最新的 ServiceID
         const response = await getLatestServiceIdByMemberId(selectedCustomerId);
         const serviceId = response.data;
 
@@ -101,11 +141,12 @@ const ServiceAdmin = () => {
           id: messages.length + 1,
           serviceId: serviceId,
           memberId: selectedCustomerId,
-          adminId: 1, // 這裡設置為具體的adminId
+          adminId: 1,
           content: message,
           timestamp: new Date(),
           sender: 'admin'
         };
+
         await createServiceMessage(newMessage.serviceId, {
           messageId: newMessage.id,
           serviceId: newMessage.serviceId,
@@ -114,8 +155,23 @@ const ServiceAdmin = () => {
           messageContent: newMessage.content,
           messageDate: newMessage.timestamp.toISOString()
         });
+
         setMessages(prevMessages => [...prevMessages, newMessage]);
         setMessage('');
+
+        // 更新客戶列表並排序
+        setCustomers(prevCustomers => {
+          const updatedCustomers = prevCustomers.map(customer =>
+            customer.id === selectedCustomerId ? {
+              ...customer,
+              lastMessage: newMessage.content,
+              lastMessageDate: newMessage.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              messageDate: newMessage.timestamp.toISOString()
+            } : customer
+          );
+
+          return updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
+        });
       } catch (error) {
         console.error('Failed to send message', error);
       }
@@ -141,7 +197,7 @@ const ServiceAdmin = () => {
             id: messages.length + 1,
             serviceId: serviceId,
             memberId: selectedCustomerId,
-            adminId: 1, // 這裡設置為具體的adminId
+            adminId: 1,
             content: reader.result as string,
             timestamp: new Date(),
             sender: 'admin'
@@ -154,7 +210,20 @@ const ServiceAdmin = () => {
             messageContent: newMessage.content,
             messageDate: newMessage.timestamp.toISOString()
           });
+
           setMessages([...messages, newMessage]);
+
+          setCustomers(prevCustomers => {
+            const updatedCustomers = prevCustomers.map(customer =>
+              customer.id === selectedCustomerId ? {
+                ...customer,
+                lastMessage: newMessage.content,
+                lastMessageDate: newMessage.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                messageDate: newMessage.timestamp.toISOString()
+              } : customer
+            );
+            return updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
+          });
         } catch (error) {
           console.error('Failed to upload file', error);
         }
