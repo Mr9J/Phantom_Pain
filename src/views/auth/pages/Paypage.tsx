@@ -9,7 +9,6 @@ import { useLocation } from 'react-router-dom';
 
 
 
-
 // import IncreaseDecreaseButtons from './components/Header/button.jsx';
 interface ProjectCardDTO {
   projectId: number;
@@ -324,20 +323,20 @@ const handleIncrease =  (e: React.MouseEvent<HTMLButtonElement>,productId:number
     ///////////////////
 return(
   <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1">
-  <label className="bg-zinc-100 rounded-md p-4 leading-none block mb-0 mx-0.5">
+  <label className="bg-zinc-100 rounded-md p-4 leading-none block mb-0 mx-0.5 dark:text-white dark:bg-slate-500">
     {/* value傳商品id */}
   <input ref={(buttonRef) => { inputRefs.current[pjitem.productId] = buttonRef; }} className="mr-4" type="checkbox" value={pjitem.productId} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
   選擇
   </label>
   {/* 點擊商品後 href顯示加購及結帳  */}
-  <div className="p-4 border-2 border-inherit rounded mb-8 block" style={{ width: '300px', height: '615px' }}>
+  <div className="p-4 border-2 border-inherit rounded mb-8 block dark:bg-slate-800" style={{ width: '300px', height: '615px' }}>
   <img
   //  src商品圖片
   src={`${pjitem.thumbnail}`}
   alt="Description"
   />
-  <div className="text-gray-600 font-bold mt-4 mb-2">{pjitem.productName}</div>
-  <div className="text-black font-bold text-xl items-center">
+  <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+  <div className="text-black font-bold text-xl items-center dark:text-white">
   {pjitem.productPrice}
   <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
   <p className="w-full text-gray-500 font-normal text-xs">
@@ -361,7 +360,7 @@ return(
   
   <div className="overflow-y-auto break-all">
   {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
-  <div className="text-black text-sm space-y-4 leading-8">
+  <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
   <p>
   {truncateText(pjitem.productDescription!,100)}</p>
@@ -372,7 +371,7 @@ return(
       <button className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 ${
     buttonDisabled[pjitem.productId] ? 'opacity-50 cursor-not-allowed pointer-events-none bg-slate-500' : ''
   }`}  disabled={buttonDisabled[pjitem.productId]} value={pjitem.productId} onClick={(e)=>handleDecrease(e,pjitem.productId)}>-</button>
-      <span className="font-bold">
+      <span className="font-bold dark:text-white">
 
     {productCounts[pjitem.productId] || 0}
   
@@ -402,9 +401,9 @@ return(
       if(pjitem.productId.toString() == selectedproductId)
         return(
       <div key={pjitem.productId}>
-    <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block" key={pjitem.productId}>
+    <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block dark:bg-slate-800" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      {fromCartPage?<></>:  <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none" to="#" onClick={() => window.history.back()}>更改回饋</Link>}
+      {fromCartPage?<></>:  <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" to="#" onClick={() => window.history.back()}>更改回饋</Link>}
      
       {/* 點擊商品後 href顯示加購及結帳 */}
       <img
@@ -413,8 +412,8 @@ return(
         src={`${pjitem.thumbnail}`}
         alt="Description"
       />
-      <div className="text-gray-600 font-bold mt-4 mb-2">{pjitem.productName}</div>
-      <div className="text-black font-bold text-xl items-center">
+      <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+      <div className="text-black font-bold text-xl items-center dark:text-white">
         {pjitem.productPrice}
         <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
         <p className="w-full text-gray-500 font-normal text-xs">
@@ -437,7 +436,7 @@ return(
       </div>
   
       <div className="overflow-y-auto break-all">
-        <div className="text-black text-sm space-y-4 leading-8">
+        <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
           {/* 加入商品敘述 */}
           <p>
             {pjitem.productDescription}
@@ -447,9 +446,9 @@ return(
       <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
       <div className="flex items-center justify-center space-x-2 mb-3">
       <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount-1)}}>-</button>
-      {fromCartPage? <><span className="font-black">{selectedProductCount}</span>
+      {fromCartPage? <><span className="font-black dark:text-white">{selectedProductCount}</span>
       <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
-      <><span className="font-black">{selectedProductCount}</span>
+      <><span className="font-black dark:text-white">{selectedProductCount}</span>
       <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
      
     </div>
@@ -468,7 +467,7 @@ return(
   <div className="whitespace-nowrap text-right">
   NT$ {(pjitem.productPrice * selectedProductCount).toLocaleString()}
   <div>
-  <div className="inline-block text-xs bg-zinc-100 mr-2 leading-none rounded-full px-2 py-1">加購</div>
+  <div className="inline-block text-xs bg-zinc-100 mr-2 leading-none rounded-full px-2 py-1 dark:bg-rose-600">加購</div>
   +
   NT$ {addToPurchase.toLocaleString()}
   </div>

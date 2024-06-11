@@ -68,6 +68,8 @@ function ProductsComponent({ productsData, getSelectProductId ,setPopupVisible}:
   const handleDecrease = (e: MouseEvent, productId: number) => {
     e.stopPropagation();
     e.preventDefault();
+    if(productCounts[productId]==undefined)
+      return;
     const updatedCount = Math.max(productCounts[productId] - 1, 0);
     setProductCounts(prevCounts => ({
       ...prevCounts,
@@ -122,8 +124,8 @@ const listitem = productsData&&productsData.map(item=>(
 src={`${pjitem.thumbnail}`}
 alt="Description"
 />
-<div className="text-gray-600 font-bold mt-4 mb-2">{pjitem.productName}</div>
-<div className="text-black font-bold text-xl items-center">
+<div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+<div className="text-black font-bold text-xl items-center dark:text-white">
 {pjitem.productPrice}
 <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
 <p className="w-full text-gray-500 font-normal text-xs">
@@ -147,7 +149,7 @@ alt="Description"
 
 <div className="overflow-y-auto break-all">
 {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
-<div className="text-black text-sm space-y-4 leading-8">
+<div className="text-black text-sm space-y-4 leading-8 dark:text-white">
 {/* 加入商品敘述 */}
 <p>
 {pjitem.productDescription}</p>
@@ -156,7 +158,7 @@ alt="Description"
 <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t" >
 {/* 不要刪 */}
 <button className="px-3 py-2 mr-1 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" onClick={(e) => handleDecrease(e, pjitem.productId)}>-</button>
-    <span className="font-black">{productCounts[pjitem.productId] || 0}</span>
+    <span className="font-black dark:text-white">{productCounts[pjitem.productId] || 0}</span>
     <button className="px-3 py-2 ml-1 bg-gray-200 rounded font-black hover:bg-slate-300" onClick={(e) => handleIncrease(e, pjitem.productId)}>+</button>
     {productCounts[pjitem.productId] === undefined||productCounts[pjitem.productId] === 0 ? (
   <button className="ml-7 h-10 rounded-full font-bold text-xs py-1 px-2 text-center text-neutral-300 leading-none opacity-50 cursor-not-allowed bg-slate-500" disabled onClick={(e) => e.stopPropagation()}>加入購物車</button>
@@ -244,9 +246,9 @@ function Productpage() {
 <div className="container my-8 px-4 mb-8 ml-60">
   
 {/* 這邊有hidden */}
-<div className="text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest">
+<div className="h-10 text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest dark:bg-slate-700 dark:text-white">
     {/* material-icons*/}
-<span className="material-icons"></span>
+<span className="material-icons font-bold"></span>
 左右捲動看看更多選項
 <span className="material-icons"></span>
 </div>
