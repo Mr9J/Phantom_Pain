@@ -576,7 +576,7 @@ return(
          {/* 確認對話框 */}
       {isConfirming && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
+          <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-500">
             <p>將前往結帳頁面，確定要進行購買嗎?</p>
             <div className="flex justify-center mt-4">
               <button

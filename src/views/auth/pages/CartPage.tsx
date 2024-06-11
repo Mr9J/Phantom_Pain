@@ -87,12 +87,12 @@ function CartPage() {
         <div className="container px-4 mb-8">
             <div className='flex flex-col-reverse lgl:flex-row gap-5'>
                 <div className='w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5'>
-                    <div className='w-full  bg-white py-7 px-5'>
+                    <div className='w-full  bg-white py-7 px-5 dark:bg-slate-800'>
                         <h1 className='text-3xl font-semibold mb-1'>Mumu 購物車</h1>
                         <hr />
                         {memberCartData?.length===0 ?    
                         
-                        <div className="max-w-4xl mx-auto px-10 py-4 bg-white rounded-lg shadow-lg">
+                        <div className="max-w-4xl mx-auto px-10 py-4 bg-white rounded-lg shadow-lg dark:bg-slate-500">
       <div className="flex flex-col items-center justify-center py-12">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +121,7 @@ function CartPage() {
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
                                         return(
-                                        <div key={product.productId} className='border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1'>
+                                        <div key={product.productId} className='border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1 dark:bg-slate-700'>
                                             <div className='float-left w-64'>
                                                 <img className='mx-auto' src={product.thumbnail?.toString()} alt="productImage" />
                                             </div>
@@ -129,22 +129,22 @@ function CartPage() {
     <br />
     <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
     <div className="flex items-center">
-        <span className='text-green-700 font-semibold text-[16px] flex-2 mr-5'>有存貨</span>
+        <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨</span>
         <div className="flex items-center justify-center space-x-2 mb-1">
             {Number(product.count) === 1 ? (
-                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`}>-</button>
+                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`}>-</button>
             ) : (
-                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
+                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
             )}
             <span className="font-bold">{product.count}</span>
-            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
+            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
         </div>
         <div className="grow h-14">
   </div>
    <div className='flex flex-row justify-between mt-2'>
         <span className="float-end mx-6 my-0">NT$ {(product.productPrice * Number(product.count)).toLocaleString()}</span>
        
-        <button className='text-blue-600' onClick={() => handleDeleteProduct(product.productId)}>刪除</button>
+        <button className='text-blue-500' onClick={() => handleDeleteProduct(product.productId)}>刪除</button>
     </div>
 
     </div>
@@ -157,7 +157,7 @@ function CartPage() {
                                     )})}
                                    
                                  <div className="mb-20 mt-6">
-<button className="float-end bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={()=>goToPayPage(item.projectId,Number(item.products&&item.products[0].productId),true)}>
+<button className="float-end bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded dark:bg-slate-700 dark:text-blue-400 dark:hover:bg-slate-600" onClick={()=>goToPayPage(item.projectId,Number(item.products&&item.products[0].productId),true)}>
 前往結帳
 </button>
 <span className="font-bold float-end mt-4 mr-5">總價 NT$ {totalAmount.toLocaleString()}</span>
