@@ -179,9 +179,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       </div>
       <Separator className="my-4" />
       <div className="flex justify-between items-center mt-2 w-full">
-        <Button variant="link" onClick={}>
-          查看留言...
-        </Button>
+        <Button variant="link">查看留言...</Button>
       </div>
       <div className="flex items-center justify-center mt-2 gap-2 w-full">
         <Input

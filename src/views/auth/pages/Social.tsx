@@ -18,7 +18,6 @@ const Social = () => {
   useEffect(() => {
     if (posts) {
       setData([...data, ...posts]);
-      console.log(data);
     }
   }, [posts]);
 
