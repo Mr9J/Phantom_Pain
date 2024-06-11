@@ -1,6 +1,12 @@
-import { PostDTO, NewPostDTO, UpdatePostDTO, NewUpdatePostDTO } from "@/types";
+import {
+  PostDTO,
+  NewPostDTO,
+  UpdatePostDTO,
+  NewUpdatePostDTO,
+  ICommentPost,
+} from "@/types";
 import { S3 } from "@/config/R2";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -28,14 +34,16 @@ export async function createPost(post: PostDTO) {
         );
 
         if (upload.$metadata.httpStatusCode === 200) {
-          newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
+          if (index === post.file.length - 1) {
+            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
+          } else {
+            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
+          }
         }
       } catch (error) {
         console.error(error);
       }
     }
-
-    console.log(newPost);
 
     const jwt = localStorage.getItem("token");
     if (!jwt) throw Error;
@@ -52,11 +60,11 @@ export async function createPost(post: PostDTO) {
   }
 }
 
-export async function getRecentPosts() {
+export async function getRecentPosts(page: number) {
   try {
     const jwt = localStorage.getItem("token");
 
-    const data = await axios.get(`${URL}/Post/get-posts`, {
+    const data = await axios.get(`${URL}/Post/get-posts/${page}`, {
       headers: { Authorization: jwt },
     });
 
@@ -144,26 +152,6 @@ export async function savePost(postId: string, userId: string) {
   }
 }
 
-export async function deleteSavePost(postId: string, userId: string) {
-  try {
-    const jwt = localStorage.getItem("token");
-
-    const data = await axios.post(
-      `${URL}/Post/delete-save-post`,
-      { postId },
-      {
-        headers: { Authorization: jwt },
-      }
-    );
-
-    console.log(data.data);
-
-    return data.data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 export async function getPostById(postId: string) {
   try {
     const jwt = localStorage.getItem("token");
@@ -208,7 +196,11 @@ export async function updatePost(post: UpdatePostDTO) {
           );
 
           if (upload.$metadata.httpStatusCode === 200) {
-            updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
+            if (index === post.file.length - 1) {
+              updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
+            } else {
+              updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
+            }
           }
         } catch (error) {
           console.error(error);
@@ -235,7 +227,50 @@ export async function updatePost(post: UpdatePostDTO) {
 
 export async function deletePost(postId: string) {
   try {
-    console.log(postId);
+    const jwt = localStorage.getItem("token");
+
+    const res = await axios.delete(`${URL}/post/delete-post/${postId}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data === "找不到該貼文或權限不足") {
+      return "找不到該貼文或權限不足";
+    }
+  }
+}
+
+export async function commentPost(comment: ICommentPost) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    const res = await axios.post(`${URL}/Post/comment-post`, comment, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getCommentsPost(postId: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    const res = await axios.get(`${URL}/Post/get-comments/${postId}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
   } catch (error) {
     console.error(error);
   }

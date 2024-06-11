@@ -4,6 +4,7 @@ import {
   SignUpDTO,
   PostDTO,
   UpdatePostDTO,
+  ICommentPost,
 } from "@/types";
 import {
   resetPassword,
@@ -14,14 +15,16 @@ import {
 } from "@/services/auth.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  commentPost,
   createPost,
+  deletePost,
+  getCommentsPost,
   getPostById,
   getRecentPosts,
   likePost,
   savePost,
   updatePost,
 } from "@/services/post.service";
-import { PostFormProps } from "@/components/forms/PostForm";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -60,10 +63,10 @@ export const useSignInWithOthers = () => {
   });
 };
 
-export const useGetRecentPosts = () => {
+export const useGetRecentPosts = (page: number) => {
   return useQuery({
-    queryKey: [],
-    queryFn: getRecentPosts,
+    queryKey: [page],
+    queryFn: () => getRecentPosts(page),
   });
 };
 
@@ -92,5 +95,25 @@ export const useGetPostById = (postId: string) => {
 export const useUpdatePost = () => {
   return useMutation({
     mutationFn: (post: UpdatePostDTO) => updatePost(post),
+  });
+};
+
+export const useDeletePost = () => {
+  return useMutation({
+    mutationFn: (postId: string) => deletePost(postId),
+  });
+};
+
+export const useCommentPost = () => {
+  return useMutation({
+    mutationFn: (x: ICommentPost) => commentPost(x),
+  });
+};
+
+export const useGetCommentPost = (postId: string) => {
+  return useQuery({
+    queryKey: [postId],
+    queryFn: () => getCommentsPost(postId),
+    enabled: !!postId,
   });
 };

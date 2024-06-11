@@ -2,9 +2,17 @@ import { GetPostDTO } from "@/types";
 import { Link } from "react-router-dom";
 import userThumbnail from "@/assets/admin_img/mygo/6.jpg";
 import moment from "moment";
-import { FilePenLineIcon, Key } from "lucide-react";
+import { FilePenLineIcon } from "lucide-react";
 import { useUserContext } from "@/context/AuthContext";
 import PostStats from "./PostStats";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "../ui/card";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -61,10 +69,24 @@ const PostCard = ({ post }: PostCardProps) => {
               ))}
           </ul>
         </div>
-        {post.imgUrl &&
-          post.imgUrl
-            .split(",")
-            .map((img, index) => <img key={index} src={img} />)}
+        <Carousel>
+          <CarouselContent>
+            {post.imgUrl &&
+              post.imgUrl.split(",").map((img, index) => {
+                return (
+                  <CarouselItem key={index}>
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center p-6">
+                          <img src={img} alt="post" className="object-cover" />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+          </CarouselContent>
+        </Carousel>
       </Link>
       <PostStats post={post} userId={user.id} />
     </div>

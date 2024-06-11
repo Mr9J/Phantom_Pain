@@ -16,11 +16,12 @@ import FileUploader from "../shared/FileUploader";
 import { PostValidation } from "@/lib/validation";
 import {
   useCreatePost,
+  useDeletePost,
   useUpdatePost,
 } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastAction } from "../ui/toast";
 import { useEffect } from "react";
 
@@ -40,8 +41,52 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { mutateAsync: createPost, isPending } = useCreatePost();
   const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
     useUpdatePost();
+  const { mutateAsync: deletePost, isPending: isDeletingPost } =
+    useDeletePost();
   const { user } = useUserContext();
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const deletePostHandler = async () => {
+    if (post && action === "update") {
+      const session = await deletePost(post?.postId);
+
+      if (session === "找不到該貼文或權限不足") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "找不到該貼文或權限不足",
+        });
+
+        return;
+      }
+
+      if (!session) {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "刪除失敗，請再試一次。",
+        });
+
+        return;
+      }
+
+      toast({
+        title: "刪除成功",
+        description: "您的貼文已經成功刪除！",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
+      });
+    }
+  };
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
@@ -76,7 +121,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
         postId: post.postId,
       });
 
-      console.log(values);
+      toast({
+        title: "更新中...",
+        description: "請稍後... ",
+      });
 
       if (!session) {
         toast({
@@ -85,7 +133,20 @@ const PostForm = ({ post, action }: PostFormProps) => {
         });
       }
 
-      console.log(session);
+      toast({
+        title: "發布成功",
+        description: "您的貼文已經成功更新！",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
+      });
 
       return;
     }
@@ -113,8 +174,13 @@ const PostForm = ({ post, action }: PostFormProps) => {
       title: "發布成功",
       description: "您的貼文已經成功發布！",
       action: (
-        <ToastAction altText="success">
-          <Link to="/social">查看</Link>
+        <ToastAction
+          altText="success"
+          onClick={() => {
+            navigate("/social");
+          }}
+        >
+          查看
         </ToastAction>
       ),
     });
@@ -151,7 +217,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
               <FormControl>
                 <FileUploader
                   fieldChange={field.onChange}
-                  mediaUrl={post?.imgUrl}
+                  mediaUrl={post ? post.imgUrl : ""}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
@@ -196,13 +262,32 @@ const PostForm = ({ post, action }: PostFormProps) => {
           )}
         />
         <div className="flex gap-4 items-center justify-end">
-          <Button type="button" className="shad-button_dark_4">
+          {action === "update" && (
+            <Button
+              type="button"
+              variant="destructive"
+              className="h-12 px-5 text-light-1 flex gap-2"
+              onClick={deletePostHandler}
+              disabled={isDeletingPost || isLoadingUpdate || isPending}
+            >
+              刪除
+            </Button>
+          )}
+
+          <Button
+            type="button"
+            className="shad-button_dark_4"
+            onClick={() => {
+              history.back();
+            }}
+            disabled={isPending || isLoadingUpdate || isDeletingPost}
+          >
             取消
           </Button>
           <Button
             type="submit"
             className="shad-button_dark_4"
-            disabled={isPending || isLoadingUpdate}
+            disabled={isPending || isLoadingUpdate || isDeletingPost}
           >
             發布
           </Button>

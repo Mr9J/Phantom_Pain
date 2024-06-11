@@ -167,3 +167,9 @@ export type GetPostDTO = {
   postTime: string;
   isAnonymous: string;
 };
+
+export type ICommentPost = {
+  postId: string;
+  userId: string;
+  comment: string;
+};
