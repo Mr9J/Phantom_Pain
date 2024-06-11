@@ -84,6 +84,8 @@ export type ProjectCardDTO = {
   projectId: number;
   projectName: string;
   projectGoal: number;
+  startDate:string;
+  endDate:string;
   dayLeft: number;
   thumbnail: string;
   totalAmount: number;
