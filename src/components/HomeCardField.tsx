@@ -58,7 +58,7 @@ export default function HomeCardField() {
         <h2 className="text-2xl font-bold">熱門項目</h2>
         <a
           className="inline-block text-base font-bold px-3 py-1 rounded text-primary bg-teal-500 hover:bg-secondary"
-          href="/explore"
+          href="/SearchProject?orderby=sponsor"
         >
           更多 &gt;
         </a>
@@ -92,7 +92,7 @@ export default function HomeCardField() {
         <h2 className="text-2xl font-bold">即將到期</h2>
         <a
           className="inline-block text-base font-bold px-3 py-1 rounded text-primary bg-teal-500 hover:bg-secondary"
-          href="/explore"
+          href="/SearchProject?orderby=enddate"
         >
           更多 &gt;
         </a>

@@ -6,7 +6,7 @@ import '@/css/ProjectCardVertical.css'
 export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
     const [progress, setProgress] = React.useState(0)
     React.useEffect(() => {
-      const timer = setTimeout(() => setProgress(Math.round((prj.totalAmount/prj.projectGoal)*100)>100?100:Math.round((prj.totalAmount/prj.projectGoal)*100)), 1500)
+      const timer = setTimeout(() => setProgress(Math.round((prj.totalAmount/prj.projectGoal)*100)>100?100:Math.round((prj.totalAmount/prj.projectGoal)*100)), 1000)
       return () => clearTimeout(timer)
     }, [prj.projectGoal, prj.totalAmount])
   return (
@@ -43,7 +43,7 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
               </h4>
               <h4 className="font-semibold flex items-center">
                 <TimerIcon className="text-sm text-gray-500 leading-none align-middle mr-px"></TimerIcon>
-                <span className="text-sm">{prj.dayLeft} 天</span>
+                <span className="text-sm">{new Date(prj.startDate)<new Date()?`${prj.dayLeft}天`:'即將啟動'}</span>
               </h4>
             </div>
           </div>
