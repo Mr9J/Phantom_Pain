@@ -4,10 +4,11 @@ import ChatMessages from '@/components/service/chatmessage';
 import ChatFooter from '@/components/service/chatfooter';
 import { Message } from '@/components/service/types';
 import '@/components/service/service.css';
-import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
+import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, getMembersNicknames, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
 
 const Service = () => {
-  const [memberId] = useState<number>(7); // 測試的 MemberID 為 10
+  const [memberId] = useState<number>(32); // 測試的 MemberID
+  const [nickname, setNickname] = useState<string>(''); // 添加狀態來儲存會員暱稱
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -16,24 +17,43 @@ const Service = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [serviceId, setServiceId] = useState<number | null>(null);
 
-  // useEffect 用於初始化歡迎訊息
+  // 獲取會員暱稱
+  useEffect(() => {
+    const fetchNickname = async () => {
+      try {
+        const response = await getMembersNicknames();
+        const member = response.data.find(m => m.memberId === memberId);
+        if (member) {
+          setNickname(member.nickname);
+        }
+      } catch (error) {
+        console.error('Failed to fetch member nickname', error);
+      }
+    };
+
+    fetchNickname();
+  }, [memberId]);
+
+  // 設置歡迎訊息
   useEffect(() => {
     const welcomeMessage: Message = {
-      id: 1,
-      serviceId: 1,
-      memberId: 1,
-      content: '🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊',
+      id: 0,
+      serviceId: 0,
+      memberId: 0,
+      content: `${nickname} 您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊`,
       timestamp: new Date(),
       sender: 'admin'
     };
     setMessages([welcomeMessage]);
-  }, []);
+  }, [nickname]);
 
   useEffect(() => {
     const fetchAllMessages = async () => {
       if (memberId !== null) {
         try {
+          // getServicesByMemberId 函數來獲取與 memberId 的所有服務。將數據中的 serviceId 提出，形成serviceIds
           const servicesResponse = await getServicesByMemberId(memberId);
+          //對每個 service 對象，提取它的 serviceId 屬性
           const serviceIds = servicesResponse.data.map(service => service.serviceId);
 
           const openService = servicesResponse.data.find(service => !service.endDate);
@@ -69,19 +89,11 @@ const Service = () => {
 
           allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
-          // 在合併獲取的訊息和歡迎訊息
-          const welcomeMessage: Message = {
-            id: 1,
-            serviceId: 1,
-            memberId: 1,
-            content: '🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊',
-            timestamp: new Date(),
-            sender: 'admin'
-          };
-          allMessages.unshift(welcomeMessage);
+          const uniqueMessages = Array.from(new Set(allMessages.map(m => m.id)))
+            .map(id => allMessages.find(m => m.id === id) as Message);
 
-          console.log('Fetched all messages:', allMessages);
-          setMessages(allMessages);
+          console.log('Fetched all messages:', uniqueMessages);
+          setMessages(prevMessages => [prevMessages[0], ...uniqueMessages]); // 插入歡迎訊息到最前面
         } catch (error) {
           console.error('Failed to fetch all messages', error);
         }
@@ -169,7 +181,11 @@ const Service = () => {
             messageContent: newMessage.content,
             messageDate: newMessage.timestamp.toISOString()
           });
-          setMessages([...messages, newMessage]);
+          setMessages(prevMessages => {
+            const updatedMessages = [...prevMessages, newMessage];
+            console.log('Updated messages:', updatedMessages);
+            return updatedMessages;
+          });
         } catch (error) {
           console.error('Failed to upload file', error);
         }
@@ -241,3 +257,4 @@ const Service = () => {
 };
 
 export default Service;
+

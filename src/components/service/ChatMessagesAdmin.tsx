@@ -17,6 +17,10 @@ const ChatMessagesAdmin: React.FC<ChatMessagesProps> = ({ messages, searchTerm, 
     }
   }, [highlightedIndexes, currentIndex]);
 
+  const formatTime = (date: Date | string): string => {
+    return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
   const highlightText = (text: string, messageIndex: number) => {
     if (!searchTerm) return text;
 
@@ -45,7 +49,7 @@ const ChatMessagesAdmin: React.FC<ChatMessagesProps> = ({ messages, searchTerm, 
               <div>{highlightText(message.content, index)}</div>
             )}
             <div className={`admin-timestamp ${message.sender}`}>
-              {new Date(message.timestamp).toLocaleTimeString()}
+              {formatTime(message.timestamp)}
             </div>
           </div>
         </div>
