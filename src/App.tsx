@@ -101,7 +101,7 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/service" element={<ServiceRoute />} />{" "}
+            {/* <Route path="/service" element={<ServiceRoute />} />{" "} */}
             <Route
               path="/manu/order/:projectId"
               element={<OrderList projectId={0} />}
