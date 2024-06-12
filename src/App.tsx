@@ -46,6 +46,7 @@ import SearchProject from "./views/root/pages/SearchProject";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+import StartProject from "./views/root/pages/StartProject";
 
 const App = () => {
   return (
@@ -68,6 +69,7 @@ const App = () => {
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
+            <Route path="/StartProject" element={<StartProject />} />
           </Route>
           
           {/* 修改的部分 */}
