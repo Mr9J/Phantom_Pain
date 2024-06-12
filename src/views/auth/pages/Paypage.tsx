@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import PaymentForm from '@/components/service/ECPay';
 
 
 
@@ -51,6 +52,9 @@ interface ProductCardDTO {
 
 function Paypage() {
 
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+
+
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement  | null }>({});
   const formRef = useRef<HTMLFormElement>(null); 
@@ -60,6 +64,7 @@ function Paypage() {
   const selectedproductId = searchParams.get('product');
   const projectId = searchParams.get('project')
   const fromCartPage = searchParams.get('fromCartPage') === 'true';
+
   
 
   const  testmemberId = 6;
@@ -78,6 +83,10 @@ function Paypage() {
   const previousProjectAndproductsData = useRef(projectAndproductsData);
   const [isConfirming, setIsConfirming] = useState(false);
 
+
+  // const handleButtonClick = () => {
+  //   setShowPaymentForm(true);
+  // };
  
   const handleConfirm = (e:React.MouseEvent<HTMLButtonElement>) => {  
     e.stopPropagation();
@@ -126,6 +135,7 @@ function Paypage() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await createOrder(orderData)
+    setShowPaymentForm(true);
   };
 
 
@@ -363,7 +373,7 @@ return(
   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
   <p>
-  {truncateText(pjitem.productDescription!,100)}</p>
+  {truncateText(pjitem.productDescription!,90)}</p>
   </div>
   
   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
@@ -605,7 +615,9 @@ return(
       <Projectcard projectData={projectAndproductsData}></Projectcard>
 {/* 原本是px-4 mb-8有另外的div */}
 <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
-
+<button>顯示付款表單</button>
+      {/* 條件渲染 PaymentForm */}
+      {showPaymentForm && <PaymentForm />}
   <form ref={formRef} method="post" onSubmit={handleSubmit}>
   <div className="flex mb-10 text-sm -mx-4">
 <div className="px-4 lg:w-1/3 mr-3">
