@@ -1,7 +1,12 @@
 import React, { useRef, useState } from 'react';
 const baseUrl = import.meta.env.VITE_API_URL;
 
-const PaymentForm: React.FC = () => {
+interface ECPayComponentProps {
+  projectName: string;
+  totalAmount: number;
+}
+
+const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }: ECPayComponentProps) =>{
   const [checksum, setChecksum] = useState<string | null>(null);
   const [shouldSubmitForm, setShouldSubmitForm] = useState<boolean>(false);
   const [merchantTradeNo, setMerchantTradeNo] = useState<string>('');
@@ -30,10 +35,11 @@ const PaymentForm: React.FC = () => {
                 MerchantTradeNo: tempMerchantTradeNo,
                 MerchantTradeDate: tempMerchantTradeDate,
                 PaymentType: "aio",
-                TotalAmount: "100", // 將數字轉換為字串
+                TotalAmount: `${totalAmount}`, // 將數字轉換為字串
                 TradeDesc: "Transaction description",
-                ItemName: "測試商品",
-                ReturnURL: "https://example.com/return",
+                ItemName: `贊助企劃:${projectName}`,
+                ReturnURL: "https://localhost:7150/api/Order/ECPayResponseMessage",
+                ClientBackURL: "http://localhost:5173/productpage",
                 ChoosePayment: "ALL",
                 EncryptType: "1"
             })
@@ -155,10 +161,11 @@ React. useEffect(() => {
       <input type="hidden" name="MerchantTradeNo" value={merchantTradeNo} />
       <input type="hidden" name="MerchantTradeDate" value={merchantTradeDate} />
       <input type="hidden" name="PaymentType" value="aio" />
-      <input type="hidden" name="TotalAmount" value={100} />
+      <input type="hidden" name="TotalAmount" value={totalAmount} />
       <input type="hidden" name="TradeDesc" value="Transaction description" />
-      <input type="hidden" name="ItemName" value="測試商品" />
-      <input type="hidden" name="ReturnURL" value="https://example.com/return" />
+      <input type="hidden" name="ItemName" value={`贊助企劃:${projectName}`}/>
+      <input type="hidden" name="ReturnURL" value="https://localhost:7150/api/Order/ECPayResponseMessage" />
+      <input type="hidden" name="ClientBackURL" value="http://localhost:5173/productpage" />
       <input type="hidden" name="ChoosePayment" value="ALL" />
       <input type="hidden" name="EncryptType" value={1} />
       <button ref={submitButtonRef} type="submit" style={{ display: 'none' }}></button>

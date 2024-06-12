@@ -57,7 +57,7 @@ function Paypage() {
 
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement  | null }>({});
-  const formRef = useRef<HTMLFormElement>(null); 
+  //const formRef = useRef<HTMLFormElement>(null);   先別刪
   //const { id } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -99,16 +99,19 @@ function Paypage() {
     setIsConfirming(false);
   };
 
-  const handleConfirmButtonClick = () => {
+  const handleConfirmButtonClick = async () => {
     console.log("確認");
-    // 点击确认按钮时触发提交按钮的点击事件
-    if (formRef.current) {
-      const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-      if (submitButton) {
-        submitButton.click();
-      }
-    }
+    setShowPaymentForm(true);
     setIsConfirming(false);
+    await createOrder(orderData)
+    
+    // if (formRef.current) {  先別刪
+    //   const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    //   if (submitButton) {
+    //     submitButton.click();
+    //   }
+    // }
+    
   };
 
   
@@ -131,12 +134,12 @@ function Paypage() {
       paymentMethodID: Number(value) // 將 paymentMethodID 設定為 value
     }));
   };
- //測試POST
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await createOrder(orderData)
-    setShowPaymentForm(true);
-  };
+ //測試POST 先別刪
+  // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   await createOrder(orderData)
+  //   setShowPaymentForm(true);
+  // };
 
 
 //觀察orderData變化用
@@ -491,6 +494,7 @@ return(
   <div className="whitespace-nowrap text-right">
     {/* 金額正規化顯示.toLocaleString() */}
   NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount).toLocaleString()}
+  {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount)}/>}
   
   </div>
   </div>
@@ -615,10 +619,8 @@ return(
       <Projectcard projectData={projectAndproductsData}></Projectcard>
 {/* 原本是px-4 mb-8有另外的div */}
 <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
-<button>顯示付款表單</button>
       {/* 條件渲染 PaymentForm */}
-      {showPaymentForm && <PaymentForm />}
-  <form ref={formRef} method="post" onSubmit={handleSubmit}>
+   
   <div className="flex mb-10 text-sm -mx-4">
 <div className="px-4 lg:w-1/3 mr-3">
 
@@ -644,7 +646,7 @@ return(
 onClick={ClickToHidden}>
 選擇付款方式
 </button>
-</form>  
+ 
 </div>
     </>
       
