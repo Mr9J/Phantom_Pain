@@ -1,3 +1,4 @@
+import axios from "axios";
 const baseUrl = import.meta.env.VITE_API_URL;
 
 
@@ -79,3 +80,14 @@ export const getOrderProjects = async () => {
     throw error; 
   }
 };
+export async function  getUserOrderProjects() {
+  const jwt = localStorage.getItem("token")
+  try {
+    const res = await axios.get(`${baseUrl}/Order/UserOrder/list`, {
+      headers: { Authorization: jwt },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error); 
+  }
+}

@@ -3,47 +3,93 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NotFound from "./NotFound";
 import Progress from "@/components/explore/Progress";
-// import ProjectToolBar from "@/components/explore/ProjectToolBar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabDetail from "@/components/explore/TabDetail";
 import TabComments from "@/components/explore/TabComments";
+import Footer from "@/components/section/Footer";
+import { useUserContext } from "@/context/AuthContext";
+import { Heart } from "lucide-react";
+
+type ProjectInfoDto = {
+  projectThumbnail: string;
+  projectName: string;
+  projectGoal: number;
+  projectDescription: string;
+  memberName: string;
+  projectTotal: number;
+  startDate: string;
+  endDate: string;
+  isLiked: boolean;
+};
 
 function ProjectInfo() {
+  const { isAuthenticated } = useUserContext();
   const { pid } = useParams();
   const URL = import.meta.env.VITE_API_URL;
-  const [project, setProject] = useState<{
-    projectThumbnail: string;
-    projectName: string;
-    projectGoal: number;
-    projectDescription: string;
-  } | null>(null);
+  const [project, setProject] = useState<ProjectInfoDto>();
+  const [isLiked, setIsLiked] = useState<boolean>();
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(`${URL}/ProjectInfo/${pid}`);
+        const res = await axios.get(`${URL}/ProjectInfo/${pid}`, {
+          headers: { Authorization: localStorage.getItem("token") },
+        });
+        console.log(res.data);
         setProject(res.data);
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [URL, pid]);
+  }, []);
+
+  useEffect(() => {
+    if (project) setIsLiked(project.isLiked);
+  }, [project]);
 
   if (!project) return <NotFound></NotFound>;
+  const handleLikeClick = async () => {
+    if (!isAuthenticated) return GotoLogIn();
+
+    if (isLiked) {
+      // 取消按讚
+      // 資料庫刪除
+      const res = await axios.delete(
+        `${URL}/ProjectInfo/Like?projectId=${pid}`,
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      console.log(res.data);
+    } else {
+      // 按讚
+      const res = await axios.post(
+        `${URL}/ProjectInfo/Like?projectId=${pid}`,
+        {},
+        {
+          headers: { Authorization: localStorage.getItem("token") },
+        }
+      );
+      console.log(res.data);
+    }
+    setIsLiked(!isLiked);
+  };
+
+  // 請先登入
+  const GotoLogIn = () => alert("阿你要按讚要先登入阿");
 
   return (
     <>
       <div className="w-full pb-32">
+        {/* 上半部 */}
         <div className="flex flex-wrap lg:-mx-4 justify-center py-4">
           {/* 圖片 */}
           <div className=" lg:w-7/12 lg:px-4">
-            {project && (
-              <img
-                className="aspect-video w-full min-w-2xl"
-                src={project.projectThumbnail}
-                alt="Project Thumbnail"
-              />
-            )}
+            <img
+              className="aspect-video w-full min-w-2xl"
+              src={project.projectThumbnail}
+              alt="Project Thumbnail"
+            />
           </div>
 
           {/* 上右半 */}
@@ -52,19 +98,21 @@ function ProjectInfo() {
               {/* 提案人 */}
               <div className="text-sm text-gray-500">
                 <span className="text-gray-500">提案人 </span>
-                <a
-                  className="text-zec-green font-bold"
-                  href="/users/2721388?tab=projects"
-                ></a>
+                <a className="text-zec-green font-bold" href="#">
+                  {project.memberName}
+                </a>
               </div>
               {/* 專案名稱 */}
               <h1 className="my-4 text-lg font-bold leading-relaxed tracking-wide">
-                {project && project.projectName}
+                {project.projectName}
               </h1>
             </div>
 
             {/* 進度條 */}
-            <Progress goal={project.projectGoal} value={1234}></Progress>
+            <Progress
+              goal={project.projectGoal}
+              value={project.projectTotal}
+            ></Progress>
             <p className="my-4 text-sm leading-relaxed tracking-wider text-gray-500">
               {project.projectDescription}
             </p>
@@ -75,10 +123,11 @@ function ProjectInfo() {
                 募資期間
               </h2>
               <h3 className="inline-block text-xs text-gray-500">
-                2023/10/08 12:00 – 2023/12/01 01:59
+                {`${project.startDate} ~ ${project.endDate}`.replace(/-/g, "/")}
               </h3>
             </div>
 
+            {/* 分享按鈕 */}
             <div className="mt-4 flex items-center">
               <a
                 className="mr-4 inline-block rounded border border-gray-300 p-2 text-xs font-bold text-gray-500"
@@ -168,38 +217,29 @@ function ProjectInfo() {
 
             {/* 收藏/贊助按鈕 */}
             <div className="px-4 py-3 text-center w-full flex  lg:static bottom-0 z-50 fixed lg:px-0">
-              <a
-                className="p-2 inline-block flex-initial mr-2 transition-transform hover:scale-105 focus:scale-105 active:scale-90 text-zec-blue border-2 border-current rounded tooltip tooltip-l"
+              <div
+                className="p-2 inline-block cursor-pointer flex-initial mr-2 transition-transform hover:scale-105 focus:scale-105 active:scale-90 text-blue-900 border-2 border-current rounded tooltip tooltip-l"
                 data-method="post"
                 data-click-event="follow_project"
                 aria-label="追蹤後會收到公開的專案更新和計畫結束提醒。"
-                href="/projects/prolight/follow"
+                onClick={() => handleLikeClick()}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="48"
-                  viewBox="0 96 960 960"
-                  width="48"
-                  className="w-6 h-6 fill-current"
-                >
-                  <path d="m479.435 948.718-48.609-43.978q-106.231-97.889-175.847-168.98-69.616-71.091-110.93-127.066-41.314-55.975-57.53-101.96-16.215-45.986-16.215-93.289 0-94.915 63.544-158.528 63.544-63.613 157.087-63.613 55.885 0 103.877 25.304t84.623 74.543q43.13-51.739 88.77-75.793 45.639-24.054 99.859-24.054 94.379 0 158.006 63.574 63.626 63.574 63.626 158.43 0 47.409-16.215 93.127-16.216 45.718-57.53 101.694-41.314 55.975-111.138 127.412-69.823 71.437-176.204 169.199l-49.174 43.978Zm-.283-100.936q100.045-92.612 164.566-157.708t102.206-113.998q37.685-48.902 52.369-87.12 14.685-38.218 14.685-75.34 0-63.355-40.649-104.475-40.649-41.119-103.649-41.119-50.349 0-92.851 31.783-42.503 31.782-70.503 88.717h-52.217q-26.859-56.5-70.188-88.5t-92.204-32q-62.394 0-102.762 40.599t-40.368 105.353q0 38.151 15.184 76.807 15.183 38.655 52.835 88.06 37.653 49.405 101.556 113.989 63.903 64.583 161.99 154.952Zm1.413-290.412Z"></path>
-                </svg>
-              </a>
+                {isLiked ? <Heart fill="rgb(30 58 138)" /> : <Heart />}
+              </div>
               <a
-                className="js-back-project-now tracking-widest flex-1 border-blue-100 align-middle bg-blue-300 inline-block w-full text-base transition-transform hover:scale-105 focus:scale-105 active:scale-90 rounded font-bold py-2 "
+                className="js-back-project-now tracking-widest cursor-pointer flex-1 border-blue-100 align-middle bg-blue-300 inline-block w-full text-base transition-transform hover:scale-105 focus:scale-105 active:scale-90 rounded font-bold py-2 "
                 data-click-event="list_options"
-                href="/projects/prolight/orders/back_project"
+                href={`/productpage/${pid}`}
               >
                 贊助專案
               </a>
             </div>
           </div>
         </div>
-        {/* <ProjectToolBar></ProjectToolBar> */}
 
         {/* 下半部 */}
         <div className="w-full flex flex-wrap justify-center">
-          <div className="lg:w-7/12">
+          <div className="w-full lg:w-7/12">
             <Tabs defaultValue="details" className="w-full">
               <TabsList className="w-full justify-around">
                 <TabsTrigger value="details" className="w-full">
@@ -232,6 +272,7 @@ function ProjectInfo() {
           <div className="lg:w-3/12 lg:px-4">放商品卡片</div>
         </div>
       </div>
+      <Footer></Footer>
     </>
   );
 }

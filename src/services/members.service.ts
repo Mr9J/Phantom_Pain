@@ -10,6 +10,19 @@ export async function getMembers() {
     console.error(error);
   }
 }
+
+export async function getMemberStaff() {
+  const jwt = localStorage.getItem("token")
+  try {
+    const res = await axios.get(`${baseUrl}/Member/GetStaff`, {
+      headers: { Authorization: jwt },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function getMemberCounts() {
   try {
     const res = await axios.get(`${baseUrl}/Member/Count`);
