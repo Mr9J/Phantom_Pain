@@ -39,7 +39,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
                 TradeDesc: "Transaction description",
                 ItemName: `贊助企劃:${projectName}`,
                 ReturnURL: "https://localhost:7150/api/Order/ECPayResponseMessage",
-                ClientBackURL: "http://localhost:5173/productpage",
+                ClientBackURL: "http://localhost:5173/home",
                 ChoosePayment: "ALL",
                 EncryptType: "1"
             })
@@ -165,7 +165,7 @@ React. useEffect(() => {
       <input type="hidden" name="TradeDesc" value="Transaction description" />
       <input type="hidden" name="ItemName" value={`贊助企劃:${projectName}`}/>
       <input type="hidden" name="ReturnURL" value="https://localhost:7150/api/Order/ECPayResponseMessage" />
-      <input type="hidden" name="ClientBackURL" value="http://localhost:5173/productpage" />
+      <input type="hidden" name="ClientBackURL" value="http://localhost:5173/home" />
       <input type="hidden" name="ChoosePayment" value="ALL" />
       <input type="hidden" name="EncryptType" value={1} />
       <button ref={submitButtonRef} type="submit" style={{ display: 'none' }}></button>
