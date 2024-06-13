@@ -62,14 +62,11 @@ const App = () => {
             <Route path="/users/:userId" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
             <Route path="/SearchProject" element={<SearchProject />} />
-            <Route path="/Productpage" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} />
-            <Route path="/Productpage" element={<Productpage />} />
+            <Route path="/Productpage/:pid" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
           </Route>
-          
+
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
@@ -111,6 +108,7 @@ const App = () => {
           <Route element={<AdminLayout />}>
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
+            <Route path="/admin" element={<AdminProjects />} />
           </Route>
         </Routes>
 
