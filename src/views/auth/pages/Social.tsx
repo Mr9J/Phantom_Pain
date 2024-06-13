@@ -29,7 +29,7 @@ const Social = () => {
       >
         <div className="max-w-screen-sm flex flex-col items-center w-full gap-6 md:gap-9">
           <h2 className="text-[24px] font-bold leading-[140%] tracking-tighte md:text-[30px] text-left w-full">
-            Social Feed
+            使用者貼文
           </h2>
           {isPostLoading && !data ? (
             <LoaderSvg />
