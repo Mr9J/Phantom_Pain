@@ -57,13 +57,16 @@ interface ProductsComponentProps {
   productsData: ProjectCardDTO[] | null;
   getSelectProductId: (productId: number) => void;
   setPopupVisible: (isVisible: boolean) => void;
+  pid : string
 }
 
 function ProductsComponent({
   productsData,
   getSelectProductId,
   setPopupVisible,
-}: ProductsComponentProps) {
+  pid
+}: ProductsComponentProps,
+) {
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>(
     {}
   );
@@ -95,7 +98,7 @@ function ProductsComponent({
     //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
     e.stopPropagation();
 
-    addToCart(productId, productCounts[productId], pid, testmemberId);
+    addToCart(productId, productCounts[productId], Number(pid), testmemberId);
     setPopupVisible(true);
   };
 
@@ -252,7 +255,7 @@ function Productpage() {
   }, [isPopupVisible]);
 
   useEffect(() => {
-    getProjectfromProductId(pid, testmemberId)
+    getProjectfromProductId(Number(pid), testmemberId)
       .then((data) => {
         setProjectData(data);
       })
@@ -286,6 +289,7 @@ function Productpage() {
             productsData={projectAndproductsData}
             getSelectProductId={ClickProductToPaypage}
             setPopupVisible={setPopupVisible}
+            pid = {pid }
           ></ProductsComponent>
         </div>
         {isPopupVisible && (
