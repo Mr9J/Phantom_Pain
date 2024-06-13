@@ -46,14 +46,18 @@ import SearchProject from "./views/root/pages/SearchProject";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+import Playground from "./views/root/pages/Playground";
+import { useState } from "react";
 
 const App = () => {
+  const [input, setInput] = useState("");
+
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           {/* public routes */}
-          <Route element={<RootLayout />}>
+          <Route element={<RootLayout input={input} setInput={setInput} />}>
             <Route index element={<Homepage />} />
             <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
@@ -61,15 +65,16 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:userId" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
-            <Route path="/SearchProject" element={<SearchProject />} />
-            <Route path="/Productpage" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} />
-            <Route path="/Productpage" element={<Productpage />} />
+            <Route
+              path="/SearchProject"
+              element={<SearchProject input={input} setInput={setInput} />}
+            />
+            <Route path="/Productpage/:pid" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
           </Route>
-          
+          <Route path="/playground" element={<Playground />}></Route>
+
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
@@ -111,6 +116,7 @@ const App = () => {
           <Route element={<AdminLayout />}>
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
+            <Route path="/admin" element={<AdminProjects />} />
           </Route>
         </Routes>
 
