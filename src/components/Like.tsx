@@ -89,13 +89,12 @@ function Like() {
             )}
           </div>
         </div>
-        <div className="border-t bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+        <div className="border-t bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" style={{position: 'fixed', bottom: '0', width: '100%' ,height:'25vh'}}>
           <footer className="max-w-xs md:max-w-5xl py-10 mx-auto flex flex-wrap px-3 justify-between">
             <section className="w-full md:w-auto pb-10 md:pb-0">
               <img
-                className="h-10"
-                width="115"
-                height="40"
+                className="h-10 w-auto"
+                
                 src="src/assets/_shared_img/logo.png"
               />
             </section>
