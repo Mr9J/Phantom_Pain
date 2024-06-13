@@ -270,7 +270,7 @@ function ProjectInfo() {
                   <TabQA />
                 </div>
               </TabsContent>
-              <TabsContent value="comments">
+              <TabsContent value="comments" className="mx-4">
                 <TabComments></TabComments>
               </TabsContent>
             </Tabs>

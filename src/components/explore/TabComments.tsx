@@ -57,7 +57,7 @@ function TabComments() {
         </Button>
       </div>
 
-      <div className="max-w-2xl mx-auto mt-10 p-4 bg-gray-800 text-white rounded-lg shadow-lg space-y-4">
+      <div className=" mx-auto mt-10 p-4 bg-gray-800 text-white rounded-lg shadow-lg space-y-4">
         {comments.map((item, index) => (
           <div key={index} className="border-b border-gray-700 pb-4">
             <div className="flex items-center mb-2">
