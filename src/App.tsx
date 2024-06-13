@@ -46,6 +46,8 @@ import SearchProject from "./views/root/pages/SearchProject";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+import Like from "./components/Like";
+import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 
 const App = () => {
   return (
@@ -68,8 +70,9 @@ const App = () => {
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
+            {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
-          
+
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
             <Route path="/sign-in" element={<SignInForm />} />
@@ -96,6 +99,11 @@ const App = () => {
             <Route path="/profile/:id/*" element={<Profile />} />
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
+
+          <Route element={<AuthDefaultLayout />}>
+            <Route path="/Like" element={<Like />} />
+          </Route>
+
           <Route element={<ManuLayout />}>
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
