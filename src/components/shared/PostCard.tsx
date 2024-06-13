@@ -69,25 +69,30 @@ const PostCard = ({ post }: PostCardProps) => {
               ))}
           </ul>
         </div>
-        <Carousel>
-          <CarouselContent>
-            {post.imgUrl &&
-              post.imgUrl.split(",").map((img, index) => {
-                return (
-                  <CarouselItem key={index}>
-                    <div className="p-1">
-                      <Card>
-                        <CardContent className="flex aspect-square items-center justify-center p-6">
-                          <img src={img} alt="post" className="object-cover" />
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                );
-              })}
-          </CarouselContent>
-        </Carousel>
       </Link>
+      <Carousel>
+        <CarouselContent>
+          {post.imgUrl &&
+            post.imgUrl.split(",").map((img, index) => {
+              return (
+                <CarouselItem key={index}>
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-6">
+                        <img
+                          src={img}
+                          alt="post"
+                          className="object-cover select-none"
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+      </Carousel>
+
       <PostStats post={post} userId={user.id} />
     </div>
   );

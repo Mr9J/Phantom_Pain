@@ -8,10 +8,11 @@ import { GetPostDTO } from "@/types";
 import { BookmarkIcon, HeartIcon } from "lucide-react";
 import { useToast } from "../ui/use-toast";
 import { likePostCheck, savePostCheck } from "@/services/post.service";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { string } from "zod";
 
 type PostStatsProps = {
   post: GetPostDTO;
@@ -23,6 +24,15 @@ type likePostCheckType = {
   isLiked: string;
 };
 
+// type CommentData = {
+//   postId: string;
+//   userId: string;
+//   commentd: string;
+//   time: string;
+//   username: string;
+//   userImg: string;
+// };
+
 const PostStats = ({ post, userId }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
@@ -31,6 +41,8 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [comment, setComment] = useState("");
+  const [commentData, setCommentData] = useState(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { mutateAsync: commentPost, isPending: isCommentSubmitting } =
     useCommentPost();
   const {
@@ -48,6 +60,13 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     setIsLiked(session.isLiked === "True" ? true : false);
     setLikeCount(parseInt(session.likeCount));
     setIsSaved(session2 === "True" ? true : false);
+  };
+
+  const commentHandler = () => {
+    if (ref.current !== null) {
+      ref.current.classList.remove("hidden");
+      ref.current.classList.add("flex");
+    }
   };
 
   const commentSubmitHandler = async () => {
@@ -75,7 +94,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     if (userId) {
       checkStatus();
     }
-  }, [checkStatus]);
+    if (comments !== "沒有留言" && comments !== undefined) {
+      setCommentData(comments);
+    }
+  }, [checkStatus, commentData, comments, userId]);
 
   const likeHandler = async () => {
     try {
@@ -179,7 +201,37 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       </div>
       <Separator className="my-4" />
       <div className="flex justify-between items-center mt-2 w-full">
-        <Button variant="link">查看留言...</Button>
+        <Button
+          variant="link"
+          onClick={commentHandler}
+          disabled={isCommentLoading}
+        >
+          查看留言...
+        </Button>
+      </div>
+      <div
+        className="justify-start items-center mt-2 w-full hidden overflow-hidden"
+        ref={ref}
+      >
+        <ul>
+          {commentData ? (
+            commentData.map((com, index) => (
+              <div className="flex items-start gap-4 mt-2 w-full" key={com.id}>
+                <img
+                  src={com.thumbnail}
+                  alt="userImg"
+                  className="h-8 w-8 rounded-full"
+                />
+                <p className="text-blue-500">{com.username}</p>
+                <div className="max-w-[480px]">
+                  <p className="break-words">{com.comment}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>沒有人留言...</p>
+          )}
+        </ul>
       </div>
       <div className="flex items-center justify-center mt-2 gap-2 w-full">
         <Input
