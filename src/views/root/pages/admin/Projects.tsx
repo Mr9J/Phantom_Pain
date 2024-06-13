@@ -6,6 +6,8 @@ const frontUrl = import.meta.env.VITE_FRONT_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 import { ProjectDTO, ProjectCount } from "@/types/index";
+import SearchBar from "@/components/admin/SearchBar";
+
 type ProjectContext = [number, string, number, number, number];
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
@@ -31,16 +33,26 @@ const Projects: React.FC = () => {
   const [orderType, setorderType] = useState(1); //列表選擇
   const [projectStatus, setProjectStatus] = useState(-1);
   const [projectCount, setProjectCount] = useState<ProjectCount>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredProjects: ProjectDTO[]| null  = projectStatus > 0
-  ? projects?.filter((item: ProjectDTO) => item.statusId === projectStatus) ?? null
-  : projects;
+  const filteredProjects: ProjectDTO[] | null =
+    projectStatus > 0
+      ? projects?.filter(
+          (item: ProjectDTO) => item.statusId === projectStatus
+        ) ?? null
+      : projects;
+  const filteredProjectsKeyword =
+    searchQuery.length > 0
+      ? filteredProjects.filter((item) =>
+          item.projectName.includes(searchQuery)
+        )
+      : filteredProjects;
 
-const statusMap: Record<number, string> = {
-  1: "募資中",
-  2: "下架",
-  3: "待審核",
-};
+  const statusMap: Record<number, string> = {
+    1: "募資中",
+    2: "下架",
+    3: "待審核",
+  };
   //載入api
   useEffect(() => {
     const fetchProjects = async () => {
@@ -78,9 +90,9 @@ const statusMap: Record<number, string> = {
   //Modal
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     //event.preventDefault(); // 阻止表單默認的提交行為
-  
+
     const formData = new FormData(event.currentTarget); // 收集表單數據
-  
+
     const jsonData: Record<string, string> = {};
     formData.forEach((value, key) => {
       jsonData[key] = value as string;
@@ -117,6 +129,10 @@ const statusMap: Record<number, string> = {
         console.error("提交數據時發生錯誤：", error);
       });
   };
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+    setSearchQuery(query);
+  };
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -127,82 +143,87 @@ const statusMap: Record<number, string> = {
             </h2>
           </header>
           <div className="p-3">
-            {orderType === 1 ? (
-              <button
-                type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-              >
-                全部({projectCount[0]})
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                onClick={() => {
-                  setorderType(1);
-                  setProjectStatus(-1);
-                }}
-              >
-                全部({projectCount[0]})
-              </button>
-            )}
-            {orderType === 2 ? (
-              <button
-                type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-              >
-                進行中({projectCount[1]})
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                onClick={() => {
-                  setorderType(2);
-                  setProjectStatus(1);
-                }}
-              >
-                進行中({projectCount[1]})
-              </button>
-            )}
-            {orderType === 3 ? (
-              <button
-                type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-              >
-                已下架({projectCount[2]})
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                onClick={() => {
-                  setorderType(3);
-                  setProjectStatus(2);
-                }}
-              >
-                已下架({projectCount[2]})
-              </button>
-            )}
-            {orderType === 4 ? (
-              <button
-                type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-              >
-                待審核({projectCount[3]})
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                onClick={() => {
-                  setorderType(4);
-                  setProjectStatus(3);
-                }}
-              >
-                待審核({projectCount[3]})
-              </button>
-            )}
+            <div style={{ display: "flex" }}>
+              {orderType === 1 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  全部({projectCount[0]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(1);
+                    setProjectStatus(-1);
+                  }}
+                >
+                  全部({projectCount[0]})
+                </button>
+              )}
+              {orderType === 2 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  進行中({projectCount[1]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(2);
+                    setProjectStatus(1);
+                  }}
+                >
+                  進行中({projectCount[1]})
+                </button>
+              )}
+              {orderType === 3 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  已下架({projectCount[2]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(3);
+                    setProjectStatus(2);
+                  }}
+                >
+                  已下架({projectCount[2]})
+                </button>
+              )}
+              {orderType === 4 ? (
+                <button
+                  type="button"
+                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  待審核({projectCount[3]})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                  onClick={() => {
+                    setorderType(4);
+                    setProjectStatus(3);
+                  }}
+                >
+                  待審核({projectCount[3]})
+                </button>
+              )}
+              <div style={{ marginLeft: "auto" }} className="pb-2">
+                <SearchBar onSearch={handleSearch} />
+              </div>
+            </div>
             {/* Table */}
             <div className="overflow-x-auto">
               <table className="table-auto w-full dark:text-slate-300">
@@ -240,8 +261,9 @@ const statusMap: Record<number, string> = {
                 {
                   //#region 專案-----------------------------------------------------------------------------------
                 }
-                {projects &&filteredProjects &&
-                  filteredProjects.map((item) => (
+                {projects &&
+                  filteredProjectsKeyword &&
+                  filteredProjectsKeyword.map((item) => (
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
@@ -259,9 +281,9 @@ const statusMap: Record<number, string> = {
                               style={{ width: 600 }}
                             >
                               <a href={`${frontUrl}/project/${item.projectId}`}>
-                              <div className="text-base text-slate-800 dark:text-slate-100 underline">
-                                {item.projectName}
-                              </div>
+                                <div className="text-base text-slate-800 dark:text-slate-100 underline">
+                                  {item.projectName}
+                                </div>
                               </a>
                             </div>
                           </td>
