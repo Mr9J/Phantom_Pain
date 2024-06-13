@@ -70,6 +70,7 @@ export type OrderProject = {
   statusId: number;
   orderCount: number;
   sponsorCount: number;
+  projectDescription :string;
   isEdit?: boolean;
 };
 
