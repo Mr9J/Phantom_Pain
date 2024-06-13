@@ -21,6 +21,7 @@ import {
   getCommentsPost,
   getPostById,
   getRecentPosts,
+  getSavedPosts,
   likePost,
   savePost,
   updatePost,
@@ -115,5 +116,12 @@ export const useGetCommentPost = (postId: string) => {
     queryKey: [postId],
     queryFn: () => getCommentsPost(postId),
     enabled: !!postId,
+  });
+};
+
+export const useGetSavedPosts = (page: number) => {
+  return useQuery({
+    queryKey: [page],
+    queryFn: () => getSavedPosts(page),
   });
 };

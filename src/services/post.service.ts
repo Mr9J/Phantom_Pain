@@ -275,3 +275,19 @@ export async function getCommentsPost(postId: string) {
     console.error(error);
   }
 }
+
+export async function getSavedPosts(page: number) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    const res = await axios.get(`${URL}/Post/get-saved-posts/${page}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
