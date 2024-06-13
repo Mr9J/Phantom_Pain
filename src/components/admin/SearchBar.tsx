@@ -20,6 +20,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   const handleReset = () => {
     setSearchQuery("");
+    if (onSearch) {
+      onSearch("");
+    }
   };
 
   return (
