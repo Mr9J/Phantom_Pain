@@ -5,10 +5,13 @@ import ChatFooter from '@/components/service/chatfooter';
 import { Message } from '@/components/service/types';
 import '@/components/service/service.css';
 import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, getMembersNicknames, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
+import { useUserContext } from '@/context/AuthContext';
+import connection from '@/components/service/SignalR';
 
 const Service = () => {
-  const [memberId] = useState<number>(32); // 測試的 MemberID
-  const [nickname, setNickname] = useState<string>(''); // 添加狀態來儲存會員暱稱
+  const { user } = useUserContext();
+  const [memberId, setMemberId] = useState<number | null>(null);
+  const [nickname, setNickname] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -17,64 +20,77 @@ const Service = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [serviceId, setServiceId] = useState<number | null>(null);
 
-  // 獲取會員暱稱
+  useEffect(() => {
+    if (user) {
+      console.log("User ID:", user.id);  // Log user ID
+      setMemberId(Number(user.id));
+    }
+  }, [user]);
+
   useEffect(() => {
     const fetchNickname = async () => {
-      try {
-        const response = await getMembersNicknames();
-        const member = response.data.find(m => m.memberId === memberId);
-        if (member) {
-          setNickname(member.nickname);
+      if (memberId !== null) {
+        try {
+          const response = await getMembersNicknames();
+          console.log("Member nicknames response:", response.data);  // Log nickname response
+          const member = response.data.find(m => m.memberId === memberId);
+          if (member) {
+            setNickname(member.nickname);
+            console.log("Member nickname:", member.nickname);  // Log fetched nickname
+          }
+        } catch (error) {
+          console.error('Failed to fetch member nickname', error);
         }
-      } catch (error) {
-        console.error('Failed to fetch member nickname', error);
       }
     };
 
     fetchNickname();
   }, [memberId]);
 
-  // 設置歡迎訊息
   useEffect(() => {
-    const welcomeMessage: Message = {
-      id: 0,
-      serviceId: 0,
-      memberId: 0,
-      content: `${nickname} 您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊`,
-      timestamp: new Date(),
-      sender: 'admin'
-    };
-    setMessages([welcomeMessage]);
+    if (nickname) {
+      const welcomeMessage: Message = {
+        id: 0,
+        serviceId: 0,
+        memberId: 0,
+        content: `${nickname} 您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊`,
+        timestamp: new Date(),
+        sender: 'admin'
+      };
+      setMessages([welcomeMessage]);
+    }
   }, [nickname]);
 
   useEffect(() => {
     const fetchAllMessages = async () => {
       if (memberId !== null) {
         try {
-          // getServicesByMemberId 函數來獲取與 memberId 的所有服務。將數據中的 serviceId 提出，形成serviceIds
           const servicesResponse = await getServicesByMemberId(memberId);
-          //對每個 service 對象，提取它的 serviceId 屬性
+          console.log("Services response:", servicesResponse.data);  // Log services response
           const serviceIds = servicesResponse.data.map(service => service.serviceId);
 
           const openService = servicesResponse.data.find(service => !service.endDate);
 
           if (openService) {
             setServiceId(openService.serviceId);
+            console.log("Open service ID:", openService.serviceId);  // Log open service ID
           } else {
             const newService: ServiceDTO = {
               serviceId: 0,
               memberId: memberId,
-              statusId: 4, // 初始狀態設置為 4 表示等待客服回應中
+              statusId: 4,
               startDate: new Date().toISOString(),
               endDate: null
             };
             const createdServiceResponse = await createService(newService);
             setServiceId(createdServiceResponse.data.serviceId);
+            console.log("Created service ID:", createdServiceResponse.data.serviceId);  // Log created service ID
           }
 
           const allMessages: Message[] = [];
           for (const id of serviceIds) {
             const messagesResponse = await getServiceMessages(id);
+            console.log("Messages response for service ID", id, ":", messagesResponse.data);  // Log messages response for each service ID
             const fetchedMessages = messagesResponse.data.map((msg: ServiceMessageDTO) => ({
               id: msg.messageId,
               serviceId: msg.serviceId,
@@ -92,8 +108,8 @@ const Service = () => {
           const uniqueMessages = Array.from(new Set(allMessages.map(m => m.id)))
             .map(id => allMessages.find(m => m.id === id) as Message);
 
-          console.log('Fetched all messages:', uniqueMessages);
-          setMessages(prevMessages => [prevMessages[0], ...uniqueMessages]); // 插入歡迎訊息到最前面
+          console.log('Fetched all messages:', uniqueMessages);  // Log all fetched messages
+          setMessages(prevMessages => [prevMessages[0], ...uniqueMessages]);
         } catch (error) {
           console.error('Failed to fetch all messages', error);
         }
@@ -128,25 +144,25 @@ const Service = () => {
         serviceId: serviceId,
         memberId: memberId,
         content: message,
-        timestamp: new Date(),  // 使用本地時間
+        timestamp: new Date(),
         sender: 'user'
       };
       try {
-        console.log('Sending message:', newMessage);
+        console.log('Sending message:', newMessage);  // Log the message to be sent
         await createServiceMessage(newMessage.serviceId, {
           messageId: newMessage.id,
           serviceId: newMessage.serviceId,
           memberId: newMessage.memberId,
           adminId: null,
           messageContent: newMessage.content,
-          messageDate: newMessage.timestamp.toISOString() // 確保時間格式正確
+          messageDate: newMessage.timestamp.toISOString()
         });
-        setMessages(prevMessages => {
-          const updatedMessages = [...prevMessages, newMessage];
-          console.log('Updated messages:', updatedMessages);
-          return updatedMessages;
-        });
+
         setMessage('');
+
+        // 發送訊息給 SignalR hub
+        connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
+
       } catch (error) {
         console.error('Failed to send message', error);
       }
@@ -181,11 +197,10 @@ const Service = () => {
             messageContent: newMessage.content,
             messageDate: newMessage.timestamp.toISOString()
           });
-          setMessages(prevMessages => {
-            const updatedMessages = [...prevMessages, newMessage];
-            console.log('Updated messages:', updatedMessages);
-            return updatedMessages;
-          });
+
+          // 發送訊息給 SignalR hub
+          connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
+
         } catch (error) {
           console.error('Failed to upload file', error);
         }
@@ -234,6 +249,20 @@ const Service = () => {
     };
   }, [serviceId]);
 
+  // SignalR 連接與訊息處理
+  useEffect(() => {
+    if (serviceId !== null) {
+      connection.on('ReceiveMessage', (message: Message) => {
+        console.log("Received message via SignalR:", message);  // Log received message
+        setMessages(prevMessages => [...prevMessages, message]);
+      });
+
+      return () => {
+        connection.off('ReceiveMessage');
+      };
+    }
+  }, [serviceId]);
+
   return (
     <div className="service-chat-container">
       <ChatHeader
@@ -257,4 +286,3 @@ const Service = () => {
 };
 
 export default Service;
-

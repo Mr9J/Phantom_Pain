@@ -15,6 +15,7 @@ import {
 } from '@/components/service/serviceApi';
 import { Customer, Message } from '@/components/service/types';
 import '@/components/service/serviceAdmin.css';
+import connection from '@/components/service/SignalR';
 
 const ServiceAdmin = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -31,54 +32,48 @@ const ServiceAdmin = () => {
     const fetchMembersNicknames = async () => {
       try {
         const response = await getMembersNicknames();
-        console.log('Nicknames fetched:', response.data); // 日誌
         setMemberNicknames(response.data);
       } catch (error) {
         console.error('Failed to fetch member nicknames', error);
       }
     };
-  
     fetchMembersNicknames();
   }, []);
-  
+
   useEffect(() => {
     const fetchLatestMessages = async () => {
       try {
         const response = await getLatestMessages();
         const latestMessages: CustomerMessageDTO[] = response.data;
-  
-        console.log('Latest messages fetched:', latestMessages); // 確認數據
-  
+
         const sortedMessages = latestMessages.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
-  
+
         const customerData = sortedMessages.map(message => {
-          const memberId = message.memberId; // 使用小寫 memberId
-          const member = memberNicknames.find(m => m.memberId === memberId); // 使用小寫 memberId 和 nickname
-          console.log('Member data for message:', member, 'Message:', message, 'MemberId:', memberId); // 確認數據
+          const memberId = message.memberId;
+          const member = memberNicknames.find(m => m.memberId === memberId);
           return {
             id: message.memberId,
-            name: member ? member.nickname : `廠商 ${message.memberId}`, // 使用小寫 nickname
-            image: member ? member.thumbnail : 'https://via.placeholder.com/150', // 使用真實圖片
+            name: member ? member.nickname : `廠商 ${message.memberId}`,
+            image: member ? `https://cdn.mumumsit158.com/Members/MemberID-${memberId}-ThumbNail.jpg` : 'https://via.placeholder.com/150',
             messageCount: message.messageCount,
             lastMessage: message.messageContent,
             lastMessageDate: new Date(message.messageDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            messageDate: message.messageDate,
+            messageDate: new Date(message.messageDate).toISOString(),
             unreadMessages: message.unreadMessages
           };
         });
-  
-        console.log('Customer data:', customerData); // 確認數據
+
         setCustomers(customerData);
       } catch (error) {
         console.error('Failed to fetch latest messages', error);
       }
     };
-  
+
     if (memberNicknames.length > 0) {
       fetchLatestMessages();
     }
   }, [memberNicknames]);
-  
+
   useEffect(() => {
     const fetchMessages = async () => {
       if (selectedCustomerId !== null) {
@@ -95,10 +90,8 @@ const ServiceAdmin = () => {
           }));
           setMessages(fetchedMessages);
 
-          // 將所有訊息標記為已讀
           await markMessagesAsRead(selectedCustomerId);
 
-          // 更新客戶未讀訊息數量
           setCustomers(prevCustomers => prevCustomers.map(customer =>
             customer.id === selectedCustomerId ? { ...customer, unreadMessages: 0 } : customer
           ));
@@ -156,22 +149,22 @@ const ServiceAdmin = () => {
           messageDate: newMessage.timestamp.toISOString()
         });
 
-        setMessages(prevMessages => [...prevMessages, newMessage]);
         setMessage('');
 
-        // 更新客戶列表並排序
-        setCustomers(prevCustomers => {
-          const updatedCustomers = prevCustomers.map(customer =>
-            customer.id === selectedCustomerId ? {
-              ...customer,
-              lastMessage: newMessage.content,
-              lastMessageDate: newMessage.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              messageDate: newMessage.timestamp.toISOString()
-            } : customer
-          );
+        const updatedCustomers = customers.map(customer =>
+          customer.id === selectedCustomerId ? {
+            ...customer,
+            lastMessage: newMessage.content,
+            lastMessageDate: newMessage.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            messageDate: newMessage.timestamp.toISOString()
+          } : customer
+        );
 
-          return updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
-        });
+        setCustomers(updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime()));
+
+        // 發送訊息給 SignalR hub
+        connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
+
       } catch (error) {
         console.error('Failed to send message', error);
       }
@@ -211,19 +204,9 @@ const ServiceAdmin = () => {
             messageDate: newMessage.timestamp.toISOString()
           });
 
-          setMessages([...messages, newMessage]);
+          // 發送訊息給 SignalR hub
+          connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
 
-          setCustomers(prevCustomers => {
-            const updatedCustomers = prevCustomers.map(customer =>
-              customer.id === selectedCustomerId ? {
-                ...customer,
-                lastMessage: newMessage.content,
-                lastMessageDate: newMessage.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                messageDate: newMessage.timestamp.toISOString()
-              } : customer
-            );
-            return updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
-          });
         } catch (error) {
           console.error('Failed to upload file', error);
         }
@@ -252,6 +235,38 @@ const ServiceAdmin = () => {
       document.querySelectorAll('.chat-message')[highlightedIndexes[newIndex]]?.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // SignalR 連接與訊息處理
+  useEffect(() => {
+    connection.on('ReceiveMessage', (message: Message) => {
+      console.log("Received message via SignalR:", message);  // Log received message
+      setMessages(prevMessages => {
+        // 確保 timestamp 是 Date 類型
+        const newMessage = {
+          ...message,
+          timestamp: new Date(message.timestamp)
+        };
+        return [...prevMessages, newMessage];
+      });
+
+      setCustomers(prevCustomers => {
+        const updatedCustomers = prevCustomers.map(customer =>
+          customer.id === message.memberId ? {
+            ...customer,
+            lastMessage: message.content,
+            lastMessageDate: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            messageDate: new Date(message.timestamp).toISOString()
+          } : customer
+        );
+
+        return updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
+      });
+    });
+
+    return () => {
+      connection.off('ReceiveMessage');
+    };
+  }, [customers]);
 
   return (
     <div className="service-admin-container">
