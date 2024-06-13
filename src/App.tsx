@@ -47,8 +47,11 @@ import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
 import StartProject from "./views/root/pages/StartProject";
+import CreateProject from "./views/root/pages/CreateProject";
+import { useState } from "react";
 
 const App = () => {
+
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -70,6 +73,7 @@ const App = () => {
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
             <Route path="/StartProject" element={<StartProject />} />
+            <Route path="/CreateProject" element={<CreateProject />} />
           </Route>
           
           {/* 修改的部分 */}

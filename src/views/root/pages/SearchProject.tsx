@@ -17,7 +17,7 @@ import {
 
 function SearchProject() {
   const params = new URLSearchParams(window.location.search).get("orderby");
-
+  
   type SearchProjectDTO = {
     projectData: ProjectCardDTO[];
     totalPage: number;
