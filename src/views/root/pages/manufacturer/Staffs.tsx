@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getMembers } from "@/services/members.service";
+import { getMemberStaff } from "@/services/members.service";
 const baseUrl = import.meta.env.VITE_API_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
-
-
 
 const Staffs = () => {
   const [members, setMembers] = useState(null);
@@ -12,7 +10,7 @@ const Staffs = () => {
     useEffect(() => {
       const fetchMembers = async () => {
         try {
-          const fetchedProjects = await getMembers();
+          const fetchedProjects = await getMemberStaff();
           setMembers(
             fetchedProjects.map((member) => ({
               ...member,
@@ -27,6 +25,12 @@ const Staffs = () => {
   
       fetchMembers();
     }, []);
+
+    const statusMap = {
+      1: "專案發起者",
+      2: "共同編輯者",
+    };
+
   return (
 <>
 <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -82,16 +86,13 @@ const Staffs = () => {
                         <div className="text-left font-medium">{member.phone}</div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
-                        <div className="text-lg text-center">專案發起人</div>
-                        {/* <div className="text-lg text-center">{member.location}</div> */}
+                        <div className="text-lg text-center">{statusMap[member.groupDetail.authStatusId]}</div>
                       </td>
                     </tr>
                 ))}
             </tbody>
           </table>
-
         </div>
-
       </div>
     </div>
     </div>
