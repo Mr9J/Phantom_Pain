@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import PaymentForm from '@/components/service/ECPay';
 
 
 
@@ -51,15 +52,19 @@ interface ProductCardDTO {
 
 function Paypage() {
 
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+
+
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement  | null }>({});
-  const formRef = useRef<HTMLFormElement>(null); 
+  //const formRef = useRef<HTMLFormElement>(null);   先別刪
   //const { id } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const selectedproductId = searchParams.get('product');
   const projectId = searchParams.get('project')
   const fromCartPage = searchParams.get('fromCartPage') === 'true';
+
   
 
   const  testmemberId = 6;
@@ -78,6 +83,10 @@ function Paypage() {
   const previousProjectAndproductsData = useRef(projectAndproductsData);
   const [isConfirming, setIsConfirming] = useState(false);
 
+
+  // const handleButtonClick = () => {
+  //   setShowPaymentForm(true);
+  // };
  
   const handleConfirm = (e:React.MouseEvent<HTMLButtonElement>) => {  
     e.stopPropagation();
@@ -90,16 +99,19 @@ function Paypage() {
     setIsConfirming(false);
   };
 
-  const handleConfirmButtonClick = () => {
+  const handleConfirmButtonClick = async () => {
     console.log("確認");
-    // 点击确认按钮时触发提交按钮的点击事件
-    if (formRef.current) {
-      const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-      if (submitButton) {
-        submitButton.click();
-      }
-    }
+    setShowPaymentForm(true);
     setIsConfirming(false);
+    await createOrder(orderData)
+    
+    // if (formRef.current) {  先別刪
+    //   const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    //   if (submitButton) {
+    //     submitButton.click();
+    //   }
+    // }
+    
   };
 
   
@@ -122,11 +134,12 @@ function Paypage() {
       paymentMethodID: Number(value) // 將 paymentMethodID 設定為 value
     }));
   };
- //測試POST
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await createOrder(orderData)
-  };
+ //測試POST 先別刪
+  // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   await createOrder(orderData)
+  //   setShowPaymentForm(true);
+  // };
 
 
 //觀察orderData變化用
@@ -363,7 +376,7 @@ return(
   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
   <p>
-  {truncateText(pjitem.productDescription!,100)}</p>
+  {truncateText(pjitem.productDescription!,90)}</p>
   </div>
   
   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
@@ -481,6 +494,7 @@ return(
   <div className="whitespace-nowrap text-right">
     {/* 金額正規化顯示.toLocaleString() */}
   NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount).toLocaleString()}
+  {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount)}/>}
   
   </div>
   </div>
@@ -492,20 +506,20 @@ return(
   
   const payment = (
     <div className={`px-4 lg:w-2/3 overflow-x-auto ${isHidden ? 'inline-block' : 'hidden'}`}>
-      <button className={`h-auto border-2 border-current rounded p-4 w-full text-left text-neutral-400 hover:text-neutral-600 font-bold ${''} hover:bg-sky-500`} type="button" onClick={ClickToHidden}>
+      <button className={`dark:text-slate-200 h-auto border-2 border-current rounded p-4 w-full text-left text-neutral-400 hover:text-neutral-600 font-bold ${''} hover:bg-sky-500`} type="button" onClick={ClickToHidden}>
         <span className="align-middle text-sm mr-2"></span>
         顯示品項細節
         <span className="align-middle text-sm ml-2"></span>
       </button>
       {/* <PaymentMethod></PaymentMethod> */}
       <div className="mt-8">
-        <label className="font-bold text-sm text-black mb-4">付款方式</label>
-        <label className="mb-2 mt-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14">
+        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">付款方式</label>
+        <label className="mb-2 mt-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14 dark:bg-slate-800 dark:hover:bg-slate-600">
           {/* 兩個radio設定同樣name，達成單選效果 */}
           <input className="flex-initial" type="radio" value="1" checked={paymentMethod === "1"} name="paymentmethod" onChange={handlePaymentMethodChange}/>
           <h3 className="ml-2 flex-1">
             <span className="block font-bold">信用卡付款</span>
-            <p className="flex text-xs text-gray-800 mt-1">
+            <p className="flex text-xs text-gray-800 mt-1 dark:text-slate-300">
               <span>台新、玉山享 3 期 / 零利率</span>
               、
               <span>可用銀聯卡</span>
@@ -514,31 +528,31 @@ return(
             </p>
           </h3>
         </label>
-        <label className="mb-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14">
+        <label className="mb-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14 dark:bg-slate-800 dark:hover:bg-slate-600">
           <input className="zec js-payment-method flex-initial" type="radio" checked={paymentMethod === "3"} value="3" name="paymentmethod" onChange={handlePaymentMethodChange}/>
           <h3 className="ml-2 flex-1">
             <span className="block font-bold">ATM 轉帳或銀行臨櫃繳款</span>
-            <span className="mt-2 text-xs text-gray-800">需於指定時間內完成付款，超過時限則會取消交易</span>
+            <span className="mt-2 text-xs text-gray-800 dark:text-slate-300">需於指定時間內完成付款，超過時限則會取消交易</span>
           </h3>
         </label>
   
         <div className="p-4 border mt-2 rounded border-slate-200">
-          <ul className="list-disc m-0 pl-4 text-slate-600">
+          <ul className="list-disc m-0 pl-4 text-slate-600 dark:text-slate-300">
             <li>您了解您的贊助是支持創意專案的一種方式，也了解創意實踐過程中充滿變數，專案不一定能確保回饋。</li>
           </ul>
         </div>
-        <div className="mb-2 mt-4">
-          <label className="font-bold text-sm text-black mb-4">加碼贊助</label>
+        <div className="mb-2 mt-4 dark:text-slate-300">
+          <label className="font-bold text-sm text-black mb-4 dark:text-slate-300 ">加碼贊助</label>
           （選擇）
         </div>
         <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
-          <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap">NT $</div>
-          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={'0'}/>
+          <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap ">NT $</div>
+          <input className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent dark:bg-slate-800" type="number" name="price" value={inputDonateValue} onChange={DonateChange} onKeyDown={EnterToDonate} min={'0'}/>
         </div>
         <div className="flex">
           <div className="mt-4 flex-auto"> 
-            <label className="font-bold text-sm text-black mb-4">縣市</label>
-            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100" onChange={CityChange} value={selectedCity}>   
+            <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">縣市</label>
+            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950" onChange={CityChange} value={selectedCity}>   
               <option selected={true}>-選擇-</option>
               {taiwan_districts.map((item) => (
                 <option key={item.name} value={item.name}>{item.name}</option>
@@ -546,8 +560,8 @@ return(
             </select>
           </div>
           <div className="mt-4 flex-auto pl-4">
-            <label className="font-bold text-sm text-black mb-4">鄉鎮市區</label>
-            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100">
+            <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">鄉鎮市區</label>
+            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950">
               <option selected={true}>-選擇-</option>
               {districtsName}
             </select>
@@ -556,19 +570,19 @@ return(
   
         <div className="flex mt-4">
           <div className="flex-auto">
-            <label className="font-bold text-sm text-black mb-4">地址</label>
-            <input required={true} autoComplete="street-address" className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1" type="text" name="order[address]"/>
+            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">地址</label>
+            <input required={true} autoComplete="street-address" className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[address]"/>
           </div>
           <div className="flex-auto pl-10">
-            <label className="font-bold text-sm text-black mb-4">郵遞區號</label>
-            <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1" type="text" name="order[postcode]"/>
+            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">郵遞區號</label>
+            <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[postcode]"/>
           </div>
         </div>
       
-        <label className="font-bold text-sm text-black mb-4">收件人</label>
-        <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500" type="text" name="order[recipient]"/>
-        <label className="font-bold text-sm text-black mb-4">連絡電話</label>
-        <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500" size={20} type="text" name="order[phone]"/>
+        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">收件人</label>
+        <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" type="text" name="order[recipient]"/>
+        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">連絡電話</label>
+        <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" size={20} type="text" name="order[phone]"/>
         <button className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500" onClick={(e)=>(handleConfirm(e))}>      
           立即預購
         </button>
@@ -576,7 +590,7 @@ return(
          {/* 確認對話框 */}
       {isConfirming && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg">
+          <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-500">
             <p>將前往結帳頁面，確定要進行購買嗎?</p>
             <div className="flex justify-center mt-4">
               <button
@@ -605,8 +619,8 @@ return(
       <Projectcard projectData={projectAndproductsData}></Projectcard>
 {/* 原本是px-4 mb-8有另外的div */}
 <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
-
-  <form ref={formRef} method="post" onSubmit={handleSubmit}>
+      {/* 條件渲染 PaymentForm */}
+   
   <div className="flex mb-10 text-sm -mx-4">
 <div className="px-4 lg:w-1/3 mr-3">
 
@@ -632,7 +646,7 @@ return(
 onClick={ClickToHidden}>
 選擇付款方式
 </button>
-</form>  
+ 
 </div>
     </>
       
