@@ -385,7 +385,11 @@ const Projects = () => {
                               className="flex items-center"
                               style={{ width: 600 }}
                             >
-                              <a href={`${frontUrl}/project/${item.projectId}`}>
+                              <a
+                                href={`${frontUrl}/project/${item.projectId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <div className="text-base text-slate-800 dark:text-slate-100 underline">
                                   {item.projectName}
                                 </div>

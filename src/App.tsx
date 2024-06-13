@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -116,7 +116,7 @@ const App = () => {
           <Route element={<AdminLayout />}>
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
-            <Route path="/admin" element={<AdminProjects />} />
+            <Route path="/admin" element={<Navigate to="/admin/projects" />} />
           </Route>
         </Routes>
 
