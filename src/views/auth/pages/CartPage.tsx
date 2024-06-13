@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
+import { useUserContext } from "@/context/AuthContext";
+
+
 
 
 interface CartDetailDTO {
@@ -22,16 +25,26 @@ interface CartDetailDTO {
   
 
 function CartPage() {
-    const testmemberId = 6;
+
+    const { user, checkAuthUser } = useUserContext();
+    const [isAuth, setIsAuth] = useState(true);
+    // const [testmemberId,setmemberId] = useState(0);
+
+    //測試會員
+    const  testmemberId = 6
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
-    let totalAmount = 0;
+    // let totalAmount = 0;
     const navigate = useNavigate();
 
     useEffect(() => {
+        checkAuthUser().then(async (res) => {
+            setIsAuth(res);    
+          });
+          console.log(isAuth)   
+    
         fetchShoppingCart();
     }, []);
     
-
     const goToPayPage = (projectId:number,productId:number,fromCartPage:boolean) =>
     {  
         navigate(`/Paypage?project=${projectId}&product=${productId}&fromCartPage=${fromCartPage}`);
@@ -84,6 +97,8 @@ function CartPage() {
     };
 
     return (
+        <>
+        {!isAuth && <Navigate to="/sign-in" />}
         <div className="container px-4 mb-8">
             <div className='flex flex-col-reverse lgl:flex-row gap-5'>
                 <div className='w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5'>
@@ -108,7 +123,7 @@ function CartPage() {
         </p>
       </div>
     </div>:  <>{memberCartData&&memberCartData.map((item) => {
-
+                            let totalAmount = 0; 
                             return (
                                 <div key={item.projectId} className="w-full">                               
                                     <div className="border-spacing-8 mx-7 my-6">
@@ -175,6 +190,7 @@ function CartPage() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 

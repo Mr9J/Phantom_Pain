@@ -65,9 +65,6 @@ const App = () => {
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
-            <Route path="/Productpage" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} />
           </Route>
           
           {/* 修改的部分 */}
