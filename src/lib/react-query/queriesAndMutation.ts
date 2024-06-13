@@ -66,7 +66,7 @@ export const useSignInWithOthers = () => {
 
 export const useGetRecentPosts = (page: number) => {
   return useQuery({
-    queryKey: [page],
+    queryKey: ["recentPosts", page],
     queryFn: () => getRecentPosts(page),
   });
 };
@@ -121,7 +121,7 @@ export const useGetCommentPost = (postId: string) => {
 
 export const useGetSavedPosts = (page: number) => {
   return useQuery({
-    queryKey: [page],
+    queryKey: ["savedPosts", page],
     queryFn: () => getSavedPosts(page),
   });
 };
