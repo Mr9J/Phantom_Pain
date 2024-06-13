@@ -226,12 +226,13 @@ function ProjectInfo() {
               >
                 {isLiked ? <Heart fill="rgb(30 58 138)" /> : <Heart />}
               </div>
-              <div
+              <a
                 className="js-back-project-now tracking-widest cursor-pointer flex-1 border-blue-100 align-middle bg-blue-300 inline-block w-full text-base transition-transform hover:scale-105 focus:scale-105 active:scale-90 rounded font-bold py-2 "
                 data-click-event="list_options"
+                href={`/productpage/${pid}`}
               >
                 贊助專案
-              </div>
+              </a>
             </div>
           </div>
         </div>
