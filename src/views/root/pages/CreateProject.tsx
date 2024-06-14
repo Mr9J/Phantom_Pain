@@ -58,7 +58,7 @@ const formSchema = z.object({
     .min(1, { message: "起碼給個名字呀。" }),
   projectdescription: z.string().min(50, { message: "最少 50 字。" }),
   thumbnail:  z.instanceof(File).refine((file) => file.size < 7000000 && file.type.startsWith('image/'), {
-    message: 'Your resume must be an image less than 7MB.',
+    message: '請上傳圖片且小於7MB。',
   }),
   projectdetail: z.string().min(350, { message: "最少 350 字。" }),
 });
