@@ -105,6 +105,7 @@ const App = () => {
           </Route>
 
           <Route element={<ManuLayout />}>
+            <Route path="/manu/test" element={<Test action={"create"} />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
