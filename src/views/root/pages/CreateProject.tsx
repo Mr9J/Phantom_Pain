@@ -29,32 +29,44 @@ import { Input } from "@/components/ui/input";
 import { useUserContext } from "@/context/AuthContext";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
-const baseUrl = import.meta.env.VITE_API_URL;
+import { Editor } from "@tinymce/tinymce-react";
+import { Editor as TinyMCEEditor } from "tinymce";
 
+const baseUrl = import.meta.env.VITE_API_URL;
+const TINYAPIKEY = import.meta.env.VITE_TINY_MCE_KEY as string;
 const formSchema = z.object({
   username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "請輸入使用者名稱。",
   }),
   email: z.string().min(2, {
-    message: "Email must be at least 2 characters.",
+    message: "請輸入email。",
   }),
   startdate: z.date({
-    required_error: "A date of Start is required.",
+    required_error: "請輸入開始日期。",
   }),
   enddate: z.date({
-    required_error: "A date of End is required.",
+    required_error: "請輸入結束日期。",
   }),
-  goal: z.number().int().gte(1, { message: "Goal must be a positive number." }),
-  typeid: z.string({
-    required_error: "A type of id is required.",
-  }),
-  projectname: z.string({
-    required_error: "A name of project is required.",
-  }),
-  projectdescription: z.string().min(50, { message: "最少 50 字" }),
-  thumbnail: z.any({ required_error: "A name of project is required." }),
+  goal: z.number().int().gte(1, { message: "請輸入金額。" }),
+  typeid: z.string().min(1, { message: "請選擇分類。" }),
+  projectname: z
+    .string({
+      required_error: "起碼給個名字呀。",
+    })
+    .min(1, { message: "起碼給個名字呀。" }),
+  projectdescription: z.string().min(50, { message: "最少 50 字。" }),
+  thumbnail: z.string().refine(
+    (path) => {
+      const fileType = path.split(".").pop();
+      return fileType === "jpeg" || fileType === "jpg" || fileType === "png";
+    },
+    {
+      message: "封面照片的檔案類型必須是 jpeg、jpg 或 png。",
+    }
+  ),
+  projectdetail: z.string().min(350, { message: "最少 350 字。" }),
 });
 
 function CreateProject() {
@@ -131,11 +143,20 @@ function CreateProject() {
       projectname: "",
       projectdescription: "",
       thumbnail: "",
+      projectdetail: "",
     },
   });
+  const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
+  const log = () => {
+    if (editorRef.current) {
+      form.setValue("projectdetail", editorRef.current.getContent());
+      // console.log(editorRef.current.getContent());
+    }
+  };
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
     console.log(values);
   }
   return (
@@ -372,7 +393,6 @@ function CreateProject() {
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="選擇計畫分類" />
@@ -386,7 +406,6 @@ function CreateProject() {
                           <SelectItem value="5">飲食</SelectItem>
                           <SelectItem value="6">表演</SelectItem>
                         </SelectContent>
-
                       </Select>
                     </div>
                     <FormDescription></FormDescription>
@@ -433,7 +452,7 @@ function CreateProject() {
                   <div className="md:col-span-1 mt-1">
                     <h2>
                       <FormLabel className="font-bold text-lg">
-                        計畫名稱
+                        計畫簡介
                       </FormLabel>
                     </h2>
                   </div>
@@ -446,9 +465,7 @@ function CreateProject() {
                         // disabled
                       />
                     </FormControl>
-                    <FormDescription>
-
-                    </FormDescription>
+                    <FormDescription></FormDescription>
                     <FormMessage />
                   </div>
                 </FormItem>
@@ -473,6 +490,7 @@ function CreateProject() {
                         type="file"
                         className="w-full mb-2 rounded"
                         placeholder=""
+                        accept=".jpeg,.jpg,.png"
                         {...field}
                         // disabled
                       />
@@ -486,7 +504,58 @@ function CreateProject() {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <FormField
+              control={form.control}
+              name="projectdetail"
+              render={() => (
+                <FormItem className="md:grid md:grid-cols-4 md:gap-4 pb-4 md:pb-8 border-b border-gray-300">
+                  <div className="md:col-span-1 mt-1">
+                    <h2>
+                      <FormLabel className="font-bold text-lg">
+                        計畫內容
+                      </FormLabel>
+                    </h2>
+                  </div>
+                  <div className="mt-4 md:mt-0 md:col-span-3">
+                    <FormControl>
+                      <Editor
+                        apiKey={TINYAPIKEY}
+                        onInit={(evt, editor) => (editorRef.current = editor)}
+                        initialValue=""
+                        init={{
+                          height: 500,
+                          menubar: false,
+                          plugins:
+                            "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate  mentions  tableofcontents footnotes mergetags autocorrect typography inlinecss markdown",
+
+                          toolbar:
+                            "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments |  align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+
+                          content_style:
+                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                        }}
+                        onChange={log}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      請告訴詳細介紹關於你計畫的故事、為什麼大家應該支持你的計畫。（最少
+                      350 字）
+                    </FormDescription>
+                    <FormDescription>
+                      請注意：Mumu必須要有足夠的訊息才有辦法審核計畫，如果您所提供的資訊過少，或嘖嘖無法評估計畫的真實性、可行性，計畫就會無法上架。
+                    </FormDescription>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <div className="md:grid md:grid-cols-4 md:gap-4 pb-4 md:py-8 -mx-4 px-4">
+              <div className="md:col-span-1 mt-1"></div>
+              <div className="mt-4 md:mt-0 md:col-span-3">
+                <Button type="submit">確定提案</Button>
+              </div>
+            </div>
           </form>
         </Form>
       </div>
