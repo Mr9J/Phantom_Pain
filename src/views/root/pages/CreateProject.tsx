@@ -57,17 +57,10 @@ const formSchema = z.object({
     })
     .min(1, { message: "起碼給個名字呀。" }),
   projectdescription: z.string().min(50, { message: "最少 50 字。" }),
-  thumbnail: z.string().refine(
-    (path) => {
-      const fileType = path.split(".").pop();
-      return fileType === "jpeg" || fileType === "jpg" || fileType === "png";
-    },
-    {
-      message: "封面照片的檔案類型必須是 jpeg、jpg 或 png。",
-    }
-  ),
+  thumbnail:  z.instanceof(File).refine((file) => file.size < 7000000 && file.type.startsWith('image/'), {
+    message: 'Your resume must be an image less than 7MB.',
+  }),
   projectdetail: z.string().min(350, { message: "最少 350 字。" }),
-  thumbnailarry: z.any(),
 });
 
 function CreateProject() {
@@ -143,9 +136,8 @@ function CreateProject() {
       typeid: "",
       projectname: "",
       projectdescription: "",
-      thumbnail: "",
+      thumbnail: undefined,
       projectdetail: "",
-      thumbnailarry:new Uint8Array(),
     },
   });
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
@@ -479,8 +471,8 @@ function CreateProject() {
 
             <FormField
               control={form.control}
-              name="thumbnail"
-              render={({ field }) => (
+              name="thumbnail" 
+              render={({ field: { onChange } }) => (
                 <FormItem className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8">
                   <div className="md:col-span-1 mt-1">
                     <h2>
@@ -496,12 +488,14 @@ function CreateProject() {
                         className="w-full mb-2 rounded"
                         placeholder=""
                         accept=".jpeg,.jpg,.png"
-                        {...field}
+                        // {...field}
+                        onChange={(event) =>
+                          onChange(event.target.files && event.target.files[0])}
                         // disabled
                       />
                     </FormControl>
                     <FormDescription>
-                      建議尺寸為 1200 x 675 像素 (16:9)
+                    請上傳小於 7MB 的圖片，建議尺寸為 1200 x 675 像素 (16:9)。
                     </FormDescription>
                     <FormMessage />
                   </div>
@@ -525,7 +519,7 @@ function CreateProject() {
                     <FormControl>
                       <Editor
                         apiKey={TINYAPIKEY}
-                        onInit={(evt, editor) => (editorRef.current = editor)}
+                        onInit={(_evt, editor) => (editorRef.current = editor)}
                         initialValue=""
                         init={{
                           height: 500,
