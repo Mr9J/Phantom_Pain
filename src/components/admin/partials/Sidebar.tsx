@@ -3,7 +3,6 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SidebarLinkGroup from "./SidebarLinkGroup";
 import headerLogo from "@/assets/_shared_img/logo.png";
 import { Button } from "@/components/ui/button";
-import { LogOutIcon } from "lucide-react";
 import { signOutNative } from "@/services/auth.service";
 import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
@@ -22,8 +21,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const signOutHandler = () => {
     signOutNative();
     signOut(auth);
-    window.location.reload();
     navigate("/");
+    window.location.reload();
   };
 
   // close on click outside
@@ -369,7 +368,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               >
                 <NavLink
                   end
-                  to="/manu/messages"
+                  to="/manu/service"
                   className={`block text-slate-200 truncate transition duration-150 ${
                     pathname.includes("messages")
                       ? "hover:text-slate-200"

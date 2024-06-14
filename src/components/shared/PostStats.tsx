@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { string } from "zod";
+import moment from "moment";
 
 type PostStatsProps = {
   post: GetPostDTO;
@@ -42,13 +42,16 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const [isSaved, setIsSaved] = useState(false);
   const [comment, setComment] = useState("");
   const [commentData, setCommentData] = useState(null);
+  const [visibleComments, setVisibleComments] = useState(5);
   const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: commentPost, isPending: isCommentSubmitting } =
     useCommentPost();
   const {
     data: comments,
     isPending: isCommentLoading,
     isError: isCommentError,
+    refetch: refetchComments,
   } = useGetCommentPost(post.postId);
 
   const checkStatus = async () => {
@@ -60,6 +63,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     setIsLiked(session.isLiked === "True" ? true : false);
     setLikeCount(parseInt(session.likeCount));
     setIsSaved(session2 === "True" ? true : false);
+  };
+
+  const loadMoreComments = () => {
+    setVisibleComments(visibleComments + 5);
   };
 
   const commentHandler = () => {
@@ -97,7 +104,8 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     if (comments !== "沒有留言" && comments !== undefined) {
       setCommentData(comments);
     }
-  }, [checkStatus, commentData, comments, userId]);
+    refetchComments();
+  }, [checkStatus, commentData, comments, userId, refetchComments]);
 
   const likeHandler = async () => {
     try {
@@ -206,7 +214,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
           onClick={commentHandler}
           disabled={isCommentLoading}
         >
-          查看留言...
+          查看留言... ({commentData ? commentData.length : 0})
         </Button>
       </div>
       <div
@@ -215,7 +223,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
       >
         <ul>
           {commentData ? (
-            commentData.map((com, index) => (
+            commentData.slice(0, visibleComments).map((com, index) => (
               <div className="flex items-start gap-4 mt-2 w-full" key={com.id}>
                 <img
                   src={com.thumbnail}
@@ -225,23 +233,38 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
                 <p className="text-blue-500">{com.username}</p>
                 <div className="max-w-[480px]">
                   <p className="break-words">{com.comment}</p>
+                  <p className="text-blue-400">
+                    {moment.utc(com.time, "YYYY-MM-DD HH:mm:ss").fromNow()}
+                  </p>
                 </div>
               </div>
             ))
           ) : (
             <p>沒有人留言...</p>
           )}
+          {commentData && commentData.length > visibleComments && (
+            <Button variant="link" onClick={loadMoreComments}>
+              載入更多...
+            </Button>
+          )}
         </ul>
       </div>
       <div className="flex items-center justify-center mt-2 gap-2 w-full">
         <Input
+          ref={inputRef}
           type="text"
           placeholder="comment"
           onChange={(e) => {
             setComment(e.currentTarget.value);
           }}
         />
-        <Button onClick={commentSubmitHandler} disabled={isCommentSubmitting}>
+        <Button
+          onClick={() => {
+            commentSubmitHandler();
+            if (inputRef.current) inputRef.current.value = "";
+          }}
+          disabled={isCommentSubmitting}
+        >
           送出
         </Button>
       </div>

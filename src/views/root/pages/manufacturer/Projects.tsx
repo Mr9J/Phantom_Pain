@@ -6,6 +6,7 @@ import {
 } from "@/services/projects.service";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import SearchBar from "@/components/admin/SearchBar";
 const baseUrl = import.meta.env.VITE_API_URL;
 const frontUrl = import.meta.env.VITE_FRONT_URL;
 
@@ -37,11 +38,18 @@ const Projects = () => {
   const [orderType, setorderType] = useState(1);
   const [projectStatus, setProjectStatus] = useState(-1);
   const [projectCount, setProjectCount] = useState([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const filteredProjects =
     projectStatus > 0
       ? projects.filter((item) => item.statusId === projectStatus)
       : projects;
+  const filteredProjectsKeyword =
+    searchQuery.length > 0
+      ? filteredProjects.filter((item) =>
+          item.projectName.includes(searchQuery)
+        )
+      : filteredProjects;
 
   //下拉式選單
   const productTableClick = (itemId: string) => {
@@ -205,8 +213,12 @@ const Projects = () => {
       .catch((error) => {
         console.error("提交數據時發生錯誤：", error);
       });
-    //window.location.reload();
   };
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+    setSearchQuery(query);
+  };
+
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -311,6 +323,9 @@ const Projects = () => {
                 </svg>
                 <p className="text-base">新增專案</p>
               </button>
+              <div style={{ marginLeft: "auto" }} className="pb-2">
+                <SearchBar onSearch={handleSearch} />
+              </div>
             </div>
             {/* Table */}
             <div className="overflow-x-auto">
@@ -353,7 +368,7 @@ const Projects = () => {
                   //#region 專案-----------------------------------------------------------------------------------
                 }
                 {projects &&
-                  filteredProjects.map((item) => (
+                  filteredProjectsKeyword.map((item) => (
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
@@ -370,7 +385,11 @@ const Projects = () => {
                               className="flex items-center"
                               style={{ width: 600 }}
                             >
-                              <a href={`${frontUrl}/project/${item.projectId}`}>
+                              <a
+                                href={`${frontUrl}/project/${item.projectId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <div className="text-base text-slate-800 dark:text-slate-100 underline">
                                   {item.projectName}
                                 </div>

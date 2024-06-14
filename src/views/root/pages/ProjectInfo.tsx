@@ -9,8 +9,12 @@ import TabComments from "@/components/explore/TabComments";
 import Footer from "@/components/section/Footer";
 import { useUserContext } from "@/context/AuthContext";
 import { Heart } from "lucide-react";
+import ProductCards from "@/components/explore/ProductCards";
+import { typeProductCards } from "@/components/explore/types";
+import TabQA from "@/components/explore/TabQA";
 
 type ProjectInfoDto = {
+  projectId: number;
   projectThumbnail: string;
   projectName: string;
   projectGoal: number;
@@ -20,6 +24,8 @@ type ProjectInfoDto = {
   startDate: string;
   endDate: string;
   isLiked: boolean;
+
+  products: typeProductCards;
 };
 
 function ProjectInfo() {
@@ -82,7 +88,7 @@ function ProjectInfo() {
     <>
       <div className="w-full pb-32">
         {/* 上半部 */}
-        <div className="flex flex-wrap lg:-mx-4 justify-center py-4">
+        <div className="flex flex-wrap  justify-center py-4">
           {/* 圖片 */}
           <div className=" lg:w-7/12 lg:px-4">
             <img
@@ -261,15 +267,21 @@ function ProjectInfo() {
               <TabsContent value="qa">
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">常見問答</h2>
-                  <p>這裡是常見問答的內容...</p>
+                  <TabQA />
                 </div>
               </TabsContent>
-              <TabsContent value="comments">
+              <TabsContent value="comments" className="mx-4">
                 <TabComments></TabComments>
               </TabsContent>
             </Tabs>
           </div>
-          <div className="lg:w-3/12 lg:px-4">放商品卡片</div>
+          {/* 下右半 */}
+          <div className="lg:w-3/12 lg:px-4">
+            <ProductCards
+              productsData={project.products}
+              projectId={project.projectId}
+            />
+          </div>
         </div>
       </div>
       <Footer></Footer>

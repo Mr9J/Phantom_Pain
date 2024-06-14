@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SidebarLinkGroup from "./SidebarLinkGroup";
+import { Button } from "@/components/ui/button";
+import { signOutNative } from "@/services/auth.service";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
   const { pathname } = location;
+  const navigate = useNavigate();
 
   const trigger = useRef(null);
   const sidebar = useRef(null);
@@ -15,6 +19,12 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
 
+  const signOutHandler = () => {
+    signOutNative();
+    signOut(auth);
+    navigate("/");
+    window.location.reload();
+  };
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -240,7 +250,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
               >
                 <NavLink
                   end
-                  to="/admin/messages"
+                  to="/admin/service"
                   className={`block text-slate-200 truncate transition duration-150 ${
                     pathname.includes("messages")
                       ? "hover:text-slate-200"
@@ -301,18 +311,12 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                 {(handleClick, open) => {
                   return (
                     <React.Fragment>
-                      <NavLink
-                        end
-                        to="/logout"
+                      <Button
+                        variant="ghost"
                         className={`block text-slate-200 truncate transition duration-150 ${
                           open ? "hover:text-slate-200" : "hover:text-white"
                         }`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          sidebarExpanded
-                            ? handleClick()
-                            : setSidebarExpanded(true);
-                        }}
+                        onClick={signOutHandler}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
@@ -334,7 +338,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                             </span>
                           </div>
                         </div>
-                      </NavLink>
+                      </Button>
                     </React.Fragment>
                   );
                 }}

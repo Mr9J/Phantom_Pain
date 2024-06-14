@@ -32,7 +32,7 @@ const ChatFooterAdmin: React.FC<ChatFooterProps> = ({
         style={{ display: 'none' }}
       />
       <label htmlFor="file-upload-admin" className="admin-file-upload-label">
-        {uploading ? '上傳中...' : '選擇文件'}
+        {uploading ? '上傳中...' : '選擇圖片'}
       </label>
       <button type="submit" className="admin-send-button">送出</button>
     </form>

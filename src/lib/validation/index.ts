@@ -2,10 +2,11 @@ import { z } from "zod";
 
 const PasswordValidation = z
   .string()
-  .min(8, { message: "Password must be at least 8 characters long" })
-  .max(24, { message: "Password must be at most 24 characters long" })
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$/, {
-    message: "密碼必須包含至少一個大寫字母、一個小寫字母和一個數字",
+  .min(8, { message: "密碼長度至少8字" })
+  .max(24, { message: "密碼長度至少24字" })
+  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,24}$/, {
+    message:
+      "密碼必須包含至少一個大寫字母、一個小寫字母、一個數字和一個特殊字符",
   });
 
 export const SignUpValidation = z
