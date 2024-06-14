@@ -7,19 +7,18 @@ import LoaderSvg from "@/components/shared/LoaderSvg";
 
 const Bookmarks = () => {
   const [page, setPage] = useState(0);
-  const [data, setData] = useState([]);
-
+  const [savedData, setSavedData] = useState([]);
   const {
-    data: posts,
+    data: savedPosts,
     isPending: isPostLoading,
     isError: isErrorPosts,
   } = useGetSavedPosts(page);
 
   useEffect(() => {
-    if (posts) {
-      setData([...data, ...posts]);
+    if (savedPosts) {
+      setSavedData([...savedData, ...savedPosts]);
     }
-  }, [posts]);
+  }, [savedPosts]);
 
   return (
     <div className="flex flex-1">
@@ -31,17 +30,17 @@ const Bookmarks = () => {
           <h2 className="text-[24px] font-bold leading-[140%] tracking-tighte md:text-[30px] text-left w-full">
             使用者書籤
           </h2>
-          {isPostLoading && !data ? (
+          {isPostLoading && !savedData ? (
             <LoaderSvg />
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full">
-              {data.map((post: GetPostDTO) => (
+              {savedData.map((post: GetPostDTO) => (
                 <PostCard post={post} key={post.postId} />
               ))}
             </ul>
           )}
         </div>
-        {posts && posts.length === 0 ? (
+        {savedPosts && savedPosts.length === 0 ? (
           <>
             <p className="text-[16px] font-bold leading-[140%]">
               已經沒有更多貼文了...

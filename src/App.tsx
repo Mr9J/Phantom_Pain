@@ -47,6 +47,7 @@ import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
 import Playground from "./views/root/pages/Playground";
 import { useState } from "react";
+import ReSendEmail from "./views/root/pages/ReSendEmail";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -76,6 +77,7 @@ const App = () => {
 
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
+            <Route path="/resend-email" element={<ReSendEmail />} />
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
             <Route path="/reset-password/:jwt" element={<ResetPassword />} />
