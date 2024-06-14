@@ -11,6 +11,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { Heart } from "lucide-react";
 import ProductCards from "@/components/explore/ProductCards";
 import { typeProductCards } from "@/components/explore/types";
+import TabQA from "@/components/explore/TabQA";
 
 type ProjectInfoDto = {
   projectId: number;
@@ -266,10 +267,10 @@ function ProjectInfo() {
               <TabsContent value="qa">
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">常見問答</h2>
-                  <p>這裡是常見問答的內容...</p>
+                  <TabQA />
                 </div>
               </TabsContent>
-              <TabsContent value="comments">
+              <TabsContent value="comments" className="mx-4">
                 <TabComments></TabComments>
               </TabsContent>
             </Tabs>
