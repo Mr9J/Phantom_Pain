@@ -42,6 +42,7 @@ import SendResetEmail from "./views/root/pages/SendResetEmail";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
 import SearchProject from "./views/root/pages/SearchProject";
+import ReturnURL from "./components/service/ReturnURL";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
@@ -57,7 +58,7 @@ const App = () => {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           {/* public routes */}
-          <Route element={<RootLayout input={input} setInput={setInput} />}>
+          <Route element={<RootLayout input={input} setInput={setInput} />}>      
             <Route index element={<Homepage />} />
             <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
@@ -121,6 +122,7 @@ const App = () => {
             <Route path="/admin" element={<AdminProjects />} />
             <Route path="/admin/service" element={< ServiceRoute/>} />
           </Route>
+          <Route path="/ReturnURL" element={<ReturnURL />} />
         </Routes>
 
         <Toaster />
