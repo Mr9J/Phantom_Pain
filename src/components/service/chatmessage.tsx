@@ -46,7 +46,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
   return (
     <div className="service-chat-messages">
       {messages.map((message, index) => (
-        <div key={message.id} className={`service-chat-message ${message.sender}`} ref={el => messageRefs.current[index] = el}>
+        <div key={`${message.id}-${index}`} className={`service-chat-message ${message.sender}`} ref={el => messageRefs.current[index] = el}>
           <div className="service-message-bubble">
             {message.content.startsWith('data:image') ? (
               <img src={message.content} alt="uploaded" className="service-uploaded-image" />
