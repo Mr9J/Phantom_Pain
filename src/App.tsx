@@ -36,18 +36,18 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
-
+import ServiceRoute from "./views/auth/pages/ServiceRoute";
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
-import ServiceRoute from "./views/auth/pages/ServiceRoute";
 import SearchProject from "./views/root/pages/SearchProject";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
 import Playground from "./views/root/pages/Playground";
 import { useState } from "react";
+import ReSendEmail from "./views/root/pages/ReSendEmail";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -77,6 +77,7 @@ const App = () => {
 
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
+            <Route path="/resend-email" element={<ReSendEmail />} />
             <Route path="/sign-in" element={<SignInForm />} />
             <Route path="/sign-up" element={<SignUpForm />} />
             <Route path="/reset-password/:jwt" element={<ResetPassword />} />
@@ -106,6 +107,7 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
+            <Route path="/manu/service" element={< ServiceRoute/>} />
             {/* <Route path="/service" element={<ServiceRoute />} />{" "} */}
             <Route
               path="/manu/order/:projectId"
@@ -117,6 +119,7 @@ const App = () => {
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
             <Route path="/admin" element={<AdminProjects />} />
+            <Route path="/admin/service" element={< ServiceRoute/>} />
           </Route>
         </Routes>
 

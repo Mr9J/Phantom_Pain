@@ -9,3 +9,10 @@ export type typeProduct = {
   initialStock: number;
   currentStock: number;
 };
+
+export type typeComment = {
+  commentId: number;
+  commentMsg: string;
+  date: string;
+  username: string;
+};
