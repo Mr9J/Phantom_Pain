@@ -175,3 +175,9 @@ export type ICommentPost = {
   userId: string;
   comment: string;
 };
+export type Like ={
+  likePrjName:string;
+  likePrjThumb:string;
+  likePrjId:number;
+  likeDetailId:number;
+}
