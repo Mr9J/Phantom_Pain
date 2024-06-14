@@ -174,7 +174,7 @@ function ProductsComponent({
                     <p>{pjitem.productDescription}</p>
                   </div>
 
-                  <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
+                  <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t"   onClick={(e) => e.stopPropagation()}>
                     {/* 不要刪 */}
                     <button
                       className="px-3 py-2 mr-1 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300"
@@ -187,7 +187,7 @@ function ProductsComponent({
                     </span>
                     <button
                       className="px-3 py-2 ml-1 bg-gray-200 rounded font-black hover:bg-slate-300"
-                      onClick={(e) => handleIncrease(e, pjitem.productId)}
+                      onClick={(e) =>productCounts[pjitem.productId]==pjitem.currentStock?"": handleIncrease(e, pjitem.productId)}
                     >
                       +
                     </button>
