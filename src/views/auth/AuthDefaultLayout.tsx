@@ -3,7 +3,13 @@ import { useUserContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 
-const AuthLayout = () => {
+const AuthDefaultLayout  = ({
+  input,
+  setInput,
+}: {
+  input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const { checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,11 +37,12 @@ const AuthLayout = () => {
     <>
     {!isAuth && <Navigate to="/sign-in" />}
     {isAuth && (
-      <div className="flex h-screen">
+      <div >
         <div className={`${isScrolled ? "fixed" : "relative"} w-full z-50`}>
-          <Header />
-          <Outlet />
+          <Header input={input} setInput={setInput}/>
+          
         </div>
+        <Outlet />
 
         
         
@@ -45,4 +52,4 @@ const AuthLayout = () => {
   );
 };
 
-export default AuthLayout;
+export default AuthDefaultLayout ;
