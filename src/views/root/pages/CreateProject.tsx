@@ -67,6 +67,7 @@ const formSchema = z.object({
     }
   ),
   projectdetail: z.string().min(350, { message: "最少 350 字。" }),
+  thumbnailarry: z.any(),
 });
 
 function CreateProject() {
@@ -144,6 +145,7 @@ function CreateProject() {
       projectdescription: "",
       thumbnail: "",
       projectdetail: "",
+      thumbnailarry:new Uint8Array(),
     },
   });
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
@@ -156,6 +158,9 @@ function CreateProject() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
+    
+
 
     console.log(values);
   }
