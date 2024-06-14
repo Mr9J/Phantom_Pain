@@ -47,6 +47,13 @@ import ReturnURL from "./components/service/ReturnURL";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+
+import StartProject from "./views/root/pages/StartProject";
+import CreateProject from "./views/root/pages/CreateProject";
+import { useState } from "react";
+
+
+
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
@@ -55,6 +62,7 @@ import ReSendEmail from "./views/root/pages/ReSendEmail";
 
 const App = () => {
   const [input, setInput] = useState("");
+
 
   return (
     <>
@@ -79,7 +87,12 @@ const App = () => {
             <Route path="/Productpage" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
+
+            <Route path="/StartProject" element={<StartProject />} />
+            <Route path="/CreateProject" element={<CreateProject />} />
+
             {/* <Route path="/Like" element={<Like/>}/> */}
+
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
 
