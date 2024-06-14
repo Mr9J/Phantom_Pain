@@ -16,6 +16,7 @@ import {
   AdminProjects,
   AdminStaffs,
   Users,
+  Test,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -102,6 +103,7 @@ const App = () => {
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
           <Route element={<ManuLayout />}>
+            <Route path="/manu/test" element={<Test />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
