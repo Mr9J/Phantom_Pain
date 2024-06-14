@@ -172,3 +172,20 @@ export async function resendEmail() {
     console.error(error);
   }
 }
+
+export async function checkAdmin() {
+  try {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/check-admin`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

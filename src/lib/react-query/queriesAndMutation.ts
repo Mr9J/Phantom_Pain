@@ -8,6 +8,7 @@ import {
 } from "@/types";
 import {
   changeEmail,
+  checkAdmin,
   resendEmail,
   resetPassword,
   sendResetEmail,
@@ -137,5 +138,11 @@ export const useChangeEmail = () => {
 export const useResendEmail = () => {
   return useMutation({
     mutationFn: () => resendEmail(),
+  });
+};
+
+export const useCheckAdmin = () => {
+  return useMutation({
+    mutationFn: () => checkAdmin(),
   });
 };
