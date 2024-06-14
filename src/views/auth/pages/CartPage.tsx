@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
 import { useUserContext } from "@/context/AuthContext";
+
 
 
 
@@ -26,8 +27,9 @@ interface CartDetailDTO {
 
 function CartPage() {
 
-    const { user, checkAuthUser } = useUserContext();
-    const [isAuth, setIsAuth] = useState(true);
+    const { user} = useUserContext();
+    // const [isAuth, setIsAuth] = useState(true);
+    // const [userID , setUserId] = useState(0);
     // const [testmemberId,setmemberId] = useState(0);
 
     //測試會員
@@ -37,13 +39,26 @@ function CartPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        checkAuthUser().then(async (res) => {
-            setIsAuth(res);    
-          });
-          console.log(isAuth)   
-    
-        fetchShoppingCart();
+        // const authenticateAndFetchCart = async () => {
+        //     const res = await checkAuthUser();
+        //     setIsAuth(res);
+        //     if (res) {
+        //         const intervalId = setInterval( () => {
+        //             if (user.id !== '0') {
+        //                 setUserId(Number(user.id))
+        //                 clearInterval(intervalId); 
+        //             }
+        //         }, 500);
+                                  
+        // }
+        // }
+        // authenticateAndFetchCart();
     }, []);
+
+
+    useLayoutEffect(()=>{
+        fetchShoppingCart();   
+    },)
     
     const goToPayPage = (projectId:number,productId:number,fromCartPage:boolean) =>
     {  
@@ -54,8 +69,9 @@ function CartPage() {
 
     const fetchShoppingCart = async () => {
         try {
-            const data = await getLoadCartPage(testmemberId);
-            setMemberCartData(data);
+         
+                    const data = await getLoadCartPage(Number(user.id));
+                   setMemberCartData(data);      
         } catch (error) {
             console.error(error);
         }
@@ -63,7 +79,7 @@ function CartPage() {
 
     const handleIncrement = async (projectId: number, productId: number , increment :string) => {
         try{      
-            await putProductFromCart(productId,testmemberId,increment);
+            await putProductFromCart(productId,Number(user.id),increment);
             await fetchShoppingCart();
         }
         catch (error) {
@@ -76,7 +92,7 @@ function CartPage() {
 
     const handleDecrement = async (projectId: number, productId: number,decrement:string) => {
         try{      
-            await putProductFromCart(productId,testmemberId,decrement);
+            await putProductFromCart(productId,Number(user.id),decrement);
             await fetchShoppingCart();
         }
         catch (error) {
@@ -89,7 +105,7 @@ function CartPage() {
    
     const handleDeleteProduct = async (productId: number) => {
         try {
-            await deleteProductFromCart(productId, testmemberId);
+            await deleteProductFromCart(productId, Number(user.id));
             await fetchShoppingCart();
         } catch (error) {
             console.error(error);
@@ -98,7 +114,7 @@ function CartPage() {
 
     return (
         <>
-        {!isAuth && <Navigate to="/sign-in" />}
+        {/* {!isAuth && <Navigate to="/sign-in" />} */}
         <div className="container px-4 mb-8">
             <div className='flex flex-col-reverse lgl:flex-row gap-5'>
                 <div className='w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5'>

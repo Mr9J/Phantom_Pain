@@ -7,6 +7,7 @@ import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
+import { useUserContext } from '@/context/AuthContext';
 
 
 
@@ -53,6 +54,7 @@ interface ProductCardDTO {
 function Paypage() {
 
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const { user} = useUserContext();
 
 
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -117,7 +119,7 @@ function Paypage() {
   
   //購買資訊 未帶入memberID 
   const [orderData, setOrderData] = useState({
-    memberID:testmemberId,
+    memberID:user.id,
     paymentMethodID:1,
     projectID: projectId,
    productID: [selectedproductId],
@@ -177,11 +179,8 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
   await setPrice(prevPrice => isChecked ? prevPrice += price * (productCounts[productId] || 0) : prevPrice -= price * (productCounts[productId] || 0));
 };
 
-  
-  
-// 載入頁面
-useEffect(()=>{
-    getProjectfromProductId(Number(projectId),testmemberId)
+  useLayoutEffect(()=>{
+    getProjectfromProductId(Number(projectId),Number(user.id))
     .then(data=>{
       setProjectData(data);
     })
@@ -189,7 +188,19 @@ useEffect(()=>{
       console.error('Error fetching project data:', error);
     });
 
-  },[projectId,testmemberId]);
+  },[projectId,user.id]);
+  
+// 載入頁面
+// useEffect(()=>{
+//     getProjectfromProductId(Number(projectId),testmemberId)
+//     .then(data=>{
+//       setProjectData(data);
+//     })
+//     .catch(error=>{
+//       console.error('Error fetching project data:', error);
+//     });
+
+//   },[projectId,testmemberId]);
 //測試購物車傳入頁面先行載入資訊，fromCartPage判斷是從哪個頁面進入
 useLayoutEffect(() => {
   if(!fromCartPage)
@@ -391,7 +402,7 @@ return(
         </span>  
       <button  ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className={`px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 ${
     buttonDisabled[pjitem.productId] ? 'opacity-50 cursor-not-allowed pointer-events-none bg-slate-500' : ''
-  }`}  disabled={buttonDisabled[pjitem.productId]} value={pjitem.productId}  onClick={(e)=>handleIncrease(e,pjitem.productId)}>+</button>
+  }`}  disabled={buttonDisabled[pjitem.productId]} value={pjitem.productId}  onClick={(e)=>productCounts[pjitem.productId]==pjitem.currentStock? '':handleIncrease(e,pjitem.productId)}>+</button>
     </div>
   </div>
   {item.productInCart&&item.productInCart.includes(pjitem.productId) ? (
@@ -458,11 +469,11 @@ return(
  
       <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
       <div className="flex items-center justify-center space-x-2 mb-3">
-      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount-1)}}>-</button>
+      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==0?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount-1)}}>-</button>
       {fromCartPage? <><span className="font-black dark:text-white">{selectedProductCount}</span>
       <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
       <><span className="font-black dark:text-white">{selectedProductCount}</span>
-      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
+      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
      
     </div>
       {item.productInCart&&item.productInCart.includes(pjitem.productId) ? (
