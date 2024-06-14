@@ -7,6 +7,8 @@ import {
   ICommentPost,
 } from "@/types";
 import {
+  changeEmail,
+  resendEmail,
   resetPassword,
   sendResetEmail,
   signIn,
@@ -123,5 +125,17 @@ export const useGetSavedPosts = (page: number) => {
   return useQuery({
     queryKey: ["savedPosts", page],
     queryFn: () => getSavedPosts(page),
+  });
+};
+
+export const useChangeEmail = () => {
+  return useMutation({
+    mutationFn: (email: string) => changeEmail(email),
+  });
+};
+
+export const useResendEmail = () => {
+  return useMutation({
+    mutationFn: () => resendEmail(),
   });
 };
