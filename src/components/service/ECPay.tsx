@@ -12,6 +12,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
   const [merchantTradeNo, setMerchantTradeNo] = useState<string>('');
   const [merchantTradeDate, setMerchantTradeDate] = useState<string>('');
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const returnURL = `${baseUrl}/Order/ECPayResponseMessage`
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
      event.preventDefault();
@@ -38,8 +39,8 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
                 TotalAmount: `${totalAmount}`, // 將數字轉換為字串
                 TradeDesc: "Transaction description",
                 ItemName: `贊助企劃:${projectName}`,
-                ReturnURL: "https://localhost:7150/api/Order/ECPayResponseMessage",
-                ClientBackURL: "http://localhost:5173/home",
+                ReturnURL: "http://test/ReturnURL",
+                ClientBackURL: "http://localhost:5173/ReturnURL",
                 ChoosePayment: "ALL",
                 EncryptType: "1"
             })
@@ -164,8 +165,8 @@ React. useEffect(() => {
       <input type="hidden" name="TotalAmount" value={totalAmount} />
       <input type="hidden" name="TradeDesc" value="Transaction description" />
       <input type="hidden" name="ItemName" value={`贊助企劃:${projectName}`}/>
-      <input type="hidden" name="ReturnURL" value="https://localhost:7150/api/Order/ECPayResponseMessage" />
-      <input type="hidden" name="ClientBackURL" value="http://localhost:5173/home" />
+      <input type="hidden" name="ReturnURL" value="http://test/ReturnURL" />
+      <input type="hidden" name="ClientBackURL" value="http://localhost:5173/ReturnURL" />
       <input type="hidden" name="ChoosePayment" value="ALL" />
       <input type="hidden" name="EncryptType" value={1} />
       <button ref={submitButtonRef} type="submit" style={{ display: 'none' }}></button>

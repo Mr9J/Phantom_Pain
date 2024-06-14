@@ -232,7 +232,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
                 />
                 <p className="text-blue-500">{com.username}</p>
                 <div className="max-w-[480px]">
-                  <p className="break-words">{com.comment}</p>-
+                  <p className="break-words">{com.comment}</p>
                   <p className="text-blue-400">
                     {moment.utc(com.time, "YYYY-MM-DD HH:mm:ss").fromNow()}
                   </p>

@@ -175,9 +175,9 @@ const Header = ({
           <Link to="/social" className={`text-sm font-semibold leading-6`}>
             Social
           </Link>
-          <Link to="/service" className={`text-sm font-semibold leading-6`}>
+          {/* <Link to="/service" className={`text-sm font-semibold leading-6`}>
             Service
-          </Link>
+          </Link> */}
         </Popover.Group>
         <div className="ml-8 hidden lg:flex lg:flex-1 lg:justify-end w-full max-w-sm items-center space-x-2">
           <Input
