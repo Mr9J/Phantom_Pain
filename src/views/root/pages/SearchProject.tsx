@@ -23,7 +23,7 @@ function SearchProject({
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const params = new URLSearchParams(window.location.search).get("orderby");
-
+  
   type SearchProjectDTO = {
     projectData: ProjectCardDTO[];
     totalPage: number;
@@ -73,8 +73,9 @@ function SearchProject({
         console.error("Error fetching projects:", error);
       }
     };
-    fetchSearchProjects();
-    console.log(Date());
+
+    fetchSearchProjects();//console.log(Date());
+
   }, [input, page, selectedValue, orderBy]); //後面陣列的參數有變動就會重新render useEffect
 
   return (

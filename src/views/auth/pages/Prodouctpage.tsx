@@ -1,13 +1,14 @@
 // import './App.css';
 import "@/css/productcard.css";
 // import PropTypes from 'prop-types';
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect, MouseEvent, useLayoutEffect } from "react";
 // import { getProject } from './api/Project.js';
 import { getProjectfromProductId } from "@/services/projects.service";
 import { addToCart } from "@/services/Cart.service";
 // import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import Projectcard from "@/components/ProjectCard/projectcard.jsx";
 import { useNavigate, useParams } from "react-router-dom";
+import { useUserContext } from "@/context/AuthContext";
 
 // import { data } from 'autoprefixer';
 //寫死的參數
@@ -57,13 +58,17 @@ interface ProductsComponentProps {
   productsData: ProjectCardDTO[] | null;
   getSelectProductId: (productId: number) => void;
   setPopupVisible: (isVisible: boolean) => void;
+  pid : string
 }
 
 function ProductsComponent({
   productsData,
   getSelectProductId,
   setPopupVisible,
-}: ProductsComponentProps) {
+  pid
+}: ProductsComponentProps,
+) {
+  const { user} = useUserContext();
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>(
     {}
   );
@@ -95,7 +100,7 @@ function ProductsComponent({
     //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
     e.stopPropagation();
 
-    addToCart(productId, productCounts[productId], pid, testmemberId);
+    addToCart(productId, productCounts[productId], Number(pid), Number(user.id));
     setPopupVisible(true);
   };
 
@@ -228,6 +233,7 @@ function ProductsComponent({
 function Productpage() {
   const { pid } = useParams();
   const navigate = useNavigate();
+  const {user} =useUserContext();
 
   const ClickProductToPaypage = (productId: number) => {
     // 點擊按鈕後導航到其他路由
@@ -251,15 +257,28 @@ function Productpage() {
     }
   }, [isPopupVisible]);
 
-  useEffect(() => {
-    getProjectfromProductId(pid, testmemberId)
-      .then((data) => {
-        setProjectData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching project data:", error);
-      });
-  }, []);
+
+useLayoutEffect(()=>{
+  getProjectfromProductId(Number(pid), Number(user.id))
+  .then((data) => {
+    setProjectData(data);
+  })
+  .catch((error) => {
+    console.error("Error fetching project data:", error);
+  });
+
+},[user])
+
+
+  // useEffect(() => {
+  //   getProjectfromProductId(Number(pid), testmemberId)
+  //     .then((data) => {
+  //       setProjectData(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching project data:", error);
+  //     });
+  // }, []);
 
   // console.log(projectAndproductsData);
 
@@ -286,6 +305,7 @@ function Productpage() {
             productsData={projectAndproductsData}
             getSelectProductId={ClickProductToPaypage}
             setPopupVisible={setPopupVisible}
+            pid = {pid }
           ></ProductsComponent>
         </div>
         {isPopupVisible && (
