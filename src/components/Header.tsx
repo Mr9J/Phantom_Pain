@@ -1,5 +1,5 @@
-import { useState, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { useState, Fragment, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,9 +60,16 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Header = () => {
+const Header = ({
+  input,
+  setInput,
+}: {
+  input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useUserContext();
+  const navigate = useNavigate();
 
   const signOutHandler = () => {
     signOutNative();
@@ -168,13 +175,19 @@ const Header = () => {
           <Link to="/social" className={`text-sm font-semibold leading-6`}>
             Social
           </Link>
-          <Link to="/service" className={`text-sm font-semibold leading-6`}>
+          {/* <Link to="/service" className={`text-sm font-semibold leading-6`}>
             Service
-          </Link>
+          </Link> */}
         </Popover.Group>
         <div className="ml-8 hidden lg:flex lg:flex-1 lg:justify-end w-full max-w-sm items-center space-x-2">
-          <Input type="text" placeholder="Searching..." />
-          <Button type="submit">Search</Button>
+          <Input
+            type="text"
+            placeholder="Searching..."
+            onChange={(e) => setInput(e.currentTarget.value)}
+          />
+          <Button type="submit" onClick={() => navigate("/SearchProject")}>
+            Search
+          </Button>
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <ModeToggle />
@@ -282,8 +295,20 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="py-6 w-full items-center space-y-2">
-                  <Input type="text" placeholder="Searching..." />
-                  <Button type="submit">Search</Button>
+                  <Input
+                    type="text"
+                    placeholder="Searching..."
+                    onChange={(e) => setInput(e.currentTarget.value)}
+                  />
+                  <Button
+                    type="submit"
+                    onClick={() => {
+                      navigate("/SearchProject");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Search
+                  </Button>
                 </div>
 
                 {user.id ? (

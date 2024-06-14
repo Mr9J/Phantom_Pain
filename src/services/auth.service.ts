@@ -134,3 +134,58 @@ export async function sendResetEmail(email: string) {
     console.error(error);
   }
 }
+
+export async function changeEmail(email: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.post(
+      `${URL}/Verify/change-email`,
+      { email },
+      { params: { email }, headers: { Authorization: jwt } }
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function resendEmail() {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Verify/resend-email`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function checkAdmin() {
+  try {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/check-admin`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

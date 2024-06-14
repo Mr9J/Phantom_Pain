@@ -21,9 +21,20 @@ import {
 } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastAction } from "../ui/toast";
 import { useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export type PostFormProps = {
   post?: {
@@ -263,15 +274,32 @@ const PostForm = ({ post, action }: PostFormProps) => {
         />
         <div className="flex gap-4 items-center justify-end">
           {action === "update" && (
-            <Button
-              type="button"
-              variant="destructive"
-              className="h-12 px-5 text-light-1 flex gap-2"
-              onClick={deletePostHandler}
-              disabled={isDeletingPost || isLoadingUpdate || isPending}
-            >
-              刪除
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  className="h-12 px-5 text-light-1 flex gap-2"
+                  disabled={isDeletingPost || isLoadingUpdate || isPending}
+                >
+                  刪除
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>您確定要刪除該貼文嗎?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    這個動作無法還原。該貼文將永久從我們的資料庫中移除。
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
+                  <AlertDialogAction onClick={deletePostHandler}>
+                    確認
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           )}
 
           <Button

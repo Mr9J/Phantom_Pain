@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getOrderProjects } from "@/services/orders.service";
-import { getProjectCounts } from "@/services/projects.service";
+import { getUserOrderProjects } from "@/services/orders.service";
+import { getUserProjectCounts } from "@/services/projects.service";
 import { OrderProject } from "@/types/index";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
@@ -23,7 +23,8 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const fetchedOrderProjects: OrderProject[] = await getOrderProjects();
+        const fetchedOrderProjects: OrderProject[] =
+          await getUserOrderProjects();
         setOrderProjects(
           fetchedOrderProjects.map((orderProject) => ({
             ...orderProject,
@@ -42,7 +43,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchProjectCount = async () => {
       try {
-        const fetchedProjectCount = await getProjectCounts();
+        const fetchedProjectCount = await getUserProjectCounts();
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchedProjectCount.map((item: any) => ({
           ...item,
