@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 const frontUrl = import.meta.env.VITE_FRONT_URL;
 const baseUrl = import.meta.env.VITE_API_URL;
+const ngrok  = "https://9fb0-2001-b011-1006-909d-5c5d-3a2e-3ce0-5fce.ngrok-free.app/api/Order/ECPayResponseMessage";
 
 interface ECPayComponentProps {
   projectName: string;
@@ -40,7 +41,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
                 TotalAmount: `${totalAmount}`, // 將數字轉換為字串
                 TradeDesc: "Transaction description",
                 ItemName: `贊助企劃:${projectName}`,
-                ReturnURL: "http://test/ReturnURL",
+                ReturnURL: ngrok,
                 ClientBackURL: `${returnURL}`,
                 ChoosePayment: "ALL",
                 EncryptType: "1"
@@ -166,7 +167,7 @@ React. useEffect(() => {
       <input type="hidden" name="TotalAmount" value={totalAmount} />
       <input type="hidden" name="TradeDesc" value="Transaction description" />
       <input type="hidden" name="ItemName" value={`贊助企劃:${projectName}`}/>
-      <input type="hidden" name="ReturnURL" value="http://test/ReturnURL" />
+      <input type="hidden" name="ReturnURL" value={ngrok} />
       <input type="hidden" name="ClientBackURL" value={returnURL} />
       <input type="hidden" name="ChoosePayment" value="ALL" />
       <input type="hidden" name="EncryptType" value={1} />
