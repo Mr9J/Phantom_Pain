@@ -29,6 +29,7 @@ import {
   savePost,
   updatePost,
 } from "@/services/post.service";
+import { getUserInfo } from "@/services/members.service";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -144,5 +145,12 @@ export const useResendEmail = () => {
 export const useCheckAdmin = () => {
   return useMutation({
     mutationFn: () => checkAdmin(),
+  });
+};
+
+export const useGetUserInfo = (id: string) => {
+  return useQuery({
+    queryKey: ["userInfo", id],
+    queryFn: () => getUserInfo(id),
   });
 };

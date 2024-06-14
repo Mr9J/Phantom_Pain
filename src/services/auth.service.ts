@@ -19,6 +19,9 @@ export async function signUp(user: SignUpDTO) {
     if (error.response.data === "使用者已存在") {
       return "使用者已存在";
     }
+    if (error.response.data === "Email已被使用") {
+      return "Email已被使用";
+    }
   }
 }
 

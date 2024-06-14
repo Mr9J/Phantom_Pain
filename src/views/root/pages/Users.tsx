@@ -1,40 +1,63 @@
-import React from "react";
+import Footer from "@/components/section/Footer";
+import { useGetUserInfo } from "@/lib/react-query/queriesAndMutation";
+import { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+
+const INITIAL_USERPROFILE: UserProfile = {
+  id: "",
+  nickname: "",
+  username: "",
+  email: "",
+  description: "",
+  avatar: "",
+  time: "",
+};
+
+type UserProfile = {
+  id: string;
+  nickname: string;
+  username: string;
+  email: string;
+  description: string;
+  avatar: string;
+  time: string;
+};
 
 const Users = () => {
+  const { pathname } = useLocation();
+  const [user, setUser] = useState<UserProfile>(INITIAL_USERPROFILE);
+  const {
+    data: userData,
+    isPending: userInfoPending,
+    isError: isErrorUserData,
+    refetch: refetchUserData,
+  } = useGetUserInfo(pathname);
+
+  useEffect(() => {
+    refetchUserData();
+  }, []);
+
   return (
-    <section className="overflow-hidden p-6">
-      <div className="w-full h-screen grid grid-cols-5 grid-rows-4 gap-6 border-4">
-        <div className=" bg-red col-start-1 col-end-2 row-start-1 row-end-3">
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="text-5xl">頭像</h2>
-            <h3 className="text-4xl">基本資料</h3>
+    <>
+      <section className="overflow-hidden">
+        <div className="h-screen w-full border-4 grid grid-cols-4 grid-rows-4 py-4 px-6 lg:px-12">
+          <div className="bg-slate-500 col-start-1 col-end-5 row-start-1 row-end-2">
+            <div className="flex justify-center items-center">
+              <img
+                src={userData ? userData.avatar : ""}
+                alt="avatar"
+                className="w-[150px] h-[150px] rounded-full"
+              />
+            </div>
+            <div className="flex flex-1 justify-center items-center">
+              <h2>{userData ? userData.description : ""}</h2>
+            </div>
           </div>
         </div>
-        <div className="bg-blue-500 col-start-1 col-end-4 row-start-3 row-end-5">
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="text-5xl">品牌資訊</h2>
-          </div>
-        </div>
-        <div className="bg-green-500 col-start-2 col-end-6">
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="text-5xl">頭像</h2>
-            <h3 className="text-4xl">基本資料</h3>
-          </div>
-        </div>
-        <div className="bg-orange-500 col-start-2 col-end-4">
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="text-5xl">頭像</h2>
-            <h3 className="text-4xl">基本資料</h3>
-          </div>
-        </div>
-        <div className=" bg-slate-600 col-start-4 col-end-6 row-start-2 row-end-5">
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="text-5xl">頭像</h2>
-            <h3 className="text-4xl">基本資料</h3>
-          </div>
-        </div>
-      </div>
-    </section>
+
+        <Footer />
+      </section>
+    </>
   );
 };
 
