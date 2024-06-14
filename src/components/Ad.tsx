@@ -32,7 +32,7 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
   }, []);
   useEffect(() => {
     if (projects && projects.length > 1) {
-      showModal(); // 自动打开对话框
+      showModal();
     }
   }, [projects]);
   const showModal = () => {
@@ -55,6 +55,7 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
               type="button"
               onClick={closeModal}
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              style={{ backgroundColor: "white" }}
             >
               ✕
             </button>
