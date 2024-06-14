@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
 import { Route, Routes, Navigate } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
@@ -50,26 +51,21 @@ import CartPage from "./views/auth/pages/CartPage";
 
 import StartProject from "./views/root/pages/StartProject";
 import CreateProject from "./views/root/pages/CreateProject";
-import { useState } from "react";
-
-
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
-import { useState } from "react";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
 
 const App = () => {
   const [input, setInput] = useState("");
-
 
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           {/* public routes */}
-          <Route element={<RootLayout input={input} setInput={setInput} />}>      
+          <Route element={<RootLayout input={input} setInput={setInput} />}>
             <Route index element={<Homepage />} />
             <Route path="/home" element={<SubHome />} />
             <Route path="/about" element={<About />} />
@@ -92,7 +88,6 @@ const App = () => {
             <Route path="/CreateProject" element={<CreateProject />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
-
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
 
@@ -134,7 +129,7 @@ const App = () => {
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/manu/service" element={< ServiceRoute/>} />
+            <Route path="/manu/service" element={<ServiceRoute />} />
             <Route
               path="/manu/order/:projectId"
               element={<OrderList projectId={0} />}
@@ -142,7 +137,7 @@ const App = () => {
             <Route path="/manu" element={<Remind />} />
           </Route>
           <Route element={<AdminLayout />}>
-            <Route path="/admin/service" element={< ServiceRoute/>} />
+            <Route path="/admin/service" element={<ServiceRoute />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
             <Route path="/admin" element={<Navigate to="/admin/projects" />} />
