@@ -28,6 +28,7 @@ import {
   likePost,
   savePost,
   updatePost,
+  createPostPY,
 } from "@/services/post.service";
 
 export const useCreateUserAccount = () => {
@@ -144,5 +145,11 @@ export const useResendEmail = () => {
 export const useCheckAdmin = () => {
   return useMutation({
     mutationFn: () => checkAdmin(),
+  });
+};
+
+export const useCreatePostPY = () => {
+  return useMutation({
+    mutationFn: (x: PostDTO) => createPostPY(x),
   });
 };

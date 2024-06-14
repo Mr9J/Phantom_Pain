@@ -291,3 +291,54 @@ export async function getSavedPosts(page: number) {
     console.error(error);
   }
 }
+
+export async function createPostPY(post: PostDTO) {
+  try {
+    const newPost: NewPostDTO = {
+      caption: post.caption,
+      location: post.location,
+      tags: post.tags,
+      file: "",
+      userId: post.userId,
+    };
+
+    for (let index = 0; index < post.file.length; index++) {
+      try {
+        const img = post.file[index];
+        const upload = await S3.send(
+          new PutObjectCommand({
+            Bucket: "Tests",
+            Key: `${post.userId}/${post.id}/${index}.jpg`,
+            Body: img,
+            ContentType: "image/jpeg",
+          })
+        );
+
+        if (upload.$metadata.httpStatusCode === 200) {
+          if (index === post.file.length - 1) {
+            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
+            //newPost.file += `https://cdn.mumumsit158.com/Projects/project-191/test1.png`;
+          } else {
+            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
+            ///newPost.file += `https://cdn.mumumsit158.com/Projects/project-191/test1.png,`;
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    const response = await axios.post(`${URL}/post/create-post`, newPost, {
+      headers: { Authorization: jwt },
+    });
+
+    if (response.status !== 200) throw Error;
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
