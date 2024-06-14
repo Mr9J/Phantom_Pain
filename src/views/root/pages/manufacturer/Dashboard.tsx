@@ -17,14 +17,17 @@ const memberPowerBIText = [
 ];
 
 const Dashboard: React.FC = () => {
-  const { user, isAuthenticated, checkAuthUser } = useUserContext();
+  const { user, checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
-  const [memberPowerBI, setMemberPowerBI] = useState(null);
+  const [memberPowerBI, setMemberPowerBI] = useState<{
+    title: string;
+    link: string;
+  } | null>(null);
   useEffect(() => {
     checkAuthUser().then((res) => {
       setIsAuth(res);
     });
-  }, []);
+  }, [checkAuthUser]);
   useEffect(() => {
     if (isAuth) {
       const mId = parseInt(user.id, 10);
@@ -45,8 +48,7 @@ const Dashboard: React.FC = () => {
       width="1600"
       height="850"
       src={memberPowerBI.link}
-      frameborder="0"
-      allowFullScreen="true"
+      allowFullScreen
     ></iframe>
   );
 };

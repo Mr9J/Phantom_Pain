@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -16,6 +16,7 @@ import {
   AdminProjects,
   AdminStaffs,
   Users,
+  Test,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -104,12 +105,12 @@ const App = () => {
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
           <Route element={<ManuLayout />}>
+            <Route path="/manu/test" element={<Test />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
             <Route path="/manu/service" element={< ServiceRoute/>} />
-            {/* <Route path="/service" element={<ServiceRoute />} />{" "} */}
             <Route
               path="/manu/order/:projectId"
               element={<OrderList projectId={0} />}
@@ -117,10 +118,10 @@ const App = () => {
             <Route path="/manu" element={<Remind />} />
           </Route>
           <Route element={<AdminLayout />}>
+            <Route path="/admin/service" element={< ServiceRoute/>} />
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
-            <Route path="/admin" element={<AdminProjects />} />
-            <Route path="/admin/service" element={< ServiceRoute/>} />
+            <Route path="/admin" element={<Navigate to="/admin/projects" />} />
           </Route>
           <Route path="/ReturnURL" element={<ReturnURL />} />
         </Routes>

@@ -1,6 +1,7 @@
 import { LucideProps } from "lucide-react";
 import react from "react";
 import { string } from "zod";
+import { MemberDTO} from "@/types/index";
 
 export type SignUpDTO = {
   nickname: string;
@@ -70,6 +71,7 @@ export type OrderProject = {
   statusId: number;
   orderCount: number;
   sponsorCount: number;
+  projectDescription :string;
   isEdit?: boolean;
 };
 
@@ -119,6 +121,7 @@ export type MemberDTO = {
   phone: number;
   registrationTime: string;
   statusId: number;
+  groupDetail:{authStatusId:number};
 };
 
 export type PostDTO = {
