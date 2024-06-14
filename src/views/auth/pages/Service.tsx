@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import ChatHeader from '@/components/service/chatheader';
 import ChatMessages from '@/components/service/chatmessage';
 import ChatFooter from '@/components/service/chatfooter';
+import FAQComponent from '@/components/service/FAQComponents';
 import { Message } from '@/components/service/types';
 import '@/components/service/service.css';
 import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, getMembersNicknames, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
 import { useUserContext } from '@/context/AuthContext';
 import connection from '@/components/service/SignalR';
 
-const Service = () => {
+const Service: React.FC = () => {
   const { user } = useUserContext();
   const [memberId, setMemberId] = useState<number | null>(null);
   const [nickname, setNickname] = useState<string>('');
@@ -22,7 +23,6 @@ const Service = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("User ID:", user.id);  // Log user ID
       setMemberId(Number(user.id));
     }
   }, [user]);
@@ -32,11 +32,9 @@ const Service = () => {
       if (memberId !== null) {
         try {
           const response = await getMembersNicknames();
-          console.log("Member nicknames response:", response.data);  // Log nickname response
           const member = response.data.find(m => m.memberId === memberId);
           if (member) {
             setNickname(member.nickname);
-            console.log("Member nickname:", member.nickname);  // Log fetched nickname
           }
         } catch (error) {
           console.error('Failed to fetch member nickname', error);
@@ -53,7 +51,7 @@ const Service = () => {
         id: 0,
         serviceId: 0,
         memberId: 0,
-        content: `${nickname} 您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊`,
+        content: `${nickname} 廠商您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊 您可以先瀏覽常見問題，如果還有疑問，請留言給我們的客服團隊！`,
         timestamp: new Date(),
         sender: 'admin'
       };
@@ -66,14 +64,12 @@ const Service = () => {
       if (memberId !== null) {
         try {
           const servicesResponse = await getServicesByMemberId(memberId);
-          console.log("Services response:", servicesResponse.data);  // Log services response
           const serviceIds = servicesResponse.data.map(service => service.serviceId);
 
           const openService = servicesResponse.data.find(service => !service.endDate);
 
           if (openService) {
             setServiceId(openService.serviceId);
-            console.log("Open service ID:", openService.serviceId);  // Log open service ID
           } else {
             const newService: ServiceDTO = {
               serviceId: 0,
@@ -84,13 +80,11 @@ const Service = () => {
             };
             const createdServiceResponse = await createService(newService);
             setServiceId(createdServiceResponse.data.serviceId);
-            console.log("Created service ID:", createdServiceResponse.data.serviceId);  // Log created service ID
           }
 
           const allMessages: Message[] = [];
           for (const id of serviceIds) {
             const messagesResponse = await getServiceMessages(id);
-            console.log("Messages response for service ID", id, ":", messagesResponse.data);  // Log messages response for each service ID
             const fetchedMessages = messagesResponse.data.map((msg: ServiceMessageDTO) => ({
               id: msg.messageId,
               serviceId: msg.serviceId,
@@ -108,7 +102,6 @@ const Service = () => {
           const uniqueMessages = Array.from(new Set(allMessages.map(m => m.id)))
             .map(id => allMessages.find(m => m.id === id) as Message);
 
-          console.log('Fetched all messages:', uniqueMessages);  // Log all fetched messages
           setMessages(prevMessages => [prevMessages[0], ...uniqueMessages]);
         } catch (error) {
           console.error('Failed to fetch all messages', error);
@@ -148,7 +141,6 @@ const Service = () => {
         sender: 'user'
       };
       try {
-        console.log('Sending message:', newMessage);  // Log the message to be sent
         await createServiceMessage(newMessage.serviceId, {
           messageId: newMessage.id,
           serviceId: newMessage.serviceId,
@@ -160,7 +152,6 @@ const Service = () => {
 
         setMessage('');
 
-        // 發送訊息給 SignalR hub
         connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
 
       } catch (error) {
@@ -198,7 +189,6 @@ const Service = () => {
             messageDate: newMessage.timestamp.toISOString()
           });
 
-          // 發送訊息給 SignalR hub
           connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
 
         } catch (error) {
@@ -235,7 +225,6 @@ const Service = () => {
       if (serviceId) {
         try {
           await closeService(serviceId);
-          console.log(`Service ${serviceId} closed`);
           setServiceId(null);
         } catch (error) {
           console.error('Failed to close service', error);
@@ -249,19 +238,54 @@ const Service = () => {
     };
   }, [serviceId]);
 
-  // SignalR 連接與訊息處理
   useEffect(() => {
     if (serviceId !== null) {
-      connection.on('ReceiveMessage', (message: Message) => {
-        console.log("Received message via SignalR:", message);  // Log received message
+      const handleReceiveMessage = (message: Message) => {
+        console.log("Message received from SignalR:", message);
         setMessages(prevMessages => [...prevMessages, message]);
-      });
+      };
+
+      connection.on('ReceiveMessage', handleReceiveMessage);
 
       return () => {
-        connection.off('ReceiveMessage');
+        connection.off('ReceiveMessage', handleReceiveMessage);
       };
     }
   }, [serviceId]);
+
+  const generateUniqueId = (): number => {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 1000); // 生成一個0到999之間的隨機數
+    return Number(`${timestamp}${randomNum}`);
+  };
+  
+  const handleFAQClick = (answer: string) => {
+    if (serviceId && memberId) {
+      console.log("FAQ answer clicked:", answer);
+      const faqMessage: Message = {
+        id: generateUniqueId(),
+        serviceId: serviceId,
+        memberId: memberId,
+        content: answer,
+        timestamp: new Date(),
+        sender: 'admin'
+      };
+      console.log("Adding FAQ message:", faqMessage);
+  
+      // 更新訊息列表
+      setMessages(prevMessages => [...prevMessages, faqMessage]);
+  
+      // 只在這裡進行 SignalR 發送
+      connection.invoke("SendMessage", faqMessage)
+        .then(() => {
+          console.log("Message sent via SignalR:", faqMessage);
+        })
+        .catch(err => {
+          console.error(err.toString());
+        });
+    }
+  };
+  
 
   return (
     <div className="service-chat-container">
@@ -273,6 +297,7 @@ const Service = () => {
         handlePrevious={handlePrevious}
         handleNext={handleNext}
       />
+      <FAQComponent onQuestionClick={handleFAQClick} />
       <ChatMessages messages={messages} searchTerm={searchTerm} highlightedIndexes={highlightedIndexes} currentIndex={currentIndex} />
       <ChatFooter
         message={message}

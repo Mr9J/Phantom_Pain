@@ -37,7 +37,7 @@ const ServiceRoute = () => {
   }
 
   // 定義管理員用戶的 MemberID 列表
-  const adminMemberIds = [1, 2, 3];
+  const adminMemberIds = [3];
 
   // 根據使用者的 MemberID 顯示不同的組件
   // 將 user.id 轉換為數字並檢查是否在 adminMemberIds 列表中
