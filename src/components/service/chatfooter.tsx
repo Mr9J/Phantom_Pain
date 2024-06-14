@@ -38,7 +38,7 @@ const ChatFooter: React.FC<ChatFooterProps> = ({
       />
       {/* 文件上傳按鈕的標籤 */}
       <label htmlFor="service-file-upload" className="service-file-label">
-        {uploading ? '上傳中...' : '選擇文件'} {/* 根據上傳狀態顯示不同的文本 */}
+        {uploading ? '上傳中...' : '選擇圖片'} {/* 根據上傳狀態顯示不同的文本 */}
       </label>
       {/* 提交按鈕 */}
       <button type="submit" className="service-submit-button">送出</button>

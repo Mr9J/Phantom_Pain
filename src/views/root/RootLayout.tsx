@@ -1,8 +1,14 @@
 import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 
-const RootLayout = () => {
+const RootLayout = ({
+  input,
+  setInput,
+}: {
+  input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -16,12 +22,12 @@ const RootLayout = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [input]);
 
   return (
     <>
       <div className={`${isScrolled ? "fixed" : "relative"} w-full z-50`}>
-        <Header />
+        <Header input={input} setInput={setInput} />
       </div>
 
       <Outlet />

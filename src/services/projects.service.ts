@@ -41,10 +41,12 @@ export const getProjects = async () => {
     throw error;
   }
 };
-
-export async function getAllProjects() {
+export async function getUserProject() {
+  const jwt = localStorage.getItem("token")
   try {
-    const res = await axios.get(`${baseUrl}/Project`);
+    const res = await axios.get(`${baseUrl}/Project/userProject`, {
+      headers: { Authorization: jwt },
+    });
     return res.data;
   } catch (error) {
     console.error(error);
@@ -54,6 +56,18 @@ export async function getAllProjects() {
 export async function getProjectCounts() {
   try {
     const res = await axios.get(`${baseUrl}/Project/Count`);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getUserProjectCounts() {
+  const jwt = localStorage.getItem("token")
+  try {
+    const res = await axios.get(`${baseUrl}/Project/UserProject/Count`, {
+      headers: { Authorization: jwt },
+    });
     return res.data;
   } catch (error) {
     console.error(error);

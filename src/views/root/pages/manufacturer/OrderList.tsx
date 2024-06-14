@@ -12,8 +12,6 @@ interface OrderListProps {
   projectId: number;
 }
 
-
-
 const OrderList : React.FC<OrderListProps>=() => {
   const [orderList, setOrderList] = useState<Order[] | null>(null);
   const { projectId } = useParams();

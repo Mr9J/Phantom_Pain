@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import numeral from "numeral";
-import { getProjects , getProjectCounts} from "@/services/projects.service";
-const baseUrl = import.meta.env.VITE_API_URL;
+import {
+  getUserProject,
+  getUserProjectCounts,
+} from "@/services/projects.service";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import SearchBar from "@/components/admin/SearchBar";
+const baseUrl = import.meta.env.VITE_API_URL;
+const frontUrl = import.meta.env.VITE_FRONT_URL;
 
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
@@ -33,8 +38,18 @@ const Projects = () => {
   const [orderType, setorderType] = useState(1);
   const [projectStatus, setProjectStatus] = useState(-1);
   const [projectCount, setProjectCount] = useState([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const filteredProjects = projectStatus > 0 ? projects.filter((item) => item.statusId === projectStatus) : projects;
+  const filteredProjects =
+    projectStatus > 0
+      ? projects.filter((item) => item.statusId === projectStatus)
+      : projects;
+  const filteredProjectsKeyword =
+    searchQuery.length > 0
+      ? filteredProjects.filter((item) =>
+          item.projectName.includes(searchQuery)
+        )
+      : filteredProjects;
 
   //下拉式選單
   const productTableClick = (itemId: string) => {
@@ -69,11 +84,32 @@ const Projects = () => {
       }
     }
   };
+
+  //載入api
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const fetchedProjects = await getUserProject();
+        setProjects(
+          fetchedProjects.map((project) => ({
+            ...project,
+            isEdit: false,
+          }))
+        );
+        // console.log('fetchedProjects:', fetchedProjects); // 確認資料是否成功加載
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   //專案狀態篩選
   useEffect(() => {
-    const fetchProjectCount= async () => {
+    const fetchProjectCount = async () => {
       try {
-        const fetchedProjectCount = await getProjectCounts();
+        const fetchedProjectCount = await getUserProjectCounts();
         fetchedProjectCount.map((item) => ({
           ...item,
           isEdit: false,
@@ -84,27 +120,7 @@ const Projects = () => {
         console.error("Error fetching projectCount:", error);
       }
     };
-
     fetchProjectCount();
-  }, []);
-  //載入api
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const fetchedProjects = await getProjects();
-        setProjects(
-          fetchedProjects.map((project) => ({
-            ...project,
-            isEdit: false,
-          }))
-        );
-        //console.log('fetchedProjects:', fetchedProjects); // 確認資料是否成功加載
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
-
-    fetchProjects();
   }, []);
 
   //POST/PUT Modal------------------------------------------------------
@@ -116,8 +132,8 @@ const Projects = () => {
     if (selectedImage && selectedImage.file instanceof File) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result.split(',')[1]; // 獲取 Base64 編碼的圖片數據
-        formData.append('Thumbnail', base64Image); // 將 Base64 圖片數據添加到 formData 中
+        const base64Image = reader.result.split(",")[1]; // 獲取 Base64 編碼的圖片數據
+        formData.append("Thumbnail", base64Image); // 將 Base64 圖片數據添加到 formData 中
 
         // 準備要發送的數據，可以對數據進行進一步處理或驗證
         const jsonData = {};
@@ -197,8 +213,12 @@ const Projects = () => {
       .catch((error) => {
         console.error("提交數據時發生錯誤：", error);
       });
-      //window.location.reload();
   };
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+    setSearchQuery(query);
+  };
+
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -208,65 +228,65 @@ const Projects = () => {
               專案列表
             </h2>
           </header>
-          <div className="p-3" >
+          <div className="p-3">
             {orderType === 1 ? (
-                <button
-                  type="button"
-                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  全部({projectCount[0]})
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  onClick={() => {
-                    setorderType(1);
-                    setProjectStatus(-1);
-                  }}
-                >
-                  全部({projectCount[0]})
-                </button>
-              )}
-              {orderType === 2 ? (
-                <button
-                  type="button"
-                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  進行中({projectCount[1]})
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  onClick={() => {
-                    setorderType(2);
-                    setProjectStatus(1);
-                  }}
-                >
-                  進行中({projectCount[1]})
-                </button>
-              )}
-              {orderType === 3 ? (
-                <button
-                  type="button"
-                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  已下架({projectCount[2]})
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  onClick={() => {
-                    setorderType(3);
-                    setProjectStatus(2);
-                  }}
-                >
-                  已下架({projectCount[2]})
-                </button>
-              )}
-              {orderType === 4 ? (
+              <button
+                type="button"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                全部({projectCount[0]})
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                onClick={() => {
+                  setorderType(1);
+                  setProjectStatus(-1);
+                }}
+              >
+                全部({projectCount[0]})
+              </button>
+            )}
+            {orderType === 2 ? (
+              <button
+                type="button"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                進行中({projectCount[1]})
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                onClick={() => {
+                  setorderType(2);
+                  setProjectStatus(1);
+                }}
+              >
+                進行中({projectCount[1]})
+              </button>
+            )}
+            {orderType === 3 ? (
+              <button
+                type="button"
+                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+              >
+                已下架({projectCount[2]})
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                onClick={() => {
+                  setorderType(3);
+                  setProjectStatus(2);
+                }}
+              >
+                已下架({projectCount[2]})
+              </button>
+            )}
+            {orderType === 4 ? (
               <button
                 type="button"
                 className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
@@ -285,24 +305,27 @@ const Projects = () => {
                 待審核({projectCount[3]})
               </button>
             )}
-              <div style={{ display: 'flex' }}>
-            <button
-              type="button"
-              onClick={() => {
-                setvisibleProjectModal(!visibleProjectLg);
-                setAlter(false);
-              }}
-              className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <svg
-                className="w-[15px] h-[15px] fill-[#f2f2f2]"
-                viewBox="0 0 448 512"
-                xmlns="http://www.w3.org/2000/svg"
+            <div style={{ display: "flex" }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setvisibleProjectModal(!visibleProjectLg);
+                  setAlter(false);
+                }}
+                className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
-                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
-              </svg>
-              <p className="text-base">新增專案</p>
-            </button>
+                <svg
+                  className="w-[15px] h-[15px] fill-[#f2f2f2]"
+                  viewBox="0 0 448 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
+                </svg>
+                <p className="text-base">新增專案</p>
+              </button>
+              <div style={{ marginLeft: "auto" }} className="pb-2">
+                <SearchBar onSearch={handleSearch} />
+              </div>
             </div>
             {/* Table */}
             <div className="overflow-x-auto">
@@ -340,27 +363,37 @@ const Projects = () => {
                       <div className="text-smfont-semibold text-center"></div>
                     </th>
                   </tr>
-                </thead>      
+                </thead>
                 {
-        //#region 專案-----------------------------------------------------------------------------------
-      } 
+                  //#region 專案-----------------------------------------------------------------------------------
+                }
                 {projects &&
-                  filteredProjects.map((item) => (
+                  filteredProjectsKeyword.map((item) => (
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
                         <tr>
                           <td className="pl-1">
-                            <img src={item.thumbnail} alt="" className="rounded-full w-10 h-10"/>
+                            <img
+                              src={item.thumbnail}
+                              alt=""
+                              className="rounded-full w-10 h-10"
+                            />
                           </td>
                           <td className="p-2">
                             <div
                               className="flex items-center"
                               style={{ width: 600 }}
                             >
-                              <div className="text-base text-slate-800 dark:text-slate-100">
-                                {item.projectName}
-                              </div>
+                              <a
+                                href={`${frontUrl}/project/${item.projectId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <div className="text-base text-slate-800 dark:text-slate-100 underline">
+                                  {item.projectName}
+                                </div>
+                              </a>
                             </div>
                           </td>
                           <td className="p-2 pr-4">
@@ -400,8 +433,7 @@ const Projects = () => {
                                     }%`,
                                   }}
                                 ></div>
-                              ) : item.totalAmount / item.projectGoal >=
-                                0.5 ? (
+                              ) : item.totalAmount / item.projectGoal >= 0.5 ? (
                                 <div
                                   className="bg-yellow-300 h-2.5 rounded-full dark:bg-yellow-500"
                                   style={{
@@ -529,26 +561,30 @@ const Projects = () => {
                                 </div>
                               </th>
                               <th style={{ width: 130 }}>
-                                {(orderType === 1 || orderType === 2) && <div className="text-smfont-semibold text-center">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setVisibleProductModal(!visibleProductLg);
-                                      setAlter(false);
-                                      setProductContext([item.projectId]);
-                                    }}
-                                    className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                  >
-                                    <svg
-                                      className="w-[15px] h-[15px] fill-[#f2f2f2]"
-                                      viewBox="0 0 448 512"
-                                      xmlns="http://www.w3.org/2000/svg"
+                                {(orderType === 1 || orderType === 2) && (
+                                  <div className="text-smfont-semibold text-center">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setVisibleProductModal(
+                                          !visibleProductLg
+                                        );
+                                        setAlter(false);
+                                        setProductContext([item.projectId]);
+                                      }}
+                                      className=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                     >
-                                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
-                                    </svg>
-                                    <p className="text-base">新增產品</p>
-                                  </button>
-                                </div>}
+                                      <svg
+                                        className="w-[15px] h-[15px] fill-[#f2f2f2]"
+                                        viewBox="0 0 448 512"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
+                                      </svg>
+                                      <p className="text-base">新增產品</p>
+                                    </button>
+                                  </div>
+                                )}
                               </th>
                             </tr>
                           </thead>
@@ -714,11 +750,10 @@ const Projects = () => {
                         //#endregion
                       }
                     </React.Fragment>
-                  ))
-                  }
-                        {
-        //#endregion
-      }
+                  ))}
+                {
+                  //#endregion
+                }
               </table>
             </div>
           </div>
@@ -931,22 +966,24 @@ const Projects = () => {
                       className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  {(orderType === 1 || orderType === 2)&& <div className="mb-3 flex items-center">
-                    <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
-                      狀態
-                    </span>
-                    <select
-                      aria-label="Default select example"
-                      name="statusId"
-                      defaultValue={
-                        alterText ? projectContext[4] : projectDemo[2]
-                      }
-                      className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="1">募資中</option>
-                      <option value="2">下架</option>
-                    </select>
-                  </div>}
+                  {(orderType === 1 || orderType === 2) && (
+                    <div className="mb-3 flex items-center">
+                      <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
+                        狀態
+                      </span>
+                      <select
+                        aria-label="Default select example"
+                        name="statusId"
+                        defaultValue={
+                          alterText ? projectContext[4] : projectDemo[2]
+                        }
+                        className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="1">募資中</option>
+                        <option value="2">下架</option>
+                      </select>
+                    </div>
+                  )}
                   <div className="mb-3 flex items-center">
                     <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                       募資目標
@@ -1156,22 +1193,24 @@ const Projects = () => {
                       className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
-                  {(orderType === 1 || orderType === 2) && <div className="mb-3 flex items-center">
-                    <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
-                      狀態
-                    </span>
-                    <select
-                      name="statusId"
-                      aria-label="Default select example"
-                      defaultValue={
-                        alterText ? productContext[5] : productDemo[2]
-                      }
-                      className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="1">募資中</option>
-                      <option value="2">下架</option>
-                    </select>
-                  </div>}
+                  {(orderType === 1 || orderType === 2) && (
+                    <div className="mb-3 flex items-center">
+                      <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
+                        狀態
+                      </span>
+                      <select
+                        name="statusId"
+                        aria-label="Default select example"
+                        defaultValue={
+                          alterText ? productContext[5] : productDemo[2]
+                        }
+                        className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="1">募資中</option>
+                        <option value="2">下架</option>
+                      </select>
+                    </div>
+                  )}
                   <div className="mb-3 flex items-center">
                     <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                       產品金額
@@ -1257,12 +1296,7 @@ const Projects = () => {
                     name="id"
                     value={productContext[1]}
                   />
-                  <input
-                    type="hidden"
-                    required
-                    name="orderBy"
-                    value={1}
-                  />
+                  <input type="hidden" required name="orderBy" value={1} />
                   {/* needtofix */}
                   {alterText ? (
                     <button

@@ -7,6 +7,8 @@ import {
   ICommentPost,
 } from "@/types";
 import {
+  changeEmail,
+  resendEmail,
   resetPassword,
   sendResetEmail,
   signIn,
@@ -21,6 +23,7 @@ import {
   getCommentsPost,
   getPostById,
   getRecentPosts,
+  getSavedPosts,
   likePost,
   savePost,
   updatePost,
@@ -65,7 +68,7 @@ export const useSignInWithOthers = () => {
 
 export const useGetRecentPosts = (page: number) => {
   return useQuery({
-    queryKey: [page],
+    queryKey: ["recentPosts", page],
     queryFn: () => getRecentPosts(page),
   });
 };
@@ -115,5 +118,24 @@ export const useGetCommentPost = (postId: string) => {
     queryKey: [postId],
     queryFn: () => getCommentsPost(postId),
     enabled: !!postId,
+  });
+};
+
+export const useGetSavedPosts = (page: number) => {
+  return useQuery({
+    queryKey: ["savedPosts", page],
+    queryFn: () => getSavedPosts(page),
+  });
+};
+
+export const useChangeEmail = () => {
+  return useMutation({
+    mutationFn: (email: string) => changeEmail(email),
+  });
+};
+
+export const useResendEmail = () => {
+  return useMutation({
+    mutationFn: () => resendEmail(),
   });
 };

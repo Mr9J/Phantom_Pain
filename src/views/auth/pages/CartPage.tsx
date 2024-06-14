@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useLayoutEffect, useState } from "react";
+import { Navigate, useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
+import { useUserContext } from "@/context/AuthContext";
+
+
+
 
 
 interface CartDetailDTO {
@@ -22,16 +26,40 @@ interface CartDetailDTO {
   
 
 function CartPage() {
-    const testmemberId = 6;
+
+    const { user} = useUserContext();
+    // const [isAuth, setIsAuth] = useState(true);
+    // const [userID , setUserId] = useState(0);
+    // const [testmemberId,setmemberId] = useState(0);
+
+    //測試會員
+    const  testmemberId = 6
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
-    let totalAmount = 0;
+    // let totalAmount = 0;
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchShoppingCart();
+        // const authenticateAndFetchCart = async () => {
+        //     const res = await checkAuthUser();
+        //     setIsAuth(res);
+        //     if (res) {
+        //         const intervalId = setInterval( () => {
+        //             if (user.id !== '0') {
+        //                 setUserId(Number(user.id))
+        //                 clearInterval(intervalId); 
+        //             }
+        //         }, 500);
+                                  
+        // }
+        // }
+        // authenticateAndFetchCart();
     }, []);
-    
 
+
+    useLayoutEffect(()=>{
+        fetchShoppingCart();   
+    },)
+    
     const goToPayPage = (projectId:number,productId:number,fromCartPage:boolean) =>
     {  
         navigate(`/Paypage?project=${projectId}&product=${productId}&fromCartPage=${fromCartPage}`);
@@ -41,8 +69,9 @@ function CartPage() {
 
     const fetchShoppingCart = async () => {
         try {
-            const data = await getLoadCartPage(testmemberId);
-            setMemberCartData(data);
+         
+                    const data = await getLoadCartPage(Number(user.id));
+                   setMemberCartData(data);      
         } catch (error) {
             console.error(error);
         }
@@ -50,7 +79,7 @@ function CartPage() {
 
     const handleIncrement = async (projectId: number, productId: number , increment :string) => {
         try{      
-            await putProductFromCart(productId,testmemberId,increment);
+            await putProductFromCart(productId,Number(user.id),increment);
             await fetchShoppingCart();
         }
         catch (error) {
@@ -63,7 +92,7 @@ function CartPage() {
 
     const handleDecrement = async (projectId: number, productId: number,decrement:string) => {
         try{      
-            await putProductFromCart(productId,testmemberId,decrement);
+            await putProductFromCart(productId,Number(user.id),decrement);
             await fetchShoppingCart();
         }
         catch (error) {
@@ -76,7 +105,7 @@ function CartPage() {
    
     const handleDeleteProduct = async (productId: number) => {
         try {
-            await deleteProductFromCart(productId, testmemberId);
+            await deleteProductFromCart(productId, Number(user.id));
             await fetchShoppingCart();
         } catch (error) {
             console.error(error);
@@ -84,15 +113,17 @@ function CartPage() {
     };
 
     return (
+        <>
+        {/* {!isAuth && <Navigate to="/sign-in" />} */}
         <div className="container px-4 mb-8">
             <div className='flex flex-col-reverse lgl:flex-row gap-5'>
                 <div className='w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5'>
-                    <div className='w-full  bg-white py-7 px-5'>
+                    <div className='w-full  bg-white py-7 px-5 dark:bg-slate-800'>
                         <h1 className='text-3xl font-semibold mb-1'>Mumu 購物車</h1>
                         <hr />
                         {memberCartData?.length===0 ?    
                         
-                        <div className="max-w-4xl mx-auto px-10 py-4 bg-white rounded-lg shadow-lg">
+                        <div className="max-w-4xl mx-auto px-10 py-4 bg-white rounded-lg shadow-lg dark:bg-slate-500">
       <div className="flex flex-col items-center justify-center py-12">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +139,7 @@ function CartPage() {
         </p>
       </div>
     </div>:  <>{memberCartData&&memberCartData.map((item) => {
-
+                            let totalAmount = 0; 
                             return (
                                 <div key={item.projectId} className="w-full">                               
                                     <div className="border-spacing-8 mx-7 my-6">
@@ -121,7 +152,7 @@ function CartPage() {
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
                                         return(
-                                        <div key={product.productId} className='border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1'>
+                                        <div key={product.productId} className='border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1 dark:bg-slate-700'>
                                             <div className='float-left w-64'>
                                                 <img className='mx-auto' src={product.thumbnail?.toString()} alt="productImage" />
                                             </div>
@@ -129,22 +160,22 @@ function CartPage() {
     <br />
     <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
     <div className="flex items-center">
-        <span className='text-green-700 font-semibold text-[16px] flex-2 mr-5'>有存貨</span>
+        <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨</span>
         <div className="flex items-center justify-center space-x-2 mb-1">
             {Number(product.count) === 1 ? (
-                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`}>-</button>
+                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`}>-</button>
             ) : (
-                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
+                <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
             )}
             <span className="font-bold">{product.count}</span>
-            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
+            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
         </div>
         <div className="grow h-14">
   </div>
    <div className='flex flex-row justify-between mt-2'>
         <span className="float-end mx-6 my-0">NT$ {(product.productPrice * Number(product.count)).toLocaleString()}</span>
        
-        <button className='text-blue-600' onClick={() => handleDeleteProduct(product.productId)}>刪除</button>
+        <button className='text-blue-500' onClick={() => handleDeleteProduct(product.productId)}>刪除</button>
     </div>
 
     </div>
@@ -157,7 +188,7 @@ function CartPage() {
                                     )})}
                                    
                                  <div className="mb-20 mt-6">
-<button className="float-end bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={()=>goToPayPage(item.projectId,Number(item.products&&item.products[0].productId),true)}>
+<button className="float-end bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded dark:bg-slate-700 dark:text-blue-400 dark:hover:bg-slate-600" onClick={()=>goToPayPage(item.projectId,Number(item.products&&item.products[0].productId),true)}>
 前往結帳
 </button>
 <span className="font-bold float-end mt-4 mr-5">總價 NT$ {totalAmount.toLocaleString()}</span>
@@ -175,6 +206,7 @@ function CartPage() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 
