@@ -5,7 +5,7 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
-import { typeComment } from "./types";
+import { typeComment, typeCommentDto } from "./types";
 import connection from "./signalrService";
 
 function TabComments() {
@@ -15,18 +15,34 @@ function TabComments() {
   const [comments, setComments] = useState<typeComment[]>([]);
 
   const sendComment = async () => {
-    const newComment: typeComment = {
+    const newComment: typeCommentDto = {
       commentMsg: input,
-      ProjectId: 100,
-      MemberId: 1,
+      projectId: 100,
+      memberId: 1,
     };
     // 呼叫 API 送出留言
     await axios.post(`${URL}/ProjectInfo/SendComment`, newComment);
     setInput("");
   };
 
-  const handleReceivedComment = async (data: typeComment) => {
-    setComments((preComments) => [...preComments, data]);
+  const fetchMember = async (memberId: number) => {
+    const res = await axios.get(`${URL}/ProjectInfo/Member`, {
+      params: {
+        memberId,
+      },
+    });
+    console.log(res.data);
+    return res.data;
+  };
+  const handleReceivedComment = async (data: typeCommentDto) => {
+    const receivedComment: typeComment = {
+      commentId: data.commentId!,
+      commentMsg: data.commentMsg,
+      date: data.date!,
+      username: (await fetchMember(data.memberId)).username,
+      userThumbnail: (await fetchMember(data.memberId)).thumbnail,
+    };
+    setComments((preComments) => [...preComments, receivedComment]);
   };
 
   useEffect(() => {
@@ -36,6 +52,7 @@ function TabComments() {
           projectId: 100,
         },
       });
+      console.log(fetchMember(1));
       setComments(res.data);
     })();
 

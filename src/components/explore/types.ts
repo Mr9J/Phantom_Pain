@@ -15,4 +15,13 @@ export type typeComment = {
   commentMsg: string;
   date: string;
   username: string;
+  userThumbnail: string;
+};
+
+export type typeCommentDto = {
+  commentId?: number;
+  date?: string;
+  commentMsg: string;
+  memberId: number;
+  projectId: number;
 };
