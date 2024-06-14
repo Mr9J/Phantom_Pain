@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
 import { typeComment } from "./types";
+import connection from "./signalrService";
 
 function TabComments() {
   const { user, isAuthenticated } = useUserContext();
@@ -14,12 +15,18 @@ function TabComments() {
   const [comments, setComments] = useState<typeComment[]>([]);
 
   const sendComment = async () => {
-    // 呼叫 API 送出留言
-    await axios.post(`${URL}/ProjectInfo/SendComment`, {
-      CommentMsg: input,
+    const newComment: typeComment = {
+      commentMsg: input,
       ProjectId: 100,
       MemberId: 1,
-    });
+    };
+    // 呼叫 API 送出留言
+    await axios.post(`${URL}/ProjectInfo/SendComment`, newComment);
+    setInput("");
+  };
+
+  const handleReceivedComment = async (data: typeComment) => {
+    setComments((preComments) => [...preComments, data]);
   };
 
   useEffect(() => {
@@ -29,10 +36,20 @@ function TabComments() {
           projectId: 100,
         },
       });
-      console.log(res.data);
       setComments(res.data);
     })();
+
+    // 註冊接收訊息事件
+    connection.on("ReceiveComment", handleReceivedComment);
+
+    return () => {
+      connection.off("ReceiveMessage", handleReceivedComment);
+    };
   }, []);
+  // comment一有變動就會去抓會員資料
+  useEffect(() => {
+    console.log(comments);
+  }, [comments]);
 
   return (
     <>
@@ -51,15 +68,14 @@ function TabComments() {
         <Input
           placeholder="留下想說的話..."
           onChange={(e) => setInput(e.currentTarget.value)}
+          value={input}
         />
-        <Button type="submit" onClick={sendComment}>
-          留言
-        </Button>
+        <Button onClick={sendComment}>留言</Button>
       </div>
 
-      <div className=" mx-auto mt-10 p-4 bg-gray-800 text-white rounded-lg shadow-lg space-y-4">
-        {comments.map((item, index) => (
-          <div key={index} className="border-b border-gray-700 pb-4">
+      <div className=" mx-auto mt-10 p-4   rounded-lg shadow-lg space-y-4">
+        {comments.map((item) => (
+          <div key={item.commentId} className="border-b border-gray-700 pb-4">
             <div className="flex items-center mb-2">
               <div className=" w-8 h-8 mr-3">
                 <Avatar>
@@ -69,9 +85,7 @@ function TabComments() {
               </div>
               <div>
                 <p className="font-bold">comment.username</p>
-                <p className="text-xs text-gray-400">
-                  {DateTimeToString(item.date)}
-                </p>
+                <p className="text-xs ">{DateTimeToString(item.date)}</p>
               </div>
             </div>
             <p>{item.commentMsg}</p>

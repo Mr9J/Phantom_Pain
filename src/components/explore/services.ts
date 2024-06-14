@@ -14,7 +14,9 @@ export const DateTimeToString = (dateTime: string): string => {
     return `${hours}小時前`;
   } else if (minutes > 0) {
     return `${minutes}分鐘前`;
-  } else {
+  } else if (seconds > 0) {
     return `${seconds}秒前`;
+  } else {
+    return "剛剛";
   }
 };
