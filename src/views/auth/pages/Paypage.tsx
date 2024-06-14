@@ -471,9 +471,9 @@ return(
       <div className="flex items-center justify-center space-x-2 mb-3">
       <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==0?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount-1)}}>-</button>
       {fromCartPage? <><span className="font-black dark:text-white">{selectedProductCount}</span>
-      <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
+      <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?"": setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
       <><span className="font-black dark:text-white">{selectedProductCount}</span>
-      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
+      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?"":setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
      
     </div>
       {item.productInCart&&item.productInCart.includes(pjitem.productId) ? (
