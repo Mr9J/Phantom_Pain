@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 const frontUrl = import.meta.env.VITE_FRONT_URL;
 const baseUrl = import.meta.env.VITE_API_URL;
-const ngrok  = "https://9fb0-2001-b011-1006-909d-5c5d-3a2e-3ce0-5fce.ngrok-free.app/api/Order/ECPayResponseMessage";
-
+const ngrok  = "https://04c7-1-160-23-145.ngrok-free.app/api/Order/ECPayResponseMessage";
+const returnURL = `${frontUrl}/ReturnURL`
 interface ECPayComponentProps {
   projectName: string;
   totalAmount: number;
@@ -14,7 +14,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
   const [merchantTradeNo, setMerchantTradeNo] = useState<string>('');
   const [merchantTradeDate, setMerchantTradeDate] = useState<string>('');
   const submitButtonRef = useRef<HTMLButtonElement>(null);
-  const returnURL = `${frontUrl}/ReturnURL`
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
      event.preventDefault();
@@ -23,7 +23,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
    await setMerchantTradeNo(tempMerchantTradeNo);
    await setMerchantTradeDate(tempMerchantTradeDate)
 
-  // 只有当 MerchantTradeNo 和 MerchantTradeDate 都不为空时才提交表单
+  // 只有當 MerchantTradeNo 和 MerchantTradeDate 都不為空時才提交
   if (tempMerchantTradeNo && tempMerchantTradeDate) {
     // 請求後端計算檢查碼
     try {

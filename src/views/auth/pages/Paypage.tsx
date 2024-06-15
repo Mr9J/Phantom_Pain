@@ -2,7 +2,6 @@ import React, { useState, useEffect, ChangeEvent, FormEvent,useRef, useLayoutEff
 import taiwan_districts from '@/constants/taiwan_districts.json'
 import { getProjectfromProductId } from '@/services/projects.service';
 import { createOrder } from '@/services/orders.service';
-import { Link } from 'react-router-dom';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -427,7 +426,7 @@ return(
       <div key={pjitem.productId}>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block dark:bg-slate-800" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      {fromCartPage?<></>:  <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" to="#" onClick={() => window.history.back()}>更改回饋</Link>}
+      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" onClick={() => window.history.back()}>更改回饋</div>}
      
       {/* 點擊商品後 href顯示加購及結帳 */}
       <img
