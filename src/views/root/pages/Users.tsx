@@ -1,26 +1,33 @@
 import Footer from "@/components/section/Footer";
 import { useGetUserInfo } from "@/lib/react-query/queriesAndMutation";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Project, UserProfile } from "@/types";
+import { ProfileMain, ProfileProjects } from "@/components/profile";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HistoryIcon, HeartHandshakeIcon, PhoneCallIcon } from "lucide-react";
+
+const INITIAL_PROJECT: Project = {
+  projectId: 0,
+  projectName: "",
+  projectDescription: "",
+  projectGoal: 0,
+  projectStartDate: new Date(),
+  projectEndDate: new Date(),
+  projectGroupId: 0,
+  projectThumbnail: "",
+  projectStatusId: 0,
+};
 
 const INITIAL_USERPROFILE: UserProfile = {
-  id: "",
+  id: 0,
   nickname: "",
   username: "",
   email: "",
   description: "",
   avatar: "",
   time: "",
-};
-
-type UserProfile = {
-  id: string;
-  nickname: string;
-  username: string;
-  email: string;
-  description: string;
-  avatar: string;
-  time: string;
+  projects: [INITIAL_PROJECT],
 };
 
 const Users = () => {
@@ -34,26 +41,39 @@ const Users = () => {
   } = useGetUserInfo(pathname);
 
   useEffect(() => {
-    refetchUserData();
-  }, []);
+    if (userData) {
+      setUser(userData);
+      console.log(user);
+    }
+  }, [userData]);
 
   return (
     <>
       <section className="overflow-hidden">
-        <div className="h-screen w-full border-4 grid grid-cols-4 grid-rows-4 py-4 px-6 lg:px-12">
-          <div className="bg-slate-500 col-start-1 col-end-5 row-start-1 row-end-2">
-            <div className="flex justify-center items-center">
-              <img
-                src={userData ? userData.avatar : ""}
-                alt="avatar"
-                className="w-[150px] h-[150px] rounded-full"
-              />
-            </div>
-            <div className="flex flex-1 justify-center items-center">
-              <h2>{userData ? userData.description : ""}</h2>
-            </div>
-          </div>
-        </div>
+        <ProfileMain user={user} />
+
+        <Tabs defaultValue="proposed" className="w-full">
+          <TabsList className="flex justify-center items-center">
+            <TabsTrigger value="proposed" className="text-3xl">
+              <HistoryIcon className="w-[30px] h-[30px] pr-1" /> 發起計畫
+            </TabsTrigger>
+            <TabsTrigger value="sponsored" className="text-3xl">
+              <HeartHandshakeIcon className="w-[30px] h-[30px] pr-1" />
+              贊助計畫
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="text-3xl">
+              <PhoneCallIcon className="w-[30px] h-[30px] pr-1" />
+              聯絡與常見問答
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="proposed">
+            <ProfileProjects user={user} />
+          </TabsContent>
+          <TabsContent value="sponsored">
+            Change your password here.
+          </TabsContent>
+          <TabsContent value="contact">Change your password here.</TabsContent>
+        </Tabs>
 
         <Footer />
       </section>

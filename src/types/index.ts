@@ -84,8 +84,8 @@ export type ProjectCardDTO = {
   projectId: number;
   projectName: string;
   projectGoal: number;
-  startDate:string;
-  endDate:string;
+  startDate: string;
+  endDate: string;
   dayLeft: number;
   thumbnail: string;
   totalAmount: number;
@@ -174,4 +174,27 @@ export type ICommentPost = {
   postId: string;
   userId: string;
   comment: string;
+};
+
+export type UserProfile = {
+  id: number;
+  nickname: string;
+  username: string;
+  email: string;
+  description: string;
+  avatar: string;
+  time: string;
+  projects: Project[];
+};
+
+export type Project = {
+  projectId: number;
+  projectName: string;
+  projectDescription: string;
+  projectGoal: number;
+  projectStartDate: Date;
+  projectEndDate: Date;
+  projectGroupId: number;
+  projectThumbnail: string;
+  projectStatusId: number;
 };
