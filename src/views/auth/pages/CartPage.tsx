@@ -38,7 +38,7 @@ function CartPage() {
     // let totalAmount = 0;
     const navigate = useNavigate();
 
-    useEffect(() => {
+    // useEffect(() => {
         // const authenticateAndFetchCart = async () => {
         //     const res = await checkAuthUser();
         //     setIsAuth(res);
@@ -53,7 +53,7 @@ function CartPage() {
         // }
         // }
         // authenticateAndFetchCart();
-    }, []);
+    // }, []);
 
 
     useLayoutEffect(()=>{

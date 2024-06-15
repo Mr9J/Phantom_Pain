@@ -1,12 +1,13 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent,useRef, useLayoutEffect} from 'react';
 import taiwan_districts from '@/constants/taiwan_districts.json'
 import { getProjectfromProductId } from '@/services/projects.service';
-import { createOrder } from '@/services/orders.service';
+import { createOrder,checkProductInventory } from '@/services/orders.service';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Await, useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
 import { useUserContext } from '@/context/AuthContext';
+
 
 
 
@@ -65,6 +66,8 @@ function Paypage() {
   const selectedproductId = searchParams.get('product');
   const projectId = searchParams.get('project')
   const fromCartPage = searchParams.get('fromCartPage') === 'true';
+   const [showModal, setShowModal] = useState(false);
+   const [errorMessage, setErrorMessage] = useState('');
 
   
 
@@ -89,12 +92,23 @@ function Paypage() {
   //   setShowPaymentForm(true);
   // };
  
-  const handleConfirm = (e:React.MouseEvent<HTMLButtonElement>) => {  
+  const handleConfirm = async   (e:React.MouseEvent<HTMLButtonElement>) => {  
     e.stopPropagation();
     e.preventDefault()
-    console.log("確認按鈕被點擊");
-     setIsConfirming(true);
+    console.log(orderData.productdata);
+      const response = await checkProductInventory(orderData.productdata); // 调用 API 函数检查库存
+
+      if (response === 'ok') {
+        setIsConfirming(true); 
+      } else {
+        console.log(response)
+       await setErrorMessage(response); 
+        setShowModal(true); 
+      }
+
   };
+
+
 
   const handleCancel = () => {
     setIsConfirming(false);
@@ -274,7 +288,7 @@ const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
       });
       setOrderData(prevFormData => ({
         ...prevFormData,
-        donate: 0 //如果没有捐赠金额，则将捐赠金额设置为0
+        donate: 0 //如果沒有設置金額 返回0
       }));
     } else {
       const donate = parseFloat(value);
@@ -638,7 +652,30 @@ return(
   
 
 </div>
-
+ {/* 彈出視窗 */}
+ {showModal && (
+        <div className="modal" style={{
+          position: 'fixed',
+          zIndex: 1,
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          overflow: 'auto',
+          backgroundColor: 'rgba(0,0,0,0.4)'
+        }}>
+          <div className="modal-content" style={{
+            backgroundColor: '#fefefe',
+            margin: '15% auto',
+            padding: '20px',
+            border: '1px solid #888',
+            width: '80%'
+          }}>
+            <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+            <p>{errorMessage}</p>
+          </div>
+        </div>
+      )}
 {/* 輸入交易資料畫面 */}
 {payment}
 
