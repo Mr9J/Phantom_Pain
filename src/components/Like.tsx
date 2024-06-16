@@ -69,7 +69,7 @@ function Like() {
                   &nbsp;
                 </Link>
                 {/* <img src={item.likePrjThumb} alt="Project Thumbnail" /> */}
-                <Link  className="truncate block font-bold text-black mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" 
+                <Link  className="truncate line-clamp-2 block font-bold text-black mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" 
                         to={`/project/${item.likePrjId}`}>
                   {" "}
                   {item.likePrjName}
