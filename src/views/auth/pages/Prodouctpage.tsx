@@ -258,7 +258,7 @@ function Productpage() {
   }, [isPopupVisible]);
 
 
-useLayoutEffect(()=>{
+useEffect(()=>{
   getProjectfromProductId(Number(pid), Number(user.id))
   .then((data) => {
     setProjectData(data);
@@ -267,7 +267,7 @@ useLayoutEffect(()=>{
     console.error("Error fetching project data:", error);
   });
 
-},[user])
+},[user,pid])
 
 
   // useEffect(() => {

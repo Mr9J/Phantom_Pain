@@ -142,12 +142,12 @@ function CartPage() {
                             let totalAmount = 0; 
                             return (
                                 <div key={item.projectId} className="w-full">                               
-                                    <div className="border-spacing-8 mx-7 my-6">
+                                    <a className="border-spacing-8 mx-7 my-6" href={`/project/${item.projectId}`}>
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         {item.projectName}
                                         
                                     
-                                    </div>
+                                    </a>
                                     <br></br>
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
