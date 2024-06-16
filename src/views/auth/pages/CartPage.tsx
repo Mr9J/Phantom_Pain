@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { Navigate, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
 import { useUserContext } from "@/context/AuthContext";
 
@@ -28,33 +28,12 @@ interface CartDetailDTO {
 function CartPage() {
 
     const { user} = useUserContext();
-    // const [isAuth, setIsAuth] = useState(true);
-    // const [userID , setUserId] = useState(0);
-    // const [testmemberId,setmemberId] = useState(0);
-
-    //測試會員
-    const  testmemberId = 6
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
-    // let totalAmount = 0;
     const navigate = useNavigate();
 
-    // useEffect(() => {
-        // const authenticateAndFetchCart = async () => {
-        //     const res = await checkAuthUser();
-        //     setIsAuth(res);
-        //     if (res) {
-        //         const intervalId = setInterval( () => {
-        //             if (user.id !== '0') {
-        //                 setUserId(Number(user.id))
-        //                 clearInterval(intervalId); 
-        //             }
-        //         }, 500);
-                                  
-        // }
-        // }
-        // authenticateAndFetchCart();
-    // }, []);
-
+    // useEffect(()=>{
+    //     fetchShoppingCart();   
+    // },[user])
 
     useLayoutEffect(()=>{
         fetchShoppingCart();   
@@ -142,12 +121,10 @@ function CartPage() {
                             let totalAmount = 0; 
                             return (
                                 <div key={item.projectId} className="w-full">                               
-                                    <a className="border-spacing-8 mx-7 my-6" href={`/project/${item.projectId}`}>
+                                    <div className="border-spacing-8 mx-7 my-6">
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
-                                        {item.projectName}
-                                        
-                                    
-                                    </a>
+                                        <a href={`/project/${item.projectId}`}>{item.projectName}</a>                                                                  
+                                    </div>
                                     <br></br>
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
@@ -160,7 +137,8 @@ function CartPage() {
     <br />
     <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
     <div className="flex items-center">
-        <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨</span>
+        {product.count!>=product.currentStock?<span className='text-orange-800 font-semibold text-[16px] flex-2 mr-5'>存貨不足 剩餘:{product.currentStock}份</span>:  <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨 剩餘:{product.currentStock}份</span>}
+      
         <div className="flex items-center justify-center space-x-2 mb-1">
             {Number(product.count) === 1 ? (
                 <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`}>-</button>

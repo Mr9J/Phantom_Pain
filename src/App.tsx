@@ -120,7 +120,6 @@ const App = () => {
             <Route path="/Productpage/:pid" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} /> 
             <Route path="/CartPage" element={<CartPage />} />
-           
           </Route>
 
           <Route element={<ManuLayout />}>

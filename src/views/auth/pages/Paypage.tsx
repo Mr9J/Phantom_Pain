@@ -359,7 +359,7 @@ const handleIncrease =  (e: React.MouseEvent<HTMLButtonElement>,productId:number
       { return null;}
     ///////////////////
 return(
-  <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1">
+  <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1 mt-14">
   <label className="bg-zinc-100 rounded-md p-4 leading-none block mb-0 mx-0.5 dark:text-white dark:bg-slate-500">
     {/* value傳商品id */}
   <input ref={(buttonRef) => { inputRefs.current[pjitem.productId] = buttonRef; }} className="mr-4" type="checkbox" value={pjitem.productId} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
@@ -400,7 +400,7 @@ return(
   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
   <p>
-  {truncateText(pjitem.productDescription!,90)}</p>
+  {truncateText(pjitem.productDescription!,70)}</p>
   </div>
   
   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
@@ -476,7 +476,7 @@ return(
         <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
           {/* 加入商品敘述 */}
           <p>
-            {pjitem.productDescription}
+          {truncateText(pjitem.productDescription!,150)}
           </p>
         </div>
  
