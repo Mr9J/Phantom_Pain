@@ -4,12 +4,62 @@ import {
   UpdatePostDTO,
   NewUpdatePostDTO,
   ICommentPost,
+  GetPostDTO,
 } from "@/types";
 import { S3 } from "@/config/R2";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
 
 const URL = import.meta.env.VITE_API_URL;
+
+// export async function createPost(post: PostDTO) {
+//   try {
+//     const newPost: NewPostDTO = {
+//       caption: post.caption,
+//       location: post.location,
+//       tags: post.tags,
+//       file: post.id,
+//       userId: post.userId,
+//     };
+
+//     for (let index = 0; index < post.file.length; index++) {
+//       try {
+//         const img = post.file[index];
+//         const upload = await S3.send(
+//           new PutObjectCommand({
+//             Bucket: "mumu",
+//             Key: `Posts/${post.userId}/${post.id}/${index}.jpg`,
+//             Body: img,
+//             ContentType: "image/jpeg",
+//           })
+//         );
+
+//         if (upload.$metadata.httpStatusCode === 200) {
+//           if (index === post.file.length - 1) {
+//             newPost.file += `https://cdn.mumumsit158.com/Posts/${post.userId}/${post.id}/${index}.jpg`;
+//           } else {
+//             newPost.file += `https://cdn.mumumsit158.com/Posts/${post.userId}/${post.id}/${index}.jpg,`;
+//           }
+//         }
+//       } catch (error) {
+//         console.error(error);
+//       }
+//     }
+
+//     const jwt = localStorage.getItem("token");
+//     if (!jwt) throw Error;
+
+//     const response = await axios.post(`${URL}/post/create-post`, newPost, {
+//       headers: { Authorization: jwt },
+//     });
+
+//     if (response.status !== 200) throw Error;
+
+//     return response.data;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 
 export async function createPost(post: PostDTO) {
   try {
@@ -17,44 +67,38 @@ export async function createPost(post: PostDTO) {
       caption: post.caption,
       location: post.location,
       tags: post.tags,
-      file: "",
+      file: post.userId + "/" + post.id,
       userId: post.userId,
     };
 
-    for (let index = 0; index < post.file.length; index++) {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const promises = post.file.map(async (img, index) => {
       try {
-        const img = post.file[index];
-        const upload = await S3.send(
+        await S3.send(
           new PutObjectCommand({
-            Bucket: "Tests",
-            Key: `${post.userId}/${post.id}/${index}.jpg`,
+            Bucket: "mumu",
+            Key: `Posts/${post.userId}/${post.id}/${index}.jpg`,
             Body: img,
             ContentType: "image/jpeg",
           })
         );
-
-        if (upload.$metadata.httpStatusCode === 200) {
-          if (index === post.file.length - 1) {
-            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
-          } else {
-            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
-          }
-        }
       } catch (error) {
-        console.error(error);
+        console.error(`Error uploading file ${index}:`, error);
       }
-    }
+    });
 
-    const jwt = localStorage.getItem("token");
-    if (!jwt) throw Error;
+    await Promise.all(promises);
 
-    const response = await axios.post(`${URL}/post/create-post`, newPost, {
+    const res = await axios.post(`${URL}/post/create-post`, newPost, {
       headers: { Authorization: jwt },
     });
 
-    if (response.status !== 200) throw Error;
+    if (res.status !== 200) throw Error;
 
-    return response.data;
+    return res.data;
   } catch (error) {
     console.error(error);
   }
@@ -63,6 +107,8 @@ export async function createPost(post: PostDTO) {
 export async function getRecentPosts(page: number) {
   try {
     const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
 
     const data = await axios.get(`${URL}/Post/get-posts/${page}`, {
       headers: { Authorization: jwt },
@@ -287,6 +333,23 @@ export async function getSavedPosts(page: number) {
     if (res.status !== 200) throw Error;
 
     return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPostImg(imgUrl: string) {
+  try {
+    const imgArr = await S3.send(
+      new ListObjectsV2Command({
+        Bucket: "mumu",
+        Prefix: `Posts/${imgUrl}/`,
+      })
+    );
+
+    if (imgArr.$metadata.httpStatusCode !== 200) throw Error;
+
+    return imgArr.Contents;
   } catch (error) {
     console.error(error);
   }

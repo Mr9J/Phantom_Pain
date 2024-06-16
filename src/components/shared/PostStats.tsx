@@ -41,7 +41,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [comment, setComment] = useState("");
-  const [commentData, setCommentData] = useState(null);
+  const [commentData, setCommentData] = useState([]);
   const [visibleComments, setVisibleComments] = useState(5);
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -222,7 +222,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
         ref={ref}
       >
         <ul>
-          {commentData ? (
+          {commentData === null ? (
             commentData.slice(0, visibleComments).map((com, index) => (
               <div className="flex items-start gap-4 mt-2 w-full" key={com.id}>
                 <img

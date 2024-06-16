@@ -23,6 +23,7 @@ import {
   deletePost,
   getCommentsPost,
   getPostById,
+  getPostImg,
   getRecentPosts,
   getSavedPosts,
   likePost,
@@ -91,7 +92,7 @@ export const useSavePost = () => {
 
 export const useGetPostById = (postId: string) => {
   return useQuery({
-    queryKey: [postId],
+    queryKey: ["GetPostById", postId],
     queryFn: () => getPostById(postId),
     enabled: !!postId,
   });
@@ -152,5 +153,12 @@ export const useGetUserInfo = (id: string) => {
   return useQuery({
     queryKey: ["userInfo", id],
     queryFn: () => getUserInfo(id),
+  });
+};
+
+export const useGetPostImg = (imgUrl: string) => {
+  return useQuery({
+    queryKey: ["postPhoto", imgUrl],
+    queryFn: () => getPostImg(imgUrl),
   });
 };
