@@ -3,26 +3,25 @@ import { useToast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import FileUploader from "@/components/shared/FileUploader";
-import { useCreatePostPY } from "@/lib/react-query/queriesAndMutation";
+import { usePostImage } from "@/lib/react-query/queriesAndMutation";
 
 export type PostFormProps = {
   post?: {
-    caption: string;
     file: File[];
-    location: string;
-    tags: string;
-    userId: number;
+    projectId: string;
+    productId: string;
+    imgUrl: string;
   };
   action: "create" | "update";
 };
 
 const Test = ({ post, action }: PostFormProps) => {
   const { toast } = useToast();
-  const { user } = useUserContext();
+  //const { user } = useUserContext();
   const [file, setFile] = useState<File | null>(null);
-  const { mutateAsync: createPostPY, isPending } = useCreatePostPY();
+  const { mutateAsync: postImage, isPending } = usePostImage();
 
-  const uploadFileHandler = async () => {
+  const uploadFileHandler = async (mode: "project" | "product") => {
     if (!file) {
       toast({
         variant: "destructive",
@@ -31,16 +30,23 @@ const Test = ({ post, action }: PostFormProps) => {
       });
       return;
     }
-
     try {
-      const session = await createPostPY({
-        caption: post?.caption || "123",
-        location: post?.location || "123",
-        userId: user.id,
-        file: [file],
-        tags: post?.tags || "123",
-        id: "",
-      });
+      let session;
+      if (mode === "project") {
+        session = await postImage({
+          //userId: user.id,
+          file: [file],
+          projectId: "X0",
+          productId: "000",
+        });
+      } else if (mode === "product") {
+        session = await postImage({
+          //userId: user.id,
+          file: [file],
+          projectId: "X1",
+          productId: "Y",
+        });
+      }
 
       if (!session) {
         toast({
@@ -66,19 +72,40 @@ const Test = ({ post, action }: PostFormProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <FileUploader
-        fieldChange={(files) => {
-          if (files && files.length > 0) {
-            setFile(files[0]);
-          }
-        }}
-        mediaUrl={post ? post.imgUrl : ""}
-      />
-      <Button onClick={uploadFileHandler} disabled={!file || isPending}>
-        {isPending ? "上傳中..." : "上傳圖片"}
-      </Button>
-    </div>
+    <>
+      <p>Project</p>
+      <div className="flex flex-col items-center gap-4">
+        <FileUploader
+          fieldChange={(files) => {
+            if (files && files.length > 0) {
+              setFile(files[0]);
+            }
+          }}
+          mediaUrl={post ? post.imgUrl : ""}
+        />
+      </div>
+      <hr />
+      <p>Product</p>
+      <div className="flex flex-col items-center gap-4">
+        <FileUploader
+          fieldChange={(files) => {
+            if (files && files.length > 0) {
+              setFile(files[0]);
+            }
+          }}
+          mediaUrl={post ? post.imgUrl : ""}
+        />
+        <Button
+          onClick={() => {
+            uploadFileHandler("project");
+            uploadFileHandler("product");
+          }}
+          disabled={!file || isPending}
+        >
+          {isPending ? "上傳中..." : "上傳圖片"}
+        </Button>
+      </div>
+    </>
   );
 };
 

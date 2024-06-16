@@ -184,3 +184,9 @@ export type Like ={
   likePrjId:number;
   likeDetailId:number;
 }
+
+export type PostImageDTO = {
+  file: File[];
+  projectId: string;
+  productId: string;
+};
