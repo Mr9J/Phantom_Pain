@@ -37,7 +37,7 @@ const Test = ({ post, action }: PostFormProps) => {
           //userId: user.id,
           file: [file],
           projectId: "X0",
-          productId: "000",
+          productId: "",
         });
       } else if (mode === "product") {
         session = await postImage({
