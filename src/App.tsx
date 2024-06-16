@@ -73,15 +73,11 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:userId" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} /> 
-            <Route path="/CartPage" element={<CartPage />} />
+           
             <Route
               path="/SearchProject"
               element={<SearchProject input={input} setInput={setInput} />}
             />
-          
-            {/* <Route path="/Productpage" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} /> */}
 
             <Route path="/StartProject" element={<StartProject />} />
             <Route path="/CreateProject" element={<CreateProject />} />
@@ -122,7 +118,8 @@ const App = () => {
           <Route element={<AuthDefaultLayout input={input} setInput={setInput}  />}>
             <Route path="/Like" element={<Like />} />  
             <Route path="/Productpage/:pid" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
+            <Route path="/Paypage" element={<Paypage />} /> 
+            <Route path="/CartPage" element={<CartPage />} />
            
           </Route>
 
