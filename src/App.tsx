@@ -56,6 +56,7 @@ import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
+import HobbyList from "./components/HobbyList";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -89,6 +90,7 @@ const App = () => {
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
+          <Route path="/Hobby" element={<HobbyList/>}></Route>
 
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>

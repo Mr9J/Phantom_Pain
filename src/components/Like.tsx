@@ -2,6 +2,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import type { Like } from "@/types/index";
 import { Link } from "react-router-dom";
+import HobbyList from "./HobbyList";
 
 
 
@@ -149,6 +150,7 @@ function Like() {
         </div>
   
       </body>
+      <HobbyList></HobbyList>
     </>
   );
 }
