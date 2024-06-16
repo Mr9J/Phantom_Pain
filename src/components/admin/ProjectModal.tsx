@@ -3,7 +3,6 @@ import { useUserContext } from "@/context/AuthContext";
 const ProjectModal = ({
   alterText,
   projectContext,
-  orderType,
   setVisibleProjectModal,
   handleFormSubmit,
   handleFileChange,
@@ -123,13 +122,12 @@ const ProjectModal = ({
                 </span>
                 <input
                   type="text"
-                  required
                   name="projectDescription"
                   defaultValue={alterText ? projectContext[3] : projectDemo[1]}
                   className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              {(orderType === 1 || orderType === 2) && !alterText && (
+              {alterText === true && projectContext[4] !== 3 && (
                 <div className="mb-3 flex items-center">
                   <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                     狀態
@@ -147,14 +145,16 @@ const ProjectModal = ({
                   </select>
                 </div>
               )}
-              {!alterText && (
-                <input
-                  type="hidden"
-                  required
-                  name="statusId"
-                  defaultValue="3"
-                />
-              )}
+              {/* 新建專案或待審核 */}
+              {alterText === false ||
+                (projectContext[4] === 3 && (
+                  <input
+                    type="hidden"
+                    required
+                    name="statusId"
+                    defaultValue="3"
+                  />
+                ))}
               <div className="mb-3 flex items-center">
                 <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                   募資目標

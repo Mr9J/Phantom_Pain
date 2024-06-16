@@ -176,16 +176,16 @@ const Projects = () => {
   const handleConfirmSubmit = () => {
     const url = visibleProductLg
       ? alterText
-        ? `endDate`
+        ? `${baseUrl}/product/${formData.id}`
         : `${baseUrl}/product`
       : alterText
       ? `${baseUrl}/project/${formData.id}`
       : `${baseUrl}/project`;
     const method = alterText ? "PUT" : "POST";
     //debug用
-    // console.log("URL:", url);
-    // console.log("Method:", method);
-    // console.log("Data being sent:", formData);
+    //console.log("URL:", url);
+    //console.log("Method:", method);
+    //console.log("Data being sent:", formData);
 
     fetch(url, {
       method: method,
@@ -844,7 +844,6 @@ const Projects = () => {
         <ProjectModal
           alterText={alterText}
           projectContext={projectContext}
-          orderType={orderType}
           setVisibleProjectModal={setvisibleProjectModal}
           handleFormSubmit={handleFormSubmit}
           handleFileChange={handleFileChange}

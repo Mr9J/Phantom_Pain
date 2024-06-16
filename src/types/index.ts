@@ -1,7 +1,7 @@
 import { LucideProps } from "lucide-react";
 import react from "react";
 import { string } from "zod";
-import { MemberDTO} from "@/types/index";
+import { MemberDTO } from "@/types/index";
 
 export type SignUpDTO = {
   nickname: string;
@@ -71,7 +71,7 @@ export type OrderProject = {
   statusId: number;
   orderCount: number;
   sponsorCount: number;
-  projectDescription :string;
+  projectDescription: string;
   isEdit?: boolean;
 };
 
@@ -86,8 +86,8 @@ export type ProjectCardDTO = {
   projectId: number;
   projectName: string;
   projectGoal: number;
-  startDate:string;
-  endDate:string;
+  startDate: string;
+  endDate: string;
   dayLeft: number;
   thumbnail: string;
   totalAmount: number;
@@ -96,7 +96,7 @@ export type ProjectCardDTO = {
 export type ProjectDTO = {
   projectId: number;
   projectName: string;
-  ProjectDescription: string;
+  projectDescription: string;
   projectGoal: number;
   startDate: number;
   endDate: number;
@@ -105,6 +105,7 @@ export type ProjectDTO = {
   thumbnail: string;
   totalAmount: number;
   statusId: number;
+  products: ProductDTO[];
 };
 export type filteredProjects = ProjectDTO;
 export type ProjectCount = number[];
@@ -121,7 +122,7 @@ export type MemberDTO = {
   phone: number;
   registrationTime: string;
   statusId: number;
-  groupDetail:{authStatusId:number};
+  groupDetail: { authStatusId: number };
 };
 
 export type PostDTO = {
@@ -178,15 +179,28 @@ export type ICommentPost = {
   userId: string;
   comment: string;
 };
-export type Like ={
-  likePrjName:string;
-  likePrjThumb:string;
-  likePrjId:number;
-  likeDetailId:number;
-}
+export type Like = {
+  likePrjName: string;
+  likePrjThumb: string;
+  likePrjId: number;
+  likeDetailId: number;
+};
 
 export type PostImageDTO = {
   file: File[];
   projectId: string;
   productId: string;
+};
+
+export type ProductDTO = {
+  productId: number;
+  productName: string;
+  productDescription: string;
+  statusId: number;
+  productPrice: number;
+  initialStock: number;
+  currentStock: number;
+  startDate: string;
+  endDate: string;
+  thumbnail: string;
 };
