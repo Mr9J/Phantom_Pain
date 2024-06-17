@@ -19,10 +19,12 @@ const Test = ({ post, action }: PostFormProps) => {
   const { toast } = useToast();
   //const { user } = useUserContext();
   const [file, setFile] = useState<File | null>(null);
+  const [projectFile, setProjectFile] = useState<File | null>(null);
+  const [productFile, setProductFile] = useState<File | null>(null);
   const { mutateAsync: postImage, isPending } = usePostImage();
 
   const uploadFileHandler = async (mode: "project" | "product") => {
-    if (!file) {
+    if (!projectFile && !productFile) {
       toast({
         variant: "destructive",
         title: "錯誤",
@@ -36,7 +38,7 @@ const Test = ({ post, action }: PostFormProps) => {
         session = await postImage({
           //userId: user.id,
           file: [file],
-          projectId: "X0",
+          projectId: "X",
           productId: "",
         });
       } else if (mode === "product") {
@@ -78,7 +80,7 @@ const Test = ({ post, action }: PostFormProps) => {
         <FileUploader
           fieldChange={(files) => {
             if (files && files.length > 0) {
-              setFile(files[0]);
+              setProjectFile(files[0]);
             }
           }}
           mediaUrl={post ? post.imgUrl : ""}
@@ -90,17 +92,21 @@ const Test = ({ post, action }: PostFormProps) => {
         <FileUploader
           fieldChange={(files) => {
             if (files && files.length > 0) {
-              setFile(files[0]);
+              setProductFile(files[0]);
             }
           }}
           mediaUrl={post ? post.imgUrl : ""}
         />
         <Button
           onClick={() => {
-            uploadFileHandler("project");
-            uploadFileHandler("product");
+            if (projectFile) {
+              uploadFileHandler("project");
+            }
+            if (productFile) {
+              uploadFileHandler("product");
+            }
           }}
-          disabled={!file || isPending}
+          disabled={(!projectFile && !productFile) || isPending}
         >
           {isPending ? "上傳中..." : "上傳圖片"}
         </Button>
