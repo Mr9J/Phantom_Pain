@@ -37,13 +37,13 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { toast } = useToast();
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [comment, setComment] = useState("");
-  const [commentData, setCommentData] = useState([]);
+  const [commentData, setCommentData] = useState(null);
   const [visibleComments, setVisibleComments] = useState(5);
-  const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: commentPost, isPending: isCommentSubmitting } =
     useCommentPost();
@@ -70,10 +70,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   };
 
   const commentHandler = () => {
-    if (ref.current !== null) {
-      ref.current.classList.remove("hidden");
-      ref.current.classList.add("flex");
-    }
+    setIsCommentOpen(!isCommentOpen);
   };
 
   const commentSubmitHandler = async () => {
@@ -218,11 +215,12 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
         </Button>
       </div>
       <div
-        className="justify-start items-center mt-2 w-full hidden overflow-hidden"
-        ref={ref}
+        className={`justify-start items-center mt-2 w-full ${
+          isCommentOpen ? "flex" : "hidden"
+        } overflow-hidden`}
       >
         <ul>
-          {commentData === null ? (
+          {commentData ? (
             commentData.slice(0, visibleComments).map((com, index) => (
               <div className="flex items-start gap-4 mt-2 w-full" key={com.id}>
                 <img

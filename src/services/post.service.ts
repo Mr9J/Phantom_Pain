@@ -4,62 +4,16 @@ import {
   UpdatePostDTO,
   NewUpdatePostDTO,
   ICommentPost,
-  GetPostDTO,
 } from "@/types";
 import { S3 } from "@/config/R2";
-import { ListObjectsV2Command, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import axios from "axios";
 
 const URL = import.meta.env.VITE_API_URL;
-
-// export async function createPost(post: PostDTO) {
-//   try {
-//     const newPost: NewPostDTO = {
-//       caption: post.caption,
-//       location: post.location,
-//       tags: post.tags,
-//       file: post.id,
-//       userId: post.userId,
-//     };
-
-//     for (let index = 0; index < post.file.length; index++) {
-//       try {
-//         const img = post.file[index];
-//         const upload = await S3.send(
-//           new PutObjectCommand({
-//             Bucket: "mumu",
-//             Key: `Posts/${post.userId}/${post.id}/${index}.jpg`,
-//             Body: img,
-//             ContentType: "image/jpeg",
-//           })
-//         );
-
-//         if (upload.$metadata.httpStatusCode === 200) {
-//           if (index === post.file.length - 1) {
-//             newPost.file += `https://cdn.mumumsit158.com/Posts/${post.userId}/${post.id}/${index}.jpg`;
-//           } else {
-//             newPost.file += `https://cdn.mumumsit158.com/Posts/${post.userId}/${post.id}/${index}.jpg,`;
-//           }
-//         }
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     }
-
-//     const jwt = localStorage.getItem("token");
-//     if (!jwt) throw Error;
-
-//     const response = await axios.post(`${URL}/post/create-post`, newPost, {
-//       headers: { Authorization: jwt },
-//     });
-
-//     if (response.status !== 200) throw Error;
-
-//     return response.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
 
 export async function createPost(post: PostDTO) {
   try {
@@ -222,40 +176,35 @@ export async function updatePost(post: UpdatePostDTO) {
       caption: post.caption,
       location: post.location,
       tags: post.tags,
-      file: "",
+      file: post.id,
       userId: post.userId,
       postId: parseInt(post.postId),
     };
 
     if (isNewImg) {
-      for (let index = 0; index < post.file.length; index++) {
-        try {
-          const img = post.file[index];
+      updatePost.file = post.userId + "/" + Date.now().toString() + post.userId;
 
-          const upload = await S3.send(
+      const promises = post.file.map(async (img, index) => {
+        try {
+          await S3.send(
             new PutObjectCommand({
-              Bucket: "Tests",
-              Key: `${post.userId}/${post.id}/${index}.jpg`,
+              Bucket: "mumu",
+              Key: `Posts/${updatePost.file}/${index}.jpg`,
               Body: img,
               ContentType: "image/jpeg",
             })
           );
-
-          if (upload.$metadata.httpStatusCode === 200) {
-            if (index === post.file.length - 1) {
-              updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
-            } else {
-              updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
-            }
-          }
         } catch (error) {
-          console.error(error);
+          console.error(`Error uploading file ${index}:`, error);
         }
-      }
+      });
+
+      await Promise.all(promises);
     }
 
     const jwt = localStorage.getItem("token");
     if (!jwt) throw Error;
+
     const response = await axios.patch(
       `${URL}/post/update-post/${post.postId}`,
       updatePost,
@@ -319,6 +268,7 @@ export async function getCommentsPost(postId: string) {
     return res.data;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }
 
@@ -347,10 +297,13 @@ export async function getPostImg(imgUrl: string) {
       })
     );
 
+    if (imgArr.KeyCount === 0) throw Error;
+
     if (imgArr.$metadata.httpStatusCode !== 200) throw Error;
 
     return imgArr.Contents;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }

@@ -27,7 +27,7 @@ const Playground = () => {
       const res = await S3.send(
         new ListObjectsV2Command({
           Bucket: "mumu",
-          Prefix: "Projects/project-00/",
+          Prefix: "Projects/project-00",
         })
       );
 
