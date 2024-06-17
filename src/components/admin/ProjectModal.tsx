@@ -146,15 +146,14 @@ const ProjectModal = ({
                 </div>
               )}
               {/* 新建專案或待審核 */}
-              {alterText === false ||
-                (projectContext[4] === 3 && (
-                  <input
-                    type="hidden"
-                    required
-                    name="statusId"
-                    defaultValue="3"
-                  />
-                ))}
+              {(alterText === false || projectContext[4] === 3) && (
+                <input
+                  type="hidden"
+                  required
+                  name="statusId"
+                  defaultValue="3"
+                />
+              )}
               <div className="mb-3 flex items-center">
                 <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                   募資目標
