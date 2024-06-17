@@ -303,9 +303,9 @@ export async function postImage(post: PostImageDTO) {
         let key;
         if (post.projectId.length > 0) {
           if (post.productId.length > 0) {
-            key = `project-${post.projectId}/product-${post.productId}.png`;
+            key = `project-${post.projectId}/product-${post.productId}.jpg`;
           } else {
-            key = `project-${post.projectId}/Thumbnail.png`;
+            key = `project-${post.projectId}/Thumbnail.jpg`;
           }
         }
         const upload = await S3.send(
@@ -320,9 +320,9 @@ export async function postImage(post: PostImageDTO) {
         if (upload.$metadata.httpStatusCode === 200) {
           let imageUrl = "";
           if (post.productId.length > 0) {
-            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/product-${post.productId}.png`;
+            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/product-${post.productId}.jpg`;
           } else {
-            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/Thumbnail.png`;
+            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/Thumbnail.jpg`;
           }
           imageUrls.push(imageUrl);
           console.log(imageUrl);
