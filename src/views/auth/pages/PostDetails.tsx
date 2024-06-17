@@ -1,5 +1,6 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
+  useDeletePost,
   useGetPostById,
   useGetPostImg,
 } from "@/lib/react-query/queriesAndMutation";
@@ -16,16 +17,59 @@ import { FilePenLineIcon, TrashIcon } from "lucide-react";
 import { useUserContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import PostStats from "@/components/shared/PostStats";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const PostDetails = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
+  const { toast } = useToast();
   const { data: post, isPending } = useGetPostById(id || "");
   const { data: postImg, isPending: isPostImgLoading } = useGetPostImg(
     post?.imgUrl
   );
+  const { mutateAsync: deletePost, isPending: isDeletingPost } =
+    useDeletePost();
   const { user } = useUserContext();
 
-  const handleDeletePost = () => {};
+  const handleDeletePost = async () => {
+    const session = await deletePost(post?.postId);
+
+    if (session === "找不到該貼文或權限不足") {
+      toast({
+        variant: "destructive",
+        title: "錯誤",
+        description: "找不到該貼文或權限不足",
+      });
+
+      return;
+    }
+
+    if (!session) {
+      toast({
+        variant: "destructive",
+        title: "錯誤",
+        description: "刪除失敗，請再試一次。",
+      });
+
+      return;
+    }
+
+    toast({
+      title: "刪除成功",
+      description: "您的貼文已經成功刪除！",
+      action: (
+        <ToastAction
+          altText="success"
+          onClick={() => {
+            navigate("/social");
+          }}
+        >
+          查看
+        </ToastAction>
+      ),
+    });
+  };
 
   return (
     <div className="flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar items-center">
@@ -35,8 +79,10 @@ const PostDetails = () => {
         <div className="bg-slate-50 dark:bg-dark-2 w-full max-w-5xl rounded-[30px] flex-col flex xl:flex-row border dark:border-dark-4 border-slate-200 xl:rounded-l-[24px]">
           <Carousel className="h-80 lg:h-[480px] xl:w-[48%] rounded-t-[30px] xl:rounded-l-[24px] xl:rounded-tr-none flex">
             <CarouselContent>
-              {postImg &&
-                postImg.map((img, index) => {
+              {isPostImgLoading ? (
+                <LoaderSvg />
+              ) : (
+                postImg?.map((img, index) => {
                   return (
                     <CarouselItem key={index}>
                       <div className="p-1">
@@ -52,7 +98,8 @@ const PostDetails = () => {
                       </div>
                     </CarouselItem>
                   );
-                })}
+                })
+              )}
             </CarouselContent>
           </Carousel>
           <div className="dark:bg-dark-2 bg-slate-50 flex flex-col gap-5 lg:gap-7 flex-1 items-start p-8 rounded-[30px]">
@@ -85,16 +132,17 @@ const PostDetails = () => {
               </Link>
               <div className="flex justify-center items-center">
                 <Link
-                  to={`/update-post/${post.postId}`}
-                  className={`${user.id !== post.userId && "hidden"}`}
+                  to={`/update-post/${post?.postId}`}
+                  className={`${user.id !== post?.userId && "hidden"}`}
                 >
                   <FilePenLineIcon width={24} height={24} />
                 </Link>
                 <Button
                   onClick={handleDeletePost}
                   variant="ghost"
+                  disabled={isDeletingPost}
                   className={`${
-                    user.id !== post.userId && "hidden"
+                    user.id !== post?.userId && "hidden"
                   } ghost_details-delete_btn`}
                 >
                   <TrashIcon stroke="red" width={24} height={24} />

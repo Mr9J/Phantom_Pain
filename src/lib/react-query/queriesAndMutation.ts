@@ -1,3 +1,5 @@
+import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutation";
+import { data } from "autoprefixer";
 import {
   OuterSignIn,
   SignInDTO,
@@ -5,10 +7,12 @@ import {
   PostDTO,
   UpdatePostDTO,
   ICommentPost,
+  SearchTerm,
 } from "@/types";
 import {
   changeEmail,
   checkAdmin,
+  getMemberById,
   resendEmail,
   resetPassword,
   sendResetEmail,
@@ -16,18 +20,21 @@ import {
   signInWithOthers,
   signUp,
 } from "@/services/auth.service";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   commentPost,
   createPost,
   deletePost,
   getCommentsPost,
+  getInfinitePosts,
   getPostById,
   getPostImg,
+  getRecent3Posts,
   getRecentPosts,
   getSavedPosts,
   likePost,
   savePost,
+  searchPosts,
   updatePost,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
@@ -160,5 +167,29 @@ export const useGetPostImg = (imgUrl: string) => {
   return useQuery({
     queryKey: ["postPhoto", imgUrl],
     queryFn: () => getPostImg(imgUrl),
+  });
+};
+
+export const useSearchPosts = (searchTerm: SearchTerm) => {
+  return useQuery({
+    queryKey: ["searchPosts", searchTerm],
+    queryFn: () => searchPosts(searchTerm),
+    enabled: !!searchTerm,
+  });
+};
+
+export const useGetMemberById = (id: string) => {
+  return useQuery({
+    queryKey: ["memberById", id],
+    queryFn: () => getMemberById(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetRecent3Posts = (id: string) => {
+  return useQuery({
+    queryKey: ["recent3Posts", id],
+    queryFn: () => getRecent3Posts(id),
+    enabled: !!id,
   });
 };

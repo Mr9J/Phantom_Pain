@@ -70,30 +70,30 @@ const PostCard = ({ post }: PostCardProps) => {
           </ul>
         </div>
       </Link>
-      <Carousel>
+
+      <Carousel className="max-w-screen-sm md:w-full w-[350px]">
         <CarouselContent>
-          {postImg &&
-            postImg.map((img, index) => {
-              return (
-                <CarouselItem key={index}>
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <img
-                          src={`https://cdn.mumumsit158.com/${img.Key}`}
-                          alt="post"
-                          className="object-cover select-none"
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              );
-            })}
+          {postImg?.map((img, index) => {
+            return (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center">
+                      <img
+                        src={`https://cdn.mumumsit158.com/${img.Key}`}
+                        alt="post"
+                        className="object-cover select-none"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
       </Carousel>
 
-      <PostStats post={post} userId={user.id} />
+      <PostStats post={post} userId={user.id} commentDisplay={true} />
     </div>
   );
 };

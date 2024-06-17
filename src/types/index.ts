@@ -198,3 +198,8 @@ export type Project = {
   projectThumbnail: string;
   projectStatusId: number;
 };
+
+export type SearchTerm = {
+  keyword: string;
+  type: string;
+};

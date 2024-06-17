@@ -4,6 +4,7 @@ import {
   UpdatePostDTO,
   NewUpdatePostDTO,
   ICommentPost,
+  SearchTerm,
 } from "@/types";
 import { S3 } from "@/config/R2";
 import {
@@ -97,6 +98,9 @@ export async function likePost(postId: string, userId: string) {
 
 export async function likePostCheck(postId: string, userId: string) {
   try {
+    if (postId === "" || userId === "")
+      throw Error("postId or userId is empty");
+
     const jwt = localStorage.getItem("token");
 
     const res = await axios.get(
@@ -116,6 +120,9 @@ export async function likePostCheck(postId: string, userId: string) {
 
 export async function savePostCheck(postId: string, userId: string) {
   try {
+    if (postId === "" || userId === "")
+      throw Error("postId or userId is empty");
+
     const jwt = localStorage.getItem("token");
 
     const res = await axios.get(
@@ -154,6 +161,8 @@ export async function savePost(postId: string, userId: string) {
 
 export async function getPostById(postId: string) {
   try {
+    if (postId === "") throw Error("postId is empty");
+
     const jwt = localStorage.getItem("token");
 
     const res = await axios.get(`${URL}/Post/get-post/${postId}`, {
@@ -305,5 +314,37 @@ export async function getPostImg(imgUrl: string) {
   } catch (error) {
     console.error(error);
     return null;
+  }
+}
+
+export async function searchPosts(searchTerm: SearchTerm) {
+  try {
+    console.log("searchTerm", searchTerm);
+
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const posts = await axios.post(`${URL}/Post/search-posts`, searchTerm, {
+      headers: { Authorization: jwt },
+    });
+
+    if (posts.status !== 200) throw Error;
+
+    return posts.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getRecent3Posts(id: string) {
+  try {
+    const data = await axios.get(`${URL}/Post/get-recent-posts/${id}`);
+
+    if (data.status !== 200) throw Error;
+
+    return data.data;
+  } catch (error) {
+    console.error(error);
   }
 }

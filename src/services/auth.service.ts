@@ -192,3 +192,15 @@ export async function checkAdmin() {
     console.error(error);
   }
 }
+
+export async function getMemberById(id: string) {
+  try {
+    const res = await axios.get(`${URL}/Member/get-member-by-id/${id}`);
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
