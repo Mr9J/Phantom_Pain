@@ -4,6 +4,7 @@ import {
   UpdatePostDTO,
   NewUpdatePostDTO,
   ICommentPost,
+  PostImageDTO,
 } from "@/types";
 import { S3 } from "@/config/R2";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
@@ -289,5 +290,51 @@ export async function getSavedPosts(page: number) {
     return res.data;
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function postImage(post: PostImageDTO) {
+  try {
+    const imageUrls: string[] = [];
+
+    for (let index = 0; index < post.file.length; index++) {
+      try {
+        const img = post.file[index];
+        let key;
+        if (post.projectId.length > 0) {
+          if (post.productId.length > 0) {
+            key = `project-${post.projectId}/product-${post.productId}.png`;
+          } else {
+            key = `project-${post.projectId}/Thumbnail.png`;
+          }
+        }
+        const upload = await S3.send(
+          new PutObjectCommand({
+            Bucket: "Projects",
+            Key: key,
+            Body: img,
+            ContentType: "image/jpeg",
+          })
+        );
+
+        if (upload.$metadata.httpStatusCode === 200) {
+          let imageUrl = "";
+          if (post.productId.length > 0) {
+            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/product-${post.productId}.png`;
+          } else {
+            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/Thumbnail.png`;
+          }
+          imageUrls.push(imageUrl);
+          console.log(imageUrl);
+        }
+      } catch (error) {
+        console.error(`Failed to upload image ${index}:`, error);
+      }
+    }
+
+    return imageUrls;
+  } catch (error) {
+    console.error("Failed to upload images:", error);
+    throw error;
   }
 }

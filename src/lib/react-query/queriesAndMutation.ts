@@ -5,6 +5,7 @@ import {
   PostDTO,
   UpdatePostDTO,
   ICommentPost,
+  PostImageDTO,
 } from "@/types";
 import {
   changeEmail,
@@ -28,6 +29,7 @@ import {
   likePost,
   savePost,
   updatePost,
+  postImage,
 } from "@/services/post.service";
 
 export const useCreateUserAccount = () => {
@@ -144,5 +146,11 @@ export const useResendEmail = () => {
 export const useCheckAdmin = () => {
   return useMutation({
     mutationFn: () => checkAdmin(),
+  });
+};
+
+export const usePostImage = () => {
+  return useMutation({
+    mutationFn: (x: PostImageDTO) => postImage(x),
   });
 };
