@@ -38,7 +38,7 @@ function CartPage() {
     // let totalAmount = 0;
     const navigate = useNavigate();
 
-    useEffect(() => {
+    // useEffect(() => {
         // const authenticateAndFetchCart = async () => {
         //     const res = await checkAuthUser();
         //     setIsAuth(res);
@@ -53,7 +53,7 @@ function CartPage() {
         // }
         // }
         // authenticateAndFetchCart();
-    }, []);
+    // }, []);
 
 
     useLayoutEffect(()=>{
@@ -142,12 +142,12 @@ function CartPage() {
                             let totalAmount = 0; 
                             return (
                                 <div key={item.projectId} className="w-full">                               
-                                    <div className="border-spacing-8 mx-7 my-6">
+                                    <a className="border-spacing-8 mx-7 my-6" href={`/project/${item.projectId}`}>
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         {item.projectName}
                                         
                                     
-                                    </div>
+                                    </a>
                                     <br></br>
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
@@ -168,7 +168,7 @@ function CartPage() {
                 <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
             )}
             <span className="font-bold">{product.count}</span>
-            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
+            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() =>product.count==product.currentStock?"": handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
         </div>
         <div className="grow h-14">
   </div>

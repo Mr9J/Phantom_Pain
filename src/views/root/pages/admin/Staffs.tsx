@@ -76,7 +76,7 @@ const Staffs: React.FC = () => {
 
   //Modal
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    // event.preventDefault(); // 阻止表單默認的提交行為
+    event.preventDefault(); // 阻止表單默認的提交行為
     const formData = new FormData(event.currentTarget); // 收集表單數據
 
     const jsonData: FormDataObject = {};
@@ -110,6 +110,7 @@ const Staffs: React.FC = () => {
       .then((data) => {
         console.log("成功提交數據：", data);
         setBanMemberModal(false); // 確認表單
+        window.location.reload();
       })
       .catch((error) => {
         console.error("提交數據時發生錯誤：", error);
