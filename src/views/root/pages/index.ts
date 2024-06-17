@@ -11,6 +11,7 @@ import Orders from "./manufacturer/Orders";
 import OrderList from "./manufacturer/OrderList";
 import Remind from "./manufacturer/Remind";
 import Test from "./manufacturer/Test";
+import Coupons from "./manufacturer/Coupons";
 
 import AdminProjects from "./admin/Projects";
 import AdminStaffs from "./admin/Staffs";
@@ -30,4 +31,5 @@ export {
   AdminProjects,
   AdminStaffs,
   Test,
+  Coupons,
 };

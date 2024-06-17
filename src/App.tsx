@@ -18,6 +18,7 @@ import {
   AdminStaffs,
   Users,
   Test,
+  Coupons,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -72,8 +73,8 @@ const App = () => {
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:userId" element={<Users />} />
-            <Route path="/project/:pid" element={<ProjectInfo />} /> 
-           
+            <Route path="/project/:pid" element={<ProjectInfo />} />
+
             <Route
               path="/SearchProject"
               element={<SearchProject input={input} setInput={setInput} />}
@@ -96,8 +97,7 @@ const App = () => {
           </Route>
           {/* public routes */}
           {/* private routes */}
-          <Route element={<LoggedInLayout />}> 
-         
+          <Route element={<LoggedInLayout />}>
             <Route
               path="/email-verify/:username/:Eid/*"
               element={<EmailVerify />}
@@ -115,15 +115,17 @@ const App = () => {
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
 
-          <Route element={<AuthDefaultLayout input={input} setInput={setInput}  />}>
-            <Route path="/Like" element={<Like />} />  
+          <Route
+            element={<AuthDefaultLayout input={input} setInput={setInput} />}
+          >
+            <Route path="/Like" element={<Like />} />
             <Route path="/Productpage/:pid" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} /> 
+            <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
-           
           </Route>
 
           <Route element={<ManuLayout />}>
+            <Route path="/manu/coupons" element={<Coupons />} />
             <Route path="/manu/test" element={<Test />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
