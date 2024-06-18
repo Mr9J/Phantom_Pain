@@ -35,7 +35,7 @@ const LeftSidebar = () => {
             className="h-16 w-16 rounded-full"
           />
           <div className="flex flex-col">
-            <p className="text-[18px] font-bold leading-[140%]">
+            <p className="text-[18px] font-bold leading-[140%] max-w-[200px] overflow-hidden">
               {user.nickname}
             </p>
             <p className="text-[14px] font-normal leading-[140%]">

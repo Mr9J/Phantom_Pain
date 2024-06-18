@@ -9,11 +9,13 @@ import {
   ICommentPost,
   SearchTerm,
   PostImageDTO,
+  IUpdateUserProfile,
 } from "@/types";
 import {
   changeEmail,
   checkAdmin,
   getMemberById,
+  getMemberProfile,
   getMemberSponsored,
   resendEmail,
   resetPassword,
@@ -21,6 +23,7 @@ import {
   signIn,
   signInWithOthers,
   signUp,
+  updateMemberProfile,
 } from "@/services/auth.service";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -190,13 +193,13 @@ export const useGetMemberById = (id: string) => {
   });
 };
 
-export const useGetRecent3Posts = (id: string) => {
-  return useQuery({
-    queryKey: ["recent3Posts", id],
-    queryFn: () => getRecent3Posts(id),
-    enabled: !!id,
-  });
-};
+// export const useGetRecent3Posts = (id: string) => {
+//   return useQuery({
+//     queryKey: ["recent3Posts", id],
+//     queryFn: () => getRecent3Posts(id),
+//     enabled: !!id,
+//   });
+// };
 
 export const useGetPostsById = (id: string) => {
   return useQuery({
@@ -217,5 +220,19 @@ export const useGetMemberSponsored = (id: string) => {
 export const usePostImage = () => {
   return useMutation({
     mutationFn: (x: PostImageDTO) => postImage(x),
+  });
+};
+
+export const useGetMemberProfile = (id: string) => {
+  return useQuery({
+    queryKey: ["memberProfile", id],
+    queryFn: () => getMemberProfile(id),
+    enabled: !!id,
+  });
+};
+
+export const useUpdataUserProfile = () => {
+  return useMutation({
+    mutationFn: (profile: IUpdateUserProfile) => updateMemberProfile(profile),
   });
 };

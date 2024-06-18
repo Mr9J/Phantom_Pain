@@ -25,15 +25,6 @@ type likePostCheckType = {
   isLiked: string;
 };
 
-// type CommentData = {
-//   postId: string;
-//   userId: string;
-//   commentd: string;
-//   time: string;
-//   username: string;
-//   userImg: string;
-// };
-
 const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
@@ -185,10 +176,16 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={likeHandler}
-              className="cursor-pointer dark:text-white"
+              className={`cursor-pointer  ${
+                commentDisplay ? "dark:text-white" : "text-white"
+              }`}
             />
           )}
-          <p className="text-[14px] font-medium leading-[140%] lg:text-[16px]">
+          <p
+            className={`text-[14px] font-medium leading-[140%] lg:text-[16px] ${
+              !commentDisplay && "text-white"
+            }`}
+          >
             {likeCount}
           </p>
         </div>
@@ -208,7 +205,9 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={savePostHandler}
-              className="cursor-pointer dark:text-white"
+              className={`cursor-pointer  ${
+                commentDisplay ? "dark:text-white" : "text-white"
+              }`}
             />
           )}
         </div>

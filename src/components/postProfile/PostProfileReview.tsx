@@ -23,8 +23,8 @@ const PostProfileReview = ({ id }: PostProfileReviewProps) => {
           <h2 className="text-[24px] font-bold leading-[140%] tracking-tighte md:text-[30px] text-left w-full">
             使用者貼文
           </h2>
-          {isPending && !posts ? (
-            <LoaderSvg />
+          {posts?.length === 0 ? (
+            <h2 className="text-2xl">沒有任何貼文...</h2>
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full">
               {posts?.map((post: GetPostDTO) => (
