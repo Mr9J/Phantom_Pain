@@ -201,6 +201,11 @@ export type Project = {
   projectGroupId: number;
   projectThumbnail: string;
   projectStatusId: number;
+}
+
+export type Hobby={
+  hobbyId:number;
+  hobbyName:string;
 };
 
 export type SearchTerm = {
