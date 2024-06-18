@@ -1,3 +1,5 @@
+import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutation";
+import { data } from "autoprefixer";
 import {
   OuterSignIn,
   SignInDTO,
@@ -5,11 +7,14 @@ import {
   PostDTO,
   UpdatePostDTO,
   ICommentPost,
+  SearchTerm,
   PostImageDTO,
 } from "@/types";
 import {
   changeEmail,
   checkAdmin,
+  getMemberById,
+  getMemberSponsored,
   resendEmail,
   resetPassword,
   sendResetEmail,
@@ -17,20 +22,26 @@ import {
   signInWithOthers,
   signUp,
 } from "@/services/auth.service";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   commentPost,
   createPost,
   deletePost,
   getCommentsPost,
+  getInfinitePosts,
   getPostById,
+  getPostImg,
+  getPostsById,
+  getRecent3Posts,
   getRecentPosts,
   getSavedPosts,
   likePost,
   savePost,
+  searchPosts,
   updatePost,
   postImage,
 } from "@/services/post.service";
+import { getUserInfo } from "@/services/members.service";
 
 export const useCreateUserAccount = () => {
   return useMutation({
@@ -92,7 +103,7 @@ export const useSavePost = () => {
 
 export const useGetPostById = (postId: string) => {
   return useQuery({
-    queryKey: [postId],
+    queryKey: ["GetPostById", postId],
     queryFn: () => getPostById(postId),
     enabled: !!postId,
   });
@@ -146,6 +157,60 @@ export const useResendEmail = () => {
 export const useCheckAdmin = () => {
   return useMutation({
     mutationFn: () => checkAdmin(),
+  });
+};
+
+export const useGetUserInfo = (id: string) => {
+  return useQuery({
+    queryKey: ["userInfo", id],
+    queryFn: () => getUserInfo(id),
+  });
+};
+
+export const useGetPostImg = (imgUrl: string) => {
+  return useQuery({
+    queryKey: ["postPhoto", imgUrl],
+    queryFn: () => getPostImg(imgUrl),
+  });
+};
+
+export const useSearchPosts = (searchTerm: SearchTerm) => {
+  return useQuery({
+    queryKey: ["searchPosts", searchTerm],
+    queryFn: () => searchPosts(searchTerm),
+    enabled: !!searchTerm,
+  });
+};
+
+export const useGetMemberById = (id: string) => {
+  return useQuery({
+    queryKey: ["memberById", id],
+    queryFn: () => getMemberById(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetRecent3Posts = (id: string) => {
+  return useQuery({
+    queryKey: ["recent3Posts", id],
+    queryFn: () => getRecent3Posts(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetPostsById = (id: string) => {
+  return useQuery({
+    queryKey: ["postsById", id],
+    queryFn: () => getPostsById(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetMemberSponsored = (id: string) => {
+  return useQuery({
+    queryKey: ["memberSponsored", id],
+    queryFn: () => getMemberSponsored(id),
+    enabled: !!id,
   });
 };
 
