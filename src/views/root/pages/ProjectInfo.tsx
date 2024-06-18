@@ -222,7 +222,7 @@ function ProjectInfo() {
             </div>
 
             {/* 收藏/贊助按鈕 */}
-            <div className="px-4 py-3 text-center w-full flex  lg:static bottom-0 z-50 fixed lg:px-0">
+            <div className="px-4 py-3 text-center w-full flex  lg:static bottom-0 z-50 lg:z-0 fixed lg:px-0">
               <div
                 className="p-2 inline-block cursor-pointer flex-initial mr-2 transition-transform hover:scale-105 focus:scale-105 active:scale-90 text-blue-900 border-2 border-current rounded tooltip tooltip-l"
                 data-method="post"

@@ -14,5 +14,19 @@ export type typeComment = {
   commentId: number;
   commentMsg: string;
   date: string;
+  sender: typeMember;
+};
+
+export type typeCommentDto = {
+  commentId?: number;
+  date?: string;
+  commentMsg: string;
+  memberId: number;
+  projectId: number;
+  member: typeMember;
+};
+
+export type typeMember = {
   username: string;
+  thumbnail: string;
 };
