@@ -5,7 +5,7 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
-import { typeComment, typeCommentDto } from "./types";
+import { typeComment, typeCommentDto, typeMember } from "./types";
 import connection from "./signalrService";
 
 function TabComments() {
@@ -25,24 +25,32 @@ function TabComments() {
     setInput("");
   };
 
-  const fetchMember = async (memberId: number) => {
+  const fetchMember = async (memberId: number): Promise<typeMember> => {
     const res = await axios.get(`${URL}/ProjectInfo/Member`, {
       params: {
         memberId,
       },
     });
-    console.log(res.data);
-    return res.data;
+    const member: typeMember = res.data;
+    console.log(member);
+    return member;
   };
   const handleReceivedComment = async (data: typeCommentDto) => {
     const receivedComment: typeComment = {
       commentId: data.commentId!,
       commentMsg: data.commentMsg,
       date: data.date!,
-      username: (await fetchMember(data.memberId)).username,
-      userThumbnail: (await fetchMember(data.memberId)).thumbnail,
+      user: data.user,
     };
     setComments((preComments) => [...preComments, receivedComment]);
+  };
+  const DtoToComment = (data: typeCommentDto): typeComment => {
+    return {
+      commentId: data.commentId!,
+      commentMsg: data.commentMsg,
+      date: data.date!,
+      sender: data.member,
+    };
   };
 
   useEffect(() => {
@@ -52,8 +60,12 @@ function TabComments() {
           projectId: 100,
         },
       });
-      console.log(fetchMember(1));
-      setComments(res.data);
+
+      const comments = res.data.map((data: typeCommentDto) =>
+        DtoToComment(data)
+      );
+      console.log(comments);
+      setComments(comments);
     })();
 
     // 註冊接收訊息事件
@@ -91,21 +103,21 @@ function TabComments() {
       </div>
 
       <div className=" mx-auto mt-10 p-4   rounded-lg shadow-lg space-y-4">
-        {comments.map((item) => (
-          <div key={item.commentId} className="border-b border-gray-700 pb-4">
+        {comments.map((c) => (
+          <div key={c.commentId} className="border-b border-gray-700 pb-4">
             <div className="flex items-center mb-2">
               <div className=" w-8 h-8 mr-3">
                 <Avatar>
-                  <AvatarImage src={"/src/assets/admin_img/mygo/6.jpg"} />
-                  <AvatarFallback>{user.nickname[0]}</AvatarFallback>
+                  <AvatarImage src={c.sender.thumbnail} />
+                  <AvatarFallback>{c.sender.username}</AvatarFallback>
                 </Avatar>
               </div>
               <div>
-                <p className="font-bold">comment.username</p>
-                <p className="text-xs ">{DateTimeToString(item.date)}</p>
+                <p className="font-bold">{c.sender.username}</p>
+                <p className="text-xs ">{DateTimeToString(c.date)}</p>
               </div>
             </div>
-            <p>{item.commentMsg}</p>
+            <p>{c.commentMsg}</p>
           </div>
         ))}
       </div>

@@ -14,8 +14,7 @@ export type typeComment = {
   commentId: number;
   commentMsg: string;
   date: string;
-  username: string;
-  userThumbnail: string;
+  sender: typeMember;
 };
 
 export type typeCommentDto = {
@@ -24,4 +23,10 @@ export type typeCommentDto = {
   commentMsg: string;
   memberId: number;
   projectId: number;
+  member: typeMember;
+};
+
+export type typeMember = {
+  username: string;
+  thumbnail: string;
 };
