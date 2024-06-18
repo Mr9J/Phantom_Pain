@@ -238,16 +238,19 @@ const ServiceAdmin = () => {
 
   // SignalR 連接與訊息處理
   useEffect(() => {
-    connection.on('ReceiveMessage', (message: Message) => {
+    connection.on('ReceiveMessage', async (message: Message) => {
       console.log("Received message via SignalR:", message);  // Log received message
-      setMessages(prevMessages => {
-        // 確保 timestamp 是 Date 類型
-        const newMessage = {
-          ...message,
-          timestamp: new Date(message.timestamp)
-        };
-        return [...prevMessages, newMessage];
-      });
+
+      // 檢查訊息的 memberId 是否與當前選中的用戶匹配
+      if (selectedCustomerId === message.memberId) {
+        setMessages(prevMessages => {
+          const newMessage = {
+            ...message,
+            timestamp: new Date(message.timestamp)
+          };
+          return [...prevMessages, newMessage];
+        });
+      }
 
       setCustomers(prevCustomers => {
         const updatedCustomers = prevCustomers.map(customer =>
@@ -255,18 +258,31 @@ const ServiceAdmin = () => {
             ...customer,
             lastMessage: message.content,
             lastMessageDate: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            messageDate: new Date(message.timestamp).toISOString()
+            messageDate: new Date(message.timestamp).toISOString(),
+            unreadMessages: customer.id === selectedCustomerId ? 0 : customer.unreadMessages + 1
           } : customer
         );
 
         return updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime());
       });
+
+      // 如果當前選中的用戶是訊息的發送者，標記為已讀
+      if (selectedCustomerId === message.memberId) {
+        try {
+          await markMessagesAsRead(message.memberId);
+          setCustomers(prevCustomers => prevCustomers.map(customer =>
+            customer.id === message.memberId ? { ...customer, unreadMessages: 0 } : customer
+          ));
+        } catch (error) {
+          console.error('Failed to mark messages as read', error);
+        }
+      }
     });
 
     return () => {
       connection.off('ReceiveMessage');
     };
-  }, [customers]);
+  }, [customers, selectedCustomerId]);
 
   return (
     <div className="service-admin-container">

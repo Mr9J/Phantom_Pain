@@ -5,7 +5,16 @@ import ChatFooter from '@/components/service/chatfooter';
 import FAQComponent from '@/components/service/FAQComponents';
 import { Message } from '@/components/service/types';
 import '@/components/service/service.css';
-import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, getMembersNicknames, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
+import {
+  getServicesByMemberId,
+  getServiceMessages,
+  createServiceMessage,
+  createService,
+  closeService,
+  getMembersNicknames,
+  ServiceDTO,
+  ServiceMessageDTO,
+} from '@/components/service/serviceApi';
 import { useUserContext } from '@/context/AuthContext';
 import connection from '@/components/service/SignalR';
 
@@ -51,7 +60,7 @@ const Service: React.FC = () => {
         id: 0,
         serviceId: 0,
         memberId: 0,
-        content: `${nickname} 廠商您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊 您可以先瀏覽常見問題，如果還有疑問，請留言給我們的客服團隊！`,
+        content: `${nickname} 廠商您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務。您可以先點擊常見問答，如果仍有疑問，請留言，我們的真人客服將為您提供進一步的幫助！😊`,
         timestamp: new Date(),
         sender: 'admin'
       };
@@ -242,7 +251,9 @@ const Service: React.FC = () => {
     if (serviceId !== null) {
       const handleReceiveMessage = (message: Message) => {
         console.log("Message received from SignalR:", message);
-        setMessages(prevMessages => [...prevMessages, message]);
+        if (message.serviceId === serviceId) {
+          setMessages(prevMessages => [...prevMessages, message]);
+        }
       };
 
       connection.on('ReceiveMessage', handleReceiveMessage);
@@ -256,36 +267,46 @@ const Service: React.FC = () => {
   const generateUniqueId = (): number => {
     const timestamp = Date.now();
     const randomNum = Math.floor(Math.random() * 1000); // 生成一個0到999之間的隨機數
-    return Number(`${timestamp}${randomNum}`);
+    return parseInt(`${timestamp}${randomNum}`, 10);
   };
-  
-  const handleFAQClick = (answer: string) => {
+
+  const handleFAQClick = (question: string, answer: string) => {
     if (serviceId && memberId) {
       console.log("FAQ answer clicked:", answer);
+      const questionMessage: Message = {
+        id: generateUniqueId(),
+        serviceId: serviceId,
+        memberId: memberId,
+        content: question,
+        timestamp: new Date(),
+        sender: 'user'
+      };
       const faqMessage: Message = {
         id: generateUniqueId(),
         serviceId: serviceId,
         memberId: memberId,
-        content: answer,
+        content: `${question}: ${answer}`,
         timestamp: new Date(),
         sender: 'admin'
       };
       console.log("Adding FAQ message:", faqMessage);
-  
-      // 更新訊息列表
-      setMessages(prevMessages => [...prevMessages, faqMessage]);
-  
-      // 只在這裡進行 SignalR 發送
-      connection.invoke("SendMessage", faqMessage)
-        .then(() => {
-          console.log("Message sent via SignalR:", faqMessage);
-        })
-        .catch(err => {
-          console.error(err.toString());
-        });
+
+      // 更新訊息列表，立即添加問題
+      setMessages(prevMessages => [...prevMessages, questionMessage]);
+
+      // 延遲一秒後添加答案
+      setTimeout(() => {
+        setMessages(prevMessages => [...prevMessages, faqMessage]);
+        connection.invoke("SendMessage", faqMessage)
+          .then(() => {
+            console.log("Message sent via SignalR:", faqMessage);
+          })
+          .catch(err => {
+            console.error(err.toString());
+          });
+      }, 1000);
     }
   };
-  
 
   return (
     <div className="service-chat-container">

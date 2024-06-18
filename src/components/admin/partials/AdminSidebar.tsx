@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { signOutNative } from "@/services/auth.service";
 import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
+import { getUnreadCount } from '@/components/service/serviceApi'; // 確保這裡正確導入
 
 function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
@@ -19,12 +20,15 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
     storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
   );
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const signOutHandler = () => {
     signOutNative();
     signOut(auth);
     navigate("/");
     window.location.reload();
   };
+  
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
@@ -59,6 +63,22 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
       document.querySelector("body").classList.remove("sidebar-expanded");
     }
   }, [sidebarExpanded]);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const response = await getUnreadCount();
+        setUnreadCount(response.data);
+      } catch (error) {
+        console.error('Failed to fetch unread messages count', error);
+      }
+    };
+
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 1000); // 每分鐘刷新一次
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div>
@@ -284,7 +304,7 @@ function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                     {/* Badge */}
                     <div className="flex flex-shrink-0 ml-2">
                       <span className="inline-flex items-center justify-center h-5 text-xs font-medium text-white bg-indigo-500 px-2 rounded">
-                        4
+                        {unreadCount}
                       </span>
                     </div>
                   </div>
