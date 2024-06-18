@@ -5,59 +5,52 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
-import { typeComment, typeCommentDto, typeMember } from "./types";
+import { typeComment, typeCommentDto } from "./types";
 import connection from "./signalrService";
 
-function TabComments() {
+function TabComments({ pid }: { pid: number }) {
   const { user, isAuthenticated } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState<string>("");
   const [comments, setComments] = useState<typeComment[]>([]);
 
   const sendComment = async () => {
+    // 判斷是否登入
+    if (!isAuthenticated) {
+      alert("請先登入");
+      return;
+    }
+
+    // 假設某人發送留言
     const newComment: typeCommentDto = {
       commentMsg: input,
-      projectId: 100,
-      memberId: 1,
+      projectId: pid,
     };
     // 呼叫 API 送出留言
-    await axios.post(`${URL}/ProjectInfo/SendComment`, newComment);
+    await axios.post(`${URL}/ProjectInfo/SendComment`, newComment, {
+      headers: { Authorization: localStorage.getItem("token") },
+    });
     setInput("");
   };
 
-  const fetchMember = async (memberId: number): Promise<typeMember> => {
-    const res = await axios.get(`${URL}/ProjectInfo/Member`, {
-      params: {
-        memberId,
-      },
-    });
-    const member: typeMember = res.data;
-    console.log(member);
-    return member;
-  };
-  const handleReceivedComment = async (data: typeCommentDto) => {
-    const receivedComment: typeComment = {
-      commentId: data.commentId!,
-      commentMsg: data.commentMsg,
-      date: data.date!,
-      user: data.user,
-    };
-    setComments((preComments) => [...preComments, receivedComment]);
-  };
   const DtoToComment = (data: typeCommentDto): typeComment => {
     return {
       commentId: data.commentId!,
       commentMsg: data.commentMsg,
       date: data.date!,
-      sender: data.member,
+      sender: data.member!,
     };
+  };
+  const handleReceivedComment = (data: typeCommentDto) => {
+    const receivedComment = DtoToComment(data);
+    setComments((comments) => [...comments, receivedComment]);
   };
 
   useEffect(() => {
     (async () => {
       const res = await axios.get(`${URL}/ProjectInfo/GetComments`, {
         params: {
-          projectId: 100,
+          projectId: pid,
         },
       });
 
