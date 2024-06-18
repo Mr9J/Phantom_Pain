@@ -25,6 +25,7 @@ type ProjectInfoDto = {
   endDate: string;
   isLiked: boolean;
   products: typeProductCards;
+  clicked: number;
 };
 
 function ProjectInfo() {
@@ -34,18 +35,20 @@ function ProjectInfo() {
   const [project, setProject] = useState<ProjectInfoDto>();
   const [isLiked, setIsLiked] = useState<boolean>();
 
+  const getProjectInfo = async () => {
+    try {
+      const res = await axios.get(`${URL}/ProjectInfo/${pid}`, {
+        headers: { Authorization: localStorage.getItem("token") },
+      });
+      if (res.status === 404) return <NotFound />;
+      setProject(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(`${URL}/ProjectInfo/${pid}`, {
-          headers: { Authorization: localStorage.getItem("token") },
-        });
-        if (res.status === 404) return <NotFound />;
-        setProject(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
+    getProjectInfo();
   }, []);
 
   useEffect(() => {
@@ -111,6 +114,7 @@ function ProjectInfo() {
               <h1 className="my-4 text-lg font-bold leading-relaxed tracking-wide">
                 {project.projectName}
               </h1>
+              <p>點擊次數: {project.clicked}</p>
             </div>
 
             {/* 進度條 */}
