@@ -1,28 +1,50 @@
 import { useState, useEffect } from "react";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import { getCouponList } from "@/services/coupons.service";
 import CouponModal from "@/components/admin/CouponModal";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 import SearchBar from "@/components/admin/SearchBar";
 import axios from "axios";
 import CouponTicket from "@/components/admin/CouponTicket";
+import { CouponDTO } from "@/types";
 const baseUrl = import.meta.env.VITE_API_URL;
 
-const Coupons = () => {
+const Coupons: React.FC = () => {
   const [visibleCreateModal, setvisibleCreateModal] = useState(false);
   const [visibleConfirmModal, setvisibleConfirmModal] = useState(false);
   const [modalText, setModalText] = useState("");
   const [formData, setFormData] = useState({});
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [couponList, setCouponList] = useState<(CouponDTO & { isEdit: boolean })[]>([]);
 
-  const handleFormSubmit = (event) => {
+  //載入api
+  useEffect(() => {
+    const fetchCouponList = async () => {
+      try {
+        const fetchedCouponList: CouponDTO[]  = await getCouponList();
+        setCouponList(
+          fetchedCouponList.map((coupon: CouponDTO) => ({
+            ...coupon,
+            isEdit: false,
+          }))
+        );
+        // console.log('fetchedCouponList:', fetchedCouponList); // 確認資料是否成功加載
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+    fetchCouponList();
+  }, []);
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 阻止表單默認的提交行為
 
-    const formData = new FormData(event.target); // 收集表單數據
+    const formData = new FormData(event.currentTarget); // 收集表單數據
 
-    const jsonData = {};
+    const jsonData: Record<string, string> = {};
     formData.forEach((value, key) => {
-      jsonData[key] = value;
+      jsonData[key] = value as string;
     });
     setFormData(jsonData);
     setModalText("您確認要建立這個折價券嗎？");
@@ -87,13 +109,21 @@ const Coupons = () => {
               >
                 <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
               </svg>
-              <p className="text-base">新增折價券</p>
+              <p
+                className="text-ba
+              se"
+              >
+                新增折價券
+              </p>
             </button>
             <div style={{ marginLeft: "auto" }} className="pb-2">
               <SearchBar onSearch={handleSearch} />
             </div>
           </div>
-          <CouponTicket />
+          {couponList.length > 0 &&
+            couponList.map((item) => (
+              <CouponTicket key={item.CouponId} coupon={item} />
+            ))}
         </div>
       </div>
       {visibleCreateModal && (

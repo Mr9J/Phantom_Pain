@@ -1,4 +1,11 @@
-const CouponModal = () => {
+import React from 'react';
+import { CouponDTO } from '@/types';
+
+type CouponTicketProps = {
+  coupon: CouponDTO & { isEdit: boolean };
+};
+
+const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
   return (
     <>
       <div className="flex items-center justify-center from-red-100 via-red-300 to-blue-500 bg-gradient-to-br">
@@ -122,4 +129,4 @@ const CouponModal = () => {
     </>
   );
 };
-export default CouponModal;
+export default CouponTicket;
