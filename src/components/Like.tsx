@@ -10,6 +10,15 @@ function Like() {
   const { user } = useUserContext();
   const [data, setData] = useState<Like[] | null>(null);
   const URL = import.meta.env.VITE_API_URL;
+
+  //呼叫Hobby使用
+  const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
+
+  const closeHobbyList = () => {
+    setIsHobbyListOpen(false);
+  };
+ //到此 下面return還有
+
   useEffect(() => {
     fetchData();
   }, [URL, user]);
@@ -150,7 +159,9 @@ function Like() {
         </div>
   
       </body>
-      <HobbyList></HobbyList>
+      
+      {/* 呼叫HobbyList Component*/}
+      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />}
     </>
   );
 }
