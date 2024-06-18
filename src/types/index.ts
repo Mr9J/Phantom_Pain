@@ -202,6 +202,12 @@ export type Project = {
   projectThumbnail: string;
   projectStatusId: number;
 }
+export type Like ={
+  likePrjName:string;
+  likePrjThumb:string;
+  likePrjId:number;
+  likeDetailId:number;
+}
 
 export type Hobby={
   hobbyId:number;
