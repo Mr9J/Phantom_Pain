@@ -1,8 +1,8 @@
 const baseUrl = import.meta.env.VITE_API_URL;
 
 
-export const getCoupons = (couponsId:string): Promise<number | string> => {
-    return fetch(`${baseUrl}/Coupons/${couponsId}`)
+export const getCoupons = (couponsId:string,projectId:number): Promise<number | string> => {
+    return fetch(`${baseUrl}/Coupons/${couponsId}/${projectId}`)
         .then(response => {
             if (!response.ok) {
                 return "NotFound";

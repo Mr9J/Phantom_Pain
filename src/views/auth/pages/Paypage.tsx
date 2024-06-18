@@ -12,6 +12,7 @@ import { getCoupons } from '@/services/getCoupons.service';
 
 
 
+
 // import IncreaseDecreaseButtons from './components/Header/button.jsx';
 interface ProjectCardDTO {
   projectId: number;
@@ -148,7 +149,7 @@ function Paypage() {
     productdata:[{ productId: selectedproductId, count: selectedProductCount }],
     discount : discount,
     donate:0,
-    couponCode:null
+    couponCode:''
   });
    
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -298,7 +299,7 @@ const truncateText = (text:string , maxLength:number)=>{
             await setshowCoupons(false);
             return;
           }
-            const discount = await getCoupons(value);
+            const discount = await getCoupons(value,Number(projectId));
             if(discount === "NotFound"  )
               {
                 await setshowNotFoundCoupons(true);
