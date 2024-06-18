@@ -375,7 +375,7 @@ const Projects = () => {
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
-                        <tr>
+                        <tr className="hover:bg-gray-200 dark:hover:bg-slate-500">
                           <td className="pl-1">
                             <img
                               src={item.thumbnail}
@@ -594,7 +594,7 @@ const Projects = () => {
                           {item.products.map((product, productIndex) => (
                             <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900 ">
                               {/* Row */}
-                              <tr>
+                              <tr className="hover:bg-gray-200 dark:hover:bg-slate-500">
                                 <td className="pl-1">
                                   <div className="text-base text-slate-800 dark:text-slate-100 text-center">
                                     {" "}

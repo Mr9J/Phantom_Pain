@@ -156,7 +156,7 @@ const ProductModal = ({
                   產品金額
                 </span>
                 <input
-                  type="text"
+                  type="number"
                   required
                   name="productPrice"
                   defaultValue={alterText ? productContext[6] : productDemo[3]}
@@ -198,6 +198,7 @@ const ProductModal = ({
                   required
                   name="startDate"
                   defaultValue={alterText ? productContext[9] : productDemo[5]}
+                  onKeyDown={(e) => e.preventDefault()}
                   className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -210,6 +211,7 @@ const ProductModal = ({
                   required
                   name="endDate"
                   defaultValue={alterText ? productContext[10] : productDemo[6]}
+                  onKeyDown={(e) => e.preventDefault()}
                   className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>

@@ -1,61 +1,65 @@
 import { useState, useEffect } from "react";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import CouponModal from "@/components/admin/CouponModal";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 import SearchBar from "@/components/admin/SearchBar";
+import axios from "axios";
+import CouponTicket from "@/components/admin/CouponTicket";
+const baseUrl = import.meta.env.VITE_API_URL;
 
 const Coupons = () => {
   const [visibleCreateModal, setvisibleCreateModal] = useState(false);
   const [visibleConfirmModal, setvisibleConfirmModal] = useState(false);
   const [modalText, setModalText] = useState("");
-  const [demoText, setDemoText] = useState(["", "", 2, "", "", ""]);
+  const [formData, setFormData] = useState({});
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const handleFormSubmit = (event) => {
+    event.preventDefault(); // 阻止表單默認的提交行為
+
+    const formData = new FormData(event.target); // 收集表單數據
+
+    const jsonData = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
+    setFormData(jsonData);
+    setModalText("您確認要建立這個折價券嗎？");
+    setvisibleConfirmModal(true);
+  };
   const handleConfirmSubmit = () => {
-    //   const url = visibleProductLg
-    //     ? alterText
-    //       ? `${baseUrl}/product/${formData.id}`
-    //       : `${baseUrl}/product`
-    //     : alterText
-    //     ? `${baseUrl}/project/${formData.id}`
-    //     : `${baseUrl}/project`;
-    //   const method = alterText ? "PUT" : "POST";
-    //   //debug用
-    //   //console.log("URL:", url);
-    //   //console.log("Method:", method);
-    //   //console.log("Data being sent:", formData);
-    //   fetch(url, {
-    //     method: method,
-    //     headers: {
-    //       "Content-Type": "application/json", // 指定 Content-Type 為 application/json
-    //     },
-    //     body: JSON.stringify(formData), // 轉換數據為 JSON 字符串並作為請求體
-    //   })
-    //     .then((response) => {
-    //       if (!response.ok) {
-    //         return response.text().then((text) => {
-    //           throw new Error(text);
-    //         });
-    //       }
-    //       return response.json();
-    //     })
-    //     .then((data) => {
-    //       console.log("成功提交數據：", data);
-    //       setModalVisible(false); // 確認表單
-    //       if (visibleProductLg) {
-    //         setVisibleProductModal(false);
-    //       } else {
-    //         setvisibleProjectModal(false);
-    //       }
-    //       window.location.reload();
-    //     })
-    //     .catch((error) => {
-    //       console.error("提交數據時發生錯誤：", error);
-    //     });
-    // };
-    // const handleSearch = (query: string) => {
-    //   console.log("Searching for:", query);
-    //   setSearchQuery(query);
+    const url = `${baseUrl}/coupon`;
+    const method = "POST";
+
+    //debug用
+    console.log("URL:", url);
+    console.log("Method:", method);
+    console.log("Data being sent:", formData);
+
+    axios({
+      method: method,
+      url: url,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: formData,
+    })
+      .then((response) => {
+        console.log("成功提交數據：", response.data);
+
+        setvisibleConfirmModal(false); // 確認表單
+        setvisibleCreateModal(false);
+
+        //window.location.reload();
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error("提交數據時發生錯誤：", error.response.data);
+        } else {
+          console.error("提交數據時發生錯誤：", error.message);
+        }
+      });
   };
   const handleSearch = (query: string) => {
     console.log("Searching for:", query);
@@ -68,7 +72,7 @@ const Coupons = () => {
           <div className="mx-auto max-w-2xl lg:max-w-none ">
             <h2 className="text-4xl font-bold">折價券列表</h2>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="pt-4" style={{ display: "flex" }}>
             <button
               type="button"
               onClick={() => {
@@ -89,8 +93,15 @@ const Coupons = () => {
               <SearchBar onSearch={handleSearch} />
             </div>
           </div>
+          <CouponTicket />
         </div>
       </div>
+      {visibleCreateModal && (
+        <CouponModal
+          setVisibleCouponModal={setvisibleCreateModal}
+          handleFormSubmit={handleFormSubmit}
+        />
+      )}
       <ConfirmModal
         isVisible={visibleConfirmModal}
         onClose={() => setvisibleConfirmModal(false)}
