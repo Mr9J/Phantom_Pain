@@ -57,6 +57,7 @@ import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
 import HobbyList from "./components/HobbyList";
+import Create from "./views/root/pages/Create";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -80,7 +81,7 @@ const App = () => {
             />
 
             <Route path="/StartProject" element={<StartProject />} />
-            <Route path="/CreateProject" element={<CreateProject />} />
+            <Route path="/CreateProject" element={<Create />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>

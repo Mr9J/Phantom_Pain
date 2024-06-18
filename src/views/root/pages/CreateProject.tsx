@@ -29,22 +29,23 @@ import { Input } from "@/components/ui/input";
 import { useUserContext } from "@/context/AuthContext";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, MouseEventHandler } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import { Field, Fieldset } from "@headlessui/react";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 const TINYAPIKEY = import.meta.env.VITE_TINY_MCE_KEY as string;
 const formSchema = z.object({
   username: z.string(),
   email: z.string(),
-  startDate: z.date({
+  start: z.date({
     required_error: "請輸入開始日期。",
   }),
-  endDate: z.date({
+  end: z.date({
     required_error: "請輸入結束日期。",
   }),
   projectGoal: z.number().int().gte(1, { message: "請輸入金額。" }),
@@ -61,6 +62,8 @@ const formSchema = z.object({
       message: "請上傳圖片且小於7MB。",
     }),
   projectDetail: z.string().min(350, { message: "最少 350 字。" }),
+  startDate:z.string(),
+  endDate:z.string()
 });
 
 function CreateProject() {
@@ -137,14 +140,16 @@ function CreateProject() {
     defaultValues: {
       username: user.username,
       email: user.email,
-      startDate: today,
-      endDate: ninetyDaysFromNow,
+      start: today,
+      end: ninetyDaysFromNow,
       projectGoal: 0,
       typeid: "",
       projectName: "",
       projectDescription: "",
       thumbnail: undefined,
       projectDetail: "",
+      endDate:"",
+      startDate:""
     },
   });
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
@@ -154,39 +159,55 @@ function CreateProject() {
       // console.log(editorRef.current.getContent());
     }
   };
+  function c():undefined{
+    form.setValue("username", user.username);
+    form.setValue("email", user.email);
+    form.setValue("startDate", form.getValues("start").toUTCString());
+    form.setValue("endDate", form.getValues("end").toUTCString());
+  }
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
     try {
       const jwt = localStorage.getItem("token");
       const url = `${baseUrl}/Home/CreateProject`;
 
       const formData = new FormData();
-      formData.append("startDate", values.startDate.toDateString()); // 轉換為 ISO 字串
-      formData.append("endDate", values.endDate.toDateString()); // 轉換為 ISO 字串
+      formData.append("startDate", values.start.toDateString()); // 轉換為 ISO 字串
+      formData.append("endDate", values.end.toDateString()); // 轉換為 ISO 字串
       formData.append("projectGoal", values.projectGoal.toString());
       formData.append("projectTypeId", values.typeid);
       formData.append("projectName", values.projectName);
       formData.append("projectDescription", values.projectDescription);
       formData.append("file", values.thumbnail); // File 物件直接添加
       formData.append("projectDetail", values.projectDetail);
-
+      
       const config = {
         headers: {
           Authorization: jwt,
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data'
         },
       };
-      console.log(url, values, config);
-      const data = await axios.post(url, formData, config);
       console.log(values);
-      alert("成功提案，請等待審核。");
+      console.log( formData);
+      console.log(url);
+      console.log( config);
+      const data = await axios.post(url, values, config);
+      console.log(data);
+      // alert("成功提案，請等待審核。");
       return data.data;
     } catch (error) {
       console.error(error);
     }
   }
-
+ function demo():undefined{
+    form.setValue('projectDescription','123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123123');
+    form.setValue('projectName','123123123123');
+    form.setValue('projectGoal',123123123123);
+    form.setValue('typeid','1');
+    
+  }
   return (
     <>
       {!isAuth && <Navigate to="/sign-in" />}
@@ -198,6 +219,7 @@ function CreateProject() {
           </h2>
         </div>
         {/* 保護區 */}
+        <Button onClick={demo}>demo</Button>
         <div className="px-4 border border-gray-300 mb-16 rounded">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -267,7 +289,7 @@ function CreateProject() {
 
               <FormField
                 control={form.control}
-                name="startDate"
+                name="start"
                 render={({ field }) => (
                   <FormItem className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
                     <div className="md:col-span-1 mt-1">
@@ -287,6 +309,7 @@ function CreateProject() {
                                 "w-[240px] pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
+                             
                             >
                               {field.value ? (
                                 format(field.value, "PPP")
@@ -320,7 +343,7 @@ function CreateProject() {
 
               <FormField
                 control={form.control}
-                name="endDate"
+                name="end"
                 render={({ field }) => (
                   <FormItem className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
                     <div className="md:col-span-1 mt-1">
@@ -356,7 +379,7 @@ function CreateProject() {
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={(date) =>
-                              date < form.getValues("startDate")
+                              date < form.getValues("start")
                             }
                             initialFocus
                           />
