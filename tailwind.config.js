@@ -27,7 +27,7 @@ export default {
         "primary-600": "#5D5FEF",
         red: "#FF5A5A",
         "red-600": "#861113",
-        "ban":"#ff0f0f",
+        ban: "#ff0f0f",
         "dark-1": "#000000",
         "dark-2": "#09090A",
         "dark-3": "#101012",
@@ -69,6 +69,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      screens: {
+        xs: "480px",
       },
       borderRadius: {
         lg: "var(--radius)",

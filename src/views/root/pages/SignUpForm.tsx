@@ -67,6 +67,16 @@ const SignUpForm = () => {
         return;
       }
 
+      if (res === "Email已被使用") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "Email已被使用",
+        });
+
+        return;
+      }
+
       if (!res) {
         toast({
           variant: "destructive",
