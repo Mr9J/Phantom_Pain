@@ -4,9 +4,10 @@ import { getProjectfromProductId } from '@/services/projects.service';
 import { createOrder,checkProductInventory } from '@/services/orders.service';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
-import { Await, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
 import { useUserContext } from '@/context/AuthContext';
+import { getCoupons } from '@/services/getCoupons.service';
 
 
 
@@ -86,6 +87,11 @@ function Paypage() {
   const [buttonDisabled, setButtonDisabled] = useState<{ [key: string]: boolean }>({}); //radio按鈕
   const previousProjectAndproductsData = useRef(projectAndproductsData);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [showCoupons,setshowCoupons] = useState(false);
+  const [showNotFoundCoupons,setshowNotFoundCoupons] = useState(false);
+  const [discount, setDiscount] = useState<number>(0);
+  const [couponCode , setCouponCode] = useState<string>('');
+  
 
 
   // const handleButtonClick = () => {
@@ -129,16 +135,20 @@ function Paypage() {
     
   };
 
+ 
+
   
   //購買資訊 未帶入memberID 
   const [orderData, setOrderData] = useState({
     memberID:user.id,
     paymentMethodID:1,
     projectID: projectId,
-   productID: [selectedproductId],
+    productID: [selectedproductId],
     // count: 1,
     productdata:[{ productId: selectedproductId, count: selectedProductCount }],
+    discount : discount,
     donate:0,
+    couponCode:couponCode
   });
    
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -275,6 +285,40 @@ const truncateText = (text:string , maxLength:number)=>{
 
   }, [selectedProductCount, selectedproductId]);
 
+
+//折價卷  
+ const EnterToGetCoupons =async (event: React.KeyboardEvent<HTMLInputElement>) =>{
+    if(event.key === "Enter")
+      {
+        event.preventDefault();
+        const value =event.currentTarget.value;
+        if(value==="")
+          {
+            await setshowNotFoundCoupons(true);
+            await setshowCoupons(false);
+            return;
+          }
+            const discount = await getCoupons(value);
+            if(discount === "NotFound"  )
+              {
+                await setshowNotFoundCoupons(true);
+                await setshowCoupons(false);
+                return;
+              }
+              else{
+                await setDiscount(Number(discount))
+                await setshowCoupons(true);
+                await setshowNotFoundCoupons(false);
+                await setOrderData(prevOrderData => ({
+                  ...prevOrderData,
+                  discount: Number(discount),  
+                  couponCode:value     
+              }));
+
+              }
+      }
+
+  }
 
 //按下斗內
 const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -495,9 +539,12 @@ return(
 <label className="mb-0 inline-block">折扣碼</label>
 </div>
 <div className="whitespace-nowrap text-right flex-1">
-<input className="text-right w-1/2 rounded border-2 text-zec-blue mb-0 focus:outline-none focus:ring-1 text-lg" type="text" name="order[coupon_code]" id="order_coupon_code"/>
+<input className="text-right w-1/2 rounded border-2 text-zec-blue mb-0 focus:outline-none focus:ring-1 text-lg" type="text" onKeyDown={EnterToGetCoupons}/>
+
 </div>
 </div>
+{showCoupons?<span className="text-green-400 text-sm font-bold">已帶入折扣碼-{discount}元</span>:""}
+{showNotFoundCoupons?<span className="text-rose-400">無效的折扣碼</span>:""}
 
 
 
@@ -523,7 +570,7 @@ return(
   <div className="whitespace-nowrap font-bold flex-auto text-2xl">總價</div>
   <div className="whitespace-nowrap text-right font-extrabold text-2xl">
     {/* 金額正規化顯示.toLocaleString() */}
-  NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount).toLocaleString()}
+  NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount).toLocaleString()}
   {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount)}/>}
   
   </div>
