@@ -48,6 +48,7 @@ import ReturnURL from "./components/service/ReturnURL";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
 import StartProject from "./views/root/pages/StartProject";
 import CreateProject from "./views/root/pages/CreateProject";
@@ -120,6 +121,7 @@ const App = () => {
             <Route path="/Productpage/:pid" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} /> 
             <Route path="/CartPage" element={<CartPage />} />
+            <Route path="/PurchasHistory" element={<PurchasHistory />} />
           </Route>
 
           <Route element={<ManuLayout />}>
