@@ -1,13 +1,13 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent,useRef, useLayoutEffect} from 'react';
 import taiwan_districts from '@/constants/taiwan_districts.json'
 import { getProjectfromProductId } from '@/services/projects.service';
-import { createOrder } from '@/services/orders.service';
-import { Link } from 'react-router-dom';
+import { createOrder,checkProductInventory } from '@/services/orders.service';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Await, useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
 import { useUserContext } from '@/context/AuthContext';
+
 
 
 
@@ -66,6 +66,8 @@ function Paypage() {
   const selectedproductId = searchParams.get('product');
   const projectId = searchParams.get('project')
   const fromCartPage = searchParams.get('fromCartPage') === 'true';
+   const [showModal, setShowModal] = useState(false);
+   const [errorMessage, setErrorMessage] = useState('');
 
   
 
@@ -90,12 +92,23 @@ function Paypage() {
   //   setShowPaymentForm(true);
   // };
  
-  const handleConfirm = (e:React.MouseEvent<HTMLButtonElement>) => {  
+  const handleConfirm = async   (e:React.MouseEvent<HTMLButtonElement>) => {  
     e.stopPropagation();
     e.preventDefault()
-    console.log("確認按鈕被點擊");
-     setIsConfirming(true);
+    console.log(orderData.productdata);
+      const response = await checkProductInventory(orderData.productdata); // 调用 API 函数检查库存
+
+      if (response === 'ok') {
+        setIsConfirming(true); 
+      } else {
+        console.log(response)
+       await setErrorMessage(response); 
+        setShowModal(true); 
+      }
+
   };
+
+
 
   const handleCancel = () => {
     setIsConfirming(false);
@@ -275,7 +288,7 @@ const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
       });
       setOrderData(prevFormData => ({
         ...prevFormData,
-        donate: 0 //如果没有捐赠金额，则将捐赠金额设置为0
+        donate: 0 //如果沒有設置金額 返回0
       }));
     } else {
       const donate = parseFloat(value);
@@ -427,7 +440,7 @@ return(
       <div key={pjitem.productId}>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block dark:bg-slate-800" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      {fromCartPage?<></>:  <Link className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" to="#" onClick={() => window.history.back()}>更改回饋</Link>}
+      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" onClick={() => window.history.back()}>更改回饋</div>}
      
       {/* 點擊商品後 href顯示加購及結帳 */}
       <img
@@ -471,9 +484,9 @@ return(
       <div className="flex items-center justify-center space-x-2 mb-3">
       <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==0?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount-1)}}>-</button>
       {fromCartPage? <><span className="font-black dark:text-white">{selectedProductCount}</span>
-      <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
+      <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?"": setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
       <><span className="font-black dark:text-white">{selectedProductCount}</span>
-      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
+      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?"":setSelectedProductCount(selectedProductCount+1)}}>+</button></>}
      
     </div>
       {item.productInCart&&item.productInCart.includes(pjitem.productId) ? (
@@ -639,7 +652,30 @@ return(
   
 
 </div>
-
+ {/* 彈出視窗 */}
+ {showModal && (
+        <div className="modal" style={{
+          position: 'fixed',
+          zIndex: 1,
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          overflow: 'auto',
+          backgroundColor: 'rgba(0,0,0,0.4)'
+        }}>
+          <div className="modal-content" style={{
+            backgroundColor: '#fefefe',
+            margin: '15% auto',
+            padding: '20px',
+            border: '1px solid #888',
+            width: '80%'
+          }}>
+            <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+            <p>{errorMessage}</p>
+          </div>
+        </div>
+      )}
 {/* 輸入交易資料畫面 */}
 {payment}
 

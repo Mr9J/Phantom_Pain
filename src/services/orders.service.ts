@@ -1,37 +1,19 @@
 import axios from "axios";
 const baseUrl = import.meta.env.VITE_API_URL;
 
+export const checkProductInventory = async (productdata: object): Promise<string> => {
+  const response = await fetch(`${baseUrl}/Order/CheckProductInventory`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(productdata)
+  });
 
-// export const createOrder = (orderData: object) => {
-//   return fetch(`${baseUrl}/Order/CreateOrder`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(orderData)
-//   })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     // 解析 JSON 响应
-//     return response.json();
-//   })
-//   .then(data => {
-//     // 检查是否存在重定向 URL
-//     const redirectUrl = data.redirectUrl;
-//     if (redirectUrl) {
-//       // 重定向到支付页面
-//       window.location.href = redirectUrl;
-//     } else {
-//       throw new Error('Redirect URL is empty');
-//     }
-//   })
-//   .catch(error => {
-//     console.error('There was a problem with your fetch operation:', error);
-//     throw error;
-//   });
-// };
+  const text = await response.text(); 
+  return text;
+};
+
 export const createOrder = (orderData:object) => {
   return fetch(`${baseUrl}/Order/CreateOrder`, {
           method: 'POST',

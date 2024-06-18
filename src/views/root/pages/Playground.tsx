@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import noThumbnail from "@/assets/admin_img/mygo/6.jpg";
 import { useEffect, useState } from "react";
+import { S3 } from "@/config/R2";
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import axios from "axios";
 
 const Playground = () => {
   //isAuthenticated: 是否已經登入
@@ -19,13 +22,28 @@ const Playground = () => {
     });
   }, []);
 
+  const getBucket = async () => {
+    try {
+      const res = await S3.send(
+        new ListObjectsV2Command({
+          Bucket: "mumu",
+          Prefix: "Projects/project-00",
+        })
+      );
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="w-full h-screen flex justify-center items-center flex-col">
         {/* 重新整理頁面的Button */}
         <Button
           onClick={() => {
-            window.location.reload();
+            getBucket();
           }}
         >
           Reload

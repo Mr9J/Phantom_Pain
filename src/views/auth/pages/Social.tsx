@@ -13,12 +13,14 @@ const Social = () => {
     data: posts,
     isPending: isPostLoading,
     isError: isErrorPosts,
+    refetch: refetchPosts,
   } = useGetRecentPosts(page);
 
   useEffect(() => {
     if (posts) {
       setData([...data, ...posts]);
     }
+    refetchPosts();
   }, [posts]);
 
   return (

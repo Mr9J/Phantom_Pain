@@ -72,17 +72,12 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/users/:userId" element={<Users />} />
-            <Route path="/project/:pid" element={<ProjectInfo />} /> 
-            <Route path="/CartPage" element={<CartPage />} />
+            <Route path="/users/:id/*" element={<Users />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} />
             <Route
               path="/SearchProject"
               element={<SearchProject input={input} setInput={setInput} />}
             />
-          
-            {/* <Route path="/Productpage" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} /> */}
 
             <Route path="/StartProject" element={<StartProject />} />
             <Route path="/CreateProject" element={<CreateProject />} />
@@ -102,8 +97,7 @@ const App = () => {
           </Route>
           {/* public routes */}
           {/* private routes */}
-          <Route element={<LoggedInLayout />}> 
-         
+          <Route element={<LoggedInLayout />}>
             <Route
               path="/email-verify/:username/:Eid/*"
               element={<EmailVerify />}
@@ -121,11 +115,13 @@ const App = () => {
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
 
-          <Route element={<AuthDefaultLayout input={input} setInput={setInput}  />}>
-            <Route path="/Like" element={<Like />} />  
+          <Route
+            element={<AuthDefaultLayout input={input} setInput={setInput} />}
+          >
+            <Route path="/Like" element={<Like />} />
             <Route path="/Productpage/:pid" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
-           
+            <Route path="/CartPage" element={<CartPage />} />
           </Route>
 
           <Route element={<ManuLayout />}>
