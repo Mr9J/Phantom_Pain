@@ -7,7 +7,13 @@ import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
 import { typeComment, typeCommentDto } from "./types";
 import connection from "./signalrService";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 function TabComments({ pid }: { pid: number }) {
   const { user, isAuthenticated } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
@@ -75,7 +81,20 @@ function TabComments({ pid }: { pid: number }) {
 
   return (
     <>
-      <h2>{comments.length}則留言</h2>
+      <div className="flex justify-between">
+        <h2>{comments.length}則留言</h2>
+
+        <Select>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="排序依據" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="nto">由新到舊</SelectItem>
+            <SelectItem value="otn">由舊到新</SelectItem>
+            <SelectItem value="hot">熱門留言</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <div className="p-2 flex w-full items-center space-x-2">
         <Avatar className="border">
           <AvatarImage
