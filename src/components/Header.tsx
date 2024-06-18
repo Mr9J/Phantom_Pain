@@ -10,6 +10,7 @@ import {
   XIcon,
   CigaretteIcon,
   LogOutIcon,
+  LaughIcon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -27,10 +28,10 @@ const exploreItems = [
     icon: CigaretteIcon,
   },
   {
-    name: "Item2",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
+    name: "Manufactor",
+    description: "mygo",
+    to: "/manu",
+    icon: LaughIcon,
   },
   {
     name: "Item3",
@@ -175,9 +176,9 @@ const Header = ({
           <Link to="/social" className={`text-sm font-semibold leading-6`}>
             Social
           </Link>
-          <Link to="/service" className={`text-sm font-semibold leading-6`}>
+          {/* <Link to="/service" className={`text-sm font-semibold leading-6`}>
             Service
-          </Link>
+          </Link> */}
         </Popover.Group>
         <div className="ml-8 hidden lg:flex lg:flex-1 lg:justify-end w-full max-w-sm items-center space-x-2">
           <Input

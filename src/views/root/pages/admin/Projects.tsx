@@ -43,7 +43,7 @@ const Projects: React.FC = () => {
       : projects;
   const filteredProjectsKeyword =
     searchQuery.length > 0
-      ? filteredProjects.filter((item) =>
+      ? filteredProjects?.filter((item) =>
           item.projectName.includes(searchQuery)
         )
       : filteredProjects;
@@ -280,7 +280,11 @@ const Projects: React.FC = () => {
                               className="flex items-center"
                               style={{ width: 600 }}
                             >
-                              <a href={`${frontUrl}/project/${item.projectId}`}>
+                              <a
+                                href={`${frontUrl}/project/${item.projectId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 <div className="text-base text-slate-800 dark:text-slate-100 underline">
                                   {item.projectName}
                                 </div>
@@ -511,7 +515,7 @@ const Projects: React.FC = () => {
                   />
                   <button
                     type="submit"
-                    className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center text-center"
+                    className="py-2.5 px-5 ms-3 text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center text-center"
                   >
                     確認
                   </button>

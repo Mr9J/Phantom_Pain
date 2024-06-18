@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useLayoutEffect, useState } from "react";
+import { Navigate, useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
+import { useUserContext } from "@/context/AuthContext";
+
+
+
 
 
 interface CartDetailDTO {
@@ -22,16 +26,40 @@ interface CartDetailDTO {
   
 
 function CartPage() {
-    const testmemberId = 6;
+
+    const { user} = useUserContext();
+    // const [isAuth, setIsAuth] = useState(true);
+    // const [userID , setUserId] = useState(0);
+    // const [testmemberId,setmemberId] = useState(0);
+
+    //測試會員
+    const  testmemberId = 6
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
-    let totalAmount = 0;
+    // let totalAmount = 0;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchShoppingCart();
-    }, []);
-    
+    // useEffect(() => {
+        // const authenticateAndFetchCart = async () => {
+        //     const res = await checkAuthUser();
+        //     setIsAuth(res);
+        //     if (res) {
+        //         const intervalId = setInterval( () => {
+        //             if (user.id !== '0') {
+        //                 setUserId(Number(user.id))
+        //                 clearInterval(intervalId); 
+        //             }
+        //         }, 500);
+                                  
+        // }
+        // }
+        // authenticateAndFetchCart();
+    // }, []);
 
+
+    useLayoutEffect(()=>{
+        fetchShoppingCart();   
+    },)
+    
     const goToPayPage = (projectId:number,productId:number,fromCartPage:boolean) =>
     {  
         navigate(`/Paypage?project=${projectId}&product=${productId}&fromCartPage=${fromCartPage}`);
@@ -41,8 +69,9 @@ function CartPage() {
 
     const fetchShoppingCart = async () => {
         try {
-            const data = await getLoadCartPage(testmemberId);
-            setMemberCartData(data);
+         
+                    const data = await getLoadCartPage(Number(user.id));
+                   setMemberCartData(data);      
         } catch (error) {
             console.error(error);
         }
@@ -50,7 +79,7 @@ function CartPage() {
 
     const handleIncrement = async (projectId: number, productId: number , increment :string) => {
         try{      
-            await putProductFromCart(productId,testmemberId,increment);
+            await putProductFromCart(productId,Number(user.id),increment);
             await fetchShoppingCart();
         }
         catch (error) {
@@ -63,7 +92,7 @@ function CartPage() {
 
     const handleDecrement = async (projectId: number, productId: number,decrement:string) => {
         try{      
-            await putProductFromCart(productId,testmemberId,decrement);
+            await putProductFromCart(productId,Number(user.id),decrement);
             await fetchShoppingCart();
         }
         catch (error) {
@@ -76,7 +105,7 @@ function CartPage() {
    
     const handleDeleteProduct = async (productId: number) => {
         try {
-            await deleteProductFromCart(productId, testmemberId);
+            await deleteProductFromCart(productId, Number(user.id));
             await fetchShoppingCart();
         } catch (error) {
             console.error(error);
@@ -84,6 +113,8 @@ function CartPage() {
     };
 
     return (
+        <>
+        {/* {!isAuth && <Navigate to="/sign-in" />} */}
         <div className="container px-4 mb-8">
             <div className='flex flex-col-reverse lgl:flex-row gap-5'>
                 <div className='w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5'>
@@ -108,15 +139,15 @@ function CartPage() {
         </p>
       </div>
     </div>:  <>{memberCartData&&memberCartData.map((item) => {
-
+                            let totalAmount = 0; 
                             return (
                                 <div key={item.projectId} className="w-full">                               
-                                    <div className="border-spacing-8 mx-7 my-6">
+                                    <a className="border-spacing-8 mx-7 my-6" href={`/project/${item.projectId}`}>
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         {item.projectName}
                                         
                                     
-                                    </div>
+                                    </a>
                                     <br></br>
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
@@ -137,7 +168,7 @@ function CartPage() {
                 <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleDecrement(item.projectId, product.productId ,"Decrement")}>-</button>
             )}
             <span className="font-bold">{product.count}</span>
-            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() => handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
+            <button className={`px-4 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500`} onClick={() =>product.count==product.currentStock?"": handleIncrement(item.projectId, product.productId,"Increment")}>+</button>
         </div>
         <div className="grow h-14">
   </div>
@@ -175,6 +206,7 @@ function CartPage() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 

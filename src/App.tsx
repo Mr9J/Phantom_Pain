@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
 import AuthLayout from "./views/auth/AuthLayout";
 import {
@@ -16,6 +17,7 @@ import {
   AdminProjects,
   AdminStaffs,
   Users,
+  Test,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -36,18 +38,23 @@ import {
   UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
-
+import ServiceRoute from "./views/auth/pages/ServiceRoute";
 import ResetPassword from "./views/root/pages/ResetPassword";
 import SendResetEmail from "./views/root/pages/SendResetEmail";
 import ProjectInfo from "./views/root/pages/ProjectInfo";
 import SubHome from "./views/root/pages/SubHome";
-import ServiceRoute from "./views/auth/pages/ServiceRoute";
 import SearchProject from "./views/root/pages/SearchProject";
+import ReturnURL from "./components/service/ReturnURL";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+
+import StartProject from "./views/root/pages/StartProject";
+import CreateProject from "./views/root/pages/CreateProject";
+
+import Like from "./components/Like";
+import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
-import { useState } from "react";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
 
 const App = () => {
@@ -65,14 +72,17 @@ const App = () => {
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/users/:userId" element={<Users />} />
-            <Route path="/project/:pid" element={<ProjectInfo />} />
+            <Route path="/project/:pid" element={<ProjectInfo />} /> 
+           
             <Route
               path="/SearchProject"
               element={<SearchProject input={input} setInput={setInput} />}
             />
-            <Route path="/Productpage/:pid" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} />
+
+            <Route path="/StartProject" element={<StartProject />} />
+            <Route path="/CreateProject" element={<CreateProject />} />
+
+            {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
 
@@ -86,7 +96,8 @@ const App = () => {
           </Route>
           {/* public routes */}
           {/* private routes */}
-          <Route element={<LoggedInLayout />}>
+          <Route element={<LoggedInLayout />}> 
+         
             <Route
               path="/email-verify/:username/:Eid/*"
               element={<EmailVerify />}
@@ -103,12 +114,22 @@ const App = () => {
             <Route path="/profile/:id/*" element={<Profile />} />
             <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
+
+          <Route element={<AuthDefaultLayout input={input} setInput={setInput}  />}>
+            <Route path="/Like" element={<Like />} />  
+            <Route path="/Productpage/:pid" element={<Productpage />} />
+            <Route path="/Paypage" element={<Paypage />} /> 
+            <Route path="/CartPage" element={<CartPage />} />
+           
+          </Route>
+
           <Route element={<ManuLayout />}>
+            <Route path="/manu/test" element={<Test />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
             <Route path="/manu/staffs" element={<Staffs />} />
             <Route path="/manu/orders" element={<Orders />} />
-            {/* <Route path="/service" element={<ServiceRoute />} />{" "} */}
+            <Route path="/manu/service" element={<ServiceRoute />} />
             <Route
               path="/manu/order/:projectId"
               element={<OrderList projectId={0} />}
@@ -116,10 +137,12 @@ const App = () => {
             <Route path="/manu" element={<Remind />} />
           </Route>
           <Route element={<AdminLayout />}>
+            <Route path="/admin/service" element={<ServiceRoute />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
             <Route path="/admin/staffs" element={<AdminStaffs />} />
-            <Route path="/admin" element={<AdminProjects />} />
+            <Route path="/admin" element={<Navigate to="/admin/projects" />} />
           </Route>
+          <Route path="/ReturnURL" element={<ReturnURL />} />
         </Routes>
 
         <Toaster />

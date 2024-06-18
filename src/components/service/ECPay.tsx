@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
+const frontUrl = import.meta.env.VITE_FRONT_URL;
 const baseUrl = import.meta.env.VITE_API_URL;
-
+const ngrok  = "https://04c7-1-160-23-145.ngrok-free.app/api/Order/ECPayResponseMessage";
+const returnURL = `${frontUrl}/ReturnURL`
 interface ECPayComponentProps {
   projectName: string;
   totalAmount: number;
@@ -13,6 +15,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
   const [merchantTradeDate, setMerchantTradeDate] = useState<string>('');
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
      event.preventDefault();
      const tempMerchantTradeNo = generateMerchantTradeNo();
@@ -20,7 +23,7 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
    await setMerchantTradeNo(tempMerchantTradeNo);
    await setMerchantTradeDate(tempMerchantTradeDate)
 
-  // 只有当 MerchantTradeNo 和 MerchantTradeDate 都不为空时才提交表单
+  // 只有當 MerchantTradeNo 和 MerchantTradeDate 都不為空時才提交
   if (tempMerchantTradeNo && tempMerchantTradeDate) {
     // 請求後端計算檢查碼
     try {
@@ -38,8 +41,8 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({ projectName, totalAmount }
                 TotalAmount: `${totalAmount}`, // 將數字轉換為字串
                 TradeDesc: "Transaction description",
                 ItemName: `贊助企劃:${projectName}`,
-                ReturnURL: "https://localhost:7150/api/Order/ECPayResponseMessage",
-                ClientBackURL: "http://localhost:5173/home",
+                ReturnURL: ngrok,
+                ClientBackURL: `${returnURL}`,
                 ChoosePayment: "ALL",
                 EncryptType: "1"
             })
@@ -164,8 +167,8 @@ React. useEffect(() => {
       <input type="hidden" name="TotalAmount" value={totalAmount} />
       <input type="hidden" name="TradeDesc" value="Transaction description" />
       <input type="hidden" name="ItemName" value={`贊助企劃:${projectName}`}/>
-      <input type="hidden" name="ReturnURL" value="https://localhost:7150/api/Order/ECPayResponseMessage" />
-      <input type="hidden" name="ClientBackURL" value="http://localhost:5173/home" />
+      <input type="hidden" name="ReturnURL" value={ngrok} />
+      <input type="hidden" name="ClientBackURL" value={returnURL} />
       <input type="hidden" name="ChoosePayment" value="ALL" />
       <input type="hidden" name="EncryptType" value={1} />
       <button ref={submitButtonRef} type="submit" style={{ display: 'none' }}></button>

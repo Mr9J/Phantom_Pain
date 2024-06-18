@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import ChatHeader from '@/components/service/chatheader';
 import ChatMessages from '@/components/service/chatmessage';
 import ChatFooter from '@/components/service/chatfooter';
+import FAQComponent from '@/components/service/FAQComponents';
 import { Message } from '@/components/service/types';
 import '@/components/service/service.css';
 import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, getMembersNicknames, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
+import { useUserContext } from '@/context/AuthContext';
+import connection from '@/components/service/SignalR';
 
-const Service = () => {
-  const [memberId] = useState<number>(32); // 測試的 MemberID
-  const [nickname, setNickname] = useState<string>(''); // 添加狀態來儲存會員暱稱
+const Service: React.FC = () => {
+  const { user } = useUserContext();
+  const [memberId, setMemberId] = useState<number | null>(null);
+  const [nickname, setNickname] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -17,43 +21,49 @@ const Service = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [serviceId, setServiceId] = useState<number | null>(null);
 
-  // 獲取會員暱稱
+  useEffect(() => {
+    if (user) {
+      setMemberId(Number(user.id));
+    }
+  }, [user]);
+
   useEffect(() => {
     const fetchNickname = async () => {
-      try {
-        const response = await getMembersNicknames();
-        const member = response.data.find(m => m.memberId === memberId);
-        if (member) {
-          setNickname(member.nickname);
+      if (memberId !== null) {
+        try {
+          const response = await getMembersNicknames();
+          const member = response.data.find(m => m.memberId === memberId);
+          if (member) {
+            setNickname(member.nickname);
+          }
+        } catch (error) {
+          console.error('Failed to fetch member nickname', error);
         }
-      } catch (error) {
-        console.error('Failed to fetch member nickname', error);
       }
     };
 
     fetchNickname();
   }, [memberId]);
 
-  // 設置歡迎訊息
   useEffect(() => {
-    const welcomeMessage: Message = {
-      id: 0,
-      serviceId: 0,
-      memberId: 0,
-      content: `${nickname} 您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊`,
-      timestamp: new Date(),
-      sender: 'admin'
-    };
-    setMessages([welcomeMessage]);
+    if (nickname) {
+      const welcomeMessage: Message = {
+        id: 0,
+        serviceId: 0,
+        memberId: 0,
+        content: `${nickname} 廠商您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊 您可以先瀏覽常見問題，如果還有疑問，請留言給我們的客服團隊！`,
+        timestamp: new Date(),
+        sender: 'admin'
+      };
+      setMessages([welcomeMessage]);
+    }
   }, [nickname]);
 
   useEffect(() => {
     const fetchAllMessages = async () => {
       if (memberId !== null) {
         try {
-          // getServicesByMemberId 函數來獲取與 memberId 的所有服務。將數據中的 serviceId 提出，形成serviceIds
           const servicesResponse = await getServicesByMemberId(memberId);
-          //對每個 service 對象，提取它的 serviceId 屬性
           const serviceIds = servicesResponse.data.map(service => service.serviceId);
 
           const openService = servicesResponse.data.find(service => !service.endDate);
@@ -64,7 +74,7 @@ const Service = () => {
             const newService: ServiceDTO = {
               serviceId: 0,
               memberId: memberId,
-              statusId: 4, // 初始狀態設置為 4 表示等待客服回應中
+              statusId: 4,
               startDate: new Date().toISOString(),
               endDate: null
             };
@@ -92,8 +102,7 @@ const Service = () => {
           const uniqueMessages = Array.from(new Set(allMessages.map(m => m.id)))
             .map(id => allMessages.find(m => m.id === id) as Message);
 
-          console.log('Fetched all messages:', uniqueMessages);
-          setMessages(prevMessages => [prevMessages[0], ...uniqueMessages]); // 插入歡迎訊息到最前面
+          setMessages(prevMessages => [prevMessages[0], ...uniqueMessages]);
         } catch (error) {
           console.error('Failed to fetch all messages', error);
         }
@@ -128,25 +137,23 @@ const Service = () => {
         serviceId: serviceId,
         memberId: memberId,
         content: message,
-        timestamp: new Date(),  // 使用本地時間
+        timestamp: new Date(),
         sender: 'user'
       };
       try {
-        console.log('Sending message:', newMessage);
         await createServiceMessage(newMessage.serviceId, {
           messageId: newMessage.id,
           serviceId: newMessage.serviceId,
           memberId: newMessage.memberId,
           adminId: null,
           messageContent: newMessage.content,
-          messageDate: newMessage.timestamp.toISOString() // 確保時間格式正確
+          messageDate: newMessage.timestamp.toISOString()
         });
-        setMessages(prevMessages => {
-          const updatedMessages = [...prevMessages, newMessage];
-          console.log('Updated messages:', updatedMessages);
-          return updatedMessages;
-        });
+
         setMessage('');
+
+        connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
+
       } catch (error) {
         console.error('Failed to send message', error);
       }
@@ -181,11 +188,9 @@ const Service = () => {
             messageContent: newMessage.content,
             messageDate: newMessage.timestamp.toISOString()
           });
-          setMessages(prevMessages => {
-            const updatedMessages = [...prevMessages, newMessage];
-            console.log('Updated messages:', updatedMessages);
-            return updatedMessages;
-          });
+
+          connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
+
         } catch (error) {
           console.error('Failed to upload file', error);
         }
@@ -220,7 +225,6 @@ const Service = () => {
       if (serviceId) {
         try {
           await closeService(serviceId);
-          console.log(`Service ${serviceId} closed`);
           setServiceId(null);
         } catch (error) {
           console.error('Failed to close service', error);
@@ -234,6 +238,55 @@ const Service = () => {
     };
   }, [serviceId]);
 
+  useEffect(() => {
+    if (serviceId !== null) {
+      const handleReceiveMessage = (message: Message) => {
+        console.log("Message received from SignalR:", message);
+        setMessages(prevMessages => [...prevMessages, message]);
+      };
+
+      connection.on('ReceiveMessage', handleReceiveMessage);
+
+      return () => {
+        connection.off('ReceiveMessage', handleReceiveMessage);
+      };
+    }
+  }, [serviceId]);
+
+  const generateUniqueId = (): number => {
+    const timestamp = Date.now();
+    const randomNum = Math.floor(Math.random() * 1000); // 生成一個0到999之間的隨機數
+    return Number(`${timestamp}${randomNum}`);
+  };
+  
+  const handleFAQClick = (answer: string) => {
+    if (serviceId && memberId) {
+      console.log("FAQ answer clicked:", answer);
+      const faqMessage: Message = {
+        id: generateUniqueId(),
+        serviceId: serviceId,
+        memberId: memberId,
+        content: answer,
+        timestamp: new Date(),
+        sender: 'admin'
+      };
+      console.log("Adding FAQ message:", faqMessage);
+  
+      // 更新訊息列表
+      setMessages(prevMessages => [...prevMessages, faqMessage]);
+  
+      // 只在這裡進行 SignalR 發送
+      connection.invoke("SendMessage", faqMessage)
+        .then(() => {
+          console.log("Message sent via SignalR:", faqMessage);
+        })
+        .catch(err => {
+          console.error(err.toString());
+        });
+    }
+  };
+  
+
   return (
     <div className="service-chat-container">
       <ChatHeader
@@ -244,6 +297,7 @@ const Service = () => {
         handlePrevious={handlePrevious}
         handleNext={handleNext}
       />
+      <FAQComponent onQuestionClick={handleFAQClick} />
       <ChatMessages messages={messages} searchTerm={searchTerm} highlightedIndexes={highlightedIndexes} currentIndex={currentIndex} />
       <ChatFooter
         message={message}
@@ -257,4 +311,3 @@ const Service = () => {
 };
 
 export default Service;
-

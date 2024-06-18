@@ -64,6 +64,7 @@
   .card {
     height: 250px;
     width: 400px;
+    overflow: hidden; /* 確保偽元素不會溢出 */
   }
 }
 
@@ -74,8 +75,8 @@
   left: 0;
   width: 100%;
   height: 110%;
-  background-size: cover;
-  background-position: 0 0;
+  background-size: contain;
+  background-position: center;
   transition: transform calc(var(--d) * 1.5) var(--e);
   pointer-events: none;
 }
@@ -112,7 +113,7 @@
   transition: transform calc(var(--d) * 2) var(--e);
 }
 
-.card:nth-child(1):before {
+ .card:nth-child(1):before {
   background-image: url('https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ');
 }
 
@@ -126,7 +127,7 @@
 
 .card:nth-child(4):before {
   background-image: url('https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400&fit=max&ixid=eyJhcHBfaWQiOjE0NTg5fQ');
-}
+} 
 
 .content {
   position: relative;
