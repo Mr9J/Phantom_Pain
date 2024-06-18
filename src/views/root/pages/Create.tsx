@@ -3,6 +3,7 @@ const baseUrl = import.meta.env.VITE_API_URL;
 import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { useUserContext } from "@/context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
@@ -80,6 +81,7 @@ const Create: React.FC = () => {
 
   return (
     <>
+    {!isAuth && <Navigate to="/sign-in" />}
       <div className="container mx-auto px-4 md:px-0">
         <div className="text-center">
           <h2 className="text-2xl font-bold my-16 inline-block after:h-1 after:block after:bg-teal-500 after:rounded after:mt-1">
