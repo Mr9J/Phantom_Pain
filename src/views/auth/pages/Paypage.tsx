@@ -369,19 +369,13 @@ return(
   <div className="p-4 border-2 border-inherit rounded mb-8 block dark:bg-slate-800" style={{ width: '300px', height: '615px' }}>
   <img
   //  src商品圖片
+  className="rounded-md"
   src={`${pjitem.thumbnail}`}
   alt="Description"
   />
-  <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+  <div className="text-gray-600 font-extrabold font-mono text-base mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
   <div className="text-black font-bold text-xl items-center dark:text-white">
-  {pjitem.productPrice}
-  <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
-  <p className="w-full text-gray-500 font-normal text-xs">
-  預定售價
-  <span className="line-through">帶入原價</span>
-  {/* 這裡要計算打折後省多少還未帶入數 */}
-  ，現省 NT$ 6,100
-  </p>
+  NT${pjitem.productPrice.toLocaleString()}
   </div>
   
   <div className="text-xs my-2">
@@ -399,7 +393,7 @@ return(
   {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
-  <p>
+  <p className="font-sans">
   {truncateText(pjitem.productDescription!,70)}</p>
   </div>
   
@@ -440,25 +434,17 @@ return(
       <div key={pjitem.productId}>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block dark:bg-slate-800" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" onClick={() => window.history.back()}>更改回饋</div>}
+      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-600" onClick={() => window.history.back()}>更改回饋</div>}
      
       {/* 點擊商品後 href顯示加購及結帳 */}
-      <img
-        // src商品圖片
-        // src={`src/assets/mumuThumbnail/Mumu projects&productsThumbnail/${item.thumbnail}`}
+      <img   
+        className="rounded-md"
         src={`${pjitem.thumbnail}`}
         alt="Description"
       />
-      <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
-      <div className="text-black font-bold text-xl items-center dark:text-white">
-        {pjitem.productPrice}
-        <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
-        <p className="w-full text-gray-500 font-normal text-xs">
-          預定售價
-          <span className="line-through">帶入原價</span>
-          {/* 這裡要計算打折後省多少還未帶入數 */}
-          ，現省 NT$ 6,100
-        </p>
+      <div className="text-gray-600 font-extrabold font-mono text-base mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+      <div className="text-black font-bold text-2xl items-center dark:text-white">
+        NT${pjitem.productPrice.toLocaleString()}
       </div>
   
       <div className="text-xs my-2">
@@ -475,7 +461,7 @@ return(
       <div className="overflow-y-auto break-all">
         <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
           {/* 加入商品敘述 */}
-          <p>
+          <p className="font-sans">
           {truncateText(pjitem.productDescription!,150)}
           </p>
         </div>
@@ -499,12 +485,32 @@ return(
       </div>
     </div>
     <div className="border-0 ml-6 w-80">
-    <div className="flex items-start text-sm py-2 mt-4">
-  <div className="whitespace-nowrap font-bold flex-auto">選項金額</div>
-  <div className="whitespace-nowrap text-right">
+    <div className="flex flex-col text-sm py-2 mt-4">
+     
+
+     
+    <div className="flex">
+<div className="whitespace-nowrap font-bold text-base">
+使用
+<label className="mb-0 inline-block">折扣碼</label>
+</div>
+<div className="whitespace-nowrap text-right flex-1">
+<input className="text-right w-1/2 rounded border-2 text-zec-blue mb-0 focus:outline-none focus:ring-1 text-lg" type="text" name="order[coupon_code]" id="order_coupon_code"/>
+</div>
+</div>
+
+
+
+
+
+
+
+
+  <div className="whitespace-nowrap font-bold flex-auto text-lg mt-3">選項金額</div>
+  <div className="whitespace-nowrap text-right text-base">
   NT$ {(pjitem.productPrice * selectedProductCount).toLocaleString()}
   <div>
-  <div className="inline-block text-xs bg-zinc-100 mr-2 leading-none rounded-full px-2 py-1 dark:bg-rose-600">加購</div>
+  <div className="inline-block bg-zinc-100 mr-2 leading-none rounded-full px-2 py-1 dark:bg-rose-600 text-base">加購</div>
   +
   NT$ {addToPurchase.toLocaleString()}
   </div>
@@ -514,8 +520,8 @@ return(
   </div>
   </div>
   <div className="flex items-start text-xl pb-2 pt-4 border-t-4 border-gray-300">
-  <div className="whitespace-nowrap font-bold flex-auto">總價</div>
-  <div className="whitespace-nowrap text-right">
+  <div className="whitespace-nowrap font-bold flex-auto text-2xl">總價</div>
+  <div className="whitespace-nowrap text-right font-extrabold text-2xl">
     {/* 金額正規化顯示.toLocaleString() */}
   NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount).toLocaleString()}
   {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount)}/>}
