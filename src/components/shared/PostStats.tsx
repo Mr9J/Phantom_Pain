@@ -17,6 +17,7 @@ import moment from "moment";
 type PostStatsProps = {
   post: GetPostDTO;
   userId: string;
+  commentDisplay: boolean;
 };
 
 type likePostCheckType = {
@@ -33,17 +34,17 @@ type likePostCheckType = {
 //   userImg: string;
 // };
 
-const PostStats = ({ post, userId }: PostStatsProps) => {
+const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { toast } = useToast();
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [comment, setComment] = useState("");
   const [commentData, setCommentData] = useState(null);
   const [visibleComments, setVisibleComments] = useState(5);
-  const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: commentPost, isPending: isCommentSubmitting } =
     useCommentPost();
@@ -52,11 +53,17 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     isPending: isCommentLoading,
     isError: isCommentError,
     refetch: refetchComments,
-  } = useGetCommentPost(post.postId);
+  } = useGetCommentPost(post?.postId);
 
   const checkStatus = async () => {
-    const session: likePostCheckType = await likePostCheck(post.postId, userId);
-    const session2: string = await savePostCheck(post.postId, userId);
+    const session: likePostCheckType = await likePostCheck(
+      post?.postId || "",
+      userId || ""
+    );
+    const session2: string = await savePostCheck(
+      post?.postId || "",
+      userId || ""
+    );
 
     if (!session || !session2) return;
 
@@ -70,10 +77,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   };
 
   const commentHandler = () => {
-    if (ref.current !== null) {
-      ref.current.classList.remove("hidden");
-      ref.current.classList.add("flex");
-    }
+    setIsCommentOpen(!isCommentOpen);
   };
 
   const commentSubmitHandler = async () => {
@@ -172,6 +176,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
               fill="red"
               width={20}
               height={20}
+              stroke="red"
               onClick={likeHandler}
               className="cursor-pointer"
             />
@@ -180,7 +185,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={likeHandler}
-              className="cursor-pointer"
+              className="cursor-pointer dark:text-white"
             />
           )}
           <p className="text-[14px] font-medium leading-[140%] lg:text-[16px]">
@@ -194,6 +199,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
               fill="blue"
               width={20}
               height={20}
+              stroke="blue"
               onClick={savePostHandler}
               className="cursor-pointer"
             />
@@ -202,72 +208,81 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={savePostHandler}
-              className="cursor-pointer"
+              className="cursor-pointer dark:text-white"
             />
           )}
         </div>
       </div>
-      <Separator className="my-4" />
-      <div className="flex justify-between items-center mt-2 w-full">
-        <Button
-          variant="link"
-          onClick={commentHandler}
-          disabled={isCommentLoading}
-        >
-          查看留言... ({commentData ? commentData.length : 0})
-        </Button>
-      </div>
-      <div
-        className="justify-start items-center mt-2 w-full hidden overflow-hidden"
-        ref={ref}
-      >
-        <ul>
-          {commentData ? (
-            commentData.slice(0, visibleComments).map((com, index) => (
-              <div className="flex items-start gap-4 mt-2 w-full" key={com.id}>
-                <img
-                  src={com.thumbnail}
-                  alt="userImg"
-                  className="h-8 w-8 rounded-full"
-                />
-                <p className="text-blue-500">{com.username}</p>
-                <div className="max-w-[480px]">
-                  <p className="break-words">{com.comment}</p>
-                  <p className="text-blue-400">
-                    {moment.utc(com.time, "YYYY-MM-DD HH:mm:ss").fromNow()}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>沒有人留言...</p>
-          )}
-          {commentData && commentData.length > visibleComments && (
-            <Button variant="link" onClick={loadMoreComments}>
-              載入更多...
+
+      {commentDisplay && (
+        <>
+          <Separator className="my-4" />
+          <div className="flex justify-between items-center mt-2 w-full">
+            <Button
+              variant="link"
+              onClick={commentHandler}
+              disabled={isCommentLoading}
+            >
+              查看留言... ({commentData ? commentData.length : 0})
             </Button>
-          )}
-        </ul>
-      </div>
-      <div className="flex items-center justify-center mt-2 gap-2 w-full">
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder="comment"
-          onChange={(e) => {
-            setComment(e.currentTarget.value);
-          }}
-        />
-        <Button
-          onClick={() => {
-            commentSubmitHandler();
-            if (inputRef.current) inputRef.current.value = "";
-          }}
-          disabled={isCommentSubmitting}
-        >
-          送出
-        </Button>
-      </div>
+          </div>
+          <div
+            className={`justify-start items-center mt-2 w-full ${
+              isCommentOpen ? "flex" : "hidden"
+            } overflow-hidden`}
+          >
+            <ul>
+              {commentData ? (
+                commentData.slice(0, visibleComments).map((com, index) => (
+                  <div
+                    className="flex items-start gap-4 mt-2 w-full"
+                    key={com.id}
+                  >
+                    <img
+                      src={com.thumbnail}
+                      alt="userImg"
+                      className="h-8 w-8 rounded-full"
+                    />
+                    <p className="text-blue-500">{com.username}</p>
+                    <div className="max-w-[480px]">
+                      <p className="break-words">{com.comment}</p>
+                      <p className="text-blue-400">
+                        {moment.utc(com.time, "YYYY-MM-DD HH:mm:ss").fromNow()}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>沒有人留言...</p>
+              )}
+              {commentData && commentData.length > visibleComments && (
+                <Button variant="link" onClick={loadMoreComments}>
+                  載入更多...
+                </Button>
+              )}
+            </ul>
+          </div>
+          <div className="flex items-center justify-center mt-2 gap-2 w-full">
+            <Input
+              ref={inputRef}
+              type="text"
+              placeholder="comment"
+              onChange={(e) => {
+                setComment(e.currentTarget.value);
+              }}
+            />
+            <Button
+              onClick={() => {
+                commentSubmitHandler();
+                if (inputRef.current) inputRef.current.value = "";
+              }}
+              disabled={isCommentSubmitting}
+            >
+              送出
+            </Button>
+          </div>
+        </>
+      )}
     </>
   );
 };

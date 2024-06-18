@@ -10,6 +10,7 @@ import {
   XIcon,
   CigaretteIcon,
   LogOutIcon,
+  LaughIcon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -27,10 +28,10 @@ const exploreItems = [
     icon: CigaretteIcon,
   },
   {
-    name: "Item2",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
+    name: "Manufactor",
+    description: "mygo",
+    to: "/manu",
+    icon: LaughIcon,
   },
   {
     name: "Item3",

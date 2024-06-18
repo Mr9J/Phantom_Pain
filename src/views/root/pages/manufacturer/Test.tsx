@@ -1,149 +1,118 @@
-import React, { useState, useEffect } from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import FileUploader from "@/components/shared/FileUploader";
-import { PostValidation } from "@/lib/validation";
+import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";
-import { ToastAction } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import {
-  useCreatePost,
-  useDeletePost,
-  useUpdatePost,
-} from "@/lib/react-query/queriesAndMutation";
+import FileUploader from "@/components/shared/FileUploader";
+import { usePostImage } from "@/lib/react-query/queriesAndMutation";
 
 export type PostFormProps = {
   post?: {
-    caption: string;
     file: File[];
-    location: string;
-    tags: string;
+    projectId: string;
+    productId: string;
     imgUrl: string;
-    postId: string;
   };
   action: "create" | "update";
 };
+
 const Test = ({ post, action }: PostFormProps) => {
-  const { mutateAsync: createPost, isPending } = useCreatePost();
-  const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
-    useUpdatePost();
   const { toast } = useToast();
-  const { user } = useUserContext();
+  //const { user } = useUserContext();
+  const [file, setFile] = useState<File | null>(null);
+  const [projectFile, setProjectFile] = useState<File | null>(null);
+  const [productFile, setProductFile] = useState<File | null>(null);
+  const { mutateAsync: postImage, isPending } = usePostImage();
 
-  const form = useForm<z.infer<typeof PostValidation>>({
-    resolver: zodResolver(PostValidation),
-    defaultValues: {
-      caption: post ? post?.caption : "",
-      file: [],
-      location: post ? post?.location : "",
-      tags: post ? post?.tags : "",
-    },
-  });
-
-  useEffect(() => {
-    if (post && action === "update") {
-      console.log(post);
-      form.reset({
-        caption: post ? post?.caption : "",
-        file: post ? post.file : [],
-        location: post ? post?.location : "",
-        tags: post ? post?.tags : "",
-      });
-    }
-  }, [post]);
-
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof PostValidation>) {
-    if (post && action === "update") {
-      const session = await updatePost({
-        ...values,
-        userId: user.id,
-        id: Date.now().toString() + user.id,
-        postId: post.postId,
-      });
-
+  const uploadFileHandler = async (mode: "project" | "product") => {
+    if (!projectFile && !productFile) {
       toast({
-        title: "更新中...",
-        description: "請稍後... ",
+        variant: "destructive",
+        title: "錯誤",
+        description: "請選擇一張圖片。",
       });
+      return;
+    }
+    try {
+      let session;
+      if (mode === "project") {
+        session = await postImage({
+          //userId: user.id,
+          file: [file],
+          projectId: "X",
+          productId: "",
+        });
+      } else if (mode === "product") {
+        session = await postImage({
+          //userId: user.id,
+          file: [file],
+          projectId: "X1",
+          productId: "Y",
+        });
+      }
 
       if (!session) {
         toast({
           variant: "destructive",
-          title: "更新失敗, 請再試一次",
+          title: "錯誤",
+          description: "伺服器錯誤，請稍後再試。",
         });
+        return;
       }
 
       toast({
-        title: "發布成功",
-        description: "您的貼文已經成功更新！",
-        action: (
-          <ToastAction
-            altText="success"
-            onClick={() => {
-              navigate("/social");
-            }}
-          >
-            查看
-          </ToastAction>
-        ),
+        title: "上傳成功",
+        description: "您的圖片已經成功上傳！",
       });
-
-      return;
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "錯誤",
+        description: "伺服器錯誤，請稍後再試。",
+      });
     }
-  }
+  };
+
   return (
     <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-9 w-full max-w-5xl"
+      <p>Project</p>
+      <div className="flex flex-col items-center gap-4">
+        <FileUploader
+          fieldChange={(files) => {
+            if (files && files.length > 0) {
+              setProjectFile(files[0]);
+            }
+          }}
+          mediaUrl={post ? post.imgUrl : ""}
+        />
+      </div>
+      <hr />
+      <p>Product</p>
+      <div className="flex flex-col items-center gap-4">
+        <FileUploader
+          fieldChange={(files) => {
+            if (files && files.length > 0) {
+              setProductFile(files[0]);
+            }
+          }}
+          mediaUrl={post ? post.imgUrl : ""}
+        />
+        <Button
+          onClick={() => {
+            if (projectFile) {
+              uploadFileHandler("project");
+            }
+            if (productFile) {
+              uploadFileHandler("product");
+            }
+          }}
+          disabled={(!projectFile && !productFile) || isPending}
         >
-          <FormField
-            control={form.control}
-            name="file"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-3xl font-bold">新增圖片</FormLabel>
-                <FormControl>
-                  <FileUploader
-                    fieldChange={field.onChange}
-                    mediaUrl={post ? post.imgUrl : ""}
-                  />
-                </FormControl>
-                <FormMessage className="shad-form_message" />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
-      <Button
-        type="submit"
-        className="shad-button_dark_4"
-        disabled={isPending || isLoadingUpdate}
-      >
-        發布
-      </Button>
-      <Button
-        type="button"
-        className="shad-button_dark_4"
-        onClick={() => {
-          history.back();
-        }}
-        disabled={isPending || isLoadingUpdate}
-      >
-        取消
-      </Button>
+          {isPending ? "上傳中..." : "上傳圖片"}
+        </Button>
+      </div>
     </>
   );
 };
+
 export default Test;
