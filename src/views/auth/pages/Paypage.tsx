@@ -90,7 +90,7 @@ function Paypage() {
   const [showCoupons,setshowCoupons] = useState(false);
   const [showNotFoundCoupons,setshowNotFoundCoupons] = useState(false);
   const [discount, setDiscount] = useState<number>(0);
-  const [couponCode , setCouponCode] = useState<string>('');
+  // const [couponCode , setCouponCode] = useState<string>('');
   
 
 
@@ -148,7 +148,7 @@ function Paypage() {
     productdata:[{ productId: selectedproductId, count: selectedProductCount }],
     discount : discount,
     donate:0,
-    couponCode:couponCode
+    couponCode:null
   });
    
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -571,7 +571,7 @@ return(
   <div className="whitespace-nowrap text-right font-extrabold text-2xl">
     {/* 金額正規化顯示.toLocaleString() */}
   NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount).toLocaleString()}
-  {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount)}/>}
+  {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount)}/>}
   
   </div>
   </div>
