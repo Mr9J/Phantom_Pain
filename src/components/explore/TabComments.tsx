@@ -52,19 +52,20 @@ function TabComments({ pid }: { pid: number }) {
     setComments((comments) => [...comments, receivedComment]);
   };
 
+  const getComments = async (config?: string) => {
+    const res = await axios.get(`${URL}/ProjectInfo/GetComments`, {
+      params: {
+        projectId: pid,
+        orderby: config,
+      },
+    });
+
+    const comments = res.data.map((data: typeCommentDto) => DtoToComment(data));
+    setComments(comments);
+  };
   useEffect(() => {
     (async () => {
-      const res = await axios.get(`${URL}/ProjectInfo/GetComments`, {
-        params: {
-          projectId: pid,
-        },
-      });
-
-      const comments = res.data.map((data: typeCommentDto) =>
-        DtoToComment(data)
-      );
-      console.log(comments);
-      setComments(comments);
+      await getComments();
     })();
 
     // 註冊接收訊息事件
@@ -79,12 +80,26 @@ function TabComments({ pid }: { pid: number }) {
     console.log(comments);
   }, [comments]);
 
+  const handleSortChange = async (value: string) => {
+    switch (value) {
+      case "nto":
+        await getComments();
+        break;
+      case "otn":
+        await getComments("Date");
+        break;
+      case "hot":
+        await getComments("CommentId");
+        break;
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between">
         <h2>{comments.length}則留言</h2>
 
-        <Select>
+        <Select onValueChange={handleSortChange}>
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="排序依據" />
           </SelectTrigger>
@@ -114,7 +129,7 @@ function TabComments({ pid }: { pid: number }) {
         <Button onClick={sendComment}>留言</Button>
       </div>
 
-      <div className=" mx-auto mt-10 p-4   rounded-lg shadow-lg space-y-4">
+      <div className=" mx-auto mt-10 p-4 rounded-lg shadow-lg space-y-4">
         {comments.map((c) => (
           <div key={c.commentId} className="border-b border-gray-700 pb-4">
             <div className="flex items-center mb-2">
