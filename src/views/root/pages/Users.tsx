@@ -1,56 +1,23 @@
 import Footer from "@/components/section/Footer";
 import { useGetUserInfo } from "@/lib/react-query/queriesAndMutation";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { Project, UserProfile } from "@/types";
+import { useParams } from "react-router-dom";
 import { ProfileMain, ProfileProjects } from "@/components/profile";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HistoryIcon, HeartHandshakeIcon, PhoneCallIcon } from "lucide-react";
-
-const INITIAL_PROJECT: Project = {
-  projectId: 0,
-  projectName: "",
-  projectDescription: "",
-  projectGoal: 0,
-  projectStartDate: new Date(),
-  projectEndDate: new Date(),
-  projectGroupId: 0,
-  projectThumbnail: "",
-  projectStatusId: 0,
-};
-
-const INITIAL_USERPROFILE: UserProfile = {
-  id: 0,
-  nickname: "",
-  username: "",
-  email: "",
-  description: "",
-  avatar: "",
-  time: "",
-  projects: [INITIAL_PROJECT],
-};
+import { useUserContext } from "@/context/AuthContext";
+import SponsoredProjects from "@/components/profile/SponsoredProjects";
 
 const Users = () => {
-  const { pathname } = useLocation();
-  const [user, setUser] = useState<UserProfile>(INITIAL_USERPROFILE);
-  const {
-    data: userData,
-    isPending: userInfoPending,
-    isError: isErrorUserData,
-    refetch: refetchUserData,
-  } = useGetUserInfo(pathname);
-
-  useEffect(() => {
-    if (userData) {
-      setUser(userData);
-      console.log(user);
-    }
-  }, [userData]);
+  const { id } = useParams();
+  const { user } = useUserContext();
+  const { data: userData, isPending: userInfoLoading } = useGetUserInfo(
+    id || ""
+  );
 
   return (
     <>
       <section className="overflow-hidden">
-        <ProfileMain user={user} />
+        <ProfileMain user={userData} isLoading={userInfoLoading} />
 
         <Tabs defaultValue="proposed" className="w-full">
           <TabsList className="flex justify-center items-center">
@@ -67,10 +34,10 @@ const Users = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="proposed">
-            <ProfileProjects user={user} />
+            <ProfileProjects user={userData} isLoading={userInfoLoading} />
           </TabsContent>
           <TabsContent value="sponsored">
-            Change your password here.
+            <SponsoredProjects id={id || ""} />
           </TabsContent>
           <TabsContent value="contact">Change your password here.</TabsContent>
         </Tabs>

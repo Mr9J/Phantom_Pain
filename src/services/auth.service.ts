@@ -1,5 +1,6 @@
 import { CurrentUserDTO, OuterSignIn, SignInDTO, SignUpDTO } from "@/types";
 import axios from "axios";
+import exp from "constants";
 import { Network } from "lucide-react";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -196,6 +197,24 @@ export async function checkAdmin() {
 export async function getMemberById(id: string) {
   try {
     const res = await axios.get(`${URL}/Member/get-member-by-id/${id}`);
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getMemberSponsored(id: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/get-member-sponsored/${id}`, {
+      headers: { Authorization: jwt },
+    });
 
     if (res.status !== 200) throw Error;
 

@@ -27,7 +27,7 @@ const PostCard = ({ post }: PostCardProps) => {
     <div className=" bg-slate-50 dark:bg-dark-2 rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <Link to={`/users/${post.userId}`}>
+          <Link to={`/profile/${post.userId}`}>
             <img
               src={post?.userImg || userThumbnail}
               alt="creator"

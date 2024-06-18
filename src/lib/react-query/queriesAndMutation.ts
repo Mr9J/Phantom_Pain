@@ -13,6 +13,7 @@ import {
   changeEmail,
   checkAdmin,
   getMemberById,
+  getMemberSponsored,
   resendEmail,
   resetPassword,
   sendResetEmail,
@@ -29,6 +30,7 @@ import {
   getInfinitePosts,
   getPostById,
   getPostImg,
+  getPostsById,
   getRecent3Posts,
   getRecentPosts,
   getSavedPosts,
@@ -190,6 +192,22 @@ export const useGetRecent3Posts = (id: string) => {
   return useQuery({
     queryKey: ["recent3Posts", id],
     queryFn: () => getRecent3Posts(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetPostsById = (id: string) => {
+  return useQuery({
+    queryKey: ["postsById", id],
+    queryFn: () => getPostsById(id),
+    enabled: !!id,
+  });
+};
+
+export const useGetMemberSponsored = (id: string) => {
+  return useQuery({
+    queryKey: ["memberSponsored", id],
+    queryFn: () => getMemberSponsored(id),
     enabled: !!id,
   });
 };

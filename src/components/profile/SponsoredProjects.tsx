@@ -1,13 +1,11 @@
-import { UserProfile } from "@/types";
 import logo from "@/assets/_shared_img/logo.png";
+import { useGetMemberSponsored } from "@/lib/react-query/queriesAndMutation";
 import ProjectCard from "./ProjectCard";
 
-type ProfileProjectsProps = {
-  user?: UserProfile;
-  isLoading: boolean;
-};
+const SponsoredProjects = ({ id }: { id: string }) => {
+  const { data: projects } = useGetMemberSponsored(id);
 
-const ProfileProjects = ({ user, isLoading }: ProfileProjectsProps) => {
+  console.log(projects);
   return (
     <section className="">
       <div className="container px-5 py-6 mx-auto">
@@ -21,7 +19,7 @@ const ProfileProjects = ({ user, isLoading }: ProfileProjectsProps) => {
           <img src={logo} className="lg:w-1/2 w-full object-cover" />
         </div>
         <div className="flex flex-wrap -m-4">
-          {user?.projects.map((project) => (
+          {projects?.map((project) => (
             <div
               className="xl:w-1/4 md:w-1/2 w-full p-4"
               key={project.projectId}
@@ -35,4 +33,4 @@ const ProfileProjects = ({ user, isLoading }: ProfileProjectsProps) => {
   );
 };
 
-export default ProfileProjects;
+export default SponsoredProjects;

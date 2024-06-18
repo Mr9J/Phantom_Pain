@@ -192,8 +192,8 @@ export type Project = {
   projectName: string;
   projectDescription: string;
   projectGoal: number;
-  projectStartDate: Date;
-  projectEndDate: Date;
+  projectStartDate: string;
+  projectEndDate: string;
   projectGroupId: number;
   projectThumbnail: string;
   projectStatusId: number;

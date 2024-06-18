@@ -176,6 +176,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               fill="red"
               width={20}
               height={20}
+              stroke="red"
               onClick={likeHandler}
               className="cursor-pointer"
             />
@@ -184,7 +185,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={likeHandler}
-              className="cursor-pointer"
+              className="cursor-pointer dark:text-white"
             />
           )}
           <p className="text-[14px] font-medium leading-[140%] lg:text-[16px]">
@@ -198,6 +199,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               fill="blue"
               width={20}
               height={20}
+              stroke="blue"
               onClick={savePostHandler}
               className="cursor-pointer"
             />
@@ -206,7 +208,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={savePostHandler}
-              className="cursor-pointer"
+              className="cursor-pointer dark:text-white"
             />
           )}
         </div>

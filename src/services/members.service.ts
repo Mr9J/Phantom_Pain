@@ -34,7 +34,7 @@ export async function getMemberCounts() {
 
 export async function getUserInfo(id: string) {
   try {
-    const res = await axios.get(`${baseUrl}/Member/user-info${id}`);
+    const res = await axios.get(`${baseUrl}/Member/user-info/users/${id}`);
 
     if (res.status !== 200) throw Error;
 

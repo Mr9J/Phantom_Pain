@@ -348,3 +348,21 @@ export async function getRecent3Posts(id: string) {
     console.error(error);
   }
 }
+
+export async function getPostsById(id: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error("jwt is empty");
+
+    const data = await axios.get(`${URL}/Post/get-posts-by-id/${id}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (data.status !== 200) throw Error;
+
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
