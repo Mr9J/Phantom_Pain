@@ -21,9 +21,9 @@ export type typeCommentDto = {
   commentId?: number;
   date?: string;
   commentMsg: string;
-  memberId: number;
+  memberId?: number;
   projectId: number;
-  member: typeMember;
+  member?: typeMember;
 };
 
 export type typeMember = {

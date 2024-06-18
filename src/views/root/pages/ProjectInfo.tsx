@@ -24,7 +24,6 @@ type ProjectInfoDto = {
   startDate: string;
   endDate: string;
   isLiked: boolean;
-
   products: typeProductCards;
 };
 
@@ -41,7 +40,7 @@ function ProjectInfo() {
         const res = await axios.get(`${URL}/ProjectInfo/${pid}`, {
           headers: { Authorization: localStorage.getItem("token") },
         });
-        console.log(res.data);
+        if (res.status === 404) return <NotFound />;
         setProject(res.data);
       } catch (error) {
         console.error(error);
@@ -271,7 +270,7 @@ function ProjectInfo() {
                 </div>
               </TabsContent>
               <TabsContent value="comments" className="mx-4">
-                <TabComments></TabComments>
+                <TabComments pid={pid}></TabComments>
               </TabsContent>
             </Tabs>
           </div>
