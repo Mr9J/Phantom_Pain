@@ -59,6 +59,7 @@ import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
 import { useToast } from "./components/ui/use-toast";
 import axios from "axios";
+import Create from "./views/root/pages/Create";
 
 const App = () => {
   const [input, setInput] = useState("");
