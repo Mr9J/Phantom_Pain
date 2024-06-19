@@ -76,7 +76,7 @@ const ViewHistory: React.FC = () => {
           {projectCards.map((item: ProjectCardDTO, index: number) => (
             <CarouselItem
               key={index}
-              className="pl-1 md:basis-1/2 lg:basis-1/3">
+              className="pl-1 md:basis-1/2 lg:basis-1/4">
               <div className="p-1">
                 <ProjectCardVertical prj={item}></ProjectCardVertical>
               </div>
