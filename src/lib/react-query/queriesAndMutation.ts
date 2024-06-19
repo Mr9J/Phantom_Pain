@@ -43,6 +43,8 @@ import {
   searchPosts,
   updatePost,
   postImage,
+  followUser,
+  followUserCheck,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
 
@@ -94,6 +96,18 @@ export const useLikePost = () => {
   return useMutation({
     mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
       likePost(postId, userId),
+  });
+};
+
+export const useFollowCheck = () => {
+  return useMutation({
+    mutationFn: ({
+      followerId,
+      followingId,
+    }: {
+      followerId: string;
+      followingId: string;
+    }) => followUserCheck(followerId, followingId),
   });
 };
 
@@ -234,5 +248,11 @@ export const useGetMemberProfile = (id: string) => {
 export const useUpdataUserProfile = () => {
   return useMutation({
     mutationFn: (profile: IUpdateUserProfile) => updateMemberProfile(profile),
+  });
+};
+
+export const useFollowUser = () => {
+  return useMutation({
+    mutationFn: (id: string) => followUser(id),
   });
 };

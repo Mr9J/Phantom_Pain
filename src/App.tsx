@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
 import { Route, Routes, Navigate } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
@@ -56,9 +56,29 @@ import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
+import { useToast } from "./components/ui/use-toast";
+import axios from "axios";
 
 const App = () => {
   const [input, setInput] = useState("");
+  const { toast } = useToast();
+  const URL = import.meta.env.VITE_BACK_URL;
+  const test = async () => {
+    console.log("test");
+    await axios.get(`${URL}/WeatherForecast`);
+  };
+
+  useEffect(() => {
+    const res = test();
+
+    res.catch((err) => {
+      toast({
+        variant: "destructive",
+        title: "大哥",
+        description: "你的後端掛了",
+      });
+    });
+  }, []);
 
   return (
     <>

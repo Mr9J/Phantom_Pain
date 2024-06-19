@@ -25,6 +25,7 @@ import {
 import { useEffect, useState } from "react";
 import FileUploader from "../shared/FileUploader";
 import { Textarea } from "../ui/textarea";
+import street from "@/assets/_shared_img/street.jpg";
 
 const PostProfileEdit = ({ id }: { id: string }) => {
   const { toast } = useToast();
@@ -106,7 +107,12 @@ const PostProfileEdit = ({ id }: { id: string }) => {
     <section className="">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
-          <div className="container_profile_side absolute inset-0 h-full w-full object-cover opacity-80"></div>
+          <img
+            src={street}
+            alt="street"
+            className="absolute inset-0 h-full w-full object-cover opacity-80"
+          />
+          {/* <div className="container_profile_side absolute inset-0 h-full w-full object-cover opacity-80"></div> */}
           <div className="hidden lg:fixed top-4 lg:block lg:p-12">
             <Link className="block text-white" to="/">
               <span className="sr-only">Home</span>
@@ -117,7 +123,7 @@ const PostProfileEdit = ({ id }: { id: string }) => {
               Welcome to Mumu
             </h2>
 
-            <p className="mt-4 leading-relaxed text-white/90">
+            <p className="mt-4 leading-relaxed text-white/90 font-bold">
               您可以在這裡分享您的生活點滴，與朋友們一起交流。
             </p>
           </div>

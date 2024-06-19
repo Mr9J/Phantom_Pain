@@ -262,9 +262,11 @@ export async function updateMemberProfile(profile: IUpdateUserProfile) {
     const newProfile: UpdateUserProfile = {
       nickname: profile.nickname,
       username: profile.username,
-      thumbnail: `https://cdn.mumumsit158.com/Members/MemberID-${
-        profile.id
-      }-${Date.now()}-ThumbNail.jpg`,
+      thumbnail: isNewImg
+        ? `https://cdn.mumumsit158.com/Members/MemberID-${
+            profile.id
+          }-${Date.now()}-ThumbNail.jpg`
+        : "",
       email: profile.email,
       password: profile.password,
       confirmPassword: profile.confirmPassword,
