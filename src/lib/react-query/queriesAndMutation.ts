@@ -45,6 +45,7 @@ import {
   postImage,
   followUser,
   followUserCheck,
+  getFollowPost,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
 
@@ -254,5 +255,13 @@ export const useUpdataUserProfile = () => {
 export const useFollowUser = () => {
   return useMutation({
     mutationFn: (id: string) => followUser(id),
+  });
+};
+
+export const useGetFollowPost = (page: number) => {
+  return useQuery({
+    queryKey: ["followPost"],
+    queryFn: () => getFollowPost(page),
+    enabled: !!page,
   });
 };

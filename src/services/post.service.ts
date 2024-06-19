@@ -442,3 +442,21 @@ export async function followUser(userId: string) {
     console.error(error);
   }
 }
+
+export async function getFollowPost(page: number) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Post/get-follow-posts/${page}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
