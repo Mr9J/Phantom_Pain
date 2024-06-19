@@ -13,39 +13,54 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 
-function ViewHistory() {
+let lastViewedPid: string | null = null;
+
+const ViewHistory: React.FC = () => {
   const [projectCards, setProjectCards] = useState<ProjectCardDTO[]>([]);
-  const { pid } = useParams(); // 使用useParams來獲取pid參數
-  const URL = import.meta.env.VITE_API_URL;
+  const { pid } = useParams<{ pid: string }>(); // 使用useParams來獲取pid參數
+  const URL: string = import.meta.env.VITE_API_URL as string;
+
+  // 更新上一次瀏覽的Project ID
+  useEffect(() => {
+    if (pid && pid !== lastViewedPid) {
+      lastViewedPid = pid;
+    }
+  }, [pid]);
+
   useEffect(() => {
     // 從cookie中加載歷史紀錄
-    let history = cookie.load("projectHistory") || [];
+    let history: string[] = cookie.load("projectHistory") || [];
 
     // 確保歷史紀錄是一個陣列
     if (!Array.isArray(history)) {
       history = [history];
     }
 
-    // 將當前的pid添加到歷史紀錄的開頭
-    if (history.indexOf(pid) === -1) {
-      // 移除陣列中已存在的當前pid
-      history = history.filter((id: string | undefined) => id !== pid);
-      // 將當前的pid添加到歷史紀錄的開頭
-      history.unshift(pid);
-      // 只保留最新的5個紀錄
-      history = history.slice(0, 6);
-      // 更新cookie
-      cookie.save("projectHistory", history, { path: "/" });
+    // 移除陣列中已存在的當前pid
+    history = history.filter(id => id !== pid);
+
+    // 將上一次瀏覽的pid添加到歷史紀錄的開頭
+    if (lastViewedPid && !history.includes(lastViewedPid)) {
+      history.unshift(lastViewedPid);
     }
+
+    // 只保留最新的5個紀錄（不包括當前的pid）
+    history = history.slice(0, 7);
+
+    // 更新cookie
+    cookie.save("projectHistory", history, { path: "/" });
 
     // 使用所有歷史紀錄的ID來呼叫API並更新狀態
     const fetchProjectCards = async () => {
       const requests = history.map((projectId: string) =>
-        axios.get(`${URL}/Project/History/${projectId}`)
+        axios.get<ProjectCardDTO>(`${URL}/Project/History/${projectId}`)
       );
       try {
         const responses = await Promise.all(requests);
-        setProjectCards(responses.map((res) => res.data));
+        const filteredProjectCards = responses
+          .map((res) => res.data)
+          .filter((card) => pid ? card.projectId !== parseInt(pid, 10) : true);           
+          setProjectCards(filteredProjectCards);
       } catch (error) {
         console.error("API呼叫出錯:", error);
       }
