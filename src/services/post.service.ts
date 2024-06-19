@@ -4,9 +4,15 @@ import {
   UpdatePostDTO,
   NewUpdatePostDTO,
   ICommentPost,
+  SearchTerm,
+  PostImageDTO,
 } from "@/types";
 import { S3 } from "@/config/R2";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import axios from "axios";
 
 const URL = import.meta.env.VITE_API_URL;
@@ -17,44 +23,38 @@ export async function createPost(post: PostDTO) {
       caption: post.caption,
       location: post.location,
       tags: post.tags,
-      file: "",
+      file: post.userId + "/" + post.id,
       userId: post.userId,
     };
 
-    for (let index = 0; index < post.file.length; index++) {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const promises = post.file.map(async (img, index) => {
       try {
-        const img = post.file[index];
-        const upload = await S3.send(
+        await S3.send(
           new PutObjectCommand({
-            Bucket: "Tests",
-            Key: `${post.userId}/${post.id}/${index}.jpg`,
+            Bucket: "mumu",
+            Key: `Posts/${post.userId}/${post.id}/${index}.jpg`,
             Body: img,
             ContentType: "image/jpeg",
           })
         );
-
-        if (upload.$metadata.httpStatusCode === 200) {
-          if (index === post.file.length - 1) {
-            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
-          } else {
-            newPost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
-          }
-        }
       } catch (error) {
-        console.error(error);
+        console.error(`Error uploading file ${index}:`, error);
       }
-    }
+    });
 
-    const jwt = localStorage.getItem("token");
-    if (!jwt) throw Error;
+    await Promise.all(promises);
 
-    const response = await axios.post(`${URL}/post/create-post`, newPost, {
+    const res = await axios.post(`${URL}/post/create-post`, newPost, {
       headers: { Authorization: jwt },
     });
 
-    if (response.status !== 200) throw Error;
+    if (res.status !== 200) throw Error;
 
-    return response.data;
+    return res.data;
   } catch (error) {
     console.error(error);
   }
@@ -63,6 +63,8 @@ export async function createPost(post: PostDTO) {
 export async function getRecentPosts(page: number) {
   try {
     const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
 
     const data = await axios.get(`${URL}/Post/get-posts/${page}`, {
       headers: { Authorization: jwt },
@@ -97,6 +99,9 @@ export async function likePost(postId: string, userId: string) {
 
 export async function likePostCheck(postId: string, userId: string) {
   try {
+    if (postId === "" || userId === "")
+      throw Error("postId or userId is empty");
+
     const jwt = localStorage.getItem("token");
 
     const res = await axios.get(
@@ -116,6 +121,9 @@ export async function likePostCheck(postId: string, userId: string) {
 
 export async function savePostCheck(postId: string, userId: string) {
   try {
+    if (postId === "" || userId === "")
+      throw Error("postId or userId is empty");
+
     const jwt = localStorage.getItem("token");
 
     const res = await axios.get(
@@ -154,6 +162,8 @@ export async function savePost(postId: string, userId: string) {
 
 export async function getPostById(postId: string) {
   try {
+    if (postId === "") throw Error("postId is empty");
+
     const jwt = localStorage.getItem("token");
 
     const res = await axios.get(`${URL}/Post/get-post/${postId}`, {
@@ -176,40 +186,35 @@ export async function updatePost(post: UpdatePostDTO) {
       caption: post.caption,
       location: post.location,
       tags: post.tags,
-      file: "",
+      file: post.id,
       userId: post.userId,
       postId: parseInt(post.postId),
     };
 
     if (isNewImg) {
-      for (let index = 0; index < post.file.length; index++) {
-        try {
-          const img = post.file[index];
+      updatePost.file = post.userId + "/" + Date.now().toString() + post.userId;
 
-          const upload = await S3.send(
+      const promises = post.file.map(async (img, index) => {
+        try {
+          await S3.send(
             new PutObjectCommand({
-              Bucket: "Tests",
-              Key: `${post.userId}/${post.id}/${index}.jpg`,
+              Bucket: "mumu",
+              Key: `Posts/${updatePost.file}/${index}.jpg`,
               Body: img,
               ContentType: "image/jpeg",
             })
           );
-
-          if (upload.$metadata.httpStatusCode === 200) {
-            if (index === post.file.length - 1) {
-              updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg`;
-            } else {
-              updatePost.file += `https://cdn.mumumsit158.com/Tests/${post.userId}/${post.id}/${index}.jpg,`;
-            }
-          }
         } catch (error) {
-          console.error(error);
+          console.error(`Error uploading file ${index}:`, error);
         }
-      }
+      });
+
+      await Promise.all(promises);
     }
 
     const jwt = localStorage.getItem("token");
     if (!jwt) throw Error;
+
     const response = await axios.patch(
       `${URL}/post/update-post/${post.postId}`,
       updatePost,
@@ -273,6 +278,7 @@ export async function getCommentsPost(postId: string) {
     return res.data;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }
 
@@ -289,5 +295,121 @@ export async function getSavedPosts(page: number) {
     return res.data;
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function getPostImg(imgUrl: string) {
+  try {
+    const imgArr = await S3.send(
+      new ListObjectsV2Command({
+        Bucket: "mumu",
+        Prefix: `Posts/${imgUrl}/`,
+      })
+    );
+
+    if (imgArr.KeyCount === 0) throw Error;
+
+    if (imgArr.$metadata.httpStatusCode !== 200) throw Error;
+
+    return imgArr.Contents;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function searchPosts(searchTerm: SearchTerm) {
+  try {
+    console.log("searchTerm", searchTerm);
+
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const posts = await axios.post(`${URL}/Post/search-posts`, searchTerm, {
+      headers: { Authorization: jwt },
+    });
+
+    if (posts.status !== 200) throw Error;
+
+    return posts.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getRecent3Posts(id: string) {
+  try {
+    const data = await axios.get(`${URL}/Post/get-recent-posts/${id}`);
+
+    if (data.status !== 200) throw Error;
+
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPostsById(id: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error("jwt is empty");
+
+    const data = await axios.get(`${URL}/Post/get-posts-by-id/${id}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (data.status !== 200) throw Error;
+
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function postImage(post: PostImageDTO) {
+  try {
+    const imageUrls: string[] = [];
+
+    for (let index = 0; index < post.file.length; index++) {
+      try {
+        const img = post.file[index];
+        let key;
+        if (post.projectId.length > 0) {
+          if (post.productId.length > 0) {
+            key = `project-${post.projectId}/product-${post.productId}.png`;
+          } else {
+            key = `project-${post.projectId}/Thumbnail.png`;
+          }
+        }
+        const upload = await S3.send(
+          new PutObjectCommand({
+            Bucket: "Projects",
+            Key: key,
+            Body: img,
+            ContentType: "image/jpeg",
+          })
+        );
+
+        if (upload.$metadata.httpStatusCode === 200) {
+          let imageUrl = "";
+          if (post.productId.length > 0) {
+            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/product-${post.productId}.png`;
+          } else {
+            imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/Thumbnail.png`;
+          }
+          imageUrls.push(imageUrl);
+          console.log(imageUrl);
+        }
+      } catch (error) {
+        console.error(`Failed to upload image ${index}:`, error);
+      }
+    }
+
+    return imageUrls;
+  } catch (error) {
+    console.error("Failed to upload images:", error);
+    throw error;
   }
 }

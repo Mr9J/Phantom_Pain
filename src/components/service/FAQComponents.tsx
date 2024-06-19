@@ -6,7 +6,7 @@ interface FAQ {
 }
 
 interface FAQComponentProps {
-  onQuestionClick: (answer: string) => void;
+  onQuestionClick: (question: string, answer: string) => void;
 }
 
 const faqs: FAQ[] = [
@@ -27,20 +27,24 @@ const faqs: FAQ[] = [
 const FAQComponent: React.FC<FAQComponentProps> = ({ onQuestionClick }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick = (answer: string) => {
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClick = (question: string, answer: string) => {
     console.log("FAQ item clicked:", answer);
-    onQuestionClick(answer);
+    onQuestionClick(question, answer);
   };
 
   return (
     <div className="service-FAQ-container">
-      <button className="faq-toggle-button" onClick={() => setIsOpen(!isOpen)}>
+      <button onClick={handleToggle}>
         {isOpen ? "隱藏常見問題" : "顯示常見問題"}
       </button>
       {isOpen && (
         <div className="service-FAQ-list">
           {faqs.map((faq, index) => (
-            <div key={index} className="service-FAQ-item" onClick={() => handleClick(faq.answer)}>
+            <div key={index} className="service-FAQ-item" onClick={() => handleClick(faq.question, faq.answer)}>
               <p>{faq.question}</p>
             </div>
           ))}
