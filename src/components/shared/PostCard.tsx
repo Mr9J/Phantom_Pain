@@ -18,6 +18,7 @@ import {
 } from "@/lib/react-query/queriesAndMutation";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
+import { use } from "passport";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -38,6 +39,10 @@ const PostCard = ({ post }: PostCardProps) => {
 
     setIsFollowed(res);
   };
+
+  useEffect(() => {
+    checkStatus();
+  }, []);
 
   if (!post.userId) return null;
 
