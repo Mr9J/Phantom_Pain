@@ -206,12 +206,14 @@ export type ProductDTO = {
 };
 
 export type CouponDTO = {
-  CouponId: number;
-  ProjectId: number;
-  Code: string;
-  Discount: number;
-  InitialStock: number;
-  CurrentStock: number;
-  Deadline: string;
-  StatusId: number;
+  couponId: number;
+  projectId: number;
+  code: string;
+  discount: number;
+  initialStock: number;
+  currentStock: number;
+  deadline: string;
+  statusId: number;
+  projectName: string;
+  projectThumbnail: string;
 };

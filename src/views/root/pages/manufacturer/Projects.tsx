@@ -218,7 +218,7 @@ const Projects = () => {
       });
   };
   const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
+    //console.log("Searching for:", query);
     setSearchQuery(query);
   };
 
