@@ -3,11 +3,13 @@ const baseUrl = import.meta.env.VITE_API_URL;
 import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { useUserContext } from "@/context/AuthContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
+import axios from "axios";
 
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
+  const { pid } = useParams();
   const [startDate,setStartDate] = useState<string>("");
   const [endDate,setEndDate] = useState<string>("");
   const [projectGoal,setProjectGoal] = useState<number>();
@@ -21,10 +23,33 @@ const Create: React.FC = () => {
   const [isAuth, setIsAuth] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
+    if(pid)
+    getProjectInfo();
     checkAuthUser().then((res) => {
       setIsAuth(res);
     });
   }, []);
+
+
+
+    const getProjectInfo = async () => {
+      try {
+        const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
+        console.log(res.data);
+
+        setStartDate(res.data[0]["startDate"]);
+        setEndDate(res.data[0]["endDate"]);
+        setProjectGoal(res.data[0]["projectGoal"]);
+        setProjectTypeId(res.data[0]["projectTypeId"]);
+        setProjectName(res.data[0]["projectName"]);
+        setProjectDescription(res.data[0]["description"])
+        setProjectPreDetail(res.data[0]["projectDetails"]);
+        setSelectedImage(res.data[0]["thumbnail"]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
 
   const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(event.target.value); 
@@ -70,10 +95,11 @@ const Create: React.FC = () => {
 
     const formData = new FormData(event.currentTarget); // 收集表單數據
     formData.append("projectDetail", projectDetail);
-
+    if(pid)
+      formData.append('projectId',pid);
     const jwt = localStorage.getItem("token");
     const url = `${baseUrl}/Home/CreateProject`;
-    const method = "POST";
+    const method = pid?"PUT":"POST";
     
     fetch(url, {
       method: method,
@@ -93,7 +119,7 @@ const Create: React.FC = () => {
       .then((data) => {
         console.log("成功提交數據：", data);
         alert('請等候管理員審核。');
-        navigate('/manu');
+        navigate('/manu/projects');
         //setBanProjectModal(false); // 確認表單
       })
       .catch((error) => {
@@ -115,7 +141,7 @@ const Create: React.FC = () => {
     setProjectGoal(10000);
     setProjectTypeId("1");
     setProjectName('測試計畫');
-    setProjectDescription('測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫')
+    setProjectDescription('測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫');
     setProjectPreDetail('<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>')
   }
 
@@ -130,7 +156,7 @@ const Create: React.FC = () => {
           </h2>
         </div>
         {/* 保護區 */}
-        <button onClick={demo} className="bg-secondary text-primary">demo</button>
+        <button onClick={demo} className="bg-secondary text-primary rounded border bottom-7">demo</button>
         <div className="px-4 border border-gray-300 mb-16 rounded">
           <form
             onSubmit={(e) => {
@@ -330,7 +356,7 @@ const Create: React.FC = () => {
                 />
                 {selectedImage ? (
                   <img
-                    src={selectedImage.preview}
+                    src={selectedImage.preview||selectedImage}
                     alt="Selected"
                     className="aspect-video"
                   />
@@ -385,7 +411,7 @@ const Create: React.FC = () => {
                   type="submit"
                   className="bg-primary text-secondary  rounded px-6 py-2 font-bold border-2 border-current cursor-pointer"
                 >
-                  確定提案
+                  {pid?'確定修改':'確定提案'}
                 </button>
               </div>
             </div>

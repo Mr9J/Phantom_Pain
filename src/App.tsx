@@ -100,7 +100,8 @@ const App = () => {
             />
 
             <Route path="/StartProject" element={<StartProject />} />
-            {/* <Route path="/CreateProject" element={<Create />} /> */}
+            <Route path="/CreateProject" element={<Create />} />
+            <Route path="/EditProject/:pid" element={<Create />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
