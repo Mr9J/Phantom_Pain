@@ -3,19 +3,45 @@ const baseUrl = import.meta.env.VITE_API_URL;
 import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { useUserContext } from "@/context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
+  const [startDate,setStartDate] = useState<string>("");
+  const [endDate,setEndDate] = useState<string>("");
+  const [projectGoal,setProjectGoal] = useState<number>();
+  const [projectTypeId,setProjectTypeId] = useState<string>("1");
+  const [projectName,setProjectName] = useState<string>();
+  const [projectDescription,setProjectDescription] = useState<string>();
   const [projectDetail, setProjectDetail] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const { user, checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
+  const navigate = useNavigate();
   useEffect(() => {
     checkAuthUser().then((res) => {
       setIsAuth(res);
     });
   }, []);
+
+  const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStartDate(event.target.value); 
+  };
+  const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEndDate(event.target.value); 
+  };
+  const handleProjectGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProjectGoal(Number(event.target.value)); 
+  };
+  const handleProjectTypeIdChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setProjectTypeId(event.target.value); 
+  };
+  const handleProjectNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProjectName(event.target.value); 
+  };
+  const handleProjectDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setProjectDescription(event.target.value); 
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -46,7 +72,7 @@ const Create: React.FC = () => {
     const jwt = localStorage.getItem("token");
     const url = `${baseUrl}/Home/CreateProject`;
     const method = "POST";
-
+    
     fetch(url, {
       method: method,
       body: formData,
@@ -64,6 +90,8 @@ const Create: React.FC = () => {
       })
       .then((data) => {
         console.log("成功提交數據：", data);
+        alert('請等候管理員審核。');
+        navigate('/manu');
         //setBanProjectModal(false); // 確認表單
       })
       .catch((error) => {
@@ -78,6 +106,12 @@ const Create: React.FC = () => {
       // console.log(editorRef.current.getContent());
     }
   };
+  function demo():undefined{
+    setStartDate("2024-06-28");
+    setEndDate("2024-07-08");
+    setProjectGoal(10000);
+    setProjectTypeId("1");
+  }
 
   return (
     <>
@@ -90,11 +124,12 @@ const Create: React.FC = () => {
           </h2>
         </div>
         {/* 保護區 */}
-
+        <button onClick={demo} className="bg-secondary text-primary">demo</button>
         <div className="px-4 border border-gray-300 mb-16 rounded">
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              if(confirm('請確認內容有無錯誤'))
               handleSubmit(e);
             }}
             className="space-y-8"
@@ -145,8 +180,10 @@ const Create: React.FC = () => {
               <div className="mt-4 md:mt-0 md:col-span-3">
                 <input
                   type="date"
-                  className="border bg-secondary text-primary"
+                  className="border bg-secondary text-primary rounded"
                   name="startDate"
+                  value={startDate}
+                  onChange={handleStartDateChange}
                 />
                 <p>
                   告訴我們你希望什麼時候開始你的計畫（必須是未來的時間），Mumu將會為你安排審核順序。Mumu至少需要約十個工作天審核你的提案。
@@ -163,8 +200,10 @@ const Create: React.FC = () => {
               <div className="mt-4 md:mt-0 md:col-span-3">
                 <input
                   type="date"
-                  className="border bg-secondary text-primary"
+                  className="border bg-secondary text-primary rounded"
                   name="endDate"
+                  value={endDate}
+                  onChange={handleEndDateChange}
                 />
                 <p>
                   計畫結束時間不得早於開始時間，計畫時間建議為期在 60 天內。
@@ -185,6 +224,8 @@ const Create: React.FC = () => {
                     className="w-full mb-2 rounded border bg-secondary text-primary"
                     placeholder="100000"
                     name="projectGoal"
+                    value={projectGoal}
+                    onChange={handleProjectGoalChange}
                   />
 
                   <span className="flex-initial mb-2 pl-2">NTD</span>
@@ -202,8 +243,10 @@ const Create: React.FC = () => {
               <div className="mt-4 md:mt-0 md:col-span-3">
                 <div className="flex w-64 items-center">
                   <select
-                    className="border bg-secondary text-primary"
+                    className="border bg-secondary text-primary rounded"
                     name="projectTypeId"
+                    onChange={handleProjectTypeIdChange}
+                    value={projectTypeId}
                   >
                     <option value="1" className="text-primary">
                       教育
@@ -240,6 +283,8 @@ const Create: React.FC = () => {
                   className="w-full mb-2 rounded border bg-secondary text-primary"
                   placeholder=""
                   name="projectName"
+                  value={projectName}
+                  onChange={handleProjectNameChange}
                 />
               </div>
             </div>
@@ -255,6 +300,8 @@ const Create: React.FC = () => {
                   className="w-full mb-2 rounded border bg-secondary text-primary"
                   placeholder="請簡短的介紹這個計畫"
                   name="projectDescription"
+                  value={projectDescription}
+                  onChange={handleProjectDescriptionChange}
                 ></textarea>
               </div>
             </div>
