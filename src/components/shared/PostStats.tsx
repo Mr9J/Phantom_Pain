@@ -13,6 +13,18 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import moment from "moment";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSeparator,
+  ContextMenuSub,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
+  ContextMenuShortcut,
+} from "@/components/ui/context-menu";
+import { Link } from "react-router-dom";
 
 type PostStatsProps = {
   post: GetPostDTO;
@@ -24,15 +36,6 @@ type likePostCheckType = {
   likeCount: string;
   isLiked: string;
 };
-
-// type CommentData = {
-//   postId: string;
-//   userId: string;
-//   commentd: string;
-//   time: string;
-//   username: string;
-//   userImg: string;
-// };
 
 const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
@@ -96,20 +99,23 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         });
         return;
       }
+      refetchComments().then(() => {
+        if (comments !== "沒有留言" && comments !== undefined) {
+          setCommentData(comments);
+        }
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (userId) {
-      checkStatus();
-    }
-    if (comments !== "沒有留言" && comments !== undefined) {
-      setCommentData(comments);
-    }
-    refetchComments();
-  }, [checkStatus, commentData, comments, userId, refetchComments]);
+    refetchComments().then(() => {
+      if (comments !== "沒有留言" && comments !== undefined) {
+        setCommentData(comments);
+      }
+    });
+  }, [comments]);
 
   const likeHandler = async () => {
     try {
@@ -134,6 +140,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
         return;
       }
+
+      checkStatus();
     } catch (error) {
       console.error(error);
     }
@@ -162,6 +170,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
         return;
       }
+
+      checkStatus();
     } catch (error) {
       console.error(error);
     }
@@ -185,10 +195,16 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={likeHandler}
-              className="cursor-pointer dark:text-white"
+              className={`cursor-pointer  ${
+                commentDisplay ? "dark:text-white" : "text-white"
+              }`}
             />
           )}
-          <p className="text-[14px] font-medium leading-[140%] lg:text-[16px]">
+          <p
+            className={`text-[14px] font-medium leading-[140%] lg:text-[16px] ${
+              !commentDisplay && "text-white"
+            }`}
+          >
             {likeCount}
           </p>
         </div>
@@ -208,7 +224,9 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               width={20}
               height={20}
               onClick={savePostHandler}
-              className="cursor-pointer dark:text-white"
+              className={`cursor-pointer  ${
+                commentDisplay ? "dark:text-white" : "text-white"
+              }`}
             />
           )}
         </div>
@@ -234,23 +252,58 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
             <ul>
               {commentData ? (
                 commentData.slice(0, visibleComments).map((com, index) => (
-                  <div
-                    className="flex items-start gap-4 mt-2 w-full"
-                    key={com.id}
-                  >
-                    <img
-                      src={com.thumbnail}
-                      alt="userImg"
-                      className="h-8 w-8 rounded-full"
-                    />
-                    <p className="text-blue-500">{com.username}</p>
-                    <div className="max-w-[480px]">
-                      <p className="break-words">{com.comment}</p>
-                      <p className="text-blue-400">
-                        {moment.utc(com.time, "YYYY-MM-DD HH:mm:ss").fromNow()}
-                      </p>
-                    </div>
-                  </div>
+                  <ContextMenu key={index}>
+                    <ContextMenuTrigger
+                      className="flex items-start gap-4 mt-2 w-full"
+                      key={com.id}
+                    >
+                      <Link
+                        to={`/profile/${com.userId}`}
+                        className="flex gap-2"
+                      >
+                        <img
+                          src={com.thumbnail}
+                          alt="userImg"
+                          className="h-8 w-8 rounded-full"
+                        />
+                        <p className="text-blue-500 w-20 overflow-y-hidden overflow-x-scroll custom-scrollbar">
+                          {com.username}
+                        </p>{" "}
+                      </Link>
+                      <div className="max-w-[480px]">
+                        <p className="break-words">{com.comment}</p>
+                        <p className="text-blue-400">
+                          {moment
+                            .utc(com.time, "YYYY-MM-DD HH:mm:ss")
+                            .fromNow()}
+                        </p>
+                      </div>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent className="w-48">
+                      <ContextMenuItem>
+                        <Link to={`/profile/${com.userId}`}>個人檔案</Link>
+                      </ContextMenuItem>
+                      <ContextMenuItem onClick={() => {}}>追隨</ContextMenuItem>
+                      <ContextMenuSeparator />
+                      <ContextMenuSub>
+                        <ContextMenuSubTrigger inset className="text-red">
+                          檢舉
+                        </ContextMenuSubTrigger>
+                        <ContextMenuSubContent className="w-48">
+                          <ContextMenuItem className="text-red">
+                            不當言論
+                          </ContextMenuItem>
+                          <ContextMenuItem className="text-red">
+                            騷擾或欺凌
+                          </ContextMenuItem>
+                          <ContextMenuSeparator />
+                          <ContextMenuItem className="text-red">
+                            其他
+                          </ContextMenuItem>
+                        </ContextMenuSubContent>
+                      </ContextMenuSub>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 ))
               ) : (
                 <p>沒有人留言...</p>

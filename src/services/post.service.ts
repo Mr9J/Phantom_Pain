@@ -97,6 +97,20 @@ export async function likePost(postId: string, userId: string) {
   }
 }
 
+export async function followUserCheck(followerId: string, followingId: string) {
+  try {
+    const res = await axios.get(
+      `${URL}/Post/follow-check/${followerId}/${followingId}`
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export async function likePostCheck(postId: string, userId: string) {
   try {
     if (postId === "" || userId === "")
@@ -320,8 +334,6 @@ export async function getPostImg(imgUrl: string) {
 
 export async function searchPosts(searchTerm: SearchTerm) {
   try {
-    console.log("searchTerm", searchTerm);
-
     const jwt = localStorage.getItem("token");
 
     if (!jwt) throw Error;
@@ -400,7 +412,6 @@ export async function postImage(post: PostImageDTO) {
             imageUrl = `https://cdn.mumumsit158.com/Projects/project-${post.projectId}/Thumbnail.jpg`;
           }
           imageUrls.push(imageUrl);
-          console.log(imageUrl);
         }
       } catch (error) {
         console.error(`Failed to upload image ${index}:`, error);
@@ -411,5 +422,23 @@ export async function postImage(post: PostImageDTO) {
   } catch (error) {
     console.error("Failed to upload images:", error);
     throw error;
+  }
+}
+
+export async function followUser(userId: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Post/follow/${userId}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
   }
 }
