@@ -40,7 +40,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
-    }).replace(':', ':').replace('AM', '上午').replace('PM', '下午'); // 顯示 "下午 3:17分" 格式
+    }).replace(':', ':').replace('AM', '上午').replace('PM', '下午');
   };
 
   return (
@@ -49,7 +49,16 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
         <div key={`${message.id}-${index}`} className={`service-chat-message ${message.sender}`} ref={el => messageRefs.current[index] = el}>
           <div className="service-message-bubble">
             {message.content.startsWith('data:image') ? (
-              <img src={message.content} alt="uploaded" className="service-uploaded-image" />
+              <div className="relative">
+                <img src={message.content} alt="uploaded" className="service-uploaded-image" />
+                <a
+                  href={message.content}
+                  download={`image-${message.id}.png`}
+                  className="absolute bottom-2 right-2 bg-gray-700 text-white px-2 py-1 rounded text-sm hover:bg-gray-900"
+                >
+                  下載
+                </a>
+              </div>
             ) : (
               <div>{highlightText(message.content, index)}</div>
             )}

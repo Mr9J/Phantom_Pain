@@ -34,9 +34,7 @@ export const createService = (service: ServiceDTO) => {
   return api.post<ServiceDTO>('/Service', service);
 };
 
-// export const closeService = (serviceId: number) => {
-//   return api.post<void>(`/Service/${serviceId}/close`);
-// };
+
 export const closeService = (serviceId: number) => {
   return api.put<void>(`/Service/${serviceId}/close`); // 使用 PUT 方法來關閉服務
 };
