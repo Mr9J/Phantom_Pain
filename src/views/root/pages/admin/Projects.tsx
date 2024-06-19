@@ -267,7 +267,7 @@ const Projects: React.FC = () => {
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
-                        <tr>
+                        <tr className="hover:bg-gray-200 dark:hover:bg-slate-500">
                           <td className="pl-1">
                             <img
                               src={item.thumbnail}

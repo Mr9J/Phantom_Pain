@@ -218,3 +218,16 @@ export type SearchTerm = {
   keyword: string;
   type: string;
 };
+
+export type CouponDTO = {
+  couponId: number;
+  projectId: number;
+  code: string;
+  discount: number;
+  initialStock: number;
+  currentStock: number;
+  deadline: string;
+  statusId: number;
+  projectName: string;
+  projectThumbnail: string;
+};

@@ -99,7 +99,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </button>
           {/* Logo */}
           <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <img src={headerLogo} alt="" />
+            <a href="/">
+              <img src={headerLogo} alt="" />
+            </a>
           </div>
         </div>
 

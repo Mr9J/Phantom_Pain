@@ -18,6 +18,7 @@ import {
   AdminStaffs,
   Users,
   Test,
+  Coupons,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -128,10 +129,10 @@ const App = () => {
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
             <Route path="/PurchasHistory" element={<PurchasHistory />} />
-
           </Route>
 
           <Route element={<ManuLayout />}>
+            <Route path="/manu/coupons" element={<Coupons />} />
             <Route path="/manu/test" element={<Test />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />
