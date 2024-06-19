@@ -9,11 +9,13 @@ import {
   ICommentPost,
   SearchTerm,
   PostImageDTO,
+  IUpdateUserProfile,
 } from "@/types";
 import {
   changeEmail,
   checkAdmin,
   getMemberById,
+  getMemberProfile,
   getMemberSponsored,
   resendEmail,
   resetPassword,
@@ -21,6 +23,7 @@ import {
   signIn,
   signInWithOthers,
   signUp,
+  updateMemberProfile,
 } from "@/services/auth.service";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -40,6 +43,9 @@ import {
   searchPosts,
   updatePost,
   postImage,
+  followUser,
+  followUserCheck,
+  getFollowPost,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
 
@@ -94,6 +100,18 @@ export const useLikePost = () => {
   });
 };
 
+export const useFollowCheck = () => {
+  return useMutation({
+    mutationFn: ({
+      followerId,
+      followingId,
+    }: {
+      followerId: string;
+      followingId: string;
+    }) => followUserCheck(followerId, followingId),
+  });
+};
+
 export const useSavePost = () => {
   return useMutation({
     mutationFn: ({ postId, userId }: { postId: string; userId: string }) =>
@@ -129,7 +147,7 @@ export const useCommentPost = () => {
 
 export const useGetCommentPost = (postId: string) => {
   return useQuery({
-    queryKey: [postId],
+    queryKey: ["getCommentPost", postId],
     queryFn: () => getCommentsPost(postId),
     enabled: !!postId,
   });
@@ -190,13 +208,13 @@ export const useGetMemberById = (id: string) => {
   });
 };
 
-export const useGetRecent3Posts = (id: string) => {
-  return useQuery({
-    queryKey: ["recent3Posts", id],
-    queryFn: () => getRecent3Posts(id),
-    enabled: !!id,
-  });
-};
+// export const useGetRecent3Posts = (id: string) => {
+//   return useQuery({
+//     queryKey: ["recent3Posts", id],
+//     queryFn: () => getRecent3Posts(id),
+//     enabled: !!id,
+//   });
+// };
 
 export const useGetPostsById = (id: string) => {
   return useQuery({
@@ -217,5 +235,33 @@ export const useGetMemberSponsored = (id: string) => {
 export const usePostImage = () => {
   return useMutation({
     mutationFn: (x: PostImageDTO) => postImage(x),
+  });
+};
+
+export const useGetMemberProfile = (id: string) => {
+  return useQuery({
+    queryKey: ["memberProfile", id],
+    queryFn: () => getMemberProfile(id),
+    enabled: !!id,
+  });
+};
+
+export const useUpdataUserProfile = () => {
+  return useMutation({
+    mutationFn: (profile: IUpdateUserProfile) => updateMemberProfile(profile),
+  });
+};
+
+export const useFollowUser = () => {
+  return useMutation({
+    mutationFn: (id: string) => followUser(id),
+  });
+};
+
+export const useGetFollowPost = (page: number) => {
+  return useQuery({
+    queryKey: ["followPost"],
+    queryFn: () => getFollowPost(page),
+    enabled: !!page,
   });
 };

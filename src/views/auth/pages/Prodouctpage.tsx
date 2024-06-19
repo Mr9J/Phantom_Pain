@@ -9,12 +9,12 @@ import { addToCart } from "@/services/Cart.service";
 import Projectcard from "@/components/ProjectCard/projectcard.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "@/context/AuthContext";
+import Footer from "@/components/section/Footer";
 
 // import { data } from 'autoprefixer';
 //寫死的參數
 
 const testmemberId = 6;
-
 
 interface ProjectCardDTO {
   projectId: number;
@@ -58,17 +58,16 @@ interface ProductsComponentProps {
   productsData: ProjectCardDTO[] | null;
   getSelectProductId: (productId: number) => void;
   setPopupVisible: (isVisible: boolean) => void;
-  pid : string
+  pid: string;
 }
 
 function ProductsComponent({
   productsData,
   getSelectProductId,
   setPopupVisible,
-  pid
-}: ProductsComponentProps,
-) {
-  const { user} = useUserContext();
+  pid,
+}: ProductsComponentProps) {
+  const { user } = useUserContext();
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>(
     {}
   );
@@ -100,7 +99,12 @@ function ProductsComponent({
     //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
     e.stopPropagation();
 
-    addToCart(productId, productCounts[productId], Number(pid), Number(user.id));
+    addToCart(
+      productId,
+      productCounts[productId],
+      Number(pid),
+      Number(user.id)
+    );
     setPopupVisible(true);
   };
 
@@ -138,20 +142,19 @@ function ProductsComponent({
                   src={`${pjitem.thumbnail}`}
                   alt="Description"
                 />
-                <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">
+                <div className="text-gray-600 font-extrabold font-mono text-base mt-4 mb-2 dark:text-white">
                   {pjitem.productName}
                 </div>
-                <div className="text-black font-bold text-xl items-center dark:text-white">
-                  {pjitem.productPrice}
-                  <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">
+                <div className="text-black font-bold items-center dark:text-white text-2xl">
+                  NT${pjitem.productPrice.toLocaleString()}
+                  {/* <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">
                     帶入幾折
                   </span>
                   <p className="w-full text-gray-500 font-normal text-xs">
                     預定售價
                     <span className="line-through">帶入原價</span>
-                    {/* 這裡要計算打折後省多少還未帶入數 */}
                     ，現省 NT$ 6,100
-                  </p>
+                  </p> */}
                 </div>
 
                 <div className="text-xs my-2">
@@ -171,10 +174,13 @@ function ProductsComponent({
                   {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
                   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
                     {/* 加入商品敘述 */}
-                    <p>{pjitem.productDescription}</p>
+                    <p className="font-sans">{pjitem.productDescription}</p>
                   </div>
 
-                  <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t"   onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className="text-center text-xs text-gray-600 pt-4 mt-4 border-t"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {/* 不要刪 */}
                     <button
                       className="px-3 py-2 mr-1 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300"
@@ -187,7 +193,11 @@ function ProductsComponent({
                     </span>
                     <button
                       className="px-3 py-2 ml-1 bg-gray-200 rounded font-black hover:bg-slate-300"
-                      onClick={(e) =>productCounts[pjitem.productId]==pjitem.currentStock?"": handleIncrease(e, pjitem.productId)}
+                      onClick={(e) =>
+                        productCounts[pjitem.productId] == pjitem.currentStock
+                          ? ""
+                          : handleIncrease(e, pjitem.productId)
+                      }
                     >
                       +
                     </button>
@@ -233,7 +243,7 @@ function ProductsComponent({
 function Productpage() {
   const { pid } = useParams();
   const navigate = useNavigate();
-  const {user} =useUserContext();
+  const { user } = useUserContext();
 
   const ClickProductToPaypage = (productId: number) => {
     // 點擊按鈕後導航到其他路由
@@ -257,18 +267,15 @@ function Productpage() {
     }
   }, [isPopupVisible]);
 
-
-useEffect(()=>{
-  getProjectfromProductId(Number(pid), Number(user.id))
-  .then((data) => {
-    setProjectData(data);
-  })
-  .catch((error) => {
-    console.error("Error fetching project data:", error);
-  });
-
-},[user,pid])
-
+  useEffect(() => {
+    getProjectfromProductId(Number(pid), Number(user.id))
+      .then((data) => {
+        setProjectData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching project data:", error);
+      });
+  }, [user, pid]);
 
   // useEffect(() => {
   //   getProjectfromProductId(Number(pid), testmemberId)
@@ -293,7 +300,7 @@ useEffect(()=>{
         <div className="h-10 text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest dark:bg-slate-700 dark:text-white">
           {/* material-icons*/}
           <span className="material-icons font-bold"></span>
-          左右捲動看看更多選項
+          <p className="text-sm px-0 py-0 font-mono">左右捲動看看更多選項</p>
           <span className="material-icons"></span>
         </div>
 
@@ -305,7 +312,7 @@ useEffect(()=>{
             productsData={projectAndproductsData}
             getSelectProductId={ClickProductToPaypage}
             setPopupVisible={setPopupVisible}
-            pid = {pid }
+            pid={pid}
           ></ProductsComponent>
         </div>
         {isPopupVisible && (
@@ -318,6 +325,7 @@ useEffect(()=>{
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }

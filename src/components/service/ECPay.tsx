@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 const frontUrl = import.meta.env.VITE_FRONT_URL;
 const baseUrl = import.meta.env.VITE_API_URL;
-const ngrok  = "https://04c7-1-160-23-145.ngrok-free.app/api/Order/ECPayResponseMessage";
+const ngrok  = "https://7fdc-1-160-7-136.ngrok-free.app/api/Order/ECPayResponseMessage";
 const returnURL = `${frontUrl}/ReturnURL`
 interface ECPayComponentProps {
   projectName: string;

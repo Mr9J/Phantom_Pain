@@ -5,28 +5,39 @@ import ChatFooter from '@/components/service/chatfooter';
 import FAQComponent from '@/components/service/FAQComponents';
 import { Message } from '@/components/service/types';
 import '@/components/service/service.css';
-import { getServicesByMemberId, getServiceMessages, createServiceMessage, createService, closeService, getMembersNicknames, ServiceDTO, ServiceMessageDTO } from '@/components/service/serviceApi';
+import {
+  getServicesByMemberId,
+  getServiceMessages,
+  createServiceMessage,
+  createService,
+  closeService,
+  getMembersNicknames,
+  ServiceDTO,
+  ServiceMessageDTO,
+} from '@/components/service/serviceApi';
 import { useUserContext } from '@/context/AuthContext';
 import connection from '@/components/service/SignalR';
 
 const Service: React.FC = () => {
-  const { user } = useUserContext();
-  const [memberId, setMemberId] = useState<number | null>(null);
-  const [nickname, setNickname] = useState<string>('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [message, setMessage] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [highlightedIndexes, setHighlightedIndexes] = useState<number[]>([]);
-  const [currentIndex, setCurrentIndex] = useState<number>(-1);
-  const [serviceId, setServiceId] = useState<number | null>(null);
+  const { user } = useUserContext(); // 使用上下文取得用戶資訊
+  const [memberId, setMemberId] = useState<number | null>(null); // 設定會員ID狀態
+  const [nickname, setNickname] = useState<string>(''); // 設定暱稱狀態
+  const [messages, setMessages] = useState<Message[]>([]); // 設定訊息狀態
+  const [message, setMessage] = useState(''); // 設定輸入訊息狀態
+  const [uploading, setUploading] = useState(false); // 設定上傳狀態
+  const [searchTerm, setSearchTerm] = useState(''); // 設定搜尋關鍵字
+  const [highlightedIndexes, setHighlightedIndexes] = useState<number[]>([]); // 設定高亮訊息索引
+  const [currentIndex, setCurrentIndex] = useState<number>(-1); // 設定當前高亮索引
+  const [serviceId, setServiceId] = useState<number | null>(null); // 設定服務ID狀態
 
+  // 設定會員ID
   useEffect(() => {
     if (user) {
       setMemberId(Number(user.id));
     }
   }, [user]);
 
+  // 取得會員暱稱
   useEffect(() => {
     const fetchNickname = async () => {
       if (memberId !== null) {
@@ -45,13 +56,14 @@ const Service: React.FC = () => {
     fetchNickname();
   }, [memberId]);
 
+  // 設定歡迎訊息
   useEffect(() => {
     if (nickname) {
       const welcomeMessage: Message = {
         id: 0,
         serviceId: 0,
         memberId: 0,
-        content: `${nickname} 廠商您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務，請問有什麼可以幫您的嗎？😊 您可以先瀏覽常見問題，如果還有疑問，請留言給我們的客服團隊！`,
+        content: `${nickname} 廠商您好🎉 歡迎光臨MuMu客服系統！我們隨時為您服務。您可以先點擊常見問答，如果仍有疑問，請留言，我們的真人客服將為您提供進一步的幫助！😊`,
         timestamp: new Date(),
         sender: 'admin'
       };
@@ -59,13 +71,15 @@ const Service: React.FC = () => {
     }
   }, [nickname]);
 
+  // 取得所有訊息
   useEffect(() => {
     const fetchAllMessages = async () => {
-      if (memberId !== null) {
+      if (memberId !== null) {//當前客戶id
         try {
           const servicesResponse = await getServicesByMemberId(memberId);
+          //使用 map 方法 提取每個服務 serviceId，並生成包含所有 serviceId 的數組。
           const serviceIds = servicesResponse.data.map(service => service.serviceId);
-
+           //尋找未結束服務 如果沒有創新的
           const openService = servicesResponse.data.find(service => !service.endDate);
 
           if (openService) {
@@ -83,7 +97,9 @@ const Service: React.FC = () => {
           }
 
           const allMessages: Message[] = [];
+          //使用 for...of 迴圈遍歷 serviceIds 陣列
           for (const id of serviceIds) {
+            //根據serviceid調用訊息 並用map方法將每個訊息轉入message
             const messagesResponse = await getServiceMessages(id);
             const fetchedMessages = messagesResponse.data.map((msg: ServiceMessageDTO) => ({
               id: msg.messageId,
@@ -96,7 +112,7 @@ const Service: React.FC = () => {
             }));
             allMessages.push(...fetchedMessages);
           }
-
+          //取得訊息 a、b 的時間戳 如果a<b a會排在前面
           allMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
           const uniqueMessages = Array.from(new Set(allMessages.map(m => m.id)))
@@ -110,8 +126,9 @@ const Service: React.FC = () => {
     };
 
     fetchAllMessages();
-  }, [memberId]);
+  }, [memberId]);//memberId更動時會觸發效果
 
+  // 搜尋訊息並高亮顯示
   useEffect(() => {
     const indexes = messages
       .map((message, index) => (message.content.includes(searchTerm) ? index : -1))
@@ -125,10 +142,12 @@ const Service: React.FC = () => {
     }
   }, [searchTerm, messages]);
 
+  // 處理訊息變更
   const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
+  // 提交訊息
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (message && serviceId && memberId !== null) {
@@ -160,6 +179,7 @@ const Service: React.FC = () => {
     }
   };
 
+  // 處理文件上傳
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
     if (!file) return;
@@ -200,10 +220,12 @@ const Service: React.FC = () => {
     reader.readAsDataURL(file);
   };
 
+  // 處理搜尋變更
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
+  // 處理前一個高亮訊息
   const handlePrevious = () => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
@@ -212,6 +234,7 @@ const Service: React.FC = () => {
     }
   };
 
+  // 處理下一個高亮訊息
   const handleNext = () => {
     if (currentIndex < highlightedIndexes.length - 1) {
       const newIndex = currentIndex + 1;
@@ -220,6 +243,7 @@ const Service: React.FC = () => {
     }
   };
 
+  // 處理離開聊天事件
   useEffect(() => {
     const handleLeaveChat = async () => {
       if (serviceId) {
@@ -238,11 +262,14 @@ const Service: React.FC = () => {
     };
   }, [serviceId]);
 
+  // 處理接收到的訊息
   useEffect(() => {
     if (serviceId !== null) {
       const handleReceiveMessage = (message: Message) => {
         console.log("Message received from SignalR:", message);
-        setMessages(prevMessages => [...prevMessages, message]);
+        if (message.serviceId === serviceId) {
+          setMessages(prevMessages => [...prevMessages, message]);
+        }
       };
 
       connection.on('ReceiveMessage', handleReceiveMessage);
@@ -253,39 +280,51 @@ const Service: React.FC = () => {
     }
   }, [serviceId]);
 
+  // 生成唯一ID
   const generateUniqueId = (): number => {
     const timestamp = Date.now();
     const randomNum = Math.floor(Math.random() * 1000); // 生成一個0到999之間的隨機數
-    return Number(`${timestamp}${randomNum}`);
+    return parseInt(`${timestamp}${randomNum}`, 10);
   };
-  
-  const handleFAQClick = (answer: string) => {
+
+  // 處理常見問答點擊
+  const handleFAQClick = (question: string, answer: string) => {
     if (serviceId && memberId) {
       console.log("FAQ answer clicked:", answer);
+      const questionMessage: Message = {
+        id: generateUniqueId(),
+        serviceId: serviceId,
+        memberId: memberId,
+        content: question,
+        timestamp: new Date(),
+        sender: 'user'
+      };
       const faqMessage: Message = {
         id: generateUniqueId(),
         serviceId: serviceId,
         memberId: memberId,
-        content: answer,
+        content: `${question}: ${answer}`,
         timestamp: new Date(),
         sender: 'admin'
       };
       console.log("Adding FAQ message:", faqMessage);
-  
-      // 更新訊息列表
-      setMessages(prevMessages => [...prevMessages, faqMessage]);
-  
-      // 只在這裡進行 SignalR 發送
-      connection.invoke("SendMessage", faqMessage)
-        .then(() => {
-          console.log("Message sent via SignalR:", faqMessage);
-        })
-        .catch(err => {
-          console.error(err.toString());
-        });
+
+      // 更新訊息列表，立即添加問題
+      setMessages(prevMessages => [...prevMessages, questionMessage]);
+
+      // 延遲一秒後添加答案
+      setTimeout(() => {
+        setMessages(prevMessages => [...prevMessages, faqMessage]);
+        connection.invoke("SendMessage", faqMessage)
+          .then(() => {
+            console.log("Message sent via SignalR:", faqMessage);
+          })
+          .catch(err => {
+            console.error(err.toString());
+          });
+      }, 1000);
     }
   };
-  
 
   return (
     <div className="service-chat-container">

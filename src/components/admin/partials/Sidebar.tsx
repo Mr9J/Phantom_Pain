@@ -99,7 +99,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </button>
           {/* Logo */}
           <div style={{ display: "inline-flex", alignItems: "center" }}>
-            <img src={headerLogo} alt="" />
+            <a href="/">
+              <img src={headerLogo} alt="" />
+            </a>
           </div>
         </div>
 
@@ -402,7 +404,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     {/* Badge */}
                     <div className="flex flex-shrink-0 ml-2">
                       <span className="inline-flex items-center justify-center h-5 text-xs font-medium text-white bg-indigo-500 px-2 rounded">
-                        4
+                        0
                       </span>
                     </div>
                   </div>
