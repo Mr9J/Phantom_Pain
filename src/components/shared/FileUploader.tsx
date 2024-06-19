@@ -2,18 +2,33 @@ import { ImageIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
 
 type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
   mediaUrl: string;
+  isSingle: boolean;
 };
 
-const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
+const FileUploader = ({
+  fieldChange,
+  mediaUrl,
+  isSingle,
+}: FileUploaderProps) => {
+  const { toast } = useToast();
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState(mediaUrl);
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
+      if (acceptedFiles.length > 1 && isSingle) {
+        toast({
+          title: "錯誤",
+          description: "只能上傳一張圖片",
+        });
+        return;
+      }
+
       setFile(acceptedFiles);
       fieldChange(acceptedFiles);
       setFileUrl(URL.createObjectURL(acceptedFiles[0]));

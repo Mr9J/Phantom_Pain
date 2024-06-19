@@ -15,15 +15,17 @@ export type typeComment = {
   commentMsg: string;
   date: string;
   sender: typeMember;
+  liked: number;
 };
 
 export type typeCommentDto = {
   commentId?: number;
   date?: string;
   commentMsg: string;
-  memberId: number;
+  memberId?: number;
   projectId: number;
-  member: typeMember;
+  member?: typeMember;
+  liked: number;
 };
 
 export type typeMember = {

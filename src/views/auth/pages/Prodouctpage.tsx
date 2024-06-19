@@ -138,20 +138,19 @@ function ProductsComponent({
                   src={`${pjitem.thumbnail}`}
                   alt="Description"
                 />
-                <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">
+                <div className="text-gray-600 font-extrabold font-mono text-base mt-4 mb-2 dark:text-white">
                   {pjitem.productName}
                 </div>
-                <div className="text-black font-bold text-xl items-center dark:text-white">
-                  {pjitem.productPrice}
-                  <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">
+                <div className="text-black font-bold items-center dark:text-white text-2xl">
+                NT${pjitem.productPrice.toLocaleString()}
+                  {/* <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">
                     帶入幾折
                   </span>
                   <p className="w-full text-gray-500 font-normal text-xs">
                     預定售價
                     <span className="line-through">帶入原價</span>
-                    {/* 這裡要計算打折後省多少還未帶入數 */}
                     ，現省 NT$ 6,100
-                  </p>
+                  </p> */}
                 </div>
 
                 <div className="text-xs my-2">
@@ -171,7 +170,7 @@ function ProductsComponent({
                   {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
                   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
                     {/* 加入商品敘述 */}
-                    <p>{pjitem.productDescription}</p>
+                    <p className="font-sans">{pjitem.productDescription}</p>
                   </div>
 
                   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t"   onClick={(e) => e.stopPropagation()}>
@@ -293,7 +292,7 @@ useEffect(()=>{
         <div className="h-10 text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest dark:bg-slate-700 dark:text-white">
           {/* material-icons*/}
           <span className="material-icons font-bold"></span>
-          左右捲動看看更多選項
+          <p className="text-sm px-0 py-0 font-mono">左右捲動看看更多選項</p>
           <span className="material-icons"></span>
         </div>
 

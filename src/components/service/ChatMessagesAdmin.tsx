@@ -17,10 +17,6 @@ const ChatMessagesAdmin: React.FC<ChatMessagesProps> = ({ messages, searchTerm, 
     }
   }, [highlightedIndexes, currentIndex]);
 
-  const formatTime = (date: Date | string): string => {
-    return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-
   const highlightText = (text: string, messageIndex: number) => {
     if (!searchTerm) return text;
 
@@ -38,13 +34,31 @@ const ChatMessagesAdmin: React.FC<ChatMessagesProps> = ({ messages, searchTerm, 
     );
   };
 
+  const formatTime = (timestamp: string | Date) => {
+    const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+    return date.toLocaleTimeString('zh-TW', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }).replace(':', ':').replace('AM', '上午').replace('PM', '下午');
+  };
+
   return (
     <div className="admin-chat-messages">
       {messages.map((message, index) => (
-        <div key={message.id} className={`admin-chat-message ${message.sender}`} ref={el => messageRefs.current[index] = el}>
+        <div key={`${message.id}-${index}`} className={`admin-chat-message ${message.sender}`} ref={el => messageRefs.current[index] = el}>
           <div className="admin-message-bubble">
             {message.content.startsWith('data:image') ? (
-              <img src={message.content} alt="uploaded" className="admin-uploaded-image" />
+              <div className="relative">
+                <img src={message.content} alt="uploaded" className="admin-uploaded-image" />
+                <a
+                  href={message.content}
+                  download={`image-${message.id}.png`}
+                  className="absolute bottom-2 right-2 bg-gray-700 text-white px-2 py-1 rounded text-sm hover:bg-gray-900"
+                >
+                  下載
+                </a>
+              </div>
             ) : (
               <div>{highlightText(message.content, index)}</div>
             )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // 引入 useNavigate
 import Service from './Service';
 import ServiceAdmin from './ServiceAdmin';
@@ -26,7 +26,6 @@ const ServiceRoute = () => {
     }
   }, [checkingAuth, isAuthenticated, navigate]);
 
-  // 顯示加載狀態
   if (isLoading || checkingAuth) {
     return <div>Loading...</div>;
   }
