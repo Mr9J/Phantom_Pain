@@ -52,7 +52,9 @@ export const getLatestServiceIdByMemberId = (memberId: number) => {
 export const markMessagesAsRead = (memberId: number) => {
   return api.post<void>(`/Service/mark-as-read/${memberId}`);
 };
-
+export const getUnreadCount = async () => {
+  return api.get('/Service/unread-count');
+};
 // TypeScript 接口定義
 
 export interface ServiceDTO {

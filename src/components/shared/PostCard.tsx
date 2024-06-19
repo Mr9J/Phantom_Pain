@@ -9,10 +9,9 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "../ui/card";
+import { useGetPostImg } from "@/lib/react-query/queriesAndMutation";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -20,6 +19,7 @@ type PostCardProps = {
 
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useUserContext();
+  const { data: postImg } = useGetPostImg(post.imgUrl);
 
   if (!post.userId) return null;
 
@@ -27,7 +27,7 @@ const PostCard = ({ post }: PostCardProps) => {
     <div className=" bg-slate-50 dark:bg-dark-2 rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <Link to={`/users/${post.userId}`}>
+          <Link to={`/profile/${post.userId}`}>
             <img
               src={post?.userImg || userThumbnail}
               alt="creator"
@@ -70,30 +70,30 @@ const PostCard = ({ post }: PostCardProps) => {
           </ul>
         </div>
       </Link>
-      <Carousel>
+
+      <Carousel className="max-w-screen-sm md:w-full w-[350px]">
         <CarouselContent>
-          {post.imgUrl &&
-            post.imgUrl.split(",").map((img, index) => {
-              return (
-                <CarouselItem key={index}>
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <img
-                          src={img}
-                          alt="post"
-                          className="object-cover select-none"
-                        />
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              );
-            })}
+          {postImg?.map((img, index) => {
+            return (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center">
+                      <img
+                        src={`https://cdn.mumumsit158.com/${img.Key}`}
+                        alt="post"
+                        className="object-cover select-none"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
       </Carousel>
 
-      <PostStats post={post} userId={user.id} />
+      <PostStats post={post} userId={user.id} commentDisplay={true} />
     </div>
   );
 };

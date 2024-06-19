@@ -112,7 +112,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
   useEffect(() => {
     if (post && action === "update") {
-      console.log(post);
       form.reset({
         caption: post ? post?.caption : "",
         file: post ? post.file : [],
@@ -128,7 +127,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       const session = await updatePost({
         ...values,
         userId: user.id,
-        id: Date.now().toString() + user.id,
+        id: post.imgUrl,
         postId: post.postId,
       });
 
