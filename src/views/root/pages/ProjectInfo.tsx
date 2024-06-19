@@ -49,6 +49,15 @@ function ProjectInfo() {
 
   useEffect(() => {
     getProjectInfo();
+
+    // 使用者停留專案頁面5秒後，觸發事件
+    setTimeout(async () => {
+      try {
+        await axios.patch(`${URL}/ProjectInfo/Click/${pid}`);
+      } catch (error) {
+        console.error(error);
+      }
+    }, 5000);
   }, []);
 
   useEffect(() => {
