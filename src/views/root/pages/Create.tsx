@@ -4,6 +4,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { useUserContext } from "@/context/AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
+import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
 
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
@@ -13,6 +14,7 @@ const Create: React.FC = () => {
   const [projectTypeId,setProjectTypeId] = useState<string>("1");
   const [projectName,setProjectName] = useState<string>();
   const [projectDescription,setProjectDescription] = useState<string>();
+  const [projectPreDetail,setProjectPreDetail] = useState<string>();
   const [projectDetail, setProjectDetail] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const { user, checkAuthUser } = useUserContext();
@@ -100,7 +102,8 @@ const Create: React.FC = () => {
   };
   const TINYAPIKEY = import.meta.env.VITE_TINY_MCE_KEY as string;
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
-  const log = () => {
+  const log = (e:EventHandler<unknown>) => {
+    setProjectPreDetail(e.target.value);
     if (editorRef.current) {
       setProjectDetail(editorRef.current.getContent());
       // console.log(editorRef.current.getContent());
@@ -111,6 +114,9 @@ const Create: React.FC = () => {
     setEndDate("2024-07-08");
     setProjectGoal(10000);
     setProjectTypeId("1");
+    setProjectName('測試計畫');
+    setProjectDescription('測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫')
+    setProjectPreDetail('<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>')
   }
 
   return (
@@ -345,7 +351,8 @@ const Create: React.FC = () => {
                 <Editor
                   apiKey={TINYAPIKEY}
                   onInit={(_evt, editor) => (editorRef.current = editor)}
-                  initialValue=""
+                  initialValue="" 
+                  value={projectPreDetail}
                   init={{
                     height: 500,
                     menubar: false,
