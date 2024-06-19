@@ -67,7 +67,7 @@ function PurchasHistory() {
             <div className='flex flex-col-reverse lgl:flex-row gap-5'>
                 <div className='w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5'>
                     <div className='w-full  bg-white py-7 px-5 dark:bg-slate-800'>
-                        <h1 className='text-3xl font-semibold mb-1'>Mumu 贊助紀錄</h1>
+                        <h1 className='text-4xl font-semibold mb-1'>Mumu 贊助紀錄</h1>
                         <hr />
                         {PurchasHistoryData?.length===0 ?    
                         
@@ -90,32 +90,31 @@ function PurchasHistory() {
                           return item.projects.map((project)=>{   
                             let totalAmount = 0; 
                             return(<div key={project.projectId} className="w-full">                               
-                                    <div className="border-spacing-8 mx-7 my-6">
+                                    <div className="border-spacing-8 mx-7 my-6 h-2">
                                        
                                         <img className='mx-4 rounded-full float-start w-24' src={project.thumbnail?.toString()} alt="projectImage" />
-                                        <a className="text-blue-300" href={`/project/${project.projectId}`}>{project.projectName}</a> 
+                                        <a className="text-blue-300 text-xl font-extrabold" href={`/project/${project.projectId}`}>{project.projectName}</a> 
                                                                                              
                                     </div>    
-                                     <span className="float-end mt-1">贊助日期:{item.orderDate}</span>
+                                     <span className="float-end mt-1 font-bold">贊助日期:{item.orderDate}</span>
                                     <br></br>
                                     <br></br>
                                     {project.products!.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
                                         return(
-                                        <div key={product.productId} className='border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1 dark:bg-slate-700'>
+                                        <div key={product.productId} className='border-b-[2px] border-b-gray-400 p-4 flex gap-3 bg-slate-100 rounded-lg my-2 dark:bg-slate-700 h-24'>
                                             <div className='float-left w-64'>
-                                                <img className='mx-auto' src={product.thumbnail?.toString()} alt="productImage" />
+                                                <img className='mx-auto h-full w-56' src={product.thumbnail?.toString()} alt="productImage" />
                                             </div>
                                             <div className='w-4/5 flex flex-col -mt-5'>
     <br />
-    <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
-    <p className="text-xs">贊助數量:{product.count}</p>  
-    <p className="text-xs">品項單價:{product.productPrice}</p>
-   
+    <h2 className='text-[20px] font-medium -mt-3'>{product.productName}</h2>
+    <div className="float-end">
+    <p className="text-sm">贊助數量:{product.count}</p>  
+    <p className="text-sm float-start">品項單價:{product.productPrice}</p>
+    <p className="float-end text-lg font-extrabold text-green-500">小計:${(product.productPrice * Number(product.count)).toLocaleString()}</p>
 
-        <span className="mx-0 my-0 float-end text-sm font-bold text-green-400">小計:${(product.productPrice * Number(product.count)).toLocaleString()}</span>
-
-
+</div>
 
     
  
@@ -132,11 +131,12 @@ function PurchasHistory() {
 
 
     
-<span className="font-bold float-end mr-5 text-lg">總計消費金額 NT${item.donate!=0&&item.donate!=null?(totalAmount+item.donate-item.discount).toLocaleString():(totalAmount-item.discount).toLocaleString()} </span>
+<span className="font-bold float-end mr-5 text-xl">總計消費金額: NT${item.donate!=0&&item.donate!=null?(totalAmount+item.donate-item.discount).toLocaleString():(totalAmount-item.discount).toLocaleString()} </span>
 {item.donate!=0&&item.donate!=null?  <span className="text-yellow-500 font-black mr-5">加碼贊助:NT${item.donate}</span> : <></>}
 {item.discount!=0?<span className="text-green-400 font-black mr-5">折價卷折抵:NT${item.discount}</span>:<></>}
                                 </div>
                                 <hr className="mb-5 border-white" />
+                                <div className="bg-slate-100 h-20 dark:bg-slate-900"></div>
                                 </div>
 
                             )

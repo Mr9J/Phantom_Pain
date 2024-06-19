@@ -203,7 +203,7 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
   await setPrice(prevPrice => isChecked ? prevPrice += price * (productCounts[productId] || 0) : prevPrice -= price * (productCounts[productId] || 0));
 };
 
-  useLayoutEffect(()=>{
+  useEffect(()=>{
     getProjectfromProductId(Number(projectId),Number(user.id))
     .then(data=>{
       setProjectData(data);
@@ -212,7 +212,7 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
       console.error('Error fetching project data:', error);
     });
 
-  },[projectId,user.id]);
+  },[projectId,user]);
   
 // 載入頁面
 // useEffect(()=>{
@@ -292,20 +292,32 @@ const truncateText = (text:string , maxLength:number)=>{
     if(event.key === "Enter")
       {
         event.preventDefault();
-        const value =event.currentTarget.value;
-        if(value==="")
+        const value =event.currentTarget.value;  
+        const discount = await getCoupons(value,Number(projectId));
+        if(value===""||discount == '0' )
           {
+            await setDiscount(0)
             await setshowNotFoundCoupons(true);
             await setshowCoupons(false);
+            await setOrderData(prevOrderData => ({
+              ...prevOrderData,
+              discount:Number(discount),  
+              couponCode:'' 
+            }));
             return;
           }
-            const discount = await getCoupons(value,Number(projectId));
-            if(discount === "NotFound"  )
-              {
-                await setshowNotFoundCoupons(true);
-                await setshowCoupons(false);
-                return;
-              }
+          
+            // if(discount == '0'  )
+            //   {
+            //     await setshowNotFoundCoupons(true);
+            //     await setshowCoupons(false);
+            //     await setOrderData(prevOrderData => ({
+            //       ...prevOrderData,
+            //       discount:0,  
+            //       couponCode:''    
+            //   }));
+            //     return;
+            //   }
               else{
                 await setDiscount(Number(discount))
                 await setshowCoupons(true);
