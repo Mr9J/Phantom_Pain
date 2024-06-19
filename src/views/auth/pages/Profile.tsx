@@ -29,7 +29,7 @@ const Profile = () => {
             <PostProfileReview id={id} />
           </TabsContent>
           <TabsContent value="edit">
-            <PostProfileEdit />
+            <PostProfileEdit id={user.id} />
           </TabsContent>
         </Tabs>
       </div>

@@ -188,6 +188,7 @@ export type UserProfile = {
   description: string;
   avatar: string;
   time: string;
+  banner: string;
   projects: Project[];
 };
 
@@ -201,17 +202,17 @@ export type Project = {
   projectGroupId: number;
   projectThumbnail: string;
   projectStatusId: number;
-}
-export type Like ={
-  likePrjName:string;
-  likePrjThumb:string;
-  likePrjId:number;
-  likeDetailId:number;
-}
+};
+export type Like = {
+  likePrjName: string;
+  likePrjThumb: string;
+  likePrjId: number;
+  likeDetailId: number;
+};
 
-export type Hobby={
-  hobbyId:number;
-  hobbyName:string;
+export type Hobby = {
+  hobbyId: number;
+  hobbyName: string;
 };
 
 export type SearchTerm = {
@@ -219,15 +220,28 @@ export type SearchTerm = {
   type: string;
 };
 
-export type CouponDTO = {
-  couponId: number;
-  projectId: number;
-  code: string;
-  discount: number;
-  initialStock: number;
-  currentStock: number;
-  deadline: string;
-  statusId: number;
-  projectName: string;
-  projectThumbnail: string;
+export type IUpdateUserProfile = {
+  id: number;
+  nickname?: string;
+  username?: string;
+  thumbnail: File[];
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  address?: string;
+  memberIntroduction?: string;
+  phone?: string;
+};
+
+export type UpdateUserProfile = {
+  id: number;
+  nickname?: string;
+  username?: string;
+  thumbnail?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  address?: string;
+  memberIntroduction?: string;
+  phone?: string;
 };

@@ -11,7 +11,13 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "../ui/card";
-import { useGetPostImg } from "@/lib/react-query/queriesAndMutation";
+import {
+  useFollowCheck,
+  useFollowUser,
+  useGetPostImg,
+} from "@/lib/react-query/queriesAndMutation";
+import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -20,6 +26,18 @@ type PostCardProps = {
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useUserContext();
   const { data: postImg } = useGetPostImg(post.imgUrl);
+  const { mutateAsync: followUser, isPending: isFollowLoading } =
+    useFollowUser();
+  const { mutateAsync: followUserCheck } = useFollowCheck();
+  const [isFollowed, setIsFollowed] = useState(false);
+  const checkStatus = async () => {
+    const res = await followUserCheck({
+      followerId: user?.id || "",
+      followingId: post?.userId || "",
+    });
+
+    setIsFollowed(res);
+  };
 
   if (!post.userId) return null;
 
@@ -46,6 +64,32 @@ const PostCard = ({ post }: PostCardProps) => {
               <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
                 {post.location}
               </p>
+              {isFollowed ? (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    followUser(post.userId).then(() => {
+                      checkStatus();
+                    });
+                  }}
+                  disabled={isFollowLoading}
+                >
+                  已跟隨
+                </Button>
+              ) : (
+                <Button
+                  className="bg-blue-500 text-white"
+                  variant="ghost"
+                  onClick={() => {
+                    followUser(post.userId).then(() => {
+                      checkStatus();
+                    });
+                  }}
+                  disabled={isFollowLoading}
+                >
+                  跟隨
+                </Button>
+              )}
             </div>
           </div>
         </div>
