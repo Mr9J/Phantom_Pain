@@ -489,9 +489,9 @@ const Projects: React.FC = () => {
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                     <p>{projectContext[1]}</p>
                     <br />
-                    <p>您確定要下架這個專案嗎？</p>
+                    <p>您確定要審核通過嗎？</p>
                   </h3>
-                  <input type="hidden" required name="statusId" value="2" />
+                  <input type="hidden" required name="statusId" value="1" />
                   <input type="hidden" name="id" value={projectContext[0]} />
                   <input
                     type="hidden"
