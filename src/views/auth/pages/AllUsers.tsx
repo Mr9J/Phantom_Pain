@@ -42,7 +42,7 @@ const AllUsers = () => {
             </ul>
           )}
         </div>
-        {posts && posts.length === 0 ? (
+        {data.length - page * 10 < 0 ? (
           <>
             <p className="text-[16px] font-bold leading-[140%]">
               已經沒有更多貼文了...

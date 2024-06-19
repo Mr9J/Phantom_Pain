@@ -305,6 +305,8 @@ const SignInForm = () => {
         );
       }
 
+      if (!isRemember) localStorage.removeItem("mumuidentity");
+
       navigate("/");
     } else {
       toast({ title: "登入失敗，請再試一次" });
