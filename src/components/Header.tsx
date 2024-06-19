@@ -34,9 +34,9 @@ const exploreItems = [
     icon: LaughIcon,
   },
   {
-    name: "Item3",
-    description: "Just An Item",
-    to: "/",
+    name: "AdminFactor",
+    description: "AdminFactor",
+    to: "/admin",
     icon: LightbulbIcon,
   },
   {

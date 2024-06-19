@@ -51,13 +51,32 @@ const ServiceAdmin = () => {
         const customerData = sortedMessages.map(message => {
           const memberId = message.memberId;
           const member = memberNicknames.find(m => m.memberId === memberId);
+
+          const messageDate = new Date(message.messageDate);
+          const today = new Date();
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+
+          let displayDate = '';
+          if (messageDate.toDateString() === today.toDateString()) {
+            displayDate = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          } else if (messageDate.toDateString() === yesterday.toDateString()) {
+            displayDate = '昨天';
+          } else {
+            displayDate = messageDate.toLocaleDateString('zh-TW', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit'
+            });
+          }
+
           return {
             id: message.memberId,
             name: member ? member.nickname : `廠商 ${message.memberId}`,
             image: member ? `https://cdn.mumumsit158.com/Members/MemberID-${memberId}-ThumbNail.jpg` : 'https://via.placeholder.com/150',
             messageCount: message.messageCount,
-            lastMessage: message.messageContent,
-            lastMessageDate: new Date(message.messageDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            lastMessage: message.messageContent.startsWith('data:image') ? '已傳送圖片' : message.messageContent,
+            lastMessageDate: displayDate,
             messageDate: new Date(message.messageDate).toISOString(),
             unreadMessages: message.unreadMessages
           };
@@ -204,6 +223,17 @@ const ServiceAdmin = () => {
             messageDate: newMessage.timestamp.toISOString()
           });
 
+          const updatedCustomers = customers.map(customer =>
+            customer.id === selectedCustomerId ? {
+              ...customer,
+              lastMessage: '已傳送圖片',
+              lastMessageDate: newMessage.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              messageDate: newMessage.timestamp.toISOString()
+            } : customer
+          );
+
+          setCustomers(updatedCustomers.sort((a, b) => new Date(b.messageDate).getTime() - new Date(a.messageDate).getTime()));
+
           // 發送訊息給 SignalR hub
           connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
 
@@ -256,7 +286,7 @@ const ServiceAdmin = () => {
         const updatedCustomers = prevCustomers.map(customer =>
           customer.id === message.memberId ? {
             ...customer,
-            lastMessage: message.content,
+            lastMessage: message.content.startsWith('data:image') ? '已傳送圖片' : message.content,
             lastMessageDate: new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             messageDate: new Date(message.timestamp).toISOString(),
             unreadMessages: customer.id === selectedCustomerId ? 0 : customer.unreadMessages + 1
