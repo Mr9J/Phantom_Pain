@@ -309,10 +309,8 @@ useEffect(()=>{
         </div>
         {isPopupVisible && (
           <div className="fixed top-10 left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
-            <div className="bg-white p-4 rounded shadow-md">
-              <p className="text-center text-lime-500 text-base">
+            <div className="bg-slate-100 p-4 rounded shadow-md w-48 h-30 text-center text-lime-500 font-extrabold text-2xl">        
                 加入購物車成功!
-              </p>
             </div>
           </div>
         )}

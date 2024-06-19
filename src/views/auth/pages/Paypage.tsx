@@ -680,20 +680,21 @@ return(
          {/* 確認對話框 */}
       {isConfirming && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-500">
-            <p>將前往結帳頁面，確定要進行購買嗎?</p>
-            <div className="flex justify-center mt-4">
+          <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-400 w-96 h-36">
+            <p className="font-black text-center text-2xl">將前往結帳頁面，確定進行購買嗎?</p>
+            <div className="flex justify-center mt-2">
+             
               <button
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-3"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500 font-bold mr-5 text-base"
+                onClick={handleConfirmButtonClick}
+              >
+                確定
+              </button> 
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-bold text-base"
                 onClick={handleCancel}
               >
                 取消
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500"
-                onClick={handleConfirmButtonClick}
-              >
-                确定
               </button>
             </div>
           </div>
