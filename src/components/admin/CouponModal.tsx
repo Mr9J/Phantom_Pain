@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getUserProject } from "@/services/projects.service";
-import { getCoupon } from "@/services/coupons.service";
+import { getCouponInfo } from "@/services/coupons.service";
 
 const CouponModal = ({ setVisibleCouponModal, handleFormSubmit }) => {
   const [couponDemo, setCouponDemo] = useState(["", "", "", "", ""]);
@@ -30,7 +30,7 @@ const CouponModal = ({ setVisibleCouponModal, handleFormSubmit }) => {
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
-        const fetchedCoupons = await getCoupon();
+        const fetchedCoupons = await getCouponInfo();
         setCoupons(
           fetchedCoupons.map((coupon) => ({
             ...coupon,

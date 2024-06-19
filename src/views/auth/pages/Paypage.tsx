@@ -7,7 +7,7 @@ import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 import { useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
 import { useUserContext } from '@/context/AuthContext';
-import { getCoupons } from '@/services/getCoupons.service';
+import { getCoupons } from '@/services/coupons.service';
 
 
 
