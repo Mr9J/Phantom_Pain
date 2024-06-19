@@ -26,10 +26,10 @@ function Progress({ goal, value }: { goal: number; value: number }) {
               id="robin"
               strokeLinecap="round"
               strokeWidth="4"
-              strokeDasharray={Math.round(Math.PI * (2 * 48))}
-              strokeDashoffset={
-                Math.round(Math.PI * (2 * 48)) - (percentage / 100) * 302
-              }
+              strokeDasharray={Math.round(Math.PI * (2 * 36))}
+              strokeDashoffset={Math.round(
+                Math.PI * (2 * 36) * (1 - percentage / 100)
+              )}
               fill="transparent"
               className="text-orange-500 transition-all duration-500"
             />

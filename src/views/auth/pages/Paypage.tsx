@@ -4,9 +4,11 @@ import { getProjectfromProductId } from '@/services/projects.service';
 import { createOrder,checkProductInventory } from '@/services/orders.service';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
 //import { useParams } from 'react-router-dom';
-import { Await, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
 import { useUserContext } from '@/context/AuthContext';
+import { getCoupons } from '@/services/getCoupons.service';
+
 
 
 
@@ -86,6 +88,11 @@ function Paypage() {
   const [buttonDisabled, setButtonDisabled] = useState<{ [key: string]: boolean }>({}); //radio按鈕
   const previousProjectAndproductsData = useRef(projectAndproductsData);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [showCoupons,setshowCoupons] = useState(false);
+  const [showNotFoundCoupons,setshowNotFoundCoupons] = useState(false);
+  const [discount, setDiscount] = useState<number>(0);
+  // const [couponCode , setCouponCode] = useState<string>('');
+  
 
 
   // const handleButtonClick = () => {
@@ -129,16 +136,20 @@ function Paypage() {
     
   };
 
+ 
+
   
   //購買資訊 未帶入memberID 
   const [orderData, setOrderData] = useState({
     memberID:user.id,
     paymentMethodID:1,
     projectID: projectId,
-   productID: [selectedproductId],
+    productID: [selectedproductId],
     // count: 1,
     productdata:[{ productId: selectedproductId, count: selectedProductCount }],
+    discount : discount,
     donate:0,
+    couponCode:''
   });
    
   const handlePaymentMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -192,7 +203,7 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
   await setPrice(prevPrice => isChecked ? prevPrice += price * (productCounts[productId] || 0) : prevPrice -= price * (productCounts[productId] || 0));
 };
 
-  useLayoutEffect(()=>{
+  useEffect(()=>{
     getProjectfromProductId(Number(projectId),Number(user.id))
     .then(data=>{
       setProjectData(data);
@@ -201,7 +212,7 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
       console.error('Error fetching project data:', error);
     });
 
-  },[projectId,user.id]);
+  },[projectId,user]);
   
 // 載入頁面
 // useEffect(()=>{
@@ -275,6 +286,52 @@ const truncateText = (text:string , maxLength:number)=>{
 
   }, [selectedProductCount, selectedproductId]);
 
+
+//折價卷  
+ const EnterToGetCoupons =async (event: React.KeyboardEvent<HTMLInputElement>) =>{
+    if(event.key === "Enter")
+      {
+        event.preventDefault();
+        const value =event.currentTarget.value;  
+        const discount = await getCoupons(value,Number(projectId));
+        if(value===""||discount == '0' )
+          {
+            await setDiscount(0)
+            await setshowNotFoundCoupons(true);
+            await setshowCoupons(false);
+            await setOrderData(prevOrderData => ({
+              ...prevOrderData,
+              discount:Number(discount),  
+              couponCode:'' 
+            }));
+            return;
+          }
+          
+            // if(discount == '0'  )
+            //   {
+            //     await setshowNotFoundCoupons(true);
+            //     await setshowCoupons(false);
+            //     await setOrderData(prevOrderData => ({
+            //       ...prevOrderData,
+            //       discount:0,  
+            //       couponCode:''    
+            //   }));
+            //     return;
+            //   }
+              else{
+                await setDiscount(Number(discount))
+                await setshowCoupons(true);
+                await setshowNotFoundCoupons(false);
+                await setOrderData(prevOrderData => ({
+                  ...prevOrderData,
+                  discount: Number(discount),  
+                  couponCode:value     
+              }));
+
+              }
+      }
+
+  }
 
 //按下斗內
 const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -359,7 +416,7 @@ const handleIncrease =  (e: React.MouseEvent<HTMLButtonElement>,productId:number
       { return null;}
     ///////////////////
 return(
-  <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1">
+  <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1 mt-14">
   <label className="bg-zinc-100 rounded-md p-4 leading-none block mb-0 mx-0.5 dark:text-white dark:bg-slate-500">
     {/* value傳商品id */}
   <input ref={(buttonRef) => { inputRefs.current[pjitem.productId] = buttonRef; }} className="mr-4" type="checkbox" value={pjitem.productId} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
@@ -369,19 +426,13 @@ return(
   <div className="p-4 border-2 border-inherit rounded mb-8 block dark:bg-slate-800" style={{ width: '300px', height: '615px' }}>
   <img
   //  src商品圖片
+  className="rounded-md"
   src={`${pjitem.thumbnail}`}
   alt="Description"
   />
-  <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+  <div className="text-gray-600 font-extrabold font-mono text-base mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
   <div className="text-black font-bold text-xl items-center dark:text-white">
-  {pjitem.productPrice}
-  <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
-  <p className="w-full text-gray-500 font-normal text-xs">
-  預定售價
-  <span className="line-through">帶入原價</span>
-  {/* 這裡要計算打折後省多少還未帶入數 */}
-  ，現省 NT$ 6,100
-  </p>
+  NT${pjitem.productPrice.toLocaleString()}
   </div>
   
   <div className="text-xs my-2">
@@ -399,8 +450,8 @@ return(
   {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
-  <p>
-  {truncateText(pjitem.productDescription!,90)}</p>
+  <p className="font-sans">
+  {truncateText(pjitem.productDescription!,70)}</p>
   </div>
   
   <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
@@ -440,25 +491,17 @@ return(
       <div key={pjitem.productId}>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block dark:bg-slate-800" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-900" onClick={() => window.history.back()}>更改回饋</div>}
+      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-600" onClick={() => window.history.back()}>更改回饋</div>}
      
       {/* 點擊商品後 href顯示加購及結帳 */}
-      <img
-        // src商品圖片
-        // src={`src/assets/mumuThumbnail/Mumu projects&productsThumbnail/${item.thumbnail}`}
+      <img   
+        className="rounded-md"
         src={`${pjitem.thumbnail}`}
         alt="Description"
       />
-      <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
-      <div className="text-black font-bold text-xl items-center dark:text-white">
-        {pjitem.productPrice}
-        <span className="inline-block text-xs font-bold text-black bg-yellow-300 leading-relaxed px-2 ml-2 rounded-sm">帶入幾折</span>
-        <p className="w-full text-gray-500 font-normal text-xs">
-          預定售價
-          <span className="line-through">帶入原價</span>
-          {/* 這裡要計算打折後省多少還未帶入數 */}
-          ，現省 NT$ 6,100
-        </p>
+      <div className="text-gray-600 font-extrabold font-mono text-base mt-4 mb-2 dark:text-white">{pjitem.productName}</div>
+      <div className="text-black font-bold text-2xl items-center dark:text-white">
+        NT${pjitem.productPrice.toLocaleString()}
       </div>
   
       <div className="text-xs my-2">
@@ -475,8 +518,8 @@ return(
       <div className="overflow-y-auto break-all">
         <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
           {/* 加入商品敘述 */}
-          <p>
-            {pjitem.productDescription}
+          <p className="font-sans">
+          {truncateText(pjitem.productDescription!,150)}
           </p>
         </div>
  
@@ -499,12 +542,35 @@ return(
       </div>
     </div>
     <div className="border-0 ml-6 w-80">
-    <div className="flex items-start text-sm py-2 mt-4">
-  <div className="whitespace-nowrap font-bold flex-auto">選項金額</div>
-  <div className="whitespace-nowrap text-right">
+    <div className="flex flex-col text-sm py-2 mt-4">
+     
+
+     
+    <div className="flex">
+<div className="whitespace-nowrap font-bold text-base">
+使用
+<label className="mb-0 inline-block">折扣碼</label>
+</div>
+<div className="whitespace-nowrap text-right flex-1">
+<input className="text-right w-1/2 rounded border-2 text-zec-blue mb-0 focus:outline-none focus:ring-1 text-lg" type="text" onKeyDown={EnterToGetCoupons}/>
+
+</div>
+</div>
+{showCoupons?<span className="text-green-400 text-sm font-bold">已帶入折扣碼-{discount}元</span>:""}
+{showNotFoundCoupons?<span className="text-rose-400">無效的折扣碼</span>:""}
+
+
+
+
+
+
+
+
+  <div className="whitespace-nowrap font-bold flex-auto text-lg mt-3">選項金額</div>
+  <div className="whitespace-nowrap text-right text-base">
   NT$ {(pjitem.productPrice * selectedProductCount).toLocaleString()}
   <div>
-  <div className="inline-block text-xs bg-zinc-100 mr-2 leading-none rounded-full px-2 py-1 dark:bg-rose-600">加購</div>
+  <div className="inline-block bg-zinc-100 mr-2 leading-none rounded-full px-2 py-1 dark:bg-rose-600 text-base">加購</div>
   +
   NT$ {addToPurchase.toLocaleString()}
   </div>
@@ -514,11 +580,11 @@ return(
   </div>
   </div>
   <div className="flex items-start text-xl pb-2 pt-4 border-t-4 border-gray-300">
-  <div className="whitespace-nowrap font-bold flex-auto">總價</div>
-  <div className="whitespace-nowrap text-right">
+  <div className="whitespace-nowrap font-bold flex-auto text-2xl">總價</div>
+  <div className="whitespace-nowrap text-right font-extrabold text-2xl">
     {/* 金額正規化顯示.toLocaleString() */}
-  NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount).toLocaleString()}
-  {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount)}/>}
+  NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount).toLocaleString()}
+  {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount)}/>}
   
   </div>
   </div>

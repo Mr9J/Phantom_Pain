@@ -226,16 +226,7 @@
   color: #999;
 }
 
-.admin-customer-message-count {
-  min-width: 20px;
-  height: 20px;
-  background-color: #3182ce;
-  color: white;
-  border-radius: 10px;
-  text-align: center;
-  padding: 2px 5px;
-  margin-left: auto;
-}
+
 
 .no-customer-selected {
   display: flex;
@@ -245,14 +236,4 @@
   font-size: 1.5rem;
   color: #666;
   background-color: #f0f2f5;
-}
-.admin-customer-message-count {
-  min-width: 20px;
-  height: 20px;
-  background-color: #3182ce;
-  color: white;
-  border-radius: 10px;
-  text-align: center;
-  padding: 2px 5px;
-  margin-left: auto;
 }

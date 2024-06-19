@@ -49,14 +49,20 @@ import ReturnURL from "./components/service/ReturnURL";
 import Paypage from "./views/auth/pages/Paypage";
 import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
+import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
 import StartProject from "./views/root/pages/StartProject";
-import CreateProject from "./views/root/pages/CreateProject";
+
+
+
+
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
+import HobbyList from "./components/HobbyList";
+import Create from "./views/root/pages/Create";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -72,20 +78,20 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/users/:userId" element={<Users />} />
+            <Route path="/users/:id/*" element={<Users />} />
             <Route path="/project/:pid" element={<ProjectInfo />} />
-
             <Route
               path="/SearchProject"
               element={<SearchProject input={input} setInput={setInput} />}
             />
 
             <Route path="/StartProject" element={<StartProject />} />
-            <Route path="/CreateProject" element={<CreateProject />} />
+            <Route path="/CreateProject" element={<Create />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
+         
 
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
@@ -122,6 +128,7 @@ const App = () => {
             <Route path="/Productpage/:pid" element={<Productpage />} />
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
+            <Route path="/PurchasHistory" element={<PurchasHistory />} />
           </Route>
 
           <Route element={<ManuLayout />}>

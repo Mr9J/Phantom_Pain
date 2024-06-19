@@ -179,30 +179,44 @@ export type ICommentPost = {
   userId: string;
   comment: string;
 };
-export type Like = {
-  likePrjName: string;
-  likePrjThumb: string;
-  likePrjId: number;
-  likeDetailId: number;
+
+export type UserProfile = {
+  id: number;
+  nickname: string;
+  username: string;
+  email: string;
+  description: string;
+  avatar: string;
+  time: string;
+  projects: Project[];
 };
 
-export type PostImageDTO = {
-  file: File[];
-  projectId: string;
-  productId: string;
+export type Project = {
+  projectId: number;
+  projectName: string;
+  projectDescription: string;
+  projectGoal: number;
+  projectStartDate: string;
+  projectEndDate: string;
+  projectGroupId: number;
+  projectThumbnail: string;
+  projectStatusId: number;
+}
+export type Like ={
+  likePrjName:string;
+  likePrjThumb:string;
+  likePrjId:number;
+  likeDetailId:number;
+}
+
+export type Hobby={
+  hobbyId:number;
+  hobbyName:string;
 };
 
-export type ProductDTO = {
-  productId: number;
-  productName: string;
-  productDescription: string;
-  statusId: number;
-  productPrice: number;
-  initialStock: number;
-  currentStock: number;
-  startDate: string;
-  endDate: string;
-  thumbnail: string;
+export type SearchTerm = {
+  keyword: string;
+  type: string;
 };
 
 export type CouponDTO = {
