@@ -15,6 +15,7 @@ export type typeComment = {
   commentMsg: string;
   date: string;
   sender: typeMember;
+  liked: number;
 };
 
 export type typeCommentDto = {
@@ -24,6 +25,7 @@ export type typeCommentDto = {
   memberId?: number;
   projectId: number;
   member?: typeMember;
+  liked: number;
 };
 
 export type typeMember = {

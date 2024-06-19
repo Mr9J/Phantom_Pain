@@ -283,7 +283,7 @@ function ProjectInfo() {
                 </div>
               </TabsContent>
               <TabsContent value="comments" className="mx-4">
-                <TabComments pid={pid}></TabComments>
+                <TabComments pid={Number.parseInt(pid ?? "100")}></TabComments>
               </TabsContent>
             </Tabs>
           </div>
