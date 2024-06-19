@@ -90,7 +90,7 @@ const App = () => {
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
-          <Route path="/Hobby" element={<HobbyList/>}></Route>
+         
 
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>

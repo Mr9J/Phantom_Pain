@@ -12,6 +12,7 @@ import { Heart } from "lucide-react";
 import ProductCards from "@/components/explore/ProductCards";
 import { typeProductCards } from "@/components/explore/types";
 import TabQA from "@/components/explore/TabQA";
+import ViewHistory from "@/components/ViewHistory";
 
 type ProjectInfoDto = {
   projectId: number;
@@ -296,6 +297,8 @@ function ProjectInfo() {
           </div>
         </div>
       </div>
+      <div className="w-10/12 mx-auto text-2xl font-bold">最近瀏覽項目<ViewHistory></ViewHistory></div>
+      
       <Footer></Footer>
     </>
   );
