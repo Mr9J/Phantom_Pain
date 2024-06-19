@@ -39,10 +39,6 @@ const PostCard = ({ post }: PostCardProps) => {
     setIsFollowed(res);
   };
 
-  useEffect(() => {
-    checkStatus();
-  }, []);
-
   if (!post.userId) return null;
 
   return (
@@ -72,7 +68,9 @@ const PostCard = ({ post }: PostCardProps) => {
                 <Button
                   variant="ghost"
                   onClick={() => {
-                    followUser(post.userId);
+                    followUser(post.userId).then(() => {
+                      checkStatus();
+                    });
                   }}
                   disabled={isFollowLoading}
                 >
@@ -83,7 +81,9 @@ const PostCard = ({ post }: PostCardProps) => {
                   className="bg-blue-500 text-white"
                   variant="ghost"
                   onClick={() => {
-                    followUser(post.userId);
+                    followUser(post.userId).then(() => {
+                      checkStatus();
+                    });
                   }}
                   disabled={isFollowLoading}
                 >

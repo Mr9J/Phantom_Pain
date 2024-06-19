@@ -99,21 +99,23 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         });
         return;
       }
+      refetchComments().then(() => {
+        if (comments !== "沒有留言" && comments !== undefined) {
+          setCommentData(comments);
+        }
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    if (userId) {
-      checkStatus();
-    }
-    if (comments !== "沒有留言" && comments !== undefined) {
-      setCommentData(comments);
-    }
-  }, []);
-
-  // checkStatus, commentData, comments, userId, refetchComments
+    refetchComments().then(() => {
+      if (comments !== "沒有留言" && comments !== undefined) {
+        setCommentData(comments);
+      }
+    });
+  }, [comments]);
 
   const likeHandler = async () => {
     try {
@@ -138,6 +140,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
         return;
       }
+
+      checkStatus();
     } catch (error) {
       console.error(error);
     }
@@ -166,6 +170,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
         return;
       }
+
+      checkStatus();
     } catch (error) {
       console.error(error);
     }
@@ -246,7 +252,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
             <ul>
               {commentData ? (
                 commentData.slice(0, visibleComments).map((com, index) => (
-                  <ContextMenu>
+                  <ContextMenu key={index}>
                     <ContextMenuTrigger
                       className="flex items-start gap-4 mt-2 w-full"
                       key={com.id}

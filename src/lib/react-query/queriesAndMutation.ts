@@ -146,7 +146,7 @@ export const useCommentPost = () => {
 
 export const useGetCommentPost = (postId: string) => {
   return useQuery({
-    queryKey: [postId],
+    queryKey: ["getCommentPost", postId],
     queryFn: () => getCommentsPost(postId),
     enabled: !!postId,
   });
