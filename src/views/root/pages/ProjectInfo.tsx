@@ -25,6 +25,7 @@ type ProjectInfoDto = {
   endDate: string;
   isLiked: boolean;
   products: typeProductCards;
+  clicked: number;
 };
 
 function ProjectInfo() {
@@ -34,18 +35,29 @@ function ProjectInfo() {
   const [project, setProject] = useState<ProjectInfoDto>();
   const [isLiked, setIsLiked] = useState<boolean>();
 
+  const getProjectInfo = async () => {
+    try {
+      const res = await axios.get(`${URL}/ProjectInfo/${pid}`, {
+        headers: { Authorization: localStorage.getItem("token") },
+      });
+      if (res.status === 404) return <NotFound />;
+      setProject(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
+    getProjectInfo();
+
+    // 使用者停留專案頁面5秒後，觸發事件
+    setTimeout(async () => {
       try {
-        const res = await axios.get(`${URL}/ProjectInfo/${pid}`, {
-          headers: { Authorization: localStorage.getItem("token") },
-        });
-        if (res.status === 404) return <NotFound />;
-        setProject(res.data);
+        await axios.patch(`${URL}/ProjectInfo/Click/${pid}`);
       } catch (error) {
         console.error(error);
       }
-    })();
+    }, 5000);
   }, []);
 
   useEffect(() => {
@@ -111,6 +123,7 @@ function ProjectInfo() {
               <h1 className="my-4 text-lg font-bold leading-relaxed tracking-wide">
                 {project.projectName}
               </h1>
+              <p>點擊次數: {project.clicked}</p>
             </div>
 
             {/* 進度條 */}
@@ -270,7 +283,7 @@ function ProjectInfo() {
                 </div>
               </TabsContent>
               <TabsContent value="comments" className="mx-4">
-                <TabComments pid={pid}></TabComments>
+                <TabComments pid={Number.parseInt(pid ?? "100")}></TabComments>
               </TabsContent>
             </Tabs>
           </div>
