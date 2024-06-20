@@ -16,20 +16,43 @@ function ProductCards({
     <>
       {productsData.map(
         (item: typeProduct) =>
+          // 下架中的專案不顯示
           item.status !== 2 && (
             <div
               key={item.productId}
-              style={{ width: "380px" }}
-              className={"mx-1 cursor-pointer"}
-              onClick={() =>
-                navigate(
-                  `/payPage?project=${projectId}&product=${item.productId}`
-                )
+              style={{ width: "380px", position: "relative" }}
+              // 庫存為0的商品不能點擊
+              className={
+                item.currentStock === 0
+                  ? "mx-1 cursor-not-allowed rounded "
+                  : "mx-1 cursor-pointer rounded "
+              }
+              onClick={
+                item.currentStock === 0
+                  ? () => alert("商品已售完，請選擇其他商品")
+                  : () =>
+                      navigate(
+                        `/payPage?project=${projectId}&product=${item.productId}`
+                      )
               }
             >
+              {/* 新增遮罩層 */}
+              {item.currentStock === 0 && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0, 0, 0, 0.35)", // 調整這裡的數值來改變遮罩的顏色和透明度
+                  }}
+                  className="rounded-lg"
+                ></div>
+              )}
               {/* 點擊商品後 href顯示加購及結帳  */}
               {/* <a className="p-4 border-2 border-inherit rounded mb-8 block" href="/paypage"> */}
-              <div className="p-4 border-2 border-inherit rounded mb-8 block">
+              <div className="p-4 border-2 border-inherit rounded-lg mb-8 block">
                 <img src={`${item.productThumbnail}`} alt="Description" />
                 <div className="text-gray-600 font-bold mt-4 mb-2 dark:text-white">
                   {item.productName}
