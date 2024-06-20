@@ -371,7 +371,16 @@ const SignInForm = () => {
                 </FormItem>
               )}
             />
-            <Turnstile siteKey="0x4AAAAAAAc5s8I5PK0pJEjH" />
+            {/* 正式版 */}
+            {/* <Turnstile siteKey="0x4AAAAAAAc5s8I5PK0pJEjH" /> */}
+            {/* 測試版 */}
+            <Turnstile
+              siteKey="3x00000000000000000000FF"
+              onClick={(token) => {
+                // 在這裡處理 token
+                console.log(token);
+              }}
+            />
             <Button
               type="submit"
               className="shad-button_primary"
