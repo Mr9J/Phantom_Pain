@@ -5,7 +5,7 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
-import { typeComment, typeCommentDto } from "./types";
+import { typeComment, typeCommentDto, typeCommentRequest } from "./types";
 import connection from "./signalrService";
 import {
   Select,
@@ -33,14 +33,14 @@ function TabComments({ pid }: { pid: number }) {
       return;
     }
     // 假設某人發送留言
-    const newComment: typeCommentDto = {
+    const newComment: typeCommentRequest = {
       commentMsg: input,
       projectId: pid,
     };
-    // 呼叫 API 送出留言
-    await axios.post(`${URL}/ProjectInfo/SendComment`, newComment, {
-      headers: { Authorization: localStorage.getItem("token") },
-    });
+    // 呼叫 Hub 送出留言
+    connection
+      .invoke("SendMessage", newComment)
+      .catch((err) => console.error(err));
     setInput("");
   };
 
@@ -74,11 +74,7 @@ function TabComments({ pid }: { pid: number }) {
     getComments();
 
     // 註冊接收訊息事件
-    connection.on("ReceiveComment", handleReceivedComment);
-
-    return () => {
-      connection.off("ReceiveMessage", handleReceivedComment);
-    };
+    // connection.on("ReceiveComment", handleReceivedComment);
   }, []);
   // comment一有變動就會去抓會員資料
   useEffect(() => {
