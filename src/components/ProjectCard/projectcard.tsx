@@ -26,7 +26,7 @@ className="w-auto max-w-full"
           <span className="mr-1 dark:text-white text-base">提案人</span>
           
            {/* a傳到提案人頁面 */}
-          <a className="font-bold text-zec-blue text-sm mt-5 dark:text-cyan-400" href="/users/tw-irisohyama">
+          <a className="font-bold text-zec-blue text-sm mt-5 dark:text-cyan-400" href={`/users/${item.member.memberId}`}>
           {item.member.nickname}
           {/* 提案人 */}
           </a>

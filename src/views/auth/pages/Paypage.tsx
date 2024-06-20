@@ -66,7 +66,9 @@ function Paypage() {
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+
   const testmemberId = 6;
+
 
   const [selectedCity, setSelectedCity] = useState<string>(""); // 存城市名稱
   const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 存區域名稱
@@ -277,15 +279,16 @@ function Paypage() {
     if (event.key === "Enter") {
       event.preventDefault();
       const value = event.currentTarget.value;
-      if (value == "") {
-        await setshowNotFoundCoupons(true);
-        await setshowCoupons(false);
-        return;
-      }
-      const discount = await getCoupons(value, Number(projectId));
+
+      const discount = await getCoupons(
+        value == "" ? "0" : value,
+        Number(projectId)
+      );
       console.log("Input value:", value);
       if (discount == "0") {
-        await setDiscount(0);
+        await setDiscount(Number(discount));
+
+
         await setshowNotFoundCoupons(true);
         await setshowCoupons(false);
         await setOrderData((prevOrderData) => ({
@@ -432,6 +435,12 @@ function Paypage() {
                     className="mr-4"
                     type="checkbox"
                     value={pjitem.productId}
+
+                    disabled={
+                      productCounts[pjitem.productId] == undefined ||
+                      productCounts[pjitem.productId] == 0
+                    }
+
                     onChange={(e) => AddToPurchase(e, pjitem.productPrice)}
                   />
                   選擇
@@ -566,7 +575,7 @@ function Paypage() {
                         className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-600"
                         onClick={() => window.history.back()}
                       >
-                        更改回饋
+                        返回贊助
                       </div>
                     )}
 
@@ -614,7 +623,7 @@ function Paypage() {
                             onClick={(e) => {
                               e.stopPropagation();
                               e.preventDefault();
-                              selectedProductCount == 0
+                              selectedProductCount == 1
                                 ? setSelectedProductCount(selectedProductCount)
                                 : setSelectedProductCount(
                                     selectedProductCount - 1
