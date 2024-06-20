@@ -236,6 +236,7 @@ const Service: React.FC = () => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
+      //取所有具有 service-chat-message 類的元素 如果選取的元素不存在 整個表達式將返回 undefined 如果存在會滾動過去
       document.querySelectorAll('.service-chat-message')[highlightedIndexes[newIndex]]?.scrollIntoView({ behavior: 'smooth' });
     }
   };
