@@ -17,7 +17,7 @@ import {
 let lastViewedPid: string | null = null;
 
 // 定義一個React功能組件來顯示瀏覽歷史
-const ViewHistory: React.FC = () => {
+function ViewHistory() {
   // 使用useState Hook來管理Project卡片的狀態
   const [projectCards, setProjectCards] = useState<ProjectCardDTO[]>([]);
   // 使用useParams Hook來從URL中獲取pid參數
@@ -43,15 +43,15 @@ const ViewHistory: React.FC = () => {
     }
 
     // 移除陣列中已存在的當前pid
-    history = history.filter(id => id !== pid);
+    history = history.filter((id) => id !== pid);
 
     // 將上一次瀏覽的pid添加到歷史紀錄的開頭
     if (lastViewedPid && !history.includes(lastViewedPid)) {
       history.unshift(lastViewedPid);
     }
 
-    // 只保留最新的5個紀錄（不包括當前的pid）
-    history = history.slice(0, 7);
+    // 只保留最新的6個紀錄（不包括當前的pid）
+    history = history.slice(0, 6);
 
     // 更新cookie以儲存最新的瀏覽歷史
     cookie.save("projectHistory", history, { path: "/" });
@@ -68,8 +68,10 @@ const ViewHistory: React.FC = () => {
         // 過濾掉當前瀏覽的Project ID並更新狀態
         const filteredProjectCards = responses
           .map((res) => res.data)
-          .filter((card) => pid ? card.projectId !== parseInt(pid, 10) : true);           
-          setProjectCards(filteredProjectCards);
+          .filter((card) =>
+            pid ? card.projectId !== parseInt(pid, 10) : true
+          );
+        setProjectCards(filteredProjectCards);
       } catch (error) {
         // 如果API呼叫出錯，則在控制台中輸出錯誤訊息
         console.error("API呼叫出錯:", error);
@@ -88,7 +90,8 @@ const ViewHistory: React.FC = () => {
           {projectCards.map((item: ProjectCardDTO, index: number) => (
             <CarouselItem
               key={index}
-              className="pl-1 md:basis-1/2 lg:basis-1/3">
+              className="pl-1 md:basis-1/2 lg:basis-1/3"
+            >
               <div className="p-1">
                 {/* 渲染每個Project卡片 */}
                 <ProjectCardVertical prj={item}></ProjectCardVertical>

@@ -6,7 +6,7 @@ import axios from "axios";
 
 function HobbyList({ onClose }) {
   const URL = import.meta.env.VITE_API_URL;
-  const [data, setData] = useState<Hobby[] | null>(null);
+  const [data, setData] = useState<Hobby[]>([]);
   const [selectedHobbies, setSelectedHobbies] = useState<number[]>([]);
   const { user } = useUserContext();
 
