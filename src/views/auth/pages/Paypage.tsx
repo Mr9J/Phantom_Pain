@@ -259,18 +259,12 @@ const truncateText = (text:string , maxLength:number)=>{
     if(event.key === "Enter")
       {
         event.preventDefault();
-        const value =event.currentTarget.value;  
-        if(value=='')
-        {
-          await setshowNotFoundCoupons(true);
-          await setshowCoupons(false);
-          return;
-        }
-        const discount = await getCoupons(value,Number(projectId));
+        const value =event.currentTarget.value;
+         const discount = await getCoupons(value==''?'0':value,Number(projectId));   
         console.log("Input value:", value)
         if(discount == '0')
           {
-            await setDiscount(0)
+            await setDiscount(Number(discount))
             await setshowNotFoundCoupons(true);
             await setshowCoupons(false);
             await setOrderData(prevOrderData => ({

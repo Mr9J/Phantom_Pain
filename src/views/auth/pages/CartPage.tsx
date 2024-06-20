@@ -100,6 +100,7 @@ function CartPage() {
                     <div className='w-full  bg-white py-7 px-5 dark:bg-slate-800'>
                         <h1 className='text-4xl font-semibold mb-1'>Mumu 購物車</h1>
                         <hr />
+                        <div className="bg-white h-20 dark:bg-slate-900"></div>
                         {memberCartData?.length===0 ?    
                         
                         <div className="max-w-4xl mx-auto px-10 py-4 bg-white rounded-lg shadow-lg dark:bg-slate-500">
@@ -120,12 +121,14 @@ function CartPage() {
     </div>:  <>{memberCartData&&memberCartData.map((item) => {
                             let totalAmount = 0; 
                             return (
-                                <div key={item.projectId} className="w-full">                               
+                                <div key={item.projectId} className="w-full">  
+                                <div className="p-0.5 dark:bg-slate-600 bg-yellow-50 h-28 rounded-md">                             
                                     <div className="border-spacing-8 mx-7 my-6">
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         <a href={`/project/${item.projectId}`}>{item.projectName}</a>                                                                  
                                     </div>
                                     <br></br>
+                                    </div>  
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
                                         return(
