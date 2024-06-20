@@ -36,7 +36,7 @@ const LeftSidebar = () => {
           />
           <div className="flex flex-col">
             <div className="flex w-full overflow-x-scroll custom-scrollbar">
-              <p className="text-[18px] font-bold leading-[140%] max-w-[200px]">
+              <p className="text-[18px] font-bold leading-[140%] max-w-full">
                 {user.nickname}
               </p>
             </div>

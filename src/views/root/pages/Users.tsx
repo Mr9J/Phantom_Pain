@@ -10,14 +10,20 @@ import SponsoredProjects from "@/components/profile/SponsoredProjects";
 const Users = () => {
   const { id } = useParams();
   const { user } = useUserContext();
-  const { data: userData, isPending: userInfoLoading } = useGetUserInfo(
-    id || ""
-  );
+  const {
+    data: userData,
+    isPending: userInfoLoading,
+    refetch,
+  } = useGetUserInfo(id || "");
 
   return (
     <>
       <section className="overflow-hidden">
-        <ProfileMain user={userData} isLoading={userInfoLoading} />
+        <ProfileMain
+          user={userData}
+          isLoading={userInfoLoading}
+          refetch={refetch}
+        />
 
         <Tabs defaultValue="proposed" className="w-full">
           <TabsList className="flex justify-center items-center">

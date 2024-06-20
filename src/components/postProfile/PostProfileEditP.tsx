@@ -16,7 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { ProfileEditValidation } from "@/lib/validation";
+import {
+  ProfileEditPValidation,
+  ProfileEditValidation,
+} from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
 import {
   useGetMemberProfile,
@@ -27,7 +30,7 @@ import FileUploader from "../shared/FileUploader";
 import { Textarea } from "../ui/textarea";
 import street from "@/assets/_shared_img/street.jpg";
 
-const PostProfileEdit = ({ id }: { id: string }) => {
+const PostProfileEditP = ({ id }: { id: string }) => {
   const { toast } = useToast();
   const [isCheck, setIsCheck] = useState(false);
   const { user } = useUserContext();
@@ -37,8 +40,8 @@ const PostProfileEdit = ({ id }: { id: string }) => {
     id || ""
   );
 
-  const form = useForm<z.infer<typeof ProfileEditValidation>>({
-    resolver: zodResolver(ProfileEditValidation),
+  const form = useForm<z.infer<typeof ProfileEditPValidation>>({
+    resolver: zodResolver(ProfileEditPValidation),
     defaultValues: {
       nickname: "",
       username: "",
@@ -53,7 +56,7 @@ const PostProfileEdit = ({ id }: { id: string }) => {
   });
 
   const handleProfileEdit = async (
-    data: z.infer<typeof ProfileEditValidation>
+    data: z.infer<typeof ProfileEditPValidation>
   ) => {
     if (!isCheck) {
       toast({
@@ -393,4 +396,4 @@ const PostProfileEdit = ({ id }: { id: string }) => {
   );
 };
 
-export default PostProfileEdit;
+export default PostProfileEditP;

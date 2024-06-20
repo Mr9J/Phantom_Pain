@@ -245,3 +245,8 @@ export type UpdateUserProfile = {
   memberIntroduction?: string;
   phone?: string;
 };
+
+export type IUpdateBanner = {
+  file: File[];
+  userId: string;
+};
