@@ -30,7 +30,7 @@ const Profile = () => {
             <PostProfileReview id={id} />
           </TabsContent>
           <TabsContent value="edit">
-            {member?.authenticationProvider === "N" ? (
+            {user?.authenticationProvider === "N" ? (
               <PostProfileEdit id={user.id} />
             ) : (
               <PostProfileEditP id={user.id} />

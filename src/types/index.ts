@@ -1,7 +1,5 @@
 import { LucideProps } from "lucide-react";
 import react from "react";
-import { string } from "zod";
-import { MemberDTO } from "@/types/index";
 
 export type SignUpDTO = {
   nickname: string;
@@ -29,6 +27,7 @@ export type CurrentUserDTO = {
   email: string;
   nickname: string;
   thumbnail: string;
+  authenticationProvider: string;
 };
 
 export type PropsTestType = {
