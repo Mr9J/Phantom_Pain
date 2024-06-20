@@ -43,7 +43,7 @@ export async function signIn(user: SignInDTO) {
 
     if (res.status !== 200) throw Error;
 
-    localStorage.setItem("token", res.data);
+    localStorage.setItem("token", res.data.jwt);
 
     return res.data;
   } catch (error) {
