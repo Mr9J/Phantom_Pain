@@ -314,7 +314,7 @@ const Projects = () => {
                 onClick={() => {
                   //setvisibleProjectModal(!visibleProjectLg);
                   //setAlter(false);
-                  (window.location.href = "/createproject"), "_blank";
+                  window.location.href = "/createproject";
                 }}
                 className="mb-2 py-2.5 px-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm  text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
@@ -391,7 +391,6 @@ const Projects = () => {
                             >
                               <a
                                 href={`${frontUrl}/project/${item.projectId}`}
-                                target="_blank"
                                 rel="noopener noreferrer"
                               >
                                 <div className="text-base text-slate-800 dark:text-slate-100 underline">
@@ -479,18 +478,19 @@ const Projects = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                setvisibleProjectModal(!visibleProjectLg);
-                                setAlter(true);
-                                setProjectContext([
-                                  item.projectId,
-                                  item.thumbnail,
-                                  item.projectName,
-                                  item.projectDescription,
-                                  item.statusId,
-                                  item.projectGoal,
-                                  item.startDate,
-                                  item.endDate,
-                                ]);
+                                // setvisibleProjectModal(!visibleProjectLg);
+                                // setAlter(true);
+                                // setProjectContext([
+                                //   item.projectId,
+                                //   item.thumbnail,
+                                //   item.projectName,
+                                //   item.projectDescription,
+                                //   item.statusId,
+                                //   item.projectGoal,
+                                //   item.startDate,
+                                //   item.endDate,
+                                // ]);
+                                window.open(`/editproject/${item.projectId}`);
                               }}
                               className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
                             >

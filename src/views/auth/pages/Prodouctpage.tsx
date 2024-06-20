@@ -292,7 +292,13 @@ function Productpage() {
   return (
     <>
       {/* <header className="py-2 px-4">MuMu</header> */}
-
+    {isPopupVisible && (
+          <div className="fixed left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
+            <div className="bg-slate-100 p-4 rounded shadow-md w-48 h-30 text-center text-lime-500 font-extrabold text-2xl">        
+                加入購物車成功!
+            </div>
+          </div>
+        )}
       <Projectcard projectData={projectAndproductsData}></Projectcard>
       {/* 原本是px-4 mb-8有另外的div */}
       <div className="container my-8 px-4 mb-8 ml-60">
@@ -312,18 +318,11 @@ function Productpage() {
             productsData={projectAndproductsData}
             getSelectProductId={ClickProductToPaypage}
             setPopupVisible={setPopupVisible}
-            pid={pid}
+            pid = {pid}
+
           ></ProductsComponent>
         </div>
-        {isPopupVisible && (
-          <div className="fixed top-10 left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
-            <div className="bg-white p-4 rounded shadow-md">
-              <p className="text-center text-lime-500 text-base">
-                加入購物車成功!
-              </p>
-            </div>
-          </div>
-        )}
+    
       </div>
       <Footer />
     </>
