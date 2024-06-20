@@ -1,19 +1,14 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent,useRef, useLayoutEffect} from 'react';
+import React, { useState, useEffect, ChangeEvent,useRef, useLayoutEffect} from 'react';
 import taiwan_districts from '@/constants/taiwan_districts.json'
 import { getProjectfromProductId } from '@/services/projects.service';
 import { createOrder,checkProductInventory } from '@/services/orders.service';
 import Projectcard from '@/components/ProjectCard/projectcard.jsx';
-//import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import PaymentForm from '@/components/service/ECPay';
 import { useUserContext } from '@/context/AuthContext';
-import { getCoupons } from '@/services/coupons.service';
+import { getCoupons } from '@/services/getCoupons.service';
 
 
-
-
-
-// import IncreaseDecreaseButtons from './components/Header/button.jsx';
 interface ProjectCardDTO {
   projectId: number;
   memberId: number;
@@ -61,8 +56,6 @@ function Paypage() {
 
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement  | null }>({});
-  //const formRef = useRef<HTMLFormElement>(null);   先別刪
-  //const { id } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const selectedproductId = searchParams.get('product');
@@ -75,13 +68,13 @@ function Paypage() {
 
   const  testmemberId = 6;
 
-  const [selectedCity, setSelectedCity] = useState<string>(''); // 用于存储所选的城市
-  const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 用于存储区域名称列表
+  const [selectedCity, setSelectedCity] = useState<string>(''); // 存城市名稱
+  const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 存區域名稱
   const [isHidden, setIsHidden] = useState(false);
   const [projectAndproductsData, setProjectData] = useState<ProjectCardDTO[]>();
   const [addToPurchase , setPrice] = useState(0);
   const [donationInfo , setDonationInfo] = useState({hasDonate:false,donationAmount:0});
-  const [inputDonateValue, setInputValue] = useState<string>('0'); // 将初始值设置为字符串类型
+  const [inputDonateValue, setInputValue] = useState<string>('0'); 
   const [paymentMethod, setPaymentMethod] = useState("1");
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>({});
   const [selectedProductCount, setSelectedProductCount] = useState(fromCartPage ? 0 : 1);
@@ -91,19 +84,18 @@ function Paypage() {
   const [showCoupons,setshowCoupons] = useState(false);
   const [showNotFoundCoupons,setshowNotFoundCoupons] = useState(false);
   const [discount, setDiscount] = useState<number>(0);
-  // const [couponCode , setCouponCode] = useState<string>('');
+  //Demo
+  const [address , setAddress]=useState('');
+  const [postcode, setPostcode] = useState('');
+  const [recipient, setRecipient] = useState(''); //姓名
+  const [phone ,setPhone] =useState('');
+  //Demo
   
-
-
-  // const handleButtonClick = () => {
-  //   setShowPaymentForm(true);
-  // };
- 
   const handleConfirm = async   (e:React.MouseEvent<HTMLButtonElement>) => {  
     e.stopPropagation();
     e.preventDefault()
     console.log(orderData.productdata);
-      const response = await checkProductInventory(orderData.productdata); // 调用 API 函数检查库存
+      const response = await checkProductInventory(orderData.productdata); //檢查商品庫存
 
       if (response === 'ok') {
         setIsConfirming(true); 
@@ -116,7 +108,6 @@ function Paypage() {
   };
 
 
-
   const handleCancel = () => {
     setIsConfirming(false);
   };
@@ -127,25 +118,17 @@ function Paypage() {
     setIsConfirming(false);
     await createOrder(orderData)
     
-    // if (formRef.current) {  先別刪
-    //   const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-    //   if (submitButton) {
-    //     submitButton.click();
-    //   }
-    // }
-    
   };
 
  
 
   
-  //購買資訊 未帶入memberID 
+  //購買資訊
   const [orderData, setOrderData] = useState({
     memberID:user.id,
     paymentMethodID:1,
     projectID: projectId,
     productID: [selectedproductId],
-    // count: 1,
     productdata:[{ productId: selectedproductId, count: selectedProductCount }],
     discount : discount,
     donate:0,
@@ -160,12 +143,6 @@ function Paypage() {
       paymentMethodID: Number(value) // 將 paymentMethodID 設定為 value
     }));
   };
- //測試POST 先別刪
-  // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   await createOrder(orderData)
-  //   setShowPaymentForm(true);
-  // };
 
 
 //觀察orderData變化用
@@ -202,7 +179,7 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
 
   await setPrice(prevPrice => isChecked ? prevPrice += price * (productCounts[productId] || 0) : prevPrice -= price * (productCounts[productId] || 0));
 };
-
+//載入
   useEffect(()=>{
     getProjectfromProductId(Number(projectId),Number(user.id))
     .then(data=>{
@@ -214,17 +191,7 @@ const AddToPurchase = async (e: ChangeEvent<HTMLInputElement>, price: number) =>
 
   },[projectId,user]);
   
-// 載入頁面
-// useEffect(()=>{
-//     getProjectfromProductId(Number(projectId),testmemberId)
-//     .then(data=>{
-//       setProjectData(data);
-//     })
-//     .catch(error=>{
-//       console.error('Error fetching project data:', error);
-//     });
 
-//   },[projectId,testmemberId]);
 //測試購物車傳入頁面先行載入資訊，fromCartPage判斷是從哪個頁面進入
 useLayoutEffect(() => {
   if(!fromCartPage)
@@ -293,8 +260,15 @@ const truncateText = (text:string , maxLength:number)=>{
       {
         event.preventDefault();
         const value =event.currentTarget.value;  
+        if(value=='')
+        {
+          await setshowNotFoundCoupons(true);
+          await setshowCoupons(false);
+          return;
+        }
         const discount = await getCoupons(value,Number(projectId));
-        if(value===""||discount == '0' )
+        console.log("Input value:", value)
+        if(discount == '0')
           {
             await setDiscount(0)
             await setshowNotFoundCoupons(true);
@@ -306,18 +280,6 @@ const truncateText = (text:string , maxLength:number)=>{
             }));
             return;
           }
-          
-            // if(discount == '0'  )
-            //   {
-            //     await setshowNotFoundCoupons(true);
-            //     await setshowCoupons(false);
-            //     await setOrderData(prevOrderData => ({
-            //       ...prevOrderData,
-            //       discount:0,  
-            //       couponCode:''    
-            //   }));
-            //     return;
-            //   }
               else{
                 await setDiscount(Number(discount))
                 await setshowCoupons(true);
@@ -351,7 +313,7 @@ const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
       const donate = parseFloat(value);
       setOrderData(prevFormData => ({
         ...prevFormData,
-        donate: donate //更新订单中的捐赠金额
+        donate: donate //更新斗內
       }));
       setDonationInfo({
         hasDonate: true,
@@ -363,20 +325,19 @@ const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
 //斗內輸入變化  
 const DonateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const parsedValue = parseFloat(e.target.value);
-  setInputValue(isNaN(parsedValue) ? '' : String(parsedValue)); // 将值转换为字符串类型
+  setInputValue(isNaN(parsedValue) ? '' : String(parsedValue)); //值轉成字串
 };
 
 
 const CityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  const selectedCity = e.target.value; // 更新所选的城市
+  const selectedCity = e.target.value; // 更新所選的城市
   setSelectedCity(selectedCity);
-  const newDistricts = getDistrictsName(selectedCity); // 根据新选择的城市更新区域名称列表
+  const newDistricts = getDistrictsName(selectedCity); // 根據城市變更更新區域
   setDistrictsName(newDistricts);
 };
 
-// 根据选择的城市动态生成区域名称列表
+// 生成區域列
 const getDistrictsName = (selectedCity: string): JSX.Element[] => {
-  // 根据所选的城市从数据源中获取对应的区域名称列表
   const filteredDistricts = taiwan_districts.find((item) => item.name === selectedCity);
   return filteredDistricts ? filteredDistricts.districts.map((item) => (
     <option key={item.name} value={item.name}>{item.name}</option>
@@ -409,6 +370,22 @@ const handleIncrease =  (e: React.MouseEvent<HTMLButtonElement>,productId:number
      setProductCounts(updatedProductCounts);
 };
   
+//Demo
+const handleDemo = async (e:React.MouseEvent<HTMLButtonElement>) =>{
+  e.preventDefault()
+  const addressDemo ='復興南路一段390號2樓';
+  const postCodeDemo = '106';
+  const recipientDemo = '王大槌';
+  const phoneDemo  = '0956459635';
+
+await  setAddress(addressDemo)
+await   setPostcode(postCodeDemo)  
+await   setRecipient(recipientDemo)
+await   setPhone(phoneDemo)
+  
+}
+
+
   const poductlist =projectAndproductsData && projectAndproductsData.map(item=>(
     <div key={item.projectId} style={{ "display": "flex", "flexGrow": "1" }}>  
   {item.products && item.products.map(pjitem=>{
@@ -447,7 +424,6 @@ return(
   </div>
   
   <div className="overflow-y-auto break-all">
-  {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
   <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
   {/* 加入商品敘述 */}
   <p className="font-sans">
@@ -584,6 +560,7 @@ return(
   <div className="whitespace-nowrap text-right font-extrabold text-2xl">
     {/* 金額正規化顯示.toLocaleString() */}
   NT$ {(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount).toLocaleString()}
+     {/* 條件渲染 PaymentForm */}
   {showPaymentForm && <PaymentForm projectName={item.projectName!} totalAmount={(pjitem.productPrice * selectedProductCount + addToPurchase + donationInfo.donationAmount-discount)}/>}
   
   </div>
@@ -601,7 +578,6 @@ return(
         顯示品項細節
         <span className="align-middle text-sm ml-2"></span>
       </button>
-      {/* <PaymentMethod></PaymentMethod> */}
       <div className="mt-8">
         <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">付款方式</label>
         <label className="mb-2 mt-2 rounded hover:bg-zinc-200 cursor-pointer bg-zinc-100 px-4 py-2 flex items-center min-h-14 dark:bg-slate-800 dark:hover:bg-slate-600">
@@ -661,39 +637,41 @@ return(
         <div className="flex mt-4">
           <div className="flex-auto">
             <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">地址</label>
-            <input required={true} autoComplete="street-address" className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[address]"/>
+            <input required={true} autoComplete="street-address" className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[address]" value={address} onChange={(e)=>setAddress(e.target.value)}/>
           </div>
           <div className="flex-auto pl-10">
             <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">郵遞區號</label>
-            <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[postcode]"/>
+            <input required={true} autoComplete="postal-code" className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800" type="text" name="order[postcode]" value={postcode} onChange={(e)=>setPostcode(e.target.value)}/>
           </div>
         </div>
       
         <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">收件人</label>
-        <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" type="text" name="order[recipient]"/>
+        <input required={true} placeholder="請輸入真實姓名，以利出貨作業進行" className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" type="text" name="order[recipient]" value={recipient} onChange={(e)=>setRecipient(e.target.value)}/>
         <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">連絡電話</label>
-        <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" size={20} type="text" name="order[phone]"/>
+        <input required={true} placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨" maxLength={20} minLength={8} pattern="[+]{0,1}[0-9]+" autoComplete="tel-national" className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800" size={20} type="text" name="order[phone]" value={phone} onChange={(e)=>setPhone(e.target.value)}/>
         <button className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500" onClick={(e)=>(handleConfirm(e))}>      
           立即預購
         </button>
+        <button className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500 ml-20" onClick={(e)=>(handleDemo(e))}>Demo</button>
           <button type="submit" style={{ display: 'none' }} /> {/* 隱藏的submit */}
          {/* 確認對話框 */}
       {isConfirming && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-500">
-            <p>將前往結帳頁面，確定要進行購買嗎?</p>
-            <div className="flex justify-center mt-4">
+          <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-400 w-96 h-36">
+            <p className="font-black text-center text-2xl">將前往結帳頁面，確定進行購買嗎?</p>
+            <div className="flex justify-center mt-2">
+             
               <button
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-3"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500 font-bold mr-5 text-base"
+                onClick={handleConfirmButtonClick}
+              >
+                確定
+              </button> 
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-bold text-base"
                 onClick={handleCancel}
               >
                 取消
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500"
-                onClick={handleConfirmButtonClick}
-              >
-                确定
               </button>
             </div>
           </div>
@@ -705,11 +683,8 @@ return(
 
   return (
     <>
- {/* <header className="py-2 px-4">MuMu</header> */}
       <Projectcard projectData={projectAndproductsData}></Projectcard>
-{/* 原本是px-4 mb-8有另外的div */}
 <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
-      {/* 條件渲染 PaymentForm */}
    
   <div className="flex mb-10 text-sm -mx-4">
 <div className="px-4 lg:w-1/3 mr-3">

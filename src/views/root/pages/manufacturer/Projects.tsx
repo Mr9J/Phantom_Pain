@@ -235,7 +235,7 @@ const Projects = () => {
             {orderType === 1 ? (
               <button
                 type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-7 py-3 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
               >
                 全部({projectCount[0]})
               </button>
@@ -376,7 +376,7 @@ const Projects = () => {
                     <React.Fragment key={item.projectId}>
                       <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700">
                         {/* Row */}
-                        <tr className="hover:bg-gray-200 dark:hover:bg-slate-500">
+                        <tr className="hover:bg-gray-100 dark:hover:bg-slate-500">
                           <td className="pl-1">
                             <img
                               src={item.thumbnail}

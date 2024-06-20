@@ -90,8 +90,8 @@ function ViewHistory() {
           {projectCards.map((item: ProjectCardDTO, index: number) => (
             <CarouselItem
               key={index}
-              className="pl-1 md:basis-1/2 lg:basis-1/4"
-            >
+              className="pl-1 md:basis-1/2 lg:basis-1/4">
+
               <div className="p-1">
                 {/* 渲染每個Project卡片 */}
                 <ProjectCardVertical prj={item}></ProjectCardVertical>
