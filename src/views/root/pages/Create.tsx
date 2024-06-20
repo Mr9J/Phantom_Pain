@@ -10,64 +10,77 @@ import axios from "axios";
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
   const { pid } = useParams();
-  const [startDate,setStartDate] = useState<string>("");
-  const [endDate,setEndDate] = useState<string>("");
-  const [projectGoal,setProjectGoal] = useState<number>();
-  const [projectTypeId,setProjectTypeId] = useState<string>("1");
-  const [projectName,setProjectName] = useState<string>();
-  const [projectDescription,setProjectDescription] = useState<string>();
-  const [projectPreDetail,setProjectPreDetail] = useState<string>();
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [projectGoal, setProjectGoal] = useState<number>();
+  const [projectTypeId, setProjectTypeId] = useState<string>("1");
+  const [projectName, setProjectName] = useState<string>();
+  const [projectDescription, setProjectDescription] = useState<string>();
+  const [projectPreDetail, setProjectPreDetail] = useState<string>();
   const [projectDetail, setProjectDetail] = useState("");
+  const [statusID, setStatusID] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState(null);
   const { user, checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    if(pid)
-    getProjectInfo();
+    if (pid) getProjectInfo();
     checkAuthUser().then((res) => {
       setIsAuth(res);
     });
   }, []);
 
+  const getProjectInfo = async () => {
+    try {
+      const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
+      console.log(res.data);
 
+      setStartDate(res.data[0]["startDate"]);
+      setEndDate(res.data[0]["endDate"]);
+      setProjectGoal(res.data[0]["projectGoal"]);
+      setProjectTypeId(res.data[0]["projectTypeId"]);
+      setProjectName(res.data[0]["projectName"]);
+      setProjectDescription(res.data[0]["description"]);
+      setProjectPreDetail(res.data[0]["projectDetails"]);
+      setSelectedImage(res.data[0]["thumbnail"]);
+      setStatusID(res.data[0]["statusID"]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const getProjectInfo = async () => {
-      try {
-        const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
-        console.log(res.data);
-
-        setStartDate(res.data[0]["startDate"]);
-        setEndDate(res.data[0]["endDate"]);
-        setProjectGoal(res.data[0]["projectGoal"]);
-        setProjectTypeId(res.data[0]["projectTypeId"]);
-        setProjectName(res.data[0]["projectName"]);
-        setProjectDescription(res.data[0]["description"])
-        setProjectPreDetail(res.data[0]["projectDetails"]);
-        setSelectedImage(res.data[0]["thumbnail"]);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-
-  const handleStartDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStartDate(event.target.value); 
+  const handleStartDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStartDate(event.target.value);
   };
   const handleEndDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEndDate(event.target.value); 
+    setEndDate(event.target.value);
   };
-  const handleProjectGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProjectGoal(Number(event.target.value)); 
+  const handleProjectGoalChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setProjectGoal(Number(event.target.value));
   };
-  const handleProjectTypeIdChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setProjectTypeId(event.target.value); 
+  const handleProjectTypeIdChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setProjectTypeId(event.target.value);
   };
-  const handleProjectNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setProjectName(event.target.value); 
+  const handleStatusIDChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setStatusID(event.target.value);
   };
-  const handleProjectDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setProjectDescription(event.target.value); 
+  const handleProjectNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setProjectName(event.target.value);
+  };
+  const handleProjectDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setProjectDescription(event.target.value);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,12 +108,13 @@ const Create: React.FC = () => {
 
     const formData = new FormData(event.currentTarget); // 收集表單數據
     formData.append("projectDetail", projectDetail);
-    if(pid)
-      formData.append('projectId',pid);
+    if (pid) formData.append("projectId", pid);
     const jwt = localStorage.getItem("token");
-    const url = `${baseUrl}/Home/CreateProject`;
-    const method = pid?"PUT":"POST";
-    
+    const url = pid
+      ? `${baseUrl}/Home/EditProject`
+      : `${baseUrl}/Home/CreateProject`;
+    const method = pid ? "PUT" : "POST";
+
     fetch(url, {
       method: method,
       body: formData,
@@ -118,8 +132,8 @@ const Create: React.FC = () => {
       })
       .then((data) => {
         console.log("成功提交數據：", data);
-        alert('請等候管理員審核。');
-        navigate('/manu/projects');
+        alert(pid ? "修改完成。" : "請等候管理員審核。");
+        navigate("/manu/projects");
         //setBanProjectModal(false); // 確認表單
       })
       .catch((error) => {
@@ -128,26 +142,30 @@ const Create: React.FC = () => {
   };
   const TINYAPIKEY = import.meta.env.VITE_TINY_MCE_KEY as string;
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
-  const log = (e:EventHandler<unknown>) => {
+  const log = (e: EventHandler<unknown>) => {
     setProjectPreDetail(e.target.value);
     if (editorRef.current) {
       setProjectDetail(editorRef.current.getContent());
       // console.log(editorRef.current.getContent());
     }
   };
-  function demo():undefined{
+  function demo(): undefined {
     setStartDate("2024-06-28");
     setEndDate("2024-07-08");
     setProjectGoal(10000);
     setProjectTypeId("1");
-    setProjectName('測試計畫');
-    setProjectDescription('測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫');
-    setProjectPreDetail('<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>')
+    setProjectName("測試計畫");
+    setProjectDescription(
+      "測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫"
+    );
+    setProjectPreDetail(
+      '<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>'
+    );
   }
 
   return (
     <>
-    {!isAuth && <Navigate to="/sign-in" />}
+      {!isAuth && <Navigate to="/sign-in" />}
       <div className="container mx-auto px-4 md:px-0">
         <div className="text-center">
           <h2 className="text-2xl font-bold my-16 inline-block after:h-1 after:block after:bg-teal-500 after:rounded after:mt-1">
@@ -156,52 +174,100 @@ const Create: React.FC = () => {
           </h2>
         </div>
         {/* 保護區 */}
-        <button onClick={demo} className="bg-secondary text-primary rounded border bottom-7">demo</button>
+        <button
+          onClick={demo}
+          className="bg-secondary text-primary rounded border bottom-7"
+        >
+          demo
+        </button>
         <div className="px-4 border border-gray-300 mb-16 rounded">
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if(confirm('請確認內容有無錯誤'))
-              handleSubmit(e);
+              if (confirm("請確認內容有無錯誤")) handleSubmit(e);
             }}
             className="space-y-8"
           >
-            <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
-              <div className="md:col-span-1 mt-1">
-                <h2>
-                  <label className="font-bold text-lg">使用者名稱</label>
-                </h2>
-              </div>
-              <div className="mt-4 md:mt-0 md:col-span-3">
-                <input
-                  type="text"
-                  className="w-full mb-2 rounded border bg-secondary text-primary"
-                  value={user.username}
-                  readOnly
-                />
+            {!pid && (
+              <>
+                <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
+                  <div className="md:col-span-1 mt-1">
+                    <h2>
+                      <label className="font-bold text-lg">使用者名稱</label>
+                    </h2>
+                  </div>
+                  <div className="mt-4 md:mt-0 md:col-span-3">
+                    <input
+                      type="text"
+                      className="w-full mb-2 rounded border bg-secondary text-primary"
+                      value={user.username}
+                      readOnly
+                    />
 
-                <p>請確認您的使用者名稱正確無誤。</p>
-              </div>
-            </div>
+                    <p>請確認您的使用者名稱正確無誤。</p>
+                  </div>
+                </div>
 
-            <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
-              <div className="md:col-span-1 mt-1">
-                <h2>
-                  <label className="font-bold text-lg">電子信箱</label>
-                </h2>
-              </div>
-              <div className="mt-4 md:mt-0 md:col-span-3">
-                <input
-                  type="email"
-                  className="w-full mb-2 rounded border bg-secondary text-primary"
-                  placeholder=""
-                  value={user.email}
-                  readOnly
-                />
+                <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
+                  <div className="md:col-span-1 mt-1">
+                    <h2>
+                      <label className="font-bold text-lg">電子信箱</label>
+                    </h2>
+                  </div>
+                  <div className="mt-4 md:mt-0 md:col-span-3">
+                    <input
+                      type="email"
+                      className="w-full mb-2 rounded border bg-secondary text-primary"
+                      placeholder=""
+                      value={user.email}
+                      readOnly
+                    />
 
-                <p>請確認你的信箱位址沒有錯誤，不然Mumu會聯絡不到你。</p>
-              </div>
-            </div>
+                    <p>請確認你的信箱位址沒有錯誤，不然Mumu會聯絡不到你。</p>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {pid && (
+              <>
+                <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
+                  <div className="md:col-span-1 mt-1">
+                    <h2>
+                      <label className="font-bold text-lg">狀態</label>
+                    </h2>
+                  </div>
+                  <div className="mt-4 md:mt-0 md:col-span-3">
+                    <div className="flex w-64 items-center">
+                      <select
+                        className="border bg-secondary text-primary rounded"
+                        name="statusID"
+                        onChange={handleStatusIDChange}
+                        value={statusID}
+                      >
+                        {statusID != "3" && (
+                          <>
+                            <option value="1" className="text-primary">
+                              上架
+                            </option>
+                            <option value="2" className="text-primary">
+                              下架
+                            </option>
+                          </>
+                        )}
+                        {statusID == "3" && (
+                          <>
+                            <option value="3" className="text-primary">
+                              審核中
+                            </option>
+                          </>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
 
             <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
               <div className="md:col-span-1 mt-1">
@@ -356,7 +422,7 @@ const Create: React.FC = () => {
                 />
                 {selectedImage ? (
                   <img
-                    src={selectedImage.preview||selectedImage}
+                    src={selectedImage.preview || selectedImage}
                     alt="Selected"
                     className="aspect-video"
                   />
@@ -377,7 +443,7 @@ const Create: React.FC = () => {
                 <Editor
                   apiKey={TINYAPIKEY}
                   onInit={(_evt, editor) => (editorRef.current = editor)}
-                  initialValue="" 
+                  initialValue=""
                   value={projectPreDetail}
                   init={{
                     height: 500,
@@ -411,7 +477,7 @@ const Create: React.FC = () => {
                   type="submit"
                   className="bg-primary text-secondary  rounded px-6 py-2 font-bold border-2 border-current cursor-pointer"
                 >
-                  {pid?'確定修改':'確定提案'}
+                  {pid ? "確定修改" : "確定提案"}
                 </button>
               </div>
             </div>
