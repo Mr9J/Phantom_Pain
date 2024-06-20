@@ -68,7 +68,7 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
             </button>
           </form>
           {projects && projects.length > 1 && (
-            <a className="z-50" href={`$/project/${projects[randomIndex].projectId}`}>
+            <a className="z-50" href={`/project/${projects[randomIndex].projectId}`}>
               <img className="border-4 border-primary aspect-video rounded" src={projects[randomIndex].thumbnail} alt="" />
             </a>
           )}
