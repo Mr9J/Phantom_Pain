@@ -18,7 +18,7 @@ import {
 } from "@/lib/react-query/queriesAndMutation";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import { use } from "passport";
+import Linkify from "linkify-react";
 
 type PostCardProps = {
   post: GetPostDTO;

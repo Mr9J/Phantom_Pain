@@ -370,6 +370,11 @@ const SignInForm = () => {
                 </FormItem>
               )}
             />
+            <div
+              className="cf-turnstile"
+              data-sitekey="0x4AAAAAAAc5s8I5PK0pJEjH"
+              data-callback="javascriptCallback"
+            ></div>
             <Button
               type="submit"
               className="shad-button_primary"
