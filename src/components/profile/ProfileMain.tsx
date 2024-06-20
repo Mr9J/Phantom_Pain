@@ -11,7 +11,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -38,7 +37,7 @@ const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
 
   return (
     <section className="">
-      <div className="container px-5 py-24 mx-auto flex flex-col">
+      <div className="container px-5 py-12 mx-auto flex flex-col">
         <div className="lg:w-4/6 mx-auto">
           <div className="rounded-lg h-64 overflow-hidden">
             {/* 新增封面圖 */}
@@ -52,10 +51,7 @@ const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
                 <DrawerContent>
                   <div className="mx-auto w-full px-6">
                     <DrawerHeader>
-                      <DrawerTitle>Move Goal</DrawerTitle>
-                      <DrawerDescription>
-                        Set your daily activity goal.
-                      </DrawerDescription>
+                      <DrawerTitle>封面圖片</DrawerTitle>
                     </DrawerHeader>
                     <FileUploader
                       fieldChange={(e) => {
