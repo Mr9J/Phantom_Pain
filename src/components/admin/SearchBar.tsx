@@ -50,7 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         </svg>
       </button>
       <input
-        className="input rounded-full px-8 py-3 border-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-400 transition-all duration-300 shadow-md"
+        className="input rounded-full px-8 py-3 border-2 border-gray-300 focus:outline-none focus:border-blue-500 placeholder-gray-400 transition-all duration-300 shadow-md dark:text-black"
         placeholder="Search..."
         type="text"
         value={searchQuery}

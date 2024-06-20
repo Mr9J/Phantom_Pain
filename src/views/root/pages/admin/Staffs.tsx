@@ -202,7 +202,10 @@ const Staffs: React.FC = () => {
                   {members &&
                     filteredMembersKeyword &&
                     filteredMembersKeyword.map((member) => (
-                      <tr key={member.id}>
+                      <tr
+                        key={member.id}
+                        className="hover:bg-gray-200 dark:hover:bg-slate-500"
+                      >
                         <td className="p-2 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="w-10 h-10 shrink-0 mr-2 sm:mr-3">

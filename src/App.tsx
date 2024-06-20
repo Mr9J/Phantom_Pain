@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeProvider } from "@/components/dark-theme/theme-provider";
 import { Route, Routes, Navigate } from "react-router-dom";
 import RootLayout from "./views/root/RootLayout";
@@ -18,6 +18,7 @@ import {
   AdminStaffs,
   Users,
   Test,
+  Coupons,
 } from "./views/root/pages";
 import FormsLayout from "./views/root/FormsLayout";
 import Explore from "./views/root/pages/Explore";
@@ -35,7 +36,6 @@ import {
   PostDetails,
   Profile,
   Social,
-  UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
 import ServiceRoute from "./views/auth/pages/ServiceRoute";
@@ -50,21 +50,36 @@ import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
 import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
-import StartProject from "./views/root/pages/StartProject";
-
-
-
-
+// import StartProject from "./views/root/pages/StartProject";
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
 import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
-import HobbyList from "./components/HobbyList";
+import { useToast } from "./components/ui/use-toast";
+import axios from "axios";
 import Create from "./views/root/pages/Create";
 
 const App = () => {
   const [input, setInput] = useState("");
+  const { toast } = useToast();
+  const URL = import.meta.env.VITE_BACK_URL;
+  const test = async () => {
+    console.log("test");
+    await axios.get(`${URL}/WeatherForecast`);
+  };
+
+  useEffect(() => {
+    const res = test();
+
+    res.catch((err) => {
+      toast({
+        variant: "destructive",
+        title: "大哥",
+        description: "你的後端掛了",
+      });
+    });
+  }, []);
 
   return (
     <>
@@ -84,13 +99,13 @@ const App = () => {
               element={<SearchProject input={input} setInput={setInput} />}
             />
 
-            <Route path="/StartProject" element={<StartProject />} />
+            {/* <Route path="/StartProject" element={<StartProject />} /> */}
             <Route path="/CreateProject" element={<Create />} />
+            <Route path="/EditProject/:pid" element={<Create />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
           <Route path="/playground" element={<Playground />}></Route>
-          <Route path="/Hobby" element={<HobbyList/>}></Route>
 
           {/* 修改的部分 */}
           <Route element={<FormsLayout />}>
@@ -117,7 +132,6 @@ const App = () => {
             <Route path="/update-post/:id" element={<EditPost />} />
             <Route path="/posts/:id" element={<PostDetails />} />
             <Route path="/profile/:id/*" element={<Profile />} />
-            <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
 
           <Route
@@ -128,10 +142,10 @@ const App = () => {
             <Route path="/Paypage" element={<Paypage />} />
             <Route path="/CartPage" element={<CartPage />} />
             <Route path="/PurchasHistory" element={<PurchasHistory />} />
-
           </Route>
 
           <Route element={<ManuLayout />}>
+            <Route path="/manu/coupons" element={<Coupons />} />
             <Route path="/manu/test" element={<Test />} />
             <Route path="/manu/dashboard" element={<Dashboard />} />
             <Route path="/manu/projects" element={<Projects />} />

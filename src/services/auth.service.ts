@@ -1,7 +1,17 @@
-import { CurrentUserDTO, OuterSignIn, SignInDTO, SignUpDTO } from "@/types";
+import { S3 } from "@/config/R2";
+import {
+  CurrentUserDTO,
+  IUpdateUserProfile,
+  OuterSignIn,
+  SignInDTO,
+  SignUpDTO,
+  UpdateUserProfile,
+} from "@/types";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
 import exp from "constants";
 import { Network } from "lucide-react";
+import { date } from "zod";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -215,6 +225,73 @@ export async function getMemberSponsored(id: string) {
     const res = await axios.get(`${URL}/Member/get-member-sponsored/${id}`, {
       headers: { Authorization: jwt },
     });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getMemberProfile(id: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/get-member-profile/${id}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateMemberProfile(profile: IUpdateUserProfile) {
+  const isNewImg = profile.thumbnail.length > 0;
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const newProfile: UpdateUserProfile = {
+      nickname: profile.nickname,
+      username: profile.username,
+      thumbnail: isNewImg
+        ? `https://cdn.mumumsit158.com/Members/MemberID-${
+            profile.id
+          }-${Date.now()}-ThumbNail.jpg`
+        : "",
+      email: profile.email,
+      password: profile.password,
+      confirmPassword: profile.confirmPassword,
+      address: profile.address,
+      memberIntroduction: profile.memberIntroduction,
+      phone: profile.phone,
+      id: profile.id,
+    };
+
+    if (isNewImg) {
+      await S3.send(
+        new PutObjectCommand({
+          Bucket: "mumu",
+          Key: `Members/MemberID-${profile.id}-${Date.now()}-ThumbNail.jpg`,
+          Body: profile.thumbnail[0],
+          ContentType: "image/jpeg",
+        })
+      );
+    }
+
+    const res = await axios.patch(
+      `${URL}/Member/update-member-profile`,
+      newProfile,
+      { headers: { Authorization: jwt } }
+    );
 
     if (res.status !== 200) throw Error;
 

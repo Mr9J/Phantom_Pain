@@ -12,6 +12,8 @@ import {
   LogOutIcon,
   LaughIcon,
   ShoppingCart,
+  LucideBookHeart,
+  CircleDollarSign,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -29,28 +31,28 @@ const exploreItems = [
     icon: CigaretteIcon,
   },
   {
+    name: "Favorites list",
+    description: "",
+    to: "/like",
+    icon: LucideBookHeart,
+  },
+  {
+    name: "Buying list",
+    description: "",
+    to: "/PurchasHistory",
+    icon: CircleDollarSign,
+  },
+  {
+    name: "m",
+    description: "Just An Item",
+    to: "/",
+    icon: LightbulbIcon,
+  },
+  {
     name: "Manufactor",
     description: "mygo",
     to: "/manu",
     icon: LaughIcon,
-  },
-  {
-    name: "AdminFactor",
-    description: "AdminFactor",
-    to: "/admin",
-    icon: LightbulbIcon,
-  },
-  {
-    name: "Item4",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
-  {
-    name: "Item5",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
   },
 ];
 const exploreBottomItems = [

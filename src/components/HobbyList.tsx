@@ -40,13 +40,12 @@ function HobbyList({ onClose }) {
       const userid = user.id;
       const response = await axios.post(`${URL}/Hobby`, {
         userId: userid,
-        hobbyIds: selectedHobbies
+        hobbyIds: selectedHobbies,
       });
 
-      if(response.status===200){
+      if (response.status === 200) {
         onClose?.();
       }
-      
     } catch (error) {
       console.error(error);
     }
@@ -54,31 +53,32 @@ function HobbyList({ onClose }) {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-    <div className="relative bg-white p-6 rounded shadow-lg border-2 border-gray-800 max-w-3xl mx-auto pb-16 text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-      請問您對以下哪些類別有興趣?
-      <ToggleGroup variant="outline" type="multiple">
-        {data && data.length > 0 ? (
-          data.map((item) => (
-            <ToggleGroupItem
-              className="text-2xl"
-              key={item.hobbyId}
-              value={item.hobbyName}
-              aria-label={item.hobbyName}
-              onClick={()=>handleSelection(item.hobbyId)}
-            >
-              {item.hobbyName}
-            </ToggleGroupItem>
-          ))
-        ) : (
-          <p>沒有可顯示的愛好。</p>
-        )}
-      
-      </ToggleGroup>
-      <button className="absolute bottom-0 right-0 p-2 text-xl bg-blue-500 text-white rounded" onClick={handleSubmit}>
-        送出
-      </button>
-     
-    </div>
+      <div className="relative bg-white p-6 rounded shadow-lg border-2 border-gray-800 max-w-3xl mx-auto pb-16 text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+        請問您對以下哪些類別有興趣?
+        <ToggleGroup variant="outline" type="multiple">
+          {data && data.length > 0 ? (
+            data.map((item) => (
+              <ToggleGroupItem
+                className="text-2xl"
+                key={item.hobbyId}
+                value={item.hobbyName}
+                aria-label={item.hobbyName}
+                onClick={() => handleSelection(item.hobbyId)}
+              >
+                {item.hobbyName}
+              </ToggleGroupItem>
+            ))
+          ) : (
+            <p>沒有可顯示的愛好。</p>
+          )}
+        </ToggleGroup>
+        <button
+          className="absolute bottom-0 right-0 p-2 text-xl bg-blue-500 text-white rounded"
+          onClick={handleSubmit}
+        >
+          送出
+        </button>
+      </div>
     </div>
   );
 }

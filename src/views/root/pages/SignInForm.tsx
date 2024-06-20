@@ -28,8 +28,10 @@ import { signInWithPopup } from "firebase/auth";
 import { OuterSignIn } from "@/types";
 import { signInWithOthers } from "@/services/auth.service";
 import { ToastAction } from "@/components/ui/toast";
+import { useEffect, useState } from "react";
 
 const SignInForm = () => {
+  const [isRemember, setIsRemember] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { checkAuthUser, isLoading } = useUserContext();
@@ -91,7 +93,11 @@ const SignInForm = () => {
       const isLoggedIn = await checkAuthUser();
 
       if (isLoggedIn) {
-        window.alert("登入成功，您將被導向至首頁");
+        toast({
+          title: "登入成功",
+          description: "您將被導向至首頁",
+        });
+
         navigate("/");
       } else {
         toast({ title: "登入失敗，請再試一次" });
@@ -153,7 +159,10 @@ const SignInForm = () => {
       const isLoggedIn = await checkAuthUser();
 
       if (isLoggedIn) {
-        window.alert("登入成功，您將被導向至首頁");
+        toast({
+          title: "登入成功",
+          description: "您將被導向至首頁",
+        });
         navigate("/");
       } else {
         toast({ title: "登入失敗，請再試一次" });
@@ -215,7 +224,10 @@ const SignInForm = () => {
       const isLoggedIn = await checkAuthUser();
 
       if (isLoggedIn) {
-        window.alert("登入成功，您將被導向至首頁");
+        toast({
+          title: "登入成功",
+          description: "您將被導向至首頁",
+        });
         navigate("/");
       } else {
         toast({ title: "登入失敗，請再試一次" });
@@ -278,13 +290,38 @@ const SignInForm = () => {
 
     if (isLoggedIn) {
       form.reset();
-      window.alert("登入成功，您將被導向至首頁");
+      toast({
+        title: "登入成功",
+        description: "您將被導向至首頁",
+      });
+
+      if (isRemember) {
+        localStorage.setItem(
+          "mumuidentity",
+          JSON.stringify({
+            username: values.username,
+            password: values.password,
+          })
+        );
+      }
+
       navigate("/");
     } else {
       toast({ title: "登入失敗，請再試一次" });
       return;
     }
   };
+
+  useEffect(() => {
+    const identity = localStorage.getItem("mumuidentity");
+
+    if (identity) {
+      const { username, password } = JSON.parse(identity);
+
+      form.setValue("username", username);
+      form.setValue("password", password);
+    }
+  }, []);
 
   return (
     <section className="flex flex-1 justify-center items-center flex-col py-10">
@@ -345,6 +382,20 @@ const SignInForm = () => {
                 <p className="text-lg font-bold">登入</p>
               )}
             </Button>
+
+            <div className="flex items-center space-x-2">
+              <label htmlFor="MarketingAccept" className="flex gap-4">
+                <input
+                  type="checkbox"
+                  id="MarketingAccept"
+                  name="marketing_accept"
+                  className="size-5 rounded-md border-gray-200 bg-white shadow-sm"
+                  onChange={(e) => setIsRemember(e.target.checked)}
+                />
+
+                <span className="text-sm">記住我的帳號與密碼</span>
+              </label>
+            </div>
             <p className="text-center mt-2 text-xl">
               還沒有Mumu帳號嗎？
               <Link to="/sign-up" className="text-blue-500 ml-1 font-bold">
@@ -352,6 +403,7 @@ const SignInForm = () => {
               </Link>
             </p>
           </form>
+
           <div className="flex justify-center items-center w-full mt-4">
             <Button
               className="flex-1 mr-2 shad-button_primary"
