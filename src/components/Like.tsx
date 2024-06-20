@@ -64,7 +64,7 @@ function Like() {
           <h2 className="flex text-2xl">追蹤計畫</h2>
         </div>
         <div className="container pb-16">
-          <div className="flex lg:-mx-4">
+          <div className="flex lg:-mx-4  flex-wrap">
             {data ? (
               data.map((item: Like, index: number) => (
                 <div key={index} className="px-4 py-4 w-full xs:w-1/2 lg:w-1/4">
@@ -108,7 +108,7 @@ function Like() {
             position: "fixed",
             bottom: "0",
             width: "100%",
-            height: "25vh",
+            height: "20vh",
           }}
         >
           <footer className="max-w-xs md:max-w-5xl py-10 mx-auto flex flex-wrap px-3 justify-between">
