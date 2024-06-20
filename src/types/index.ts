@@ -61,6 +61,7 @@ export type Order = {
     count: number;
     price: number;
   };
+  coupon: { discount: number };
 };
 export type OrderProject = {
   orderId: number;
@@ -244,6 +245,19 @@ export type UpdateUserProfile = {
   memberIntroduction?: string;
   phone?: string;
 };
+
+export type CouponDTO = {
+  couponId: number;
+  projectId: number;
+  code: string;
+  discount: number;
+  initialStock?: number;
+  currentStock?: number;
+  deadline: string;
+  statusId: number;
+  projectName?: string;
+  projectThumbnail?: string;
+  };
 
 export type IUpdateBanner = {
   file: File[];

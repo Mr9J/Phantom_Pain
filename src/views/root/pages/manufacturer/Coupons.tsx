@@ -90,7 +90,9 @@ const Coupons: React.FC = () => {
   };
   const filteredCouponsList =
     searchQuery.length > 0
-      ? couponList.filter((item) => item.projectName.includes(searchQuery))
+      ? couponList.filter(
+          (item) => item.projectName && item.projectName.includes(searchQuery)
+        )
       : couponList;
   return (
     <>
