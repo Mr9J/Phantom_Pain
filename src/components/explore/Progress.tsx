@@ -1,6 +1,14 @@
 import { CircleHelp, Users } from "lucide-react";
 
-function Progress({ goal, value }: { goal: number; value: number }) {
+function Progress({
+  goal,
+  value,
+  sponsorCount,
+}: {
+  goal: number;
+  value: number;
+  sponsorCount: number;
+}) {
   const percentageValue = (value / goal) * 100;
   const percentage = percentageValue > 100 ? 100 : percentageValue;
 
@@ -58,8 +66,8 @@ function Progress({ goal, value }: { goal: number; value: number }) {
                 <Users />
               </h2>
               <h3 className="text-zec-green flex items-center text-lg font-bold ">
-                <span className="js-backers-count">174</span>人
-                <CircleHelp size={16} color="#2b913c" />
+                <span className="js-backers-count">{sponsorCount}</span>人
+                {/* <CircleHelp size={16} color="#2b913c" /> */}
               </h3>
             </li>
           </ul>

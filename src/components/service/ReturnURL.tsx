@@ -19,7 +19,7 @@ useEffect(()=>{
         if(response.ok)
             {
                 setTimeout(() => {
-                    navigate('/home'); // 在計時器內使用導航函數
+                    navigate('/PurchasHistory'); // 在計時器內使用導航函數
                 }, 3000);
             }
     })
