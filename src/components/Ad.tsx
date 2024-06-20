@@ -68,7 +68,7 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
             </a>
           )}
         </div>
-        {/* 添加遮罩层 */}
+        
         <div
           style={{
             position: "fixed",
@@ -76,8 +76,8 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)", // 半透明黑色
-            zIndex: -20, // 确保遮罩层在最上层
+            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            zIndex: -20, 
           }}
         />
       </dialog>

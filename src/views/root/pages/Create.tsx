@@ -159,7 +159,7 @@ const Create: React.FC = () => {
       "測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫"
     );
     setProjectPreDetail(
-      '<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>'
+      '<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>'
     );
   }
 
@@ -169,7 +169,7 @@ const Create: React.FC = () => {
       <div className="container mx-auto px-4 md:px-0">
         <div className="text-center">
           <h2 className="text-2xl font-bold my-16 inline-block after:h-1 after:block after:bg-teal-500 after:rounded after:mt-1">
-            <span>群眾集資</span>
+            <span>{pid?'編輯':'群眾集資'}</span>
             提案
           </h2>
         </div>
@@ -282,6 +282,7 @@ const Create: React.FC = () => {
                   name="startDate"
                   value={startDate}
                   onChange={handleStartDateChange}
+                  required
                 />
                 <p>
                   告訴我們你希望什麼時候開始你的計畫（必須是未來的時間），Mumu將會為你安排審核順序。Mumu至少需要約十個工作天審核你的提案。
@@ -302,6 +303,7 @@ const Create: React.FC = () => {
                   name="endDate"
                   value={endDate}
                   onChange={handleEndDateChange}
+                  required
                 />
                 <p>
                   計畫結束時間不得早於開始時間，計畫時間建議為期在 60 天內。
@@ -324,6 +326,7 @@ const Create: React.FC = () => {
                     name="projectGoal"
                     value={projectGoal}
                     onChange={handleProjectGoalChange}
+                    required
                   />
 
                   <span className="flex-initial mb-2 pl-2">NTD</span>
@@ -345,6 +348,7 @@ const Create: React.FC = () => {
                     name="projectTypeId"
                     onChange={handleProjectTypeIdChange}
                     value={projectTypeId}
+                    required
                   >
                     <option value="1" className="text-primary">
                       教育
@@ -383,6 +387,7 @@ const Create: React.FC = () => {
                   name="projectName"
                   value={projectName}
                   onChange={handleProjectNameChange}
+                  required
                 />
               </div>
             </div>
@@ -400,6 +405,7 @@ const Create: React.FC = () => {
                   name="projectDescription"
                   value={projectDescription}
                   onChange={handleProjectDescriptionChange}
+                  required
                 ></textarea>
               </div>
             </div>
@@ -418,6 +424,7 @@ const Create: React.FC = () => {
                   accept=".jpeg,.jpg,.png"
                   onChange={handleFileChange}
                   name="thumbnail"
+                  required={!pid}
                   // disabled
                 />
                 {selectedImage ? (
@@ -461,11 +468,10 @@ const Create: React.FC = () => {
                 />
 
                 <p>
-                  請告訴詳細介紹關於你計畫的故事、為什麼大家應該支持你的計畫。（最少
-                  350 字）
+                  請告訴詳細介紹關於你計畫的故事、為什麼大家應該支持你的計畫。
                 </p>
                 <p>
-                  請注意：Mumu必須要有足夠的訊息才有辦法審核計畫，如果您所提供的資訊過少，或嘖嘖無法評估計畫的真實性、可行性，計畫就會無法上架。
+                  請注意：Mumu必須要有足夠的訊息才有辦法審核計畫，如果您所提供的資訊過少，或Mumu無法評估計畫的真實性、可行性，計畫就會無法上架。
                 </p>
               </div>
             </div>
