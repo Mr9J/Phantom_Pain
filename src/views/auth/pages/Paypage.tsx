@@ -396,7 +396,7 @@ return(
   <div key={pjitem.productId} style={{"width":"300px"}} className="mx-1 mt-14">
   <label className="bg-zinc-100 rounded-md p-4 leading-none block mb-0 mx-0.5 dark:text-white dark:bg-slate-500">
     {/* value傳商品id */}
-  <input ref={(buttonRef) => { inputRefs.current[pjitem.productId] = buttonRef; }} className="mr-4" type="checkbox" value={pjitem.productId} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
+  <input ref={(buttonRef) => { inputRefs.current[pjitem.productId] = buttonRef; }} className="mr-4" type="checkbox" value={pjitem.productId} disabled={productCounts[pjitem.productId]==undefined||productCounts[pjitem.productId]==0} onChange={(e)=>AddToPurchase(e,pjitem.productPrice)}/>
   選擇
   </label>
   {/* 點擊商品後 href顯示加購及結帳  */}
@@ -467,7 +467,7 @@ return(
       <div key={pjitem.productId}>
     <div className="w-80 h-auto p-4 border-2 border-inherit rounded my-8 ml-4 block dark:bg-slate-800" key={pjitem.productId}>
       {/* 更改回饋回上頁 */}
-      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-600" onClick={() => window.history.back()}>更改回饋</div>}
+      {fromCartPage?<></>:  <div className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-600" onClick={() => window.history.back()}>返回贊助</div>}
      
       {/* 點擊商品後 href顯示加購及結帳 */}
       <img   
@@ -501,7 +501,7 @@ return(
  
       <div className="text-center text-xs text-gray-600 pt-4 mt-4 border-t">
       <div className="flex items-center justify-center space-x-2 mb-3">
-      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==0?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount-1)}}>-</button>
+      <button className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId} onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==1?setSelectedProductCount(selectedProductCount):setSelectedProductCount(selectedProductCount-1)}}>-</button>
       {fromCartPage? <><span className="font-black dark:text-white">{selectedProductCount}</span>
       <button ref={(buttonRef) => { buttonRefs.current[pjitem.productId] = buttonRef; }} className="px-3 py-2 bg-gray-200 rounded cursor-pointer font-black hover:bg-slate-300" value={pjitem.productId}  onClick={(e)=>{e.stopPropagation(); e.preventDefault(); selectedProductCount==pjitem.currentStock?"": setSelectedProductCount(selectedProductCount+1)}}>+</button></>: 
       <><span className="font-black dark:text-white">{selectedProductCount}</span>
