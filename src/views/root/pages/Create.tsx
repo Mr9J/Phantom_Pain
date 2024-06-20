@@ -146,7 +146,7 @@ const Create: React.FC = () => {
     setProjectPreDetail(e.target.value);
     if (editorRef.current) {
       setProjectDetail(editorRef.current.getContent());
-      // console.log(editorRef.current.getContent());
+      //console.log(editorRef.current.getContent());
     }
   };
   function demo(): undefined {
@@ -159,7 +159,7 @@ const Create: React.FC = () => {
       "測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫"
     );
     setProjectPreDetail(
-      '<p>測試計畫</p><img src="https://cdn.mumumsit158.com/Projects/project-999/Thumbnail.png"/><iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p>'
+      '<p style="text-align: center;"><strong><span style="font-size: 36pt;">測試計畫</span></strong></p><p style="text-align: center;"><img src="https://cdn.mumumsit158.com/Test/project-192/Thumbnail.png" width="350" height="361"></p><p style="text-align: center;"><iframe title="YouTube video player" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></p><p style="text-align: center;">測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p><p style="text-align: center;">這是demo<br>これでもです🤡</p>'
     );
   }
 
@@ -169,7 +169,7 @@ const Create: React.FC = () => {
       <div className="container mx-auto px-4 md:px-0">
         <div className="text-center">
           <h2 className="text-2xl font-bold my-16 inline-block after:h-1 after:block after:bg-teal-500 after:rounded after:mt-1">
-            <span>{pid?'編輯':'群眾集資'}</span>
+            <span>{pid ? "編輯" : "群眾集資"}</span>
             提案
           </h2>
         </div>
