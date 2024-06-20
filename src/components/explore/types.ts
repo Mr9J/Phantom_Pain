@@ -13,6 +13,7 @@ export type ProjectInfoDto = {
   clicked: number;
   projectDetail: string;
   member: typeMember;
+  sponsorCount: number;
 };
 
 export type typeProductCards = typeProduct[];

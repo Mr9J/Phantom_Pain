@@ -122,7 +122,9 @@ function ProjectInfo() {
             <Progress
               goal={project.projectGoal}
               value={project.projectTotal}
+              sponsorCount={project.sponsorCount}
             ></Progress>
+
             <p className="my-4 text-sm leading-relaxed tracking-wider text-gray-500">
               {project.projectDescription}
             </p>
