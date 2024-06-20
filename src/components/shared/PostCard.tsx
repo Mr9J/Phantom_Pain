@@ -18,7 +18,7 @@ import {
 } from "@/lib/react-query/queriesAndMutation";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import { use } from "passport";
+import Linkify from "linkify-react";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -108,7 +108,7 @@ const PostCard = ({ post }: PostCardProps) => {
 
       <Link to={`/posts/${post.postId}`}>
         <div className="text-[14px] font-medium leading-[140%] lg:text-[16px] py-5">
-          <p>{post.caption}</p>
+          <p className="whitespace-pre-wrap">{post.caption}</p>
           <ul className="flex gap-1 mt-2">
             {post.tags &&
               post.tags.split(",").map((tag: string, index) => (

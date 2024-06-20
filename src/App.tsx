@@ -50,7 +50,7 @@ import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
 import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
-import StartProject from "./views/root/pages/StartProject";
+// import StartProject from "./views/root/pages/StartProject";
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
@@ -99,8 +99,9 @@ const App = () => {
               element={<SearchProject input={input} setInput={setInput} />}
             />
 
-            <Route path="/StartProject" element={<StartProject />} />
-            {/* <Route path="/CreateProject" element={<Create />} /> */}
+            {/* <Route path="/StartProject" element={<StartProject />} /> */}
+            <Route path="/CreateProject" element={<Create />} />
+            <Route path="/EditProject/:pid" element={<Create />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>

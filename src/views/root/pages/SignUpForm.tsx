@@ -22,8 +22,11 @@ import {
 } from "@/lib/react-query/queriesAndMutation";
 import { useUserContext } from "@/context/AuthContext";
 import { ToastAction } from "@/components/ui/toast";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { useState } from "react";
 
 const SignUpForm = () => {
+  const [isVerify, setIsVerify] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
@@ -45,6 +48,15 @@ const SignUpForm = () => {
 
   const handleSignUp = async (user: z.infer<typeof SignUpValidation>) => {
     try {
+      if (!isVerify) {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "請完成驗證",
+        });
+        return;
+      }
+
       const res = await signUp(user);
 
       if (res === "註冊資料格式錯誤") {
@@ -106,7 +118,10 @@ const SignUpForm = () => {
 
       if (isLoggedIn) {
         form.reset();
-        window.alert("註冊成功，您將被導向至首頁");
+        toast({
+          title: "註冊成功",
+          description: "歡迎加入Mumu，已自動登入，您將被導向首頁",
+        });
         navigate("/");
       } else {
         toast({
@@ -214,6 +229,15 @@ const SignUpForm = () => {
                   <FormMessage className="dark:text-rose-500" />
                 </FormItem>
               )}
+            />
+            {/* 正式版 */}
+            {/* <Turnstile siteKey="0x4AAAAAAAc5s8I5PK0pJEjH" /> */}
+            {/* 測試版 */}
+            <Turnstile
+              siteKey="3x00000000000000000000FF"
+              onSuccess={(e) => {
+                if (e) setIsVerify(true);
+              }}
             />
             <Button
               type="submit"

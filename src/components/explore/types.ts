@@ -1,3 +1,19 @@
+export type ProjectInfoDto = {
+  projectId: number;
+  projectThumbnail: string;
+  projectName: string;
+  projectGoal: number;
+  projectDescription: string;
+  memberName: string;
+  projectTotal: number;
+  startDate: string;
+  endDate: string;
+  isLiked: boolean;
+  products: typeProductCards;
+  clicked: number;
+  projectDetail: string;
+};
+
 export type typeProductCards = typeProduct[];
 
 export type typeProduct = {
@@ -8,6 +24,7 @@ export type typeProduct = {
   productThumbnail: string;
   initialStock: number;
   currentStock: number;
+  status: number;
 };
 
 export type typeComment = {
@@ -16,6 +33,7 @@ export type typeComment = {
   date: string;
   sender: typeMember;
   liked: number;
+  parentId: number;
 };
 
 export type typeCommentDto = {
@@ -26,6 +44,7 @@ export type typeCommentDto = {
   projectId: number;
   member?: typeMember;
   liked: number;
+  parentId: number;
 };
 
 export type typeMember = {

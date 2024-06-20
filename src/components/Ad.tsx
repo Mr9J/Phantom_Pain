@@ -16,7 +16,7 @@ const randomIndex =
 
 const Ad: React.FC<ModalProps> = ({ id }) => {
   const [projects, setProjects] = useState<ProjectDTO[] | null>(null);
-
+  
   //載入api
   useEffect(() => {
     const fetchProjects = async () => {
@@ -43,11 +43,13 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
   const showModal = () => {
     const modal = document.getElementById(id) as HTMLDialogElement;
     if (modal) modal.showModal();
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     const modal = document.getElementById(id) as HTMLDialogElement;
     if (modal) modal.close();
+    document.body.style.overflow = 'auto';
   };
 
   return (
@@ -66,11 +68,23 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
             </button>
           </form>
           {projects && projects.length > 1 && (
-            <a href={`${frontUrl}/project/${projects[randomIndex].projectId}`}>
-              <img src={projects[randomIndex].thumbnail} alt="" />
+            <a className="z-50" href={`${frontUrl}/project/${projects[randomIndex].projectId}`}>
+              <img className="border-4 border-primary aspect-video rounded" src={projects[randomIndex].thumbnail} alt="" />
             </a>
           )}
         </div>
+        
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            zIndex: -20, 
+          }}
+        />
       </dialog>
     </>
   );
