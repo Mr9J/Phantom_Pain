@@ -4,19 +4,99 @@ import moment from "moment";
 import { UserProfile } from "@/types";
 import avatar from "@/assets/admin_img/mygo/6.jpg";
 import cloud from "@/assets/_shared_img/cloud.jpg";
+import { PenBoxIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { useUserContext } from "@/context/AuthContext";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import FileUploader from "../shared/FileUploader";
+import { useUpdateBanner } from "@/lib/react-query/queriesAndMutation";
+import { useState } from "react";
+import { useToast } from "../ui/use-toast";
 
 type ProfileMainProps = {
   user?: UserProfile;
   isLoading: boolean;
+  refetch: (
+    options?: RefetchOptions | undefined
+  ) => Promise<QueryObserverResult<any, Error>>;
 };
 
-const ProfileMain = ({ user, isLoading }: ProfileMainProps) => {
+const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
+  const { user: currentUser } = useUserContext();
+  const { mutateAsync: updateBanner } = useUpdateBanner();
+  const [data, setData] = useState<File[]>([]);
+  const { toast } = useToast();
+
   return (
     <section className="">
-      <div className="container px-5 py-24 mx-auto flex flex-col">
+      <div className="container px-5 py-12 mx-auto flex flex-col">
         <div className="lg:w-4/6 mx-auto">
           <div className="rounded-lg h-64 overflow-hidden">
             {/* 新增封面圖 */}
+            {Number(currentUser?.id) === user?.id && (
+              <Drawer>
+                <DrawerTrigger>
+                  <Button className="absolute" variant="outline">
+                    <PenBoxIcon stroke="blue" width={24} height={24} />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <div className="mx-auto w-full px-6">
+                    <DrawerHeader>
+                      <DrawerTitle>封面圖片</DrawerTitle>
+                    </DrawerHeader>
+                    <FileUploader
+                      fieldChange={(e) => {
+                        setData(e);
+                      }}
+                      mediaUrl={user ? user?.banner : ""}
+                      isSingle={true}
+                    />
+                    <DrawerFooter>
+                      <Button
+                        onClick={async () => {
+                          const session = await updateBanner({
+                            file: data,
+                            userId: currentUser?.id || "",
+                          });
+
+                          if (!session) {
+                            toast({
+                              variant: "destructive",
+                              title: "錯誤",
+                              description: "更新失敗，請再試一次。",
+                            });
+
+                            return;
+                          }
+
+                          toast({
+                            title: "成功",
+                            description: "更新成功。",
+                          });
+
+                          refetch();
+                        }}
+                      >
+                        Submit
+                      </Button>
+                      <DrawerClose>
+                        <Button variant="outline">Cancel</Button>
+                      </DrawerClose>
+                    </DrawerFooter>
+                  </div>
+                </DrawerContent>
+              </Drawer>
+            )}
+
             {isLoading ? (
               <Skeleton className="object-cover object-center h-full w-full" />
             ) : (
@@ -66,6 +146,14 @@ const ProfileMain = ({ user, isLoading }: ProfileMainProps) => {
                   joined :<span> </span>
                   {moment.utc(user?.time, "YYYY-MM-DD HH:mm:ss").fromNow()}
                 </p>
+
+                {Number(currentUser?.id) === user?.id && (
+                  <Button variant="ghost">
+                    <Link to={`/profile/${user?.id}`}>
+                      <PenBoxIcon stroke="blue" width={24} height={24} />
+                    </Link>
+                  </Button>
+                )}
               </div>
             </div>
             <div className="sm:w-2/3 sm:pl-8 sm:py-8 sm:border-l border-gray-200 sm:border-t-0 border-t mt-4 pt-4 sm:mt-0 text-center sm:text-left">
@@ -83,7 +171,7 @@ const ProfileMain = ({ user, isLoading }: ProfileMainProps) => {
               </p>
 
               <Link
-                to={`${user?.projects[0].projectId}`}
+                to={`${user?.projects[0]?.projectId}`}
                 className="text-indigo-500 inline-flex items-center"
               >
                 Learn More

@@ -212,7 +212,7 @@ const Header = ({
                 <LogOutIcon />
               </Button>
               <Link
-                to={`/profile/${user.id}`}
+                to={`/users/${user.id}`}
                 className="flex justify-center items-center gap-3"
               >
                 <img
@@ -331,7 +331,7 @@ const Header = ({
                       <LogOutIcon />
                     </Button>
                     <Link
-                      to={`/profile/${user.id}`}
+                      to={`/users/${user.id}`}
                       className="flex justify-center items-center gap-3"
                     >
                       <img

@@ -17,7 +17,13 @@ const AllUsers = () => {
 
   useEffect(() => {
     if (posts) {
-      setData([...data, ...posts]);
+      const dataMap = new Map(data.map((item) => [item.postId, item]));
+      posts.forEach((post) => {
+        if (!dataMap.has(post.postId)) {
+          dataMap.set(post.postId, post);
+        }
+      });
+      setData(Array.from(dataMap.values()));
     }
     refetchPosts();
   }, [posts]);
@@ -42,7 +48,7 @@ const AllUsers = () => {
             </ul>
           )}
         </div>
-        {posts && posts.length === 0 ? (
+        {data.length - page * 10 < 0 ? (
           <>
             <p className="text-[16px] font-bold leading-[140%]">
               已經沒有更多貼文了...

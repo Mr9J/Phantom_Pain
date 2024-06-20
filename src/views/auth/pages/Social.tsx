@@ -16,10 +16,24 @@ const Social = () => {
     refetch: refetchPosts,
   } = useGetRecentPosts(page);
 
+  // useEffect(() => {
+  //   if (posts) {
+  //     setData([...data, ...posts]);
+  //   }
+  //   refetchPosts();
+  // }, [posts]);
+
   useEffect(() => {
     if (posts) {
-      setData([...data, ...posts]);
+      const dataMap = new Map(data.map((item) => [item.postId, item]));
+      posts.forEach((post) => {
+        if (!dataMap.has(post.postId)) {
+          dataMap.set(post.postId, post);
+        }
+      });
+      setData(Array.from(dataMap.values()));
     }
+
     refetchPosts();
   }, [posts]);
 
