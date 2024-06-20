@@ -6,28 +6,11 @@ import Progress from "@/components/explore/Progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabDetail from "@/components/explore/TabDetail";
 import TabComments from "@/components/explore/TabComments";
-import Footer from "@/components/section/Footer";
 import { useUserContext } from "@/context/AuthContext";
 import { Heart } from "lucide-react";
 import ProductCards from "@/components/explore/ProductCards";
-import { typeProductCards } from "@/components/explore/types";
+import { ProjectInfoDto } from "@/components/explore/types";
 import TabQA from "@/components/explore/TabQA";
-
-type ProjectInfoDto = {
-  projectId: number;
-  projectThumbnail: string;
-  projectName: string;
-  projectGoal: number;
-  projectDescription: string;
-  memberName: string;
-  projectTotal: number;
-  startDate: string;
-  endDate: string;
-  isLiked: boolean;
-  products: typeProductCards;
-  clicked: number;
-  projectDetail: string;
-};
 
 function ProjectInfo() {
   const { isAuthenticated } = useUserContext();
