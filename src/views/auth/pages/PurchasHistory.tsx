@@ -135,7 +135,7 @@ function PurchasHistory() {
 
 
     
-<span className="font-bold float-end mr-5 text-2xl">總計消費金額: NT${item.donate!=0&&item.donate!=null?(totalAmount+item.donate-item.discount).toLocaleString():(totalAmount-item.discount).toLocaleString()} </span>
+<span className="font-bold float-end mr-5 text-2xl">總計消費金額: NT${item.donate!=0&&item.donate!=null?(totalAmount+item.donate-item.discount<0?0:totalAmount+item.donate-item.discount).toLocaleString():(totalAmount-item.discount<0?0:totalAmount-item.discount).toLocaleString()} </span>
 {item.donate!=0&&item.donate!=null?  <span className="text-yellow-500 font-black mr-5 px-4 text-xl">加碼贊助:NT${item.donate}</span> : <></>}
 {item.discount!=0?<span className="text-green-400 font-black mr-5 text-xl">折價卷折抵:NT${item.discount}</span>:<></>}
                                 </div>
