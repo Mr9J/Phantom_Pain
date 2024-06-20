@@ -51,6 +51,7 @@ function TabComments({ pid }: { pid: number }) {
       date: data.date!,
       sender: data.member!,
       liked: data.liked,
+      parentId: data.parentId,
     };
   };
   const handleReceivedComment = (data: typeCommentDto) => {
@@ -134,41 +135,96 @@ function TabComments({ pid }: { pid: number }) {
       </div>
 
       <div className=" mx-auto mt-10 p-4 rounded-lg shadow-lg space-y-4">
-        {comments.map((c) => (
-          // [元件]一則留言
-          <div key={c.commentId} className="border-b border-gray-700 pb-4">
-            <div className="flex items-center mb-2">
-              <div className="w-8 h-8 mr-3">
-                <Avatar>
-                  <AvatarImage src={c.sender.thumbnail} />
-                  <AvatarFallback>{c.sender.username}</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex-col">
-                <p className="font-bold">{c.sender.username}</p>
-                <div className="flex">
-                  <p className="text-xs">{DateTimeToString(c.date)}</p>
-                  <Button
-                    variant="ghost"
-                    className="p-2 h-4 text-xs cursor-pointer ml-1"
-                    onClick={() => alert("hi")}
-                  >
-                    <ThumbsUp width={10} className="mr-1" />
-                    {c.liked}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="p-2 h-4 text-xs text-gray-400 ml-1"
-                    onClick={sendComment}
-                  >
-                    回覆
-                  </Button>
+        {comments.map(
+          (c) =>
+            // [元件]一則留言
+            !c.parentId && (
+              <div>
+                {/* 顯示第一層留言(ParentId 為 null) */}
+                <div
+                  key={c.commentId}
+                  className="border-b border-gray-700 pb-4"
+                >
+                  <div className="flex items-center mb-2">
+                    <div className="w-8 h-8 mr-3">
+                      <Avatar>
+                        <AvatarImage src={c.sender.thumbnail} />
+                        <AvatarFallback>{c.sender.username}</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex-col">
+                      <p className="font-bold">{c.sender.username}</p>
+                      <div className="flex">
+                        <p className="text-xs">{DateTimeToString(c.date)}</p>
+                        <Button
+                          variant="ghost"
+                          className="p-2 h-4 text-xs cursor-pointer ml-1"
+                          onClick={() => alert("hi")}
+                        >
+                          <ThumbsUp width={10} className="mr-1" />
+                          {c.liked}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="p-2 h-4 text-xs text-gray-400 ml-1"
+                          onClick={sendComment}
+                        >
+                          回覆
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div>{c.commentMsg}</div>
+                </div>
+                {/* 第二層留言 */}
+                <div className="ml-8">
+                  {comments
+                    .filter((sc) => sc.parentId === c.commentId)
+                    .map((sc) => (
+                      <div
+                        key={sc.commentId}
+                        className="border-b border-gray-600 pb-2 pt-2"
+                      >
+                        <div className="flex items-center mb-2">
+                          <div className="w-8 h-8 mr-3">
+                            <Avatar>
+                              <AvatarImage src={sc.sender.thumbnail} />
+                              <AvatarFallback>
+                                {sc.sender.username}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <div className="flex-col">
+                            <p className="font-bold">{sc.sender.username}</p>
+                            <div className="flex">
+                              <p className="text-xs">
+                                {DateTimeToString(sc.date)}
+                              </p>
+                              <Button
+                                variant="ghost"
+                                className="p-2 h-4 text-xs cursor-pointer ml-1"
+                                onClick={() => alert("hi")}
+                              >
+                                <ThumbsUp width={10} className="mr-1" />
+                                {sc.liked}
+                              </Button>
+                              {/* <Button
+                                variant="ghost"
+                                className="p-2 h-4 text-xs text-gray-400 ml-1"
+                                onClick={sendComment}
+                              >
+                                回覆
+                              </Button> */}
+                            </div>
+                          </div>
+                        </div>
+                        <div>{sc.commentMsg}</div>
+                      </div>
+                    ))}
                 </div>
               </div>
-            </div>
-            <div>{c.commentMsg}</div>
-          </div>
-        ))}
+            )
+        )}
       </div>
     </>
   );
