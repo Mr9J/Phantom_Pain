@@ -1,5 +1,5 @@
 import { useUserContext } from "@/context/AuthContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Like } from "@/types/index";
 import { Link } from "react-router-dom";
 import HobbyList from "./HobbyList";
@@ -17,15 +17,12 @@ function Like() {
   //   };
   //  //到此 下面return還有
 
-  useEffect(() => {
-    fetchData();
-  }, [URL, user]);
-
-  const fetchData = async () => {
+  ////簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部 但是其他地方需要使用 同時又有使用useState無法放在最上方 所以需要使用useCallback確保
+  // fetchData 函數現在被定義為 useCallback 鉤子，這樣可以保證它的身份在渲染之間是穩定的
+  const fetchData = useCallback(async () => {
     const userid = user.id;
     try {
       const response = await fetch(`${URL}/Like/${userid}`);
-      // const response = await fetch(`${URL}/Like/57`);
       const data = await response.json();
       console.log(data);
       console.log(userid);
@@ -33,7 +30,11 @@ function Like() {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [URL, user.id, setData]); // 將 URL, user.id 和 setData 加入依賴數組
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   //可以考慮是否把列表獨立出來
 

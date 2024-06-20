@@ -10,20 +10,21 @@ function HobbyList({ onClose }) {
   const [selectedHobbies, setSelectedHobbies] = useState<number[]>([]);
   const { user } = useUserContext();
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(`${URL}/Hobby`);
-      const data = await response.json();
-      setData(data);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+ 
+//簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${URL}/Hobby`);
+        const data = await response.json();
+        setData(data);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchData();
-  }, []);
+  }, [URL]);
 
   const handleSelection = (hobbyId: number) => {
     setSelectedHobbies((prevSelectedHobbies) => {
