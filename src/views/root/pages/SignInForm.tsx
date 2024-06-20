@@ -30,6 +30,7 @@ import { signInWithOthers } from "@/services/auth.service";
 import { ToastAction } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { use } from "passport";
 
 const SignInForm = () => {
   const [isVerify, setIsVerify] = useState(false);
@@ -461,6 +462,16 @@ const SignInForm = () => {
           </form>
 
           <div className="flex justify-center items-center flex-col w-full mt-4 gap-4">
+            <Button
+              onClick={() =>
+                form.reset({
+                  username: "Test123456!",
+                  password: "Test1234!",
+                })
+              }
+            >
+              Admin DEMO
+            </Button>
             <button
               onClick={googleHandler}
               type="button"
