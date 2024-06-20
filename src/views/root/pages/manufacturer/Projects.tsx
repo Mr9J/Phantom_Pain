@@ -591,7 +591,7 @@ const Projects = () => {
                             </tr>
                           </thead>
                           {item.products.map((product, productIndex) => (
-                            <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900 transition-all">
+                            <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900">
                               {/* Row */}
                               <tr className="hover:bg-gray-200 dark:hover:bg-slate-500">
                                 <td className="pl-1">
