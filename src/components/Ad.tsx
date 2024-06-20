@@ -7,7 +7,7 @@ const frontUrl = import.meta.env.VITE_FRONT_URL;
 interface ModalProps {
   id: string;
 }
-const excludedIndexes = [137, 138, 145, 147, 154, 157, 160]; // 排除的索引
+const excludedIndexes = [130, 137, 138, 145, 147, 154, 157, 160]; // 排除的索引
 const validIndexes = Array.from({ length: 169 }, (_, i) => i).filter(
   (index) => !excludedIndexes.includes(index)
 );

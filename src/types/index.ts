@@ -62,6 +62,7 @@ export type Order = {
     count: number;
     price: number;
   };
+  coupon: { discount: number };
 };
 export type OrderProject = {
   orderId: number;
