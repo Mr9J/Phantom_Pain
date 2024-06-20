@@ -10,6 +10,7 @@ import {
   SearchTerm,
   PostImageDTO,
   IUpdateUserProfile,
+  IUpdateBanner,
 } from "@/types";
 import {
   changeEmail,
@@ -23,6 +24,7 @@ import {
   signIn,
   signInWithOthers,
   signUp,
+  updateBanner,
   updateMemberProfile,
 } from "@/services/auth.service";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
@@ -263,5 +265,11 @@ export const useGetFollowPost = (page: number) => {
     queryKey: ["followPost"],
     queryFn: () => getFollowPost(page),
     enabled: !!page,
+  });
+};
+
+export const useUpdateBanner = () => {
+  return useMutation({
+    mutationFn: (x: IUpdateBanner) => updateBanner(x),
   });
 };

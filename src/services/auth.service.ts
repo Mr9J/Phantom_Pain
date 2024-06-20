@@ -1,6 +1,7 @@
 import { S3 } from "@/config/R2";
 import {
   CurrentUserDTO,
+  IUpdateBanner,
   IUpdateUserProfile,
   OuterSignIn,
   SignInDTO,
@@ -296,6 +297,44 @@ export async function updateMemberProfile(profile: IUpdateUserProfile) {
     if (res.status !== 200) throw Error;
 
     return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateBanner(x: IUpdateBanner) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const imgId = Date.now() + x.userId;
+
+    const res = await S3.send(
+      new PutObjectCommand({
+        Bucket: "mumu",
+        Key: `Members/MemberID-${x.userId}-Banner-${imgId}.jpg`,
+        Body: x.file[0],
+        ContentType: "image/jpeg",
+      })
+    );
+
+    if (res.$metadata.httpStatusCode !== 200) throw Error;
+
+    const newProfile = {
+      banner: `https://cdn.mumumsit158.com/Members/MemberID-${x.userId}-Banner-${imgId}.jpg`,
+      id: x.userId,
+    };
+
+    const res2 = await axios.patch(
+      `${URL}/Member/update-member-banner`,
+      newProfile,
+      { params: newProfile, headers: { Authorization: jwt } }
+    );
+
+    if (res2.status !== 200) throw Error;
+
+    return res2.data;
   } catch (error) {
     console.error(error);
   }

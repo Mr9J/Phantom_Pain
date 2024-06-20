@@ -150,7 +150,7 @@ const PostDetails = () => {
               </div>
             </div>
             <hr className="border w-full dark:border-dark-4/80 border-slate-300/80" />
-            <div className="flex flex-col flex-1 w-full text-[14px] font-medium leading-[140%] lg:text-[16px]">
+            <div className="flex flex-col flex-1 w-full text-[14px] font-medium leading-[140%] lg:text-[16px] whitespace-pre-wrap">
               <p>{post?.caption}</p>
               <ul className="flex gap-1 mt-2">
                 {post?.tags.split(",").map((tag: string, index) => (

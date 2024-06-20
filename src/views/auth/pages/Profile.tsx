@@ -1,5 +1,6 @@
 import {
   PostProfileEdit,
+  PostProfileEditP,
   PostProfileMain,
   PostProfileReview,
 } from "@/components/postProfile";
@@ -29,7 +30,11 @@ const Profile = () => {
             <PostProfileReview id={id} />
           </TabsContent>
           <TabsContent value="edit">
-            <PostProfileEdit id={user.id} />
+            {member?.authenticationProvider === "N" ? (
+              <PostProfileEdit id={user.id} />
+            ) : (
+              <PostProfileEditP id={user.id} />
+            )}
           </TabsContent>
         </Tabs>
       </div>
