@@ -16,7 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { ProfileEditValidation } from "@/lib/validation";
+import {
+  ProfileEditPValidation,
+  ProfileEditValidation,
+} from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
 import {
   useGetMemberProfile,
@@ -25,9 +28,9 @@ import {
 import { useEffect, useState } from "react";
 import FileUploader from "../shared/FileUploader";
 import { Textarea } from "../ui/textarea";
-import sea from "@/assets/_shared_img/sea.jpg";
+import street from "@/assets/_shared_img/street.jpg";
 
-const PostProfileEdit = ({ id }: { id: string }) => {
+const PostProfileEditP = ({ id }: { id: string }) => {
   const { toast } = useToast();
   const [isCheck, setIsCheck] = useState(false);
   const { user } = useUserContext();
@@ -37,8 +40,8 @@ const PostProfileEdit = ({ id }: { id: string }) => {
     id || ""
   );
 
-  const form = useForm<z.infer<typeof ProfileEditValidation>>({
-    resolver: zodResolver(ProfileEditValidation),
+  const form = useForm<z.infer<typeof ProfileEditPValidation>>({
+    resolver: zodResolver(ProfileEditPValidation),
     defaultValues: {
       nickname: "",
       username: "",
@@ -53,7 +56,7 @@ const PostProfileEdit = ({ id }: { id: string }) => {
   });
 
   const handleProfileEdit = async (
-    data: z.infer<typeof ProfileEditValidation>
+    data: z.infer<typeof ProfileEditPValidation>
   ) => {
     if (!isCheck) {
       toast({
@@ -109,7 +112,7 @@ const PostProfileEdit = ({ id }: { id: string }) => {
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
-            src={sea}
+            src={street}
             alt="street"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
@@ -359,20 +362,20 @@ const PostProfileEdit = ({ id }: { id: string }) => {
                       onChange={(e) => setIsCheck(e.target.checked)}
                     />
 
-                    <span className="text-sm">
+                    <span className="text-sm text-gray-700">
                       我同意 Mumu 的服務條款與隱私政策
                     </span>
                   </label>
                 </div>
                 <div className="col-span-6">
-                  <p className="text-sm ">
+                  <p className="text-sm text-gray-500">
                     By continuing, you agree to our
-                    <a href="#" className="underline">
+                    <a href="#" className="text-gray-700 underline">
                       {" "}
                       Terms and Conditions{" "}
                     </a>
                     and
-                    <a href="#" className=" underline">
+                    <a href="#" className="text-gray-700 underline">
                       {" "}
                       Privacy Policy
                     </a>
@@ -393,4 +396,4 @@ const PostProfileEdit = ({ id }: { id: string }) => {
   );
 };
 
-export default PostProfileEdit;
+export default PostProfileEditP;

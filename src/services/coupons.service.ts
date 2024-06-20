@@ -13,7 +13,7 @@ export async function getCouponInfo() {
 export async function getCouponList() {
   const jwt = localStorage.getItem("token");
   try {
-    const res = await axios.get(`${baseUrl}/Coupon/couponList`, {
+    const res = await axios.get(`${baseUrl}/Coupon/CouponList`, {
       headers: { Authorization: jwt },
     });
     return res.data;
@@ -45,4 +45,19 @@ export const getCoupons = (
       console.error("There was a problem with your fetch operation:", error);
       throw error;
     });
+};
+
+export const getCouponsUsedList = async (
+  couponsId: number
+): Promise<number> => {
+  const jwt = localStorage.getItem("token");
+  try {
+    const res = await axios.get(`${baseUrl}/Coupon/UsedList/${couponsId}`, {
+      headers: { Authorization: jwt },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
 };

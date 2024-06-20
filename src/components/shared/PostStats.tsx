@@ -110,6 +110,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   };
 
   useEffect(() => {
+    checkStatus();
     refetchComments().then(() => {
       if (comments !== "沒有留言" && comments !== undefined) {
         setCommentData(comments);

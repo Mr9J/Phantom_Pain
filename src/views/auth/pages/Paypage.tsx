@@ -66,7 +66,9 @@ function Paypage() {
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+
   const testmemberId = 6;
+
 
   const [selectedCity, setSelectedCity] = useState<string>(""); // 存城市名稱
   const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 存區域名稱
@@ -277,6 +279,7 @@ function Paypage() {
     if (event.key === "Enter") {
       event.preventDefault();
       const value = event.currentTarget.value;
+
       const discount = await getCoupons(
         value == "" ? "0" : value,
         Number(projectId)
@@ -284,6 +287,8 @@ function Paypage() {
       console.log("Input value:", value);
       if (discount == "0") {
         await setDiscount(Number(discount));
+
+
         await setshowNotFoundCoupons(true);
         await setshowCoupons(false);
         await setOrderData((prevOrderData) => ({
@@ -430,10 +435,12 @@ function Paypage() {
                     className="mr-4"
                     type="checkbox"
                     value={pjitem.productId}
+
                     disabled={
                       productCounts[pjitem.productId] == undefined ||
                       productCounts[pjitem.productId] == 0
                     }
+
                     onChange={(e) => AddToPurchase(e, pjitem.productPrice)}
                   />
                   選擇

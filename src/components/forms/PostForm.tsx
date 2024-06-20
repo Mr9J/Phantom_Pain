@@ -210,7 +210,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
               <FormLabel className="text-3xl font-bold">內文</FormLabel>
               <FormControl>
                 <Textarea
-                  className="text-lg custom-scrollbar dark:shad-textarea bg-gray-100"
+                  className="text-lg custom-scrollbar dark:shad-textarea bg-gray-100 whitespace-pre-wrap"
                   {...field}
                 />
               </FormControl>

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TabDetail from "@/components/explore/TabDetail";
 import TabComments from "@/components/explore/TabComments";
 import { useUserContext } from "@/context/AuthContext";
-import { Copy, Heart, Share2, Twitter } from "lucide-react";
+import { Heart, Share2 } from "lucide-react";
 import ProductCards from "@/components/explore/ProductCards";
 import { ProjectInfoDto } from "@/components/explore/types";
 import TabQA from "@/components/explore/TabQA";
@@ -104,8 +104,11 @@ function ProjectInfo() {
               {/* 提案人 */}
               <div className="text-sm text-gray-500">
                 <span className="text-gray-500">提案人 </span>
-                <a className="text-zec-green font-bold" href="#">
-                  {project.memberName}
+                <a
+                  className="text-zec-green font-bold"
+                  href={`/users/${project.member.memberId}`}
+                >
+                  {project.member.username}
                 </a>
               </div>
               {/* 專案名稱 */}
@@ -119,7 +122,9 @@ function ProjectInfo() {
             <Progress
               goal={project.projectGoal}
               value={project.projectTotal}
+              sponsorCount={project.sponsorCount}
             ></Progress>
+
             <p className="my-4 text-sm leading-relaxed tracking-wider text-gray-500">
               {project.projectDescription}
             </p>
@@ -175,7 +180,7 @@ function ProjectInfo() {
                 }
               >
                 <svg
-                  enable-background="new 0 0 24 24"
+                  enableBackground="new 0 0 24 24"
                   height="24px"
                   id="Layer_1"
                   version="1.1"

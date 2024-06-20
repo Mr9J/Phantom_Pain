@@ -12,6 +12,8 @@ export type ProjectInfoDto = {
   products: typeProductCards;
   clicked: number;
   projectDetail: string;
+  member: typeMember;
+  sponsorCount: number;
 };
 
 export type typeProductCards = typeProduct[];
@@ -48,6 +50,7 @@ export type typeCommentDto = {
 };
 
 export type typeMember = {
+  memberId: number;
   username: string;
   thumbnail: string;
 };
