@@ -26,6 +26,7 @@ type ProjectInfoDto = {
   isLiked: boolean;
   products: typeProductCards;
   clicked: number;
+  projectDetail: string;
 };
 
 function ProjectInfo() {
@@ -41,6 +42,7 @@ function ProjectInfo() {
         headers: { Authorization: localStorage.getItem("token") },
       });
       if (res.status === 404) return <NotFound />;
+      console.log(res.data);
       setProject(res.data);
     } catch (error) {
       console.error(error);
@@ -273,7 +275,7 @@ function ProjectInfo() {
               <TabsContent value="details">
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">專案內容</h2>
-                  <TabDetail></TabDetail>
+                  <TabDetail detailContents={project.projectDetail}></TabDetail>
                 </div>
               </TabsContent>
               <TabsContent value="qa">
@@ -296,7 +298,6 @@ function ProjectInfo() {
           </div>
         </div>
       </div>
-      <Footer></Footer>
     </>
   );
 }
