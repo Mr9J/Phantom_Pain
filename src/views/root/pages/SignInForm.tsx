@@ -29,6 +29,7 @@ import { OuterSignIn } from "@/types";
 import { signInWithOthers } from "@/services/auth.service";
 import { ToastAction } from "@/components/ui/toast";
 import { useEffect, useState } from "react";
+import CloudflareScript from "@/config/Cloudflare";
 
 const SignInForm = () => {
   const [isRemember, setIsRemember] = useState(false);
@@ -370,11 +371,6 @@ const SignInForm = () => {
                 </FormItem>
               )}
             />
-            <div
-              className="cf-turnstile"
-              data-sitekey="0x4AAAAAAAc5s8I5PK0pJEjH"
-              data-callback="javascriptCallback"
-            ></div>
             <Button
               type="submit"
               className="shad-button_primary"
@@ -389,7 +385,12 @@ const SignInForm = () => {
                 <p className="text-lg font-bold">登入</p>
               )}
             </Button>
-
+            <CloudflareScript />
+            <div
+              className="cf-turnstile"
+              data-sitekey="0x4AAAAAAAc5s8I5PK0pJEjH"
+              data-callback="javascriptCallback"
+            ></div>
             <div className="flex items-center space-x-2">
               <label htmlFor="MarketingAccept" className="flex gap-4">
                 <input
