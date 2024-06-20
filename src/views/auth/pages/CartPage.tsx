@@ -137,7 +137,7 @@ function CartPage() {
     <br />
     <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
     <div className="flex items-center">
-        {product.count!>=product.currentStock?<span className='text-orange-800 font-semibold text-[16px] flex-2 mr-5'>存貨不足 剩餘:{product.currentStock}份</span>:  <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨 剩餘:{product.currentStock}份</span>}
+        {product.count!>=product.currentStock?<span className='text-orange-800 font-semibold text-[16px] flex-2 mr-5'>到達商品庫存上限 剩餘:{product.currentStock}份</span>:  <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨 剩餘:{product.currentStock}份</span>}
       
         <div className="flex items-center justify-center space-x-2 mb-1">
             {Number(product.count) === 1 ? (
