@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ThumbsUp } from "lucide-react";
+import ReplyInput from "./ReplyInput";
+import CommentCard from "./CommentCard";
 
 function TabComments({ pid }: { pid: number }) {
   const { user, isAuthenticated } = useUserContext();
@@ -23,7 +25,7 @@ function TabComments({ pid }: { pid: number }) {
   const [comments, setComments] = useState<typeComment[]>([]);
   const [sortConfig, setSortConfig] = useState<string>("nto");
 
-  const sendComment = async () => {
+  const sendComment = async (reply?: number) => {
     // 判斷是否登入
     if (!isAuthenticated) {
       alert("請先登入");
@@ -38,6 +40,7 @@ function TabComments({ pid }: { pid: number }) {
     const newComment: typeCommentRequest = {
       commentMsg: input,
       projectId: pid,
+      parentId: reply,
     };
     // 呼叫 Hub 送出留言
     connection
@@ -53,14 +56,25 @@ function TabComments({ pid }: { pid: number }) {
       sender: data.member!,
       liked: data.liked,
       parentId: data.parentId,
+      isNew: false,
     };
   };
   const handleReceivedComment = (data: typeCommentDto) => {
     const receivedComment = DtoToComment(data);
-    console.log(sortConfig);
+    receivedComment.isNew = true;
+
+    // 依照排序方式加入留言
     if (sortConfig === "nto")
       setComments((comments) => [receivedComment, ...comments]);
     else setComments((comments) => [...comments, receivedComment]);
+
+    setTimeout(() => {
+      setComments((prevComments) =>
+        prevComments.map((m) =>
+          m.date === receivedComment.date ? { ...m, isNew: false } : m
+        )
+      );
+    }, 3000);
   };
 
   // 取得排序後的所有留言
@@ -151,40 +165,9 @@ function TabComments({ pid }: { pid: number }) {
           (c) =>
             // [元件]一則留言
             !c.parentId && (
-              <div>
+              <div className="border-b" style={{ borderColor: "currentcolor" }}>
                 {/* 顯示第一層留言(ParentId 為 null) */}
-                <div key={c.date} className="border-b border-gray-700 pb-4">
-                  <div className="flex items-center mb-2">
-                    <div className="w-8 h-8 mr-3">
-                      <Avatar>
-                        <AvatarImage src={c.sender.thumbnail} />
-                        <AvatarFallback>{c.sender.username}</AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <div className="flex-col">
-                      <p className="font-bold">{c.sender.username}</p>
-                      <div className="flex">
-                        <p className="text-xs">{DateTimeToString(c.date)}</p>
-                        <Button
-                          variant="ghost"
-                          className="p-2 h-4 text-xs cursor-pointer ml-1"
-                          onClick={() => alert("hi")}
-                        >
-                          <ThumbsUp width={10} className="mr-1" />
-                          {c.liked}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="p-2 h-4 text-xs text-gray-400 ml-1"
-                          onClick={sendComment}
-                        >
-                          回覆
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  <div>{c.commentMsg}</div>
-                </div>
+                <CommentCard c={c} projectId={pid} />
                 {/* 第二層留言 */}
                 <div className="ml-8">
                   {comments
@@ -192,14 +175,18 @@ function TabComments({ pid }: { pid: number }) {
                     .map((sc) => (
                       <div
                         key={sc.commentId}
-                        className="border-b border-gray-600 pb-2 pt-2"
+                        className={`border-b px-4 py-2 rounded-lg ${
+                          sc.isNew
+                            ? "animate-bounce bg-blue-200 text-black"
+                            : ""
+                        }`}
                       >
-                        <div className="flex items-center mb-2">
+                        <div className="flex items-center mb-2 ">
                           <div className="w-8 h-8 mr-3">
                             <Avatar>
                               <AvatarImage src={sc.sender.thumbnail} />
                               <AvatarFallback>
-                                {sc.sender.username}
+                                {sc.sender.username[0]}
                               </AvatarFallback>
                             </Avatar>
                           </div>
@@ -228,6 +215,7 @@ function TabComments({ pid }: { pid: number }) {
                           </div>
                         </div>
                         <div>{sc.commentMsg}</div>
+                        {/* <ReplyInput parentId={sc.commentId} projectId={pid} /> */}
                       </div>
                     ))}
                 </div>
