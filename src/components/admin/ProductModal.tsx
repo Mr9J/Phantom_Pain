@@ -29,7 +29,7 @@ const ProductModal = ({
             <button
               onClick={() => {
                 setVisibleProductModal(false);
-                setProductDemo(["", "", 3, "", "", ""]);
+                setProductDemo(["", "", 1, "", "", ""]);
                 setSelectedImage("");
               }}
               type="button"
@@ -98,7 +98,7 @@ const ProductModal = ({
                         "把這邊拍下來",
                         2,
                         8000,
-                        2,
+                        10,
                         "2024-05-01",
                         "2024-06-30",
                       ]);
