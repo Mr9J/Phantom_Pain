@@ -12,7 +12,6 @@ import ProductModal from "@/components/admin/ProductModal";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 
 const baseUrl = import.meta.env.VITE_API_URL;
-const frontUrl = import.meta.env.VITE_FRONT_URL;
 
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
@@ -390,7 +389,7 @@ const Projects = () => {
                               style={{ width: 600 }}
                             >
                               <a
-                                href={`${frontUrl}/project/${item.projectId}`}
+                                href={`/project/${item.projectId}`}
                                 rel="noopener noreferrer"
                               >
                                 <div className="text-base text-slate-800 dark:text-slate-100 underline">
