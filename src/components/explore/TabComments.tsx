@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ThumbsUp } from "lucide-react";
+import ReplyInput from "./ReplyInput";
 
 function TabComments({ pid }: { pid: number }) {
   const { user, isAuthenticated } = useUserContext();
@@ -23,7 +24,7 @@ function TabComments({ pid }: { pid: number }) {
   const [comments, setComments] = useState<typeComment[]>([]);
   const [sortConfig, setSortConfig] = useState<string>("nto");
 
-  const sendComment = async () => {
+  const sendComment = async (reply?: number) => {
     // 判斷是否登入
     if (!isAuthenticated) {
       alert("請先登入");
@@ -38,6 +39,7 @@ function TabComments({ pid }: { pid: number }) {
     const newComment: typeCommentRequest = {
       commentMsg: input,
       projectId: pid,
+      parentId: reply,
     };
     // 呼叫 Hub 送出留言
     connection
@@ -167,14 +169,14 @@ function TabComments({ pid }: { pid: number }) {
                 <div
                   key={c.date}
                   className={` border-gray-700 px-4 py-2 rounded-lg ${
-                    c.isNew ? "animate-bounce bg-blue-200" : ""
+                    c.isNew ? "animate-bounce bg-blue-200 text-black" : ""
                   }`}
                 >
                   <div className="flex items-center mb-2">
                     <div className="w-8 h-8 mr-3">
                       <Avatar>
                         <AvatarImage src={c.sender.thumbnail} />
-                        <AvatarFallback>{c.sender.username}</AvatarFallback>
+                        <AvatarFallback>{c.sender.username[0]}</AvatarFallback>
                       </Avatar>
                     </div>
                     <div className="flex-col">
@@ -200,6 +202,7 @@ function TabComments({ pid }: { pid: number }) {
                     </div>
                   </div>
                   <div>{c.commentMsg}</div>
+                  <ReplyInput parentId={c.commentId} projectId={pid} />
                 </div>
                 {/* 第二層留言 */}
                 <div className="ml-8">
@@ -215,7 +218,7 @@ function TabComments({ pid }: { pid: number }) {
                             <Avatar>
                               <AvatarImage src={sc.sender.thumbnail} />
                               <AvatarFallback>
-                                {sc.sender.username}
+                                {sc.sender.username[0]}
                               </AvatarFallback>
                             </Avatar>
                           </div>
@@ -244,6 +247,7 @@ function TabComments({ pid }: { pid: number }) {
                           </div>
                         </div>
                         <div>{sc.commentMsg}</div>
+                        {/* <ReplyInput parentId={sc.commentId} projectId={pid} /> */}
                       </div>
                     ))}
                 </div>
