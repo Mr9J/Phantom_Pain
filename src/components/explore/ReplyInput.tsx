@@ -61,7 +61,7 @@ function ReplyInput({
           setInput("");
         }}
       >
-        留言
+        回覆
       </Button>
     </div>
   );
