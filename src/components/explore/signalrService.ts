@@ -12,9 +12,6 @@ const connection = new signalR.HubConnectionBuilder()
   })
   .build();
 
-connection
-  .start()
-  .then(() => console.log("Connection started", connection))
-  .catch((err) => console.error(err.toString()));
+connection.start().catch((err) => console.error(err.toString()));
 
 export default connection;
