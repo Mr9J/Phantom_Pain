@@ -53,14 +53,25 @@ function TabComments({ pid }: { pid: number }) {
       sender: data.member!,
       liked: data.liked,
       parentId: data.parentId,
+      isNew: false,
     };
   };
   const handleReceivedComment = (data: typeCommentDto) => {
     const receivedComment = DtoToComment(data);
-    console.log(sortConfig);
+    receivedComment.isNew = true;
+
+    // 依照排序方式加入留言
     if (sortConfig === "nto")
       setComments((comments) => [receivedComment, ...comments]);
     else setComments((comments) => [...comments, receivedComment]);
+
+    setTimeout(() => {
+      setComments((prevComments) =>
+        prevComments.map((m) =>
+          m.date === receivedComment.date ? { ...m, isNew: false } : m
+        )
+      );
+    }, 3000);
   };
 
   // 取得排序後的所有留言
@@ -151,9 +162,14 @@ function TabComments({ pid }: { pid: number }) {
           (c) =>
             // [元件]一則留言
             !c.parentId && (
-              <div>
+              <div className="border-b">
                 {/* 顯示第一層留言(ParentId 為 null) */}
-                <div key={c.date} className="border-b border-gray-700 pb-4">
+                <div
+                  key={c.date}
+                  className={` border-gray-700 px-4 py-2 rounded-lg ${
+                    c.isNew ? "animate-bounce bg-blue-200" : ""
+                  }`}
+                >
                   <div className="flex items-center mb-2">
                     <div className="w-8 h-8 mr-3">
                       <Avatar>
