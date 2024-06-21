@@ -9,7 +9,7 @@ import taiwan_districts from "@/constants/taiwan_districts.json";
 import { getProjectfromProductId } from "@/services/projects.service";
 import { createOrder, checkProductInventory } from "@/services/orders.service";
 import Projectcard from "@/components/ProjectCard/projectcard.jsx";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import PaymentForm from "@/components/service/ECPay";
 import { useUserContext } from "@/context/AuthContext";
 import { getCoupons } from "@/services/coupons.service";
@@ -100,8 +100,9 @@ function Paypage() {
   const [postcode, setPostcode] = useState("");
   const [recipient, setRecipient] = useState(""); //姓名
   const [phone, setPhone] = useState("");
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   //Demo
-
+  const navigate = useNavigate();
   const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     e.preventDefault();
@@ -122,6 +123,14 @@ function Paypage() {
   };
 
   const handleConfirmButtonClick = async () => {
+    if(totalAmount==0||totalAmount>300000)
+      {
+        createOrder(orderData);
+        setTimeout(() => {
+          navigate(`/ReturnURL`);
+        }, 1000);
+      return;
+      }
     console.log("確認");
     setShowPaymentForm(true);
     setIsConfirming(false);
@@ -410,6 +419,32 @@ function Paypage() {
     await setPhone(phoneDemo);
   };
 
+  useEffect(() => {
+    if (projectAndproductsData) {
+      projectAndproductsData.forEach((item) => {
+        item.products!.forEach((pjitem) => {
+          if (pjitem.productId.toString() === selectedproductId) {
+            const computedTotalAmount =
+              pjitem.productPrice * selectedProductCount +
+              addToPurchase +
+              donationInfo.donationAmount -
+              discount;
+
+            setTotalAmount(computedTotalAmount < 0 ? 0 : computedTotalAmount);
+          }
+        });
+      });
+    }
+  }, [
+    projectAndproductsData,
+    selectedproductId,
+    selectedProductCount,
+    addToPurchase,
+    donationInfo,
+    discount,
+  ]);
+
+
   const poductlist =
     projectAndproductsData &&
     projectAndproductsData.map((item) => (
@@ -560,6 +595,12 @@ function Paypage() {
       <div key={item.projectId}>
         {item.products &&
           item.products.map((pjitem) => {
+            const totalAmount =
+                    pjitem.productPrice * selectedProductCount +
+                    addToPurchase +
+                    donationInfo.donationAmount -
+                    discount; 
+                   
             if (pjitem.productId.toString() == selectedproductId)
               return (
                 <div key={pjitem.productId}>
@@ -762,14 +803,12 @@ function Paypage() {
                         總價
                       </div>
                       <div className="whitespace-nowrap text-right font-extrabold text-2xl">
-                        {/* 金額正規化顯示.toLocaleString() */}
+                        {/* 金額正規化顯示.toLocaleString() */} 
                         NT${" "}
-                        {(
-                          pjitem.productPrice * selectedProductCount +
-                          addToPurchase +
-                          donationInfo.donationAmount -
-                          discount
-                        ).toLocaleString()}
+                        {
+                          totalAmount 
+                        <0?0:
+                        totalAmount .toLocaleString()}
                         {/* 條件渲染 PaymentForm */}
                         {showPaymentForm && (
                           <PaymentForm

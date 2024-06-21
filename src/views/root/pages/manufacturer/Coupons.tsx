@@ -101,7 +101,7 @@ const Coupons: React.FC = () => {
           <div className="mx-auto max-w-2xl lg:max-w-none ">
             <h2 className="text-4xl font-bold">折價券列表</h2>
           </div>
-          <div className="pt-4" style={{ display: "flex" }}>
+          <div className="pt-4 pb-4" style={{ display: "flex" }}>
             <button
               type="button"
               onClick={() => {

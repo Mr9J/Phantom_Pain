@@ -38,6 +38,12 @@ export type typeComment = {
   parentId: number;
 };
 
+export type typeCommentRequest = {
+  commentMsg: string;
+  projectId: number;
+  parentId?: number;
+};
+
 export type typeCommentDto = {
   commentId?: number;
   date?: string;

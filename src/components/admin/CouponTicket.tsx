@@ -100,7 +100,7 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
                 </div>
                 <div className="flex flex-row space-x-1">
                   <button
-                    className="bg-green-500 shadow-lg shadow- shadow-green-600 text-white cursor-pointer px-3 text-center justify-center items-center py-1 rounded-xl flex space-x-2 flex-row"
+                    className="bg-blue-600 shadow-lg shadow- shadow-blue-600  text-white cursor-pointer px-3 text-center justify-center items-center py-1 rounded-xl flex space-x-2 flex-row"
                     onClick={() => {
                       setvisibleConponUsedListModal(true);
                       setcouponID(coupon.couponId);

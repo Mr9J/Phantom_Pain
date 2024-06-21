@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
-import { typeComment, typeCommentDto } from "./types";
+import { typeComment, typeCommentDto, typeCommentRequest } from "./types";
 import connection from "./signalrService";
 import {
   Select,
@@ -15,11 +15,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ThumbsUp } from "lucide-react";
+
 function TabComments({ pid }: { pid: number }) {
   const { user, isAuthenticated } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState<string>("");
   const [comments, setComments] = useState<typeComment[]>([]);
+  const [sortConfig, setSortConfig] = useState<string>("nto");
 
   const sendComment = async () => {
     // 判斷是否登入
@@ -33,15 +35,14 @@ function TabComments({ pid }: { pid: number }) {
       return;
     }
     // 假設某人發送留言
-    const newComment: typeCommentDto = {
+    const newComment: typeCommentRequest = {
       commentMsg: input,
       projectId: pid,
     };
-    // 呼叫 API 送出留言
-    await axios.post(`${URL}/ProjectInfo/SendComment`, newComment, {
-      headers: { Authorization: localStorage.getItem("token") },
-    });
-    setInput("");
+    // 呼叫 Hub 送出留言
+    connection
+      .invoke("SendMessage", newComment)
+      .catch((err) => console.error(err));
   };
 
   const DtoToComment = (data: typeCommentDto): typeComment => {
@@ -56,14 +57,18 @@ function TabComments({ pid }: { pid: number }) {
   };
   const handleReceivedComment = (data: typeCommentDto) => {
     const receivedComment = DtoToComment(data);
-    setComments((comments) => [...comments, receivedComment]);
+    console.log(sortConfig);
+    if (sortConfig === "nto")
+      setComments((comments) => [receivedComment, ...comments]);
+    else setComments((comments) => [...comments, receivedComment]);
   };
 
-  const getComments = async (config?: string) => {
+  // 取得排序後的所有留言
+  const getComments = async (sortConfig?: string) => {
     const res = await axios.get(`${URL}/ProjectInfo/GetComments`, {
       params: {
         projectId: pid,
-        orderby: config,
+        orderby: sortConfig,
       },
     });
     console.log(res.data);
@@ -71,30 +76,30 @@ function TabComments({ pid }: { pid: number }) {
     setComments(comments);
   };
   useEffect(() => {
-    getComments();
+    getComments(sortConfig);
 
     // 註冊接收訊息事件
     connection.on("ReceiveComment", handleReceivedComment);
 
     return () => {
-      connection.off("ReceiveMessage", handleReceivedComment);
+      connection.off("ReceiveComment", handleReceivedComment);
     };
-  }, []);
+  }, [sortConfig]);
   // comment一有變動就會去抓會員資料
   useEffect(() => {
     console.log(comments);
   }, [comments]);
 
-  const handleSortChange = async (value: string) => {
+  const handleSortChange = (value: string) => {
     switch (value) {
-      case "nto":
-        await getComments();
-        break;
       case "otn":
-        await getComments("Date");
+        setSortConfig("otn");
         break;
       case "hot":
-        await getComments("CommentId");
+        setSortConfig("hot");
+        break;
+      default:
+        setSortConfig("nto");
         break;
     }
   };
@@ -131,7 +136,14 @@ function TabComments({ pid }: { pid: number }) {
           onChange={(e) => setInput(e.currentTarget.value)}
           value={input}
         />
-        <Button onClick={sendComment}>留言</Button>
+        <Button
+          onClick={() => {
+            sendComment();
+            setInput("");
+          }}
+        >
+          留言
+        </Button>
       </div>
 
       <div className=" mx-auto mt-10 p-4 rounded-lg shadow-lg space-y-4">
@@ -141,10 +153,7 @@ function TabComments({ pid }: { pid: number }) {
             !c.parentId && (
               <div>
                 {/* 顯示第一層留言(ParentId 為 null) */}
-                <div
-                  key={c.commentId}
-                  className="border-b border-gray-700 pb-4"
-                >
+                <div key={c.date} className="border-b border-gray-700 pb-4">
                   <div className="flex items-center mb-2">
                     <div className="w-8 h-8 mr-3">
                       <Avatar>
