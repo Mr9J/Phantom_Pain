@@ -13,7 +13,7 @@ import {
   ShoppingCart,
   LucideBookHeart,
   CircleDollarSign,
-  HomeIcon
+  HomeIcon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -42,12 +42,12 @@ const exploreItems = [
     to: "/PurchasHistory",
     icon: CircleDollarSign,
   },
-  {
-    name: "m",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
+  // {
+  //   name: "m",
+  //   description: "Just An Item",
+  //   to: "/",
+  //   icon: LightbulbIcon,
+  // },
   {
     name: "Manufactor",
     description: "mygo",
@@ -153,7 +153,7 @@ const Header = ({
                     </div>
                   ))}
                 </div>
-                <div
+                {/* <div
                   className={`grid grid-cols-2 divide-x divide-gray-900/5 dark:divide-gray-50/5 bg-gray-50 dark:bg-slate-800`}
                 >
                   {exploreBottomItems.map((item) => (
@@ -169,7 +169,7 @@ const Header = ({
                       {item.name}
                     </Link>
                   ))}
-                </div>
+                </div> */}
               </Popover.Panel>
             </Transition>
           </Popover>
@@ -204,7 +204,7 @@ const Header = ({
           onClick={() => navigate("/CartPage")}
           className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
         >
-          <ShoppingCart/>
+          <ShoppingCart />
         </Button>
         {user.id ? (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
