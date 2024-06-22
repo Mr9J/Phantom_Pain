@@ -1,4 +1,3 @@
-
 import {
   Pagination,
   PaginationContent,
@@ -27,6 +26,7 @@ export const SearchPagination: React.FC<Props> = ({
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
+            className="cursor-pointer"
             onClick={() =>
               onPageChange(currentPage - 1 >= 1 ? currentPage - 1 : currentPage)
             }
@@ -35,6 +35,7 @@ export const SearchPagination: React.FC<Props> = ({
         {pages.map((page) => (
           <PaginationItem key={page}>
             <PaginationLink
+              className="cursor-pointer"
               onClick={() => onPageChange(page)}
               isActive={page === currentPage}
             >
@@ -44,6 +45,7 @@ export const SearchPagination: React.FC<Props> = ({
         ))}
         <PaginationItem>
           <PaginationNext
+            className="cursor-pointer"
             onClick={() =>
               onPageChange(
                 currentPage + 1 <= totalPage ? currentPage + 1 : currentPage
