@@ -36,6 +36,7 @@ export type typeComment = {
   sender: typeMember;
   liked: number;
   parentId: number;
+  isNew: boolean;
 };
 
 export type typeCommentRequest = {

@@ -8,12 +8,12 @@ import {
   MenuIcon,
   ChevronDownIcon,
   XIcon,
-  CigaretteIcon,
   LogOutIcon,
   LaughIcon,
   ShoppingCart,
   LucideBookHeart,
   CircleDollarSign,
+  HomeIcon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -26,9 +26,9 @@ import { useUserContext } from "@/context/AuthContext";
 const exploreItems = [
   {
     name: "Home",
-    description: "Smoking Area",
+    description: "",
     to: "/Home",
-    icon: CigaretteIcon,
+    icon: HomeIcon,
   },
   {
     name: "Favorites list",
@@ -42,12 +42,12 @@ const exploreItems = [
     to: "/PurchasHistory",
     icon: CircleDollarSign,
   },
-  {
-    name: "m",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
+  // {
+  //   name: "m",
+  //   description: "Just An Item",
+  //   to: "/",
+  //   icon: LightbulbIcon,
+  // },
   {
     name: "Manufactor",
     description: "mygo",
@@ -153,7 +153,7 @@ const Header = ({
                     </div>
                   ))}
                 </div>
-                <div
+                {/* <div
                   className={`grid grid-cols-2 divide-x divide-gray-900/5 dark:divide-gray-50/5 bg-gray-50 dark:bg-slate-800`}
                 >
                   {exploreBottomItems.map((item) => (
@@ -169,7 +169,7 @@ const Header = ({
                       {item.name}
                     </Link>
                   ))}
-                </div>
+                </div> */}
               </Popover.Panel>
             </Transition>
           </Popover>
