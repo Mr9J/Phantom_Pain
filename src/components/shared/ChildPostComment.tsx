@@ -199,9 +199,7 @@ const ChildPostComment = ({
           </Button>
           <Dialog>
             <DialogTrigger>
-              <Button variant="link">
-                <FlagIcon width={16} height={16} stroke="red" fill="red" />
-              </Button>
+              <FlagIcon width={16} height={16} stroke="red" fill="red" />
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>

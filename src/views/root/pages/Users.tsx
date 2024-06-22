@@ -47,7 +47,7 @@ const Users = () => {
             <SponsoredProjects id={id || ""} />
           </TabsContent>
           <TabsContent value="contact">
-            <Contact id={id || ""} />
+            <Contact id={id || ""} user={userData} />
           </TabsContent>
         </Tabs>
 

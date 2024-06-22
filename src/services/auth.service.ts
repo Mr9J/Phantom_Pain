@@ -336,3 +336,21 @@ export async function updateBanner(x: IUpdateBanner) {
     console.error(error);
   }
 }
+
+export async function setContactInfo(status: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/set-contact-info/${status}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}

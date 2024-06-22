@@ -186,11 +186,14 @@ export type UserProfile = {
   nickname: string;
   username: string;
   email: string;
+  address: string;
+  phone: string;
   description: string;
   avatar: string;
   time: string;
   banner: string;
   projects: Project[];
+  showContactInfo: string;
 };
 
 export type Project = {

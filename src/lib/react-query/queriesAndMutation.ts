@@ -22,6 +22,7 @@ import {
   resendEmail,
   resetPassword,
   sendResetEmail,
+  setContactInfo,
   signIn,
   signInWithOthers,
   signUp,
@@ -279,5 +280,11 @@ export const useUpdateBanner = () => {
 export const useCommentLike = () => {
   return useMutation({
     mutationFn: (x: ICommentLike) => likeComment(x),
+  });
+};
+
+export const useSetContactInfo = () => {
+  return useMutation({
+    mutationFn: (status: string) => setContactInfo(status),
   });
 };
