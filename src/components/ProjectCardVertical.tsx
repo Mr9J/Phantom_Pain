@@ -11,7 +11,7 @@ export default function ProjectCardVertical({ prj }: { prj: ProjectCardDTO }) {
     }, [prj.projectGoal, prj.totalAmount])
   return (
     <a
-      className="inline-block text-primary rounded xs:w-1/4 lg:w-full px-4 pb-4 mb-4 group"
+      className="inline-block text-primary rounded min-w-60 lg:w-full px-4 pb-4 mb-4 group"
       href={`/project/${prj.projectId}`}
     >
       <div className="bg-secondary explore h-full rounded pb-4 flex flex-col group-hover:shadow-md dark:group-hover:shadow-slate-500 border">

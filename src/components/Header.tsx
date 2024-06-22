@@ -8,12 +8,12 @@ import {
   MenuIcon,
   ChevronDownIcon,
   XIcon,
-  CigaretteIcon,
   LogOutIcon,
   LaughIcon,
   ShoppingCart,
   LucideBookHeart,
   CircleDollarSign,
+  HomeIcon
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -26,9 +26,9 @@ import { useUserContext } from "@/context/AuthContext";
 const exploreItems = [
   {
     name: "Home",
-    description: "Smoking Area",
+    description: "",
     to: "/Home",
-    icon: CigaretteIcon,
+    icon: HomeIcon,
   },
   {
     name: "Favorites list",
