@@ -37,6 +37,7 @@
     "@tanstack/react-query": "^5.39.0",
     "@tinymce/tinymce-react": "^5.1.1",
     "@types/passport": "^1.0.16",
+    "@vis.gl/react-google-maps": "^1.1.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "add": "^2.0.6",
     "axios": "^1.7.2",
