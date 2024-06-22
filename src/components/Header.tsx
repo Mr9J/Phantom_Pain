@@ -204,7 +204,7 @@ const Header = ({
           onClick={() => navigate("/CartPage")}
           className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
         >
-          <ShoppingCart />
+          <ShoppingCart/>
         </Button>
         {user.id ? (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
