@@ -9,6 +9,7 @@ import { signOutNative } from "@/services/auth.service";
 import { ModeSwitch } from "./dark-theme/mode-switch";
 import { signOut } from "firebase/auth";
 import { auth } from "@/config/firebase";
+import TruncateText from "./shared/TruncateText";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
@@ -35,10 +36,12 @@ const LeftSidebar = () => {
             className="h-16 w-16 rounded-full"
           />
           <div className="flex flex-col">
-            <div className="flex w-full overflow-x-scroll custom-scrollbar">
-              <p className="text-[18px] font-bold leading-[140%] max-w-full">
-                {user.nickname}
-              </p>
+            <div className="flex w-full">
+              <TruncateText
+                content={user.nickname}
+                maxLength={18}
+                textStyles="text-[18px] font-bold leading-[140%]"
+              />
             </div>
             <p className="text-[14px] font-normal leading-[140%]">
               @{user.username.split(",")[0]}
