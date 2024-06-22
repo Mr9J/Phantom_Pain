@@ -11,6 +11,7 @@ import {
   PostImageDTO,
   IUpdateUserProfile,
   IUpdateBanner,
+  ICommentLike,
 } from "@/types";
 import {
   changeEmail,
@@ -48,6 +49,7 @@ import {
   followUser,
   followUserCheck,
   getFollowPost,
+  likeComment,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
 
@@ -271,5 +273,11 @@ export const useGetFollowPost = (page: number) => {
 export const useUpdateBanner = () => {
   return useMutation({
     mutationFn: (x: IUpdateBanner) => updateBanner(x),
+  });
+};
+
+export const useCommentLike = () => {
+  return useMutation({
+    mutationFn: (x: ICommentLike) => likeComment(x),
   });
 };

@@ -10,9 +10,6 @@ import {
 } from "@/types";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
-import exp from "constants";
-import { Network } from "lucide-react";
-import { date } from "zod";
 
 const URL = import.meta.env.VITE_API_URL;
 

@@ -39,7 +39,7 @@ const GridPostList = ({ post }: GridPostListProps) => {
       <div className="absolute bottom-0 p-5 flex-between w-full bg-gradient-to-t from-dark-3 to-transparent rounded-b-[24px] gap-2">
         <div className="flex items-center justify-start gap-2 flex-1">
           <img src={post?.userImg} className="w-8 h-8 rounded-full" />
-          <p className="line-clamp-1">{post?.username}</p>
+          <p className="line-clamp-1 text-white">{post?.username}</p>
         </div>
         <PostStats post={post} userId={user.id} commentDisplay={false} />
       </div>

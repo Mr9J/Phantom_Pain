@@ -178,6 +178,7 @@ export type ICommentPost = {
   postId: string;
   userId: string;
   comment: string;
+  parentId?: string;
 };
 
 export type UserProfile = {
@@ -257,9 +258,49 @@ export type CouponDTO = {
   statusId: number;
   projectName?: string;
   projectThumbnail?: string;
-  };
+};
 
 export type IUpdateBanner = {
   file: File[];
   userId: string;
+};
+
+export type commentPostType = {
+  postCommentID: number;
+  memberID: number;
+  nickname: string;
+  thumbnail: string;
+  postID: number;
+  comment: string;
+  date: Date;
+  parentCommentID?: number;
+  childComments?: childCommentsType[];
+  postCommentDetail: {
+    likeCount: number;
+    dislikeCount: number;
+    isLiked: boolean;
+    isDisliked: boolean;
+  };
+};
+
+export type childCommentsType = {
+  postCommentID: number;
+  memberID: number;
+  nickname: string;
+  thumbnail: string;
+  postID: number;
+  comment: string;
+  date: Date;
+  parentCommentID?: number;
+  postCommentDetail: {
+    likeCount: number;
+    dislikeCount: number;
+    isLiked: boolean;
+    isDisliked: boolean;
+  };
+};
+
+export type ICommentLike = {
+  commentId: number;
+  status: string;
 };

@@ -16,13 +16,6 @@ const Social = () => {
     refetch: refetchPosts,
   } = useGetRecentPosts(page);
 
-  // useEffect(() => {
-  //   if (posts) {
-  //     setData([...data, ...posts]);
-  //   }
-  //   refetchPosts();
-  // }, [posts]);
-
   useEffect(() => {
     if (posts) {
       const dataMap = new Map(data.map((item) => [item.postId, item]));
