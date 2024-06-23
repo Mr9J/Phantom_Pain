@@ -19,9 +19,9 @@ className="w-auto max-w-full"
       {/* 原本有flex-1 */}
       <div className="py-2 px-4">
         {/* 傳到project詳細頁面 */}
-        <a href="/projects/koizumi-wirelessionfan">
+     
           <a className="mt-1 font-bold mb-10 text-xl" href={`/project/${item.projectId}`}>{item.projectName}</a>
-        </a>
+
         <div className="text-neutral-600 text-xs mb-4">
           <span className="mr-1 dark:text-white text-base">提案人</span>
           

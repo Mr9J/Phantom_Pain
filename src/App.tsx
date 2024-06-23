@@ -59,7 +59,9 @@ import ReSendEmail from "./views/root/pages/ReSendEmail";
 import { useToast } from "./components/ui/use-toast";
 import axios from "axios";
 import Create from "./views/root/pages/Create";
+import { CartProvider } from "./context/CartContext";
 import EditProject from "./views/root/pages/EditProject";
+
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -84,6 +86,7 @@ const App = () => {
 
   return (
     <>
+    <CartProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           {/* public routes */}
@@ -170,6 +173,7 @@ const App = () => {
 
         <Toaster />
       </ThemeProvider>
+      </CartProvider>
     </>
   );
 };
