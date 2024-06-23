@@ -66,7 +66,7 @@ const App = () => {
   const { toast } = useToast();
   const URL = import.meta.env.VITE_BACK_URL;
   const test = async () => {
-    console.log("test");
+    //console.log("test");
     await axios.get(`${URL}/WeatherForecast`);
   };
 

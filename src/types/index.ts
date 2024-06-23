@@ -56,12 +56,19 @@ export type Order = {
   thumbnail: string;
   isEdit?: boolean;
   orderDetails: {
+    orderDetailId: number;
+    orderId: number;
+    thumbnail: string; 
+    projectId: number;
     projectName: string;
-    thumbnail: string;
+    productName: string;
     count: number;
     price: number;
+  }[];
+  coupon: {
+    discount: number;
   };
-  coupon: { discount: number };
+  totalAmount:number;
 };
 export type OrderProject = {
   orderId: number;
