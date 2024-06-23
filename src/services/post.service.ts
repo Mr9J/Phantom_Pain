@@ -268,6 +268,8 @@ export async function commentPost(comment: ICommentPost) {
   try {
     const jwt = localStorage.getItem("token");
 
+    if (!jwt) throw Error;
+
     const res = await axios.post(`${URL}/Post/comment-post`, comment, {
       headers: { Authorization: jwt },
     });

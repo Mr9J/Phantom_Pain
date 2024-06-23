@@ -54,11 +54,21 @@ const PostComment = ({ com, userId, refetchComments }: PostCommentProps) => {
 
   const commentSubmitHandler = async () => {
     try {
+      if (comment === "") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "留言不得為空。",
+        });
+        return;
+      }
+
       const session = await commentPost({
         postId: String(com.postID),
         comment: comment,
         userId: userId,
         parentId: String(com.postCommentID),
+        isReply: true,
       });
 
       if (!session) {

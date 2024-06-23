@@ -180,6 +180,7 @@ export type ICommentPost = {
   userId: string;
   comment: string;
   parentId?: string;
+  isReply?: boolean;
 };
 
 export type UserProfile = {
@@ -193,6 +194,8 @@ export type UserProfile = {
   avatar: string;
   time: string;
   banner: string;
+  postCount: number;
+  followCount: number;
   projects: Project[];
   showContactInfo: string;
 };

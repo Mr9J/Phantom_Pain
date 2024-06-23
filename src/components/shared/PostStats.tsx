@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import PostComment from "./PostComment";
+import { set } from "date-fns";
 
 type PostStatsProps = {
   post: GetPostDTO;
@@ -72,10 +73,22 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
   const commentSubmitHandler = async () => {
     try {
+      if (comment === "") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "留言不得為空。",
+        });
+        return;
+      }
+
+      console.log(comment);
+
       const session = await commentPost({
         postId: post.postId,
         userId,
         comment,
+        isReply: false,
       });
 
       if (!session) {
@@ -86,6 +99,14 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         });
         return;
       }
+      toast({
+        title: "成功",
+        description: "留言已送出",
+      });
+
+      setComment("");
+      if (inputRef.current) inputRef.current.value = "";
+
       refetchComments().then(() => {
         if (comments !== "沒有留言" && comments !== undefined) {
           setCommentData(comments);
@@ -269,14 +290,11 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               type="text"
               placeholder="評論貼文..."
               onChange={(e) => {
-                setComment(e.currentTarget.value);
+                setComment(e.target.value);
               }}
             />
             <Button
-              onClick={() => {
-                commentSubmitHandler();
-                if (inputRef.current) inputRef.current.value = "";
-              }}
+              onClick={commentSubmitHandler}
               disabled={isCommentSubmitting}
             >
               送出

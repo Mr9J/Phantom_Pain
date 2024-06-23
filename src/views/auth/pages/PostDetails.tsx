@@ -87,11 +87,11 @@ const PostDetails = () => {
                     <CarouselItem key={index}>
                       <div className="p-1">
                         <Card>
-                          <CardContent className="flex xl:aspect-square items-center justify-center p-6">
+                          <CardContent className="flex xl:aspect-square items-center justify-center">
                             <img
                               src={`https://cdn.mumumsit158.com/${img.Key}`}
                               alt="post"
-                              className="object-cover select-none"
+                              className="object-contain select-none w-full h-full"
                             />
                           </CardContent>
                         </Card>
