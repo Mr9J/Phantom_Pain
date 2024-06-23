@@ -6,6 +6,7 @@ import { useToast } from "../ui/use-toast";
 import { useUserContext } from "@/context/AuthContext";
 import { useState } from "react";
 import { useSetContactInfo } from "@/lib/react-query/queriesAndMutation";
+import { Input } from "../ui/input";
 
 type ContactProps = {
   id: string;
@@ -15,6 +16,7 @@ type ContactProps = {
 const Contact = ({ id, user }: ContactProps) => {
   const { user: currentUser } = useUserContext();
   const [search, setSearch] = useState("106台北市大安區復興南路一段390號");
+  const [origin, setOrigin] = useState("106台北市大安區復興南路一段390號");
   const { toast } = useToast();
   const { mutateAsync: setContact } = useSetContactInfo();
   const submitHandler = () => {
@@ -24,7 +26,7 @@ const Contact = ({ id, user }: ContactProps) => {
     });
   };
   const handleCheckbox = async () => {
-    const session = setContact(user?.showContactInfo === "Y" ? "N" : "Y");
+    const session = setContact(user?.showContactInfo === "N" ? "Y" : "N");
 
     if (!session) {
       toast({
@@ -60,7 +62,7 @@ const Contact = ({ id, user }: ContactProps) => {
                     defaultZoom={13}
                     defaultCenter={{ lat: 25.0740708, lng: 121.4713167 }}
                   >
-                    <Directions address={user?.address || ""} />
+                    <Directions address={user?.address || ""} origin={origin} />
                   </Map>
                 </APIProvider>
                 <div className="bg-white sm:relative flex flex-wrap py-6 rounded shadow-md">
@@ -110,13 +112,27 @@ const Contact = ({ id, user }: ContactProps) => {
           )}
 
           <div className="lg:w-1/3 md:w-1/2 flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
-            {Number(currentUser?.id) === user?.id && (
-              <Button onClick={handleCheckbox}>
-                {user?.showContactInfo === "Y"
-                  ? "隱藏聯絡資訊"
-                  : "顯示聯絡資訊"}
-              </Button>
-            )}
+            <div className="w-full flex flex-col mb-4">
+              {Number(currentUser?.id) === user?.id && (
+                <Button onClick={handleCheckbox}>
+                  {user?.showContactInfo === "N"
+                    ? "顯示聯絡資訊"
+                    : "隱藏聯絡資訊"}
+                </Button>
+              )}
+              <div className="flex w-full justify-center items-center space-x-2 mt-4">
+                <Input
+                  type="text"
+                  placeholder="搜尋出發地點"
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                  }}
+                />
+                <Button type="submit" onClick={() => setOrigin(search)}>
+                  Search
+                </Button>
+              </div>
+            </div>
             <h2 className="text-lg mb-1 font-medium title-font">Feedback</h2>
             <p className="leading-relaxed mb-5 ">
               您可以透過以下表單與 {user?.nickname} 聯絡

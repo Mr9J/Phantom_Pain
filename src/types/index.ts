@@ -1,3 +1,4 @@
+import { Group } from "@/components/profile/Group";
 import { LucideProps } from "lucide-react";
 import react from "react";
 
@@ -306,4 +307,26 @@ export type childCommentsType = {
 export type ICommentLike = {
   commentId: number;
   status: string;
+};
+
+export type GroupDTO = {
+  groupId?: number;
+  groupName: string;
+  users?: SimpleUserDTO[];
+};
+
+export type SimpleUserDTO = {
+  memberId: number;
+  username: string;
+  nickname: string;
+  thumbnail: string;
+  authStatus: number;
+};
+
+export type IGroupUpdate = {
+  groupId: number;
+  groupName: string;
+  username: string;
+  projectId: number;
+  action: string;
 };

@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HistoryIcon, HeartHandshakeIcon, PhoneCallIcon } from "lucide-react";
 import { useUserContext } from "@/context/AuthContext";
 import SponsoredProjects from "@/components/profile/SponsoredProjects";
+import Group from "@/components/profile/Group";
 
 const Users = () => {
   const { id } = useParams();
@@ -39,6 +40,12 @@ const Users = () => {
               <PhoneCallIcon className="w-[30px] h-[30px] pr-1" />
               聯絡方式
             </TabsTrigger>
+            {user?.id === id && (
+              <TabsTrigger value="group" className="text-3xl">
+                <PhoneCallIcon className="w-[30px] h-[30px] pr-1" />
+                權限管理
+              </TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="proposed">
             <ProfileProjects user={userData} isLoading={userInfoLoading} />
@@ -49,6 +56,11 @@ const Users = () => {
           <TabsContent value="contact">
             <Contact id={id || ""} user={userData} />
           </TabsContent>
+          {user?.id === id && (
+            <TabsContent value="group">
+              <Group id={id || ""} userData={userData} />
+            </TabsContent>
+          )}
         </Tabs>
 
         <Footer />
