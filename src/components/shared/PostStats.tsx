@@ -3,6 +3,7 @@ import {
   useGetCommentPost,
   useLikePost,
   useSavePost,
+  useSearchUsersByKeyword,
 } from "@/lib/react-query/queriesAndMutation";
 import { GetPostDTO, commentPostType } from "@/types";
 import { BookmarkIcon, HeartIcon } from "lucide-react";
@@ -13,7 +14,15 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import PostComment from "./PostComment";
-import { set } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type PostStatsProps = {
   post: GetPostDTO;
@@ -30,6 +39,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { toast } = useToast();
+  const [keyword, setKeyword] = useState("");
+  const [showSmartOptions, setShowSmartOptions] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -45,6 +56,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
     isPending: isCommentLoading,
     refetch: refetchComments,
   } = useGetCommentPost(post?.postId);
+  const { data: userResult } = useSearchUsersByKeyword(keyword);
 
   const checkStatus = async () => {
     const session: likePostCheckType = await likePostCheck(
@@ -71,6 +83,22 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
     setIsCommentOpen(!isCommentOpen);
   };
 
+  const handleChange = (value: string) => {
+    setComment(value);
+
+    if (value.includes("@")) {
+      const parts = value.split("@");
+      const lastPart = parts?.[parts.length - 1] ?? "";
+
+      if (lastPart.length >= 2) {
+        setKeyword(lastPart);
+        setShowSmartOptions(true);
+      }
+    } else {
+      setShowSmartOptions(false);
+    }
+  };
+
   const commentSubmitHandler = async () => {
     try {
       if (comment === "") {
@@ -81,8 +109,6 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         });
         return;
       }
-
-      console.log(comment);
 
       const session = await commentPost({
         postId: post.postId,
@@ -285,14 +311,67 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
             </ul>
           </div>
           <div className="flex items-center justify-center mt-2 gap-2 w-full">
-            <Input
-              ref={inputRef}
-              type="text"
-              placeholder="評論貼文..."
-              onChange={(e) => {
-                setComment(e.target.value);
-              }}
-            />
+            <div className="relative w-full">
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder="評論貼文..."
+                onChange={(e) => handleChange(e.target.value)}
+              />
+              {showSmartOptions && (
+                <div className="absolute w-full">
+                  <Select
+                    open={showSmartOptions}
+                    onValueChange={(e) => {
+                      const parts = inputRef.current?.value.split("@");
+                      const lastPart = parts?.[parts.length - 1] ?? "";
+                      inputRef.current.value = inputRef.current?.value.replace(
+                        "@" + lastPart,
+                        "@" + e
+                      );
+                      setShowSmartOptions(false);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="搜尋使用者" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Users</SelectLabel>
+                        {userResult?.map((user) => (
+                          <SelectItem
+                            key={user.memberId}
+                            value={user.nickname}
+                            className="p-4 w-full"
+                          >
+                            <div className="flex-row gap-4 flex justify-center items-center w-full">
+                              <div className="flex-shrink-0">
+                                <p className="relative block">
+                                  <img
+                                    alt="profil"
+                                    src={user.thumbnail}
+                                    className="mx-auto object-cover rounded-full h-16 w-16 "
+                                  />
+                                </p>
+                              </div>
+                              <div className=" flex flex-col">
+                                <span className="text-lg font-medium">
+                                  {user.nickname}
+                                </span>
+                                <span className="text-xs text-blue-500">
+                                  @{user.username}
+                                </span>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+
             <Button
               onClick={commentSubmitHandler}
               disabled={isCommentSubmitting}

@@ -55,6 +55,7 @@ import {
   followUserCheck,
   getFollowPost,
   likeComment,
+  searchUsersByKeyword,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
 
@@ -304,5 +305,13 @@ export const useGetGroupByProjectId = (projectId: number) => {
 export const useUpdateGroup = () => {
   return useMutation({
     mutationFn: (x: IGroupUpdate) => updateGroup(x),
+  });
+};
+
+export const useSearchUsersByKeyword = (keyword: string) => {
+  return useQuery({
+    queryKey: ["searchUsersByKeyWord", keyword],
+    queryFn: () => searchUsersByKeyword(keyword),
+    enabled: !!keyword,
   });
 };

@@ -483,3 +483,21 @@ export async function likeComment(x: ICommentLike) {
     console.error(error);
   }
 }
+
+export async function searchUsersByKeyword(keyword: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Post/search-users/${keyword}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
