@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import {  useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
 import { useUserContext } from "@/context/AuthContext";
+import { useCartContext } from "@/context/CartContext";
 
 
 
@@ -30,6 +31,7 @@ function CartPage() {
     const { user} = useUserContext();
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
     const navigate = useNavigate();
+    const { fetchCartQuantity } = useCartContext();
 
     // useEffect(()=>{
     //     fetchShoppingCart();   
@@ -85,10 +87,12 @@ function CartPage() {
     const handleDeleteProduct = async (productId: number) => {
         try {
             await deleteProductFromCart(productId, Number(user.id));
-            await fetchShoppingCart();
+            await fetchShoppingCart(); 
+            await fetchCartQuantity();
         } catch (error) {
             console.error(error);
         }
+      
     };
 
     return (
