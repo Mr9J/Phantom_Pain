@@ -26,7 +26,7 @@ const PostDetails = () => {
   const { toast } = useToast();
   const { data: post, isPending } = useGetPostById(id || "");
   const { data: postImg, isPending: isPostImgLoading } = useGetPostImg(
-    post?.imgUrl
+    post?.imgUrl || ""
   );
   const { mutateAsync: deletePost, isPending: isDeletingPost } =
     useDeletePost();

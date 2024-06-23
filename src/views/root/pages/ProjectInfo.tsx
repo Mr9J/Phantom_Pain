@@ -230,11 +230,12 @@ function ProjectInfo() {
               </Button>
               <Button
                 variant="secondary"
-                className="mr-4 rounded border border-gray-300 p-2 text-xs font-bold "
+                className="mr-4 rounded border border-gray-300 p-2 text-xs font-bold"
                 onClick={() => {
                   navigator.clipboard.writeText(location.href);
                   toast({
-                    description: "連結已複製到剪貼簿",
+                    variant: "info",
+                    description: "連結已複製到📋剪貼簿",
                   });
                 }}
               >

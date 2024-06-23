@@ -12,7 +12,6 @@ import ProductModal from "@/components/admin/ProductModal";
 import ConfirmModal from "@/components/admin/ConfirmModal";
 
 const baseUrl = import.meta.env.VITE_API_URL;
-const frontUrl = import.meta.env.VITE_FRONT_URL;
 
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
@@ -390,7 +389,7 @@ const Projects = () => {
                               style={{ width: 600 }}
                             >
                               <a
-                                href={`${frontUrl}/project/${item.projectId}`}
+                                href={`/project/${item.projectId}`}
                                 rel="noopener noreferrer"
                               >
                                 <div className="text-base text-slate-800 dark:text-slate-100 underline">
@@ -490,7 +489,7 @@ const Projects = () => {
                                 //   item.startDate,
                                 //   item.endDate,
                                 // ]);
-                                window.open(`/editproject/${item.projectId}`);
+                                window.location.href = `/editproject/${item.projectId}`;
                               }}
                               className="text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
                             >
@@ -513,15 +512,15 @@ const Projects = () => {
                               onClick={() => productTableClick(item.projectId)}
                             >
                               <svg
-                                className="w-[30px] h-[30px] fill-[#262626] dark:fill-[#f2f2f2]"
+                                className={`w-[30px] h-[30px] fill-[#262626] dark:fill-[#f2f2f2] transition-transform duration-300 ${
+                                  productVisible[item.projectId]
+                                    ? "rotate-180"
+                                    : "rotate-0"
+                                }`}
                                 viewBox="0 0 512 512"
                                 xmlns="http://www.w3.org/2000/svg"
                               >
-                                {productVisible[item.projectId] ? (
-                                  <path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM135.1 217.4c-4.5 4.2-7.1 10.1-7.1 16.3c0 12.3 10 22.3 22.3 22.3H208v96c0 17.7 14.3 32 32 32h32c17.7 0 32-14.3 32-32V256h57.7c12.3 0 22.3-10 22.3-22.3c0-6.2-2.6-12.1-7.1-16.3L269.8 117.5c-3.8-3.5-8.7-5.5-13.8-5.5s-10.1 2-13.8 5.5L135.1 217.4z"></path>
-                                ) : (
-                                  <path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3H304V160c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32v96H150.3C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z"></path>
-                                )}
+                                <path d="M256 464a208 208 0 1 1 0-416 208 208 0 1 1 0 416zM256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6c4.5-4.2 7.1-10.1 7.1-16.3c0-12.3-10-22.3-22.3-22.3H304V160c0-17.7-14.3-32-32-32l-32 0c-17.7 0-32 14.3-32 32v96H150.3C138 256 128 266 128 278.3c0 6.2 2.6 12.1 7.1 16.3l107.1 99.9c3.8 3.5 8.7 5.5 13.8 5.5s10.1-2 13.8-5.5l107.1-99.9z"></path>
                               </svg>
                             </button>
                           </td>
@@ -593,7 +592,7 @@ const Projects = () => {
                             </tr>
                           </thead>
                           {item.products.map((product, productIndex) => (
-                            <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900 ">
+                            <tbody className="text-sm font-medium divide-y divide-slate-100 dark:divide-slate-700 bg-gray-100 dark:bg-gray-900">
                               {/* Row */}
                               <tr className="hover:bg-gray-200 dark:hover:bg-slate-500">
                                 <td className="pl-1">

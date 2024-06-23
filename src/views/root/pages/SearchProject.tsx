@@ -108,9 +108,10 @@ function SearchProject({
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>排序方式</SelectLabel>
-                          <SelectItem value="all">所有計畫</SelectItem>
+                          <SelectItem value="all">預設排序</SelectItem>
                           <SelectItem value="goal">專案金額</SelectItem>
                           <SelectItem value="sponsor">支持人次</SelectItem>
+                          <SelectItem value="clicked">熱門點擊</SelectItem>
                           <SelectItem value="enddate">最後衝刺</SelectItem>
                           <SelectItem value="startdate">最新啟動</SelectItem>
                         </SelectGroup>

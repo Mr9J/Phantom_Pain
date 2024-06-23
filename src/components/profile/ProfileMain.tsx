@@ -44,9 +44,12 @@ const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
             {Number(currentUser?.id) === user?.id && (
               <Drawer>
                 <DrawerTrigger>
-                  <Button className="absolute" variant="outline">
-                    <PenBoxIcon stroke="blue" width={24} height={24} />
-                  </Button>
+                  <PenBoxIcon
+                    stroke="blue"
+                    width={24}
+                    height={24}
+                    className="absolute bg-white cursor-pointer rounded-lg"
+                  />
                 </DrawerTrigger>
                 <DrawerContent>
                   <div className="mx-auto w-full px-6">
@@ -112,7 +115,7 @@ const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
           </div>
           <div className="flex flex-col sm:flex-row mt-10">
             <div className="sm:w-1/3 text-center sm:pr-8 sm:py-8">
-              <div className="w-20 h-20 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
+              <div className="w-48 h-48 rounded-full inline-flex items-center justify-center bg-gray-200 text-gray-400">
                 {isLoading ? (
                   <svg
                     fill="none"
@@ -130,7 +133,7 @@ const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
                   <img
                     src={user?.avatar || avatar}
                     alt="userData.avatar"
-                    className="w-20 h-20 object-contain"
+                    className="w-48 h-48 object-contain rounded-full"
                   />
                 )}
               </div>

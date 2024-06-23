@@ -60,6 +60,8 @@ import { useToast } from "./components/ui/use-toast";
 import axios from "axios";
 import Create from "./views/root/pages/Create";
 import { CartProvider } from "./context/CartContext";
+import EditProject from "./views/root/pages/EditProject";
+
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -103,7 +105,7 @@ const App = () => {
 
             {/* <Route path="/StartProject" element={<StartProject />} /> */}
             <Route path="/CreateProject" element={<Create />} />
-            <Route path="/EditProject/:pid" element={<Create />} />
+            <Route path="/EditProject/:pid" element={<EditProject />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
