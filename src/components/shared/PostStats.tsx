@@ -110,6 +110,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         return;
       }
 
+      //inputRef.current?.value 跟 comment 分開
+
       const session = await commentPost({
         postId: post.postId,
         userId,
