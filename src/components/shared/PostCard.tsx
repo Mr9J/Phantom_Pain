@@ -130,7 +130,7 @@ const PostCard = ({ post }: PostCardProps) => {
                       <img
                         src={`https://cdn.mumumsit158.com/${img.Key}`}
                         alt="post"
-                        className="object-cover select-none"
+                        className="object-contain select-none w-full h-full"
                       />
                     </CardContent>
                   </Card>

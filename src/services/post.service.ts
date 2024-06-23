@@ -268,6 +268,8 @@ export async function commentPost(comment: ICommentPost) {
   try {
     const jwt = localStorage.getItem("token");
 
+    if (!jwt) throw Error;
+
     const res = await axios.post(`${URL}/Post/comment-post`, comment, {
       headers: { Authorization: jwt },
     });
@@ -471,6 +473,24 @@ export async function likeComment(x: ICommentLike) {
     if (!jwt) throw Error;
 
     const res = await axios.post(`${URL}/post/like-comment`, x, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function searchUsersByKeyword(keyword: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Post/search-users/${keyword}`, {
       headers: { Authorization: jwt },
     });
 

@@ -57,11 +57,21 @@ const ChildPostComment = ({
 
   const commentSubmitHandler = async () => {
     try {
+      if (comment === "") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "留言不得為空。",
+        });
+        return;
+      }
+
       const session = await commentPost({
         postId: String(child.postID),
         comment: comment,
         userId: userId,
         parentId: String(comId),
+        isReply: true,
       });
 
       if (!session) {

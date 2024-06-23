@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import styles from "@/styles";
 import { fadeIn, staggerContainer, zoomIn } from "../../utils/motion";
-import p4 from "@/assets/insight_img/planet-04.png";
+import star from "@/assets/_shared_img/reign-abarintos--cKXtsJWU-I-unsplash.jpg";
 import { SearchIcon } from "lucide-react";
 
 const FeedBackSection = () => {
@@ -24,16 +24,13 @@ const FeedBackSection = () => {
               MSIT158
             </h4>
             <p className="mt-[8px] font-normal sm:text-[18px] text-[12px] sm:leading-[22.68px] leading-[16.68px] text-black dark:text-white">
-              Founder Mumu
+              第四組
             </p>
           </div>
 
           <p className="mt-[24px] font-normal sm:text-[24px] text-[18px] sm:leading-[45.6px] leading-[39.6px] text-black dark:text-white">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus
-            facere repudiandae corrupti voluptate sed, aspernatur soluta
-            voluptates praesentium distinctio minima harum rerum delectus aut at
-            eum itaque enim eveniet, quasi aliquam omnis animi fugit consectetur
-            accusamus dolorem. Assumenda, ipsa modi.
+            資策會 智慧應用微軟C#工程師就業養成班 MSIT158 專題成果發表 <br />
+            這個網站是我們的專題成果，僅作為展示用途，不作任何商業使用。以防萬一，請勿留下任何個人資料，例如信用卡資料，或個人隱私資訊。如有任何問題，請聯絡我們。
           </p>
         </motion.div>
 
@@ -42,7 +39,7 @@ const FeedBackSection = () => {
           className="relative flex-1 flex justify-center items-center"
         >
           <img
-            src={p4}
+            src={star}
             alt="p4"
             className="w-full lg:h-[610px] h-auto min-h-[210px] object-cover rounded-[40px]"
           />
@@ -51,7 +48,7 @@ const FeedBackSection = () => {
             variants={zoomIn(0.4, 1)}
             className="lg:block hidden absolute -left-[10%] top-[3%]"
           >
-            <SearchIcon className="w-[155px] h-[155px] object-contain" />
+            <SearchIcon className="w-[155px] h-[155px] object-contain text-blue-500" />
           </motion.div>
         </motion.div>
       </motion.div>

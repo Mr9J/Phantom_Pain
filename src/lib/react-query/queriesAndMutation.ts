@@ -1,3 +1,4 @@
+import { GroupDTO, IGroupUpdate } from "./../../types/index";
 import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutation";
 import { data } from "autoprefixer";
 import {
@@ -12,10 +13,12 @@ import {
   IUpdateUserProfile,
   IUpdateBanner,
   ICommentLike,
+  GroupDTO,
 } from "@/types";
 import {
   changeEmail,
   checkAdmin,
+  getGroupbyProjectId,
   getMemberById,
   getMemberProfile,
   getMemberSponsored,
@@ -27,6 +30,7 @@ import {
   signInWithOthers,
   signUp,
   updateBanner,
+  updateGroup,
   updateMemberProfile,
 } from "@/services/auth.service";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
@@ -51,6 +55,7 @@ import {
   followUserCheck,
   getFollowPost,
   likeComment,
+  searchUsersByKeyword,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
 
@@ -286,5 +291,27 @@ export const useCommentLike = () => {
 export const useSetContactInfo = () => {
   return useMutation({
     mutationFn: (status: string) => setContactInfo(status),
+  });
+};
+
+export const useGetGroupByProjectId = (projectId: number) => {
+  return useQuery({
+    queryKey: ["groupProject", projectId],
+    queryFn: () => getGroupbyProjectId(projectId),
+    enabled: !!projectId,
+  });
+};
+
+export const useUpdateGroup = () => {
+  return useMutation({
+    mutationFn: (x: IGroupUpdate) => updateGroup(x),
+  });
+};
+
+export const useSearchUsersByKeyword = (keyword: string) => {
+  return useQuery({
+    queryKey: ["searchUsersByKeyWord", keyword],
+    queryFn: () => searchUsersByKeyword(keyword),
+    enabled: !!keyword,
   });
 };

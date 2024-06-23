@@ -4,9 +4,10 @@ import { Button } from "../ui/button";
 
 type DirectionsProps = {
   address: string;
+  origin: string;
 };
 
-const Directions = ({ address }: DirectionsProps) => {
+const Directions = ({ address, origin }: DirectionsProps) => {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
   const [directionsService, setDirectionsService] =
@@ -28,7 +29,7 @@ const Directions = ({ address }: DirectionsProps) => {
     if (!directionsService || !directionsRenderer) return;
     directionsService
       .route({
-        origin: "106台北市大安區復興南路一段390號",
+        origin: origin ? origin : "106台北市大安區復興南路一段390號",
         destination: address ? address : "106台北市大安區復興南路一段390號",
         travelMode: google.maps.TravelMode.DRIVING,
         provideRouteAlternatives: true,
