@@ -210,7 +210,7 @@ const GroupForm = ({
         <DialogFooter>
           <Button
             type="submit"
-            className="bg-red"
+            className="bg-red text-white hover:bg-red-600 hover:text-white"
             onClick={() => {
               setDeleteUser("T");
             }}

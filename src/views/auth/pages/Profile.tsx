@@ -21,7 +21,9 @@ const Profile = () => {
           <TabsList className="w-full">
             <TabsTrigger value="main">主頁</TabsTrigger>
             <TabsTrigger value="review">瀏覽</TabsTrigger>
-            {user.id === id && <TabsTrigger value="edit">編輯</TabsTrigger>}
+            {user.id === id && (
+              <TabsTrigger value="edit">個人資料編輯</TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="main">
             <PostProfileMain member={member} isLoading={isPending} />

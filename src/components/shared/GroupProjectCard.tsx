@@ -43,7 +43,7 @@ const GroupProjectCard = ({ project }: GroupProjectCardProps) => {
               projectGroups?.users?.map((user: SimpleUserDTO, index) => (
                 <Fragment key={index}>
                   {index < 7 ? (
-                    <Link to={`/profile/${user?.memberId}`} className="">
+                    <Link to={`/users/${user?.memberId}`} className="">
                       <img
                         className="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-white"
                         src={user?.thumbnail || userTemp}
@@ -67,7 +67,7 @@ const GroupProjectCard = ({ project }: GroupProjectCardProps) => {
           <div className="flex justify-between items-center">
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="mt-4 bg-black text-white">
+                <Button className="mt-4 bg-black text-white hover:text-dark-2">
                   {projectGroups?.groupId ? "編輯" : "建立專案群組"}
                 </Button>
               </DialogTrigger>
@@ -86,7 +86,7 @@ const GroupProjectCard = ({ project }: GroupProjectCardProps) => {
                 />
               </DialogContent>
             </Dialog>
-            <Button className="mt-4 bg-black text-white">
+            <Button className="mt-4 bg-black text-white hover:text-dark-2">
               <Link to={`/project/${project?.projectId}`}>前往專案</Link>
             </Button>
           </div>
