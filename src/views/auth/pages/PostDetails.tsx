@@ -20,7 +20,8 @@ import PostStats from "@/components/shared/PostStats";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import GoogleTranslate from "@/config/GoogleTranslate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { set } from "date-fns";
 
 const PostDetails = () => {
   const navigate = useNavigate();
@@ -37,8 +38,6 @@ const PostDetails = () => {
   const [isTranslate, setIsTranslate] = useState(false);
 
   const handleTranslate = async () => {
-    console.log(translateCaption);
-
     if (translateCaption) {
       await GoogleTranslate(translateCaption, "zh-TW").then((res) => {
         setIsTranslate(true);
@@ -85,6 +84,10 @@ const PostDetails = () => {
       ),
     });
   };
+
+  useEffect(() => {
+    if (post?.caption) setTranslateCaption(post?.caption);
+  }, [post?.caption]);
 
   return (
     <div className="flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar items-center">
