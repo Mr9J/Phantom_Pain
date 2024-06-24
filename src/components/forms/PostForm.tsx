@@ -23,7 +23,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { ToastAction } from "../ui/toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +35,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import GoogleAnalize from "@/config/GoogleAnalize";
+import GoogleTranslate from "@/config/GoogleTranslate";
+import { set } from "date-fns";
 
 export type PostFormProps = {
   post?: {
@@ -57,6 +60,11 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [validate, setValidate] = useState(false);
+  const validation = async (text: string) => {
+    const translatedText = await GoogleTranslate(text, "en");
+    const result = await GoogleAnalize(translatedText);
+  };
 
   const deletePostHandler = async () => {
     if (post && action === "update") {
@@ -121,9 +129,26 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
   }, [post]);
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof PostValidation>) {
+  const onSubmit = async (values: z.infer<typeof PostValidation>) => {
     if (post && action === "update") {
+      toast({
+        title: "更新中...",
+        description: "請稍後... ",
+      });
+
+      await validation(values.caption);
+
+      console.log(validate);
+
+      if (!validate) {
+        toast({
+          variant: "destructive",
+          title: "發布失敗",
+          description: "內文不符合規定，請檢查內文是否合乎規範",
+        });
+        return;
+      }
+
       const session = await updatePost({
         ...values,
         userId: user.id,
@@ -131,16 +156,12 @@ const PostForm = ({ post, action }: PostFormProps) => {
         postId: post.postId,
       });
 
-      toast({
-        title: "更新中...",
-        description: "請稍後... ",
-      });
-
       if (!session) {
         toast({
           variant: "destructive",
           title: "更新失敗, 請再試一次",
         });
+        return;
       }
 
       toast({
@@ -162,8 +183,21 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
 
     toast({
-      title: "發布中...",
+      title: "更新中...",
+      description: "請稍後... ",
     });
+
+    await validation(values.caption);
+    console.log(validate);
+
+    if (!validate) {
+      toast({
+        variant: "destructive",
+        title: "發布失敗",
+        description: "內文不符合規定，請檢查內文是否合乎規範",
+      });
+      return;
+    }
 
     const newPost = await createPost({
       ...values,
@@ -194,7 +228,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         </ToastAction>
       ),
     });
-  }
+  };
 
   return (
     <Form {...form}>
