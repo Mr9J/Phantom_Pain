@@ -3,6 +3,7 @@ import About from "./About";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 import Users from "./Users";
+import Playground from "./Playground";
 
 import Dashboard from "./manufacturer/Dashboard";
 import Projects from "./manufacturer/Projects";
@@ -18,6 +19,7 @@ import AdminStaffs from "./admin/Staffs";
 
 export {
   Homepage,
+  Playground,
   About,
   SignInForm,
   SignUpForm,
