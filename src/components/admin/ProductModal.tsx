@@ -29,7 +29,7 @@ const ProductModal = ({
             <button
               onClick={() => {
                 setVisibleProductModal(false);
-                setProductDemo(["", "", 3, "", "", ""]);
+                setProductDemo(["", "", 1, "", "", ""]);
                 setSelectedImage("");
               }}
               type="button"
@@ -98,9 +98,9 @@ const ProductModal = ({
                         "把這邊拍下來",
                         2,
                         8000,
-                        2,
-                        "2024-05-01",
-                        "2024-06-30",
+                        10,
+                        "2024-06-01",
+                        "2024-09-30",
                       ]);
                     }}
                   >
@@ -157,6 +157,7 @@ const ProductModal = ({
                 </span>
                 <input
                   type="number"
+                  min="0"
                   required
                   name="productPrice"
                   defaultValue={alterText ? productContext[6] : productDemo[3]}
@@ -169,25 +170,27 @@ const ProductModal = ({
                   庫存量
                 </span>
                 <input
-                  type="text"
+                  type="number"
+                  min="0"
                   required
                   name="initialStock"
                   defaultValue={alterText ? productContext[7] : productDemo[4]}
                   className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div className="mb-3 flex items-center">
+              {alterText&& (<div className="mb-3 flex items-center">
                 <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
                   剩餘量
                 </span>
                 <input
-                  type="text"
+                  type="number"
+                  min="0"
                   required
                   name="currentStock"
                   defaultValue={alterText ? productContext[8] : productDemo[4]}
                   className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
-              </div>
+              </div>)}
 
               <div className="mb-3 flex items-center">
                 <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">

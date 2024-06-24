@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import {  useNavigate } from 'react-router-dom';
 import { getLoadCartPage, deleteProductFromCart,putProductFromCart } from "@/services/Cart.service";
 import { useUserContext } from "@/context/AuthContext";
+import { useCartContext } from "@/context/CartContext";
 
 
 
@@ -30,6 +31,7 @@ function CartPage() {
     const { user} = useUserContext();
     const [memberCartData, setMemberCartData] = useState<CartDetailDTO[]>();
     const navigate = useNavigate();
+    const { fetchCartQuantity } = useCartContext();
 
     // useEffect(()=>{
     //     fetchShoppingCart();   
@@ -85,10 +87,12 @@ function CartPage() {
     const handleDeleteProduct = async (productId: number) => {
         try {
             await deleteProductFromCart(productId, Number(user.id));
-            await fetchShoppingCart();
+            await fetchShoppingCart(); 
+            await fetchCartQuantity();
         } catch (error) {
             console.error(error);
         }
+      
     };
 
     return (
@@ -100,6 +104,7 @@ function CartPage() {
                     <div className='w-full  bg-white py-7 px-5 dark:bg-slate-800'>
                         <h1 className='text-4xl font-semibold mb-1'>Mumu 購物車</h1>
                         <hr />
+                        <div className="bg-white h-20 dark:bg-slate-900"></div>
                         {memberCartData?.length===0 ?    
                         
                         <div className="max-w-4xl mx-auto px-10 py-4 bg-white rounded-lg shadow-lg dark:bg-slate-500">
@@ -113,19 +118,21 @@ function CartPage() {
             d="M4.00488 16V4H2.00488V2H5.00488C5.55717 2 6.00488 2.44772 6.00488 3V15H18.4433L20.4433 7H8.00488V5H21.7241C22.2764 5 22.7241 5.44772 22.7241 6C22.7241 6.08176 22.7141 6.16322 22.6942 6.24254L20.1942 16.2425C20.083 16.6877 19.683 17 19.2241 17H5.00488C4.4526 17 4.00488 16.5523 4.00488 16ZM6.00488 23C4.90031 23 4.00488 22.1046 4.00488 21C4.00488 19.8954 4.90031 19 6.00488 19C7.10945 19 8.00488 19.8954 8.00488 21C8.00488 22.1046 7.10945 23 6.00488 23ZM18.0049 23C16.9003 23 16.0049 22.1046 16.0049 21C16.0049 19.8954 16.9003 19 18.0049 19C19.1095 19 20.0049 19.8954 20.0049 21C20.0049 22.1046 19.1095 23 18.0049 23Z"
           />
         </svg>
-        <p className="text-gray-600 text-lg font-semibold mb-4">
+        <p className="text-gray-600 font-semibold mb-4 dark:text-slate-200 text-3xl">
           你的購物車是空的.
         </p>
       </div>
     </div>:  <>{memberCartData&&memberCartData.map((item) => {
                             let totalAmount = 0; 
                             return (
-                                <div key={item.projectId} className="w-full">                               
+                                <div key={item.projectId} className="w-full">  
+                                <div className="p-0.5 dark:bg-slate-600 bg-yellow-50 h-28 rounded-md">                             
                                     <div className="border-spacing-8 mx-7 my-6">
                                         <img className='mx-4 rounded-full float-start w-24' src={item.thumbnail?.toString()} alt="projectImage" />
                                         <a href={`/project/${item.projectId}`}>{item.projectName}</a>                                                                  
                                     </div>
                                     <br></br>
+                                    </div>  
                                     {item.products&&item.products.map(product => {
                                          totalAmount += product.productPrice * Number(product.count);
                                         return(
@@ -137,7 +144,7 @@ function CartPage() {
     <br />
     <h2 className='text-[25px] font-medium -mt-2'>{product.productName}</h2>
     <div className="flex items-center">
-        {product.count!>=product.currentStock?<span className='text-orange-800 font-semibold text-[16px] flex-2 mr-5'>存貨不足 剩餘:{product.currentStock}份</span>:  <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨 剩餘:{product.currentStock}份</span>}
+        {product.count!>=product.currentStock?<span className='text-orange-800 font-semibold text-[16px] flex-2 mr-5'>到達商品庫存上限 剩餘:{product.currentStock}份</span>:  <span className='text-green-600 font-semibold text-[16px] flex-2 mr-5'>有存貨 剩餘:{product.currentStock}份</span>}
       
         <div className="flex items-center justify-center space-x-2 mb-1">
             {Number(product.count) === 1 ? (

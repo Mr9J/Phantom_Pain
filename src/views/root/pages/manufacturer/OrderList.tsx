@@ -11,7 +11,6 @@ const baseUrl = import.meta.env.VITE_API_URL;
 interface OrderListProps {
   projectId: number;
 }
-
 const OrderList: React.FC<OrderListProps> = () => {
   const [orderList, setOrderList] = useState<Order[] | null>(null);
   const { projectId } = useParams();
@@ -76,13 +75,19 @@ const OrderList: React.FC<OrderListProps> = () => {
                       <div className="font-semibold text-left">贊助方案</div>
                     </th>
                     <th className="p-2 whitespace-nowrap">
-                      <div className="font-semibold text-left">贊助日期</div>
-                    </th>
-                    <th className="p-2 whitespace-nowrap">
                       <div className="font-semibold text-left">Price</div>
                     </th>
                     <th className="p-2 whitespace-nowrap">
                       <div className="font-semibold text-center">Donate</div>
+                    </th>
+                    <th className="p-2 whitespace-nowrap">
+                      <div className="font-semibold text-center">Discount</div>
+                    </th>
+                    <th className="p-2 whitespace-nowrap">
+                      <div className="font-semibold text-center">Total</div>
+                    </th>
+                    <th className="p-2 whitespace-nowrap">
+                      <div className="font-semibold text-left">贊助日期</div>
                     </th>
                   </tr>
                 </thead>
@@ -116,24 +121,41 @@ const OrderList: React.FC<OrderListProps> = () => {
                           </div>
                         </td>
                         <td className="p-2 whitespace-nowrap">
-                          <div className="text-left font-medium">
-                            {item.orderDetails.projectName} X{" "}
-                            {item.orderDetails.count}
+                        {item.orderDetails.map((od, index) => (
+                          <div key={index} className="text-left font-medium pb-2">
+                            {od.projectName} X{" "}
+                            {od.count}
+                          </div>))}
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          {item.orderDetails.map((od, index) => (
+                            <div key={index} className="text-left font-medium  pb-2">
+                              {numeral(od.price).format("0,0")}
+                            </div>
+                          ))}
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-center font-medium">
+                            {numeral(item.donate).format("0,0")}
+                          </div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-center font-medium">
+                            {numeral(item.coupon.discount).format("0,0")}
+                          </div>
+                        </td>
+                        <td className="p-2 whitespace-nowrap">
+                          <div className="text-center font-medium">
+                            {numeral(
+                              item.totalAmount +
+                                item.donate -
+                                item.coupon.discount
+                            ).format("0,0")}
                           </div>
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           <div className="text-left font-medium text-green-500">
                             {item.orderDate}
-                          </div>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          <div className="text-left font-medium">
-                            {numeral(item.orderDetails.price).format("0,0")}
-                          </div>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          <div className="text-center font-medium">
-                            {numeral(item.donate).format("0,0")}
                           </div>
                         </td>
                       </tr>

@@ -5,7 +5,7 @@ import axios from "axios";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useUserContext } from "@/context/AuthContext";
 import { DateTimeToString } from "./services";
-import { typeComment, typeCommentDto } from "./types";
+import { typeComment, typeCommentDto, typeCommentRequest } from "./types";
 import connection from "./signalrService";
 import {
   Select,
@@ -15,13 +15,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ThumbsUp } from "lucide-react";
+import ReplyInput from "./ReplyInput";
+import CommentCard from "./CommentCard";
+
 function TabComments({ pid }: { pid: number }) {
   const { user, isAuthenticated } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState<string>("");
   const [comments, setComments] = useState<typeComment[]>([]);
+  const [sortConfig, setSortConfig] = useState<string>("nto");
 
-  const sendComment = async () => {
+  const sendComment = async (reply?: number) => {
     // 判斷是否登入
     if (!isAuthenticated) {
       alert("請先登入");
@@ -33,15 +37,15 @@ function TabComments({ pid }: { pid: number }) {
       return;
     }
     // 假設某人發送留言
-    const newComment: typeCommentDto = {
+    const newComment: typeCommentRequest = {
       commentMsg: input,
       projectId: pid,
+      parentId: reply,
     };
-    // 呼叫 API 送出留言
-    await axios.post(`${URL}/ProjectInfo/SendComment`, newComment, {
-      headers: { Authorization: localStorage.getItem("token") },
-    });
-    setInput("");
+    // 呼叫 Hub 送出留言
+    connection
+      .invoke("SendMessage", newComment)
+      .catch((err) => console.error(err));
   };
 
   const DtoToComment = (data: typeCommentDto): typeComment => {
@@ -51,18 +55,34 @@ function TabComments({ pid }: { pid: number }) {
       date: data.date!,
       sender: data.member!,
       liked: data.liked,
+      parentId: data.parentId,
+      isNew: false,
     };
   };
   const handleReceivedComment = (data: typeCommentDto) => {
     const receivedComment = DtoToComment(data);
-    setComments((comments) => [...comments, receivedComment]);
+    receivedComment.isNew = true;
+
+    // 依照排序方式加入留言
+    if (sortConfig === "nto")
+      setComments((comments) => [receivedComment, ...comments]);
+    else setComments((comments) => [...comments, receivedComment]);
+
+    setTimeout(() => {
+      setComments((prevComments) =>
+        prevComments.map((m) =>
+          m.date === receivedComment.date ? { ...m, isNew: false } : m
+        )
+      );
+    }, 3000);
   };
 
-  const getComments = async (config?: string) => {
+  // 取得排序後的所有留言
+  const getComments = async (sortConfig?: string) => {
     const res = await axios.get(`${URL}/ProjectInfo/GetComments`, {
       params: {
         projectId: pid,
-        orderby: config,
+        orderby: sortConfig,
       },
     });
     console.log(res.data);
@@ -70,30 +90,30 @@ function TabComments({ pid }: { pid: number }) {
     setComments(comments);
   };
   useEffect(() => {
-    getComments();
+    getComments(sortConfig);
 
     // 註冊接收訊息事件
     connection.on("ReceiveComment", handleReceivedComment);
 
     return () => {
-      connection.off("ReceiveMessage", handleReceivedComment);
+      connection.off("ReceiveComment", handleReceivedComment);
     };
-  }, []);
+  }, [sortConfig]);
   // comment一有變動就會去抓會員資料
   useEffect(() => {
     console.log(comments);
   }, [comments]);
 
-  const handleSortChange = async (value: string) => {
+  const handleSortChange = (value: string) => {
     switch (value) {
-      case "nto":
-        await getComments();
-        break;
       case "otn":
-        await getComments("Date");
+        setSortConfig("otn");
         break;
       case "hot":
-        await getComments("CommentId");
+        setSortConfig("hot");
+        break;
+      default:
+        setSortConfig("nto");
         break;
     }
   };
@@ -130,45 +150,78 @@ function TabComments({ pid }: { pid: number }) {
           onChange={(e) => setInput(e.currentTarget.value)}
           value={input}
         />
-        <Button onClick={sendComment}>留言</Button>
+        <Button
+          onClick={() => {
+            sendComment();
+            setInput("");
+          }}
+        >
+          留言
+        </Button>
       </div>
 
       <div className=" mx-auto mt-10 p-4 rounded-lg shadow-lg space-y-4">
-        {comments.map((c) => (
-          // [元件]一則留言
-          <div key={c.commentId} className="border-b border-gray-700 pb-4">
-            <div className="flex items-center mb-2">
-              <div className="w-8 h-8 mr-3">
-                <Avatar>
-                  <AvatarImage src={c.sender.thumbnail} />
-                  <AvatarFallback>{c.sender.username}</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex-col">
-                <p className="font-bold">{c.sender.username}</p>
-                <div className="flex">
-                  <p className="text-xs">{DateTimeToString(c.date)}</p>
-                  <Button
-                    variant="ghost"
-                    className="p-2 h-4 text-xs cursor-pointer ml-1"
-                    onClick={() => alert("hi")}
-                  >
-                    <ThumbsUp width={10} className="mr-1" />
-                    {c.liked}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="p-2 h-4 text-xs text-gray-400 ml-1"
-                    onClick={sendComment}
-                  >
-                    回覆
-                  </Button>
+        {comments.map(
+          (c) =>
+            // [元件]一則留言
+            !c.parentId && (
+              <div className="border-b" style={{ borderColor: "currentcolor" }}>
+                {/* 顯示第一層留言(ParentId 為 null) */}
+                <CommentCard c={c} projectId={pid} />
+                {/* 第二層留言 */}
+                <div className="ml-8">
+                  {comments
+                    .filter((sc) => sc.parentId === c.commentId)
+                    .map((sc) => (
+                      <div
+                        key={sc.commentId}
+                        className={`border-b px-4 py-2 rounded-lg ${
+                          sc.isNew
+                            ? "animate-bounce bg-blue-200 text-black"
+                            : ""
+                        }`}
+                      >
+                        <div className="flex items-center mb-2 ">
+                          <div className="w-8 h-8 mr-3">
+                            <Avatar>
+                              <AvatarImage src={sc.sender.thumbnail} />
+                              <AvatarFallback>
+                                {sc.sender.username[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <div className="flex-col">
+                            <p className="font-bold">{sc.sender.username}</p>
+                            <div className="flex">
+                              <p className="text-xs">
+                                {DateTimeToString(sc.date)}
+                              </p>
+                              <Button
+                                variant="ghost"
+                                className="p-2 h-4 text-xs cursor-pointer ml-1"
+                                onClick={() => alert("hi")}
+                              >
+                                <ThumbsUp width={10} className="mr-1" />
+                                {sc.liked}
+                              </Button>
+                              {/* <Button
+                                variant="ghost"
+                                className="p-2 h-4 text-xs text-gray-400 ml-1"
+                                onClick={sendComment}
+                              >
+                                回覆
+                              </Button> */}
+                            </div>
+                          </div>
+                        </div>
+                        <div>{sc.commentMsg}</div>
+                        {/* <ReplyInput parentId={sc.commentId} projectId={pid} /> */}
+                      </div>
+                    ))}
                 </div>
               </div>
-            </div>
-            <div>{c.commentMsg}</div>
-          </div>
-        ))}
+            )
+        )}
       </div>
     </>
   );

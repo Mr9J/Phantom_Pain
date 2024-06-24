@@ -2,7 +2,6 @@ import React, {
   useState,
   useEffect,
   ChangeEvent,
-  FormEvent,
   useRef,
   useLayoutEffect,
 } from "react";
@@ -10,13 +9,11 @@ import taiwan_districts from "@/constants/taiwan_districts.json";
 import { getProjectfromProductId } from "@/services/projects.service";
 import { createOrder, checkProductInventory } from "@/services/orders.service";
 import Projectcard from "@/components/ProjectCard/projectcard.jsx";
-//import { useParams } from 'react-router-dom';
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import PaymentForm from "@/components/service/ECPay";
 import { useUserContext } from "@/context/AuthContext";
 import { getCoupons } from "@/services/coupons.service";
 
-// import IncreaseDecreaseButtons from './components/Header/button.jsx';
 interface ProjectCardDTO {
   projectId: number;
   memberId: number;
@@ -58,11 +55,9 @@ interface ProductCardDTO {
 function Paypage() {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const { user } = useUserContext();
-
+ const submitButtonRef = useRef<HTMLButtonElement>(null);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
-  //const formRef = useRef<HTMLFormElement>(null);   先別刪
-  //const { id } = useParams();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const selectedproductId = searchParams.get("product");
@@ -70,11 +65,14 @@ function Paypage() {
   const fromCartPage = searchParams.get("fromCartPage") === "true";
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+ 
+
 
   const testmemberId = 6;
 
-  const [selectedCity, setSelectedCity] = useState<string>(""); // 用于存储所选的城市
-  const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 用于存储区域名称列表
+
+  const [selectedCity, setSelectedCity] = useState<string>(""); // 存城市名稱
+  const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 存區域名稱
   const [isHidden, setIsHidden] = useState(false);
   const [projectAndproductsData, setProjectData] = useState<ProjectCardDTO[]>();
   const [addToPurchase, setPrice] = useState(0);
@@ -82,7 +80,7 @@ function Paypage() {
     hasDonate: false,
     donationAmount: 0,
   });
-  const [inputDonateValue, setInputValue] = useState<string>("0"); // 将初始值设置为字符串类型
+  const [inputDonateValue, setInputValue] = useState<string>("0");
   const [paymentMethod, setPaymentMethod] = useState("1");
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>(
     {}
@@ -98,18 +96,34 @@ function Paypage() {
   const [showCoupons, setshowCoupons] = useState(false);
   const [showNotFoundCoupons, setshowNotFoundCoupons] = useState(false);
   const [discount, setDiscount] = useState<number>(0);
-  // const [couponCode , setCouponCode] = useState<string>('');
-
-  // const handleButtonClick = () => {
-  //   setShowPaymentForm(true);
-  // };
-
-  const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //Demo
+  const [address, setAddress] = useState("");
+  const [postcode, setPostcode] = useState("");
+  const [recipient, setRecipient] = useState(""); //姓名
+  const [phone, setPhone] = useState("");
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  //Demo
+  const navigate = useNavigate();
+  const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => { 
     e.stopPropagation();
     e.preventDefault();
+    const button = submitButtonRef.current;
+    button && button.click(); //模擬表單提交資料驗證
+    const form = document.querySelector('form');
+    if (selectedCity === '' || selectedCity === '-選擇-') {
+      alert('請選擇縣市');
+      return;
+    }
+    if (parseFloat(inputDonateValue) < 0) {
+      alert('加碼贊助金額有誤');
+      return;
+    }
+    if (form && !form.reportValidity()) {
+      // 如果表單無效直接返回
+      return;
+    }
     console.log(orderData.productdata);
-    const response = await checkProductInventory(orderData.productdata); // 调用 API 函数检查库存
-
+    const response = await checkProductInventory(orderData.productdata); //檢查商品庫存
     if (response === "ok") {
       setIsConfirming(true);
     } else {
@@ -119,31 +133,36 @@ function Paypage() {
     }
   };
 
+  const handleSubmit = (e) =>{
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
   const handleCancel = () => {
     setIsConfirming(false);
   };
 
   const handleConfirmButtonClick = async () => {
+    if(totalAmount==0||totalAmount>300000)
+      {
+        createOrder(orderData);
+        setTimeout(() => {
+          navigate(`/ReturnURL`);
+        }, 3000);
+      return;
+      }
     console.log("確認");
     setShowPaymentForm(true);
     setIsConfirming(false);
     await createOrder(orderData);
-
-    // if (formRef.current) {  先別刪
-    //   const submitButton = formRef.current.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-    //   if (submitButton) {
-    //     submitButton.click();
-    //   }
-    // }
   };
 
-  //購買資訊 未帶入memberID
+  //購買資訊
   const [orderData, setOrderData] = useState({
     memberID: user.id,
     paymentMethodID: 1,
     projectID: projectId,
     productID: [selectedproductId],
-    // count: 1,
     productdata: [
       { productId: selectedproductId, count: selectedProductCount },
     ],
@@ -160,12 +179,6 @@ function Paypage() {
       paymentMethodID: Number(value), // 將 paymentMethodID 設定為 value
     }));
   };
-  //測試POST 先別刪
-  // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   await createOrder(orderData)
-  //   setShowPaymentForm(true);
-  // };
 
   //觀察orderData變化用
   useEffect(() => {
@@ -211,7 +224,7 @@ function Paypage() {
         : (prevPrice -= price * (productCounts[productId] || 0))
     );
   };
-
+  //載入
   useEffect(() => {
     getProjectfromProductId(Number(projectId), Number(user.id))
       .then((data) => {
@@ -222,17 +235,6 @@ function Paypage() {
       });
   }, [projectId, user]);
 
-  // 載入頁面
-  // useEffect(()=>{
-  //     getProjectfromProductId(Number(projectId),testmemberId)
-  //     .then(data=>{
-  //       setProjectData(data);
-  //     })
-  //     .catch(error=>{
-  //       console.error('Error fetching project data:', error);
-  //     });
-
-  //   },[projectId,testmemberId]);
   //測試購物車傳入頁面先行載入資訊，fromCartPage判斷是從哪個頁面進入
   useLayoutEffect(() => {
     if (!fromCartPage) return;
@@ -306,9 +308,16 @@ function Paypage() {
     if (event.key === "Enter") {
       event.preventDefault();
       const value = event.currentTarget.value;
-      const discount = await getCoupons(value, Number(projectId));
-      if (value === "" || discount == "0") {
-        await setDiscount(0);
+
+      const discount = await getCoupons(
+        value == "" ? "0" : value,
+        Number(projectId)
+      );
+      console.log("Input value:", value);
+      if (discount == "0") {
+        await setDiscount(Number(discount));
+
+
         await setshowNotFoundCoupons(true);
         await setshowCoupons(false);
         await setOrderData((prevOrderData) => ({
@@ -317,20 +326,7 @@ function Paypage() {
           couponCode: "",
         }));
         return;
-      }
-
-      // if(discount == '0'  )
-      //   {
-      //     await setshowNotFoundCoupons(true);
-      //     await setshowCoupons(false);
-      //     await setOrderData(prevOrderData => ({
-      //       ...prevOrderData,
-      //       discount:0,
-      //       couponCode:''
-      //   }));
-      //     return;
-      //   }
-      else {
+      } else {
         await setDiscount(Number(discount));
         await setshowCoupons(true);
         await setshowNotFoundCoupons(false);
@@ -361,7 +357,7 @@ function Paypage() {
         const donate = parseFloat(value);
         setOrderData((prevFormData) => ({
           ...prevFormData,
-          donate: donate, //更新订单中的捐赠金额
+          donate: donate, //更新斗內
         }));
         setDonationInfo({
           hasDonate: true,
@@ -373,19 +369,18 @@ function Paypage() {
   //斗內輸入變化
   const DonateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const parsedValue = parseFloat(e.target.value);
-    setInputValue(isNaN(parsedValue) ? "" : String(parsedValue)); // 将值转换为字符串类型
+    setInputValue(isNaN(parsedValue) ? "" : String(parsedValue)); //值轉成字串
   };
 
   const CityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCity = e.target.value; // 更新所选的城市
+    const selectedCity = e.target.value; // 更新所選的城市
     setSelectedCity(selectedCity);
-    const newDistricts = getDistrictsName(selectedCity); // 根据新选择的城市更新区域名称列表
+    const newDistricts = getDistrictsName(selectedCity); // 根據城市變更更新區域
     setDistrictsName(newDistricts);
   };
 
-  // 根据选择的城市动态生成区域名称列表
+  // 生成區域列
   const getDistrictsName = (selectedCity: string): JSX.Element[] => {
-    // 根据所选的城市从数据源中获取对应的区域名称列表
     const filteredDistricts = taiwan_districts.find(
       (item) => item.name === selectedCity
     );
@@ -430,6 +425,46 @@ function Paypage() {
     setProductCounts(updatedProductCounts);
   };
 
+  //Demo
+  const handleDemo = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const addressDemo = "復興南路一段390號2樓";
+    const postCodeDemo = "106";
+    const recipientDemo = "王大槌";
+    const phoneDemo = "0956459635";
+
+    await setAddress(addressDemo);
+    await setPostcode(postCodeDemo);
+    await setRecipient(recipientDemo);
+    await setPhone(phoneDemo);
+  };
+
+  useEffect(() => {
+    if (projectAndproductsData) {
+      projectAndproductsData.forEach((item) => {
+        item.products!.forEach((pjitem) => {
+          if (pjitem.productId.toString() === selectedproductId) {
+            const computedTotalAmount =
+              pjitem.productPrice * selectedProductCount +
+              addToPurchase +
+              donationInfo.donationAmount -
+              discount;
+
+            setTotalAmount(computedTotalAmount < 0 ? 0 : computedTotalAmount);
+          }
+        });
+      });
+    }
+  }, [
+    projectAndproductsData,
+    selectedproductId,
+    selectedProductCount,
+    addToPurchase,
+    donationInfo,
+    discount,
+  ]);
+
+
   const poductlist =
     projectAndproductsData &&
     projectAndproductsData.map((item) => (
@@ -455,6 +490,12 @@ function Paypage() {
                     className="mr-4"
                     type="checkbox"
                     value={pjitem.productId}
+
+                    disabled={
+                      productCounts[pjitem.productId] == undefined ||
+                      productCounts[pjitem.productId] == 0
+                    }
+
                     onChange={(e) => AddToPurchase(e, pjitem.productPrice)}
                   />
                   選擇
@@ -491,7 +532,6 @@ function Paypage() {
                   </div>
 
                   <div className="overflow-y-auto break-all">
-                    {/* <div className="text-black text-sm flex flex-col space-y-4 leading-relaxed"> */}
                     <div className="text-black text-sm space-y-4 leading-8 dark:text-white">
                       {/* 加入商品敘述 */}
                       <p className="font-sans">
@@ -575,6 +615,12 @@ function Paypage() {
       <div key={item.projectId}>
         {item.products &&
           item.products.map((pjitem) => {
+            const totalAmount =
+                    pjitem.productPrice * selectedProductCount +
+                    addToPurchase +
+                    donationInfo.donationAmount -
+                    discount; 
+                   
             if (pjitem.productId.toString() == selectedproductId)
               return (
                 <div key={pjitem.productId}>
@@ -590,7 +636,7 @@ function Paypage() {
                         className="float-right mb-3 rounded-full font-bold text-xs py-1 px-2 cursor-pointer bg-neutral-200 text-center text-neutral-600 leading-none dark:text-white dark:bg-slate-600"
                         onClick={() => window.history.back()}
                       >
-                        更改回饋
+                        返回贊助
                       </div>
                     )}
 
@@ -638,7 +684,7 @@ function Paypage() {
                             onClick={(e) => {
                               e.stopPropagation();
                               e.preventDefault();
-                              selectedProductCount == 0
+                              selectedProductCount == 1
                                 ? setSelectedProductCount(selectedProductCount)
                                 : setSelectedProductCount(
                                     selectedProductCount - 1
@@ -777,14 +823,13 @@ function Paypage() {
                         總價
                       </div>
                       <div className="whitespace-nowrap text-right font-extrabold text-2xl">
-                        {/* 金額正規化顯示.toLocaleString() */}
+                        {/* 金額正規化顯示.toLocaleString() */} 
                         NT${" "}
-                        {(
-                          pjitem.productPrice * selectedProductCount +
-                          addToPurchase +
-                          donationInfo.donationAmount -
-                          discount
-                        ).toLocaleString()}
+                        {
+                          totalAmount 
+                        <0?0:
+                        totalAmount .toLocaleString()}
+                        {/* 條件渲染 PaymentForm */}
                         {showPaymentForm && (
                           <PaymentForm
                             projectName={item.projectName!}
@@ -806,6 +851,7 @@ function Paypage() {
     ));
 
   const payment = (
+    
     <div
       className={`px-4 lg:w-2/3 overflow-x-auto ${
         isHidden ? "inline-block" : "hidden"
@@ -820,7 +866,6 @@ function Paypage() {
         顯示品項細節
         <span className="align-middle text-sm ml-2"></span>
       </button>
-      {/* <PaymentMethod></PaymentMethod> */}
       <div className="mt-8">
         <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
           付款方式
@@ -865,13 +910,15 @@ function Paypage() {
               您了解您的贊助是支持創意專案的一種方式，也了解創意實踐過程中充滿變數，專案不一定能確保回饋。
             </li>
           </ul>
-        </div>
+        </div> 
+        <form onSubmit={handleSubmit}>
         <div className="mb-2 mt-4 dark:text-slate-300">
           <label className="font-bold text-sm text-black mb-4 dark:text-slate-300 ">
             加碼贊助
           </label>
           （選擇）
         </div>
+       
         <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
           <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap ">
             NT $
@@ -883,9 +930,10 @@ function Paypage() {
             value={inputDonateValue}
             onChange={DonateChange}
             onKeyDown={EnterToDonate}
-            min="0"
+            min={0}
           />
         </div>
+        
         <div className="flex">
           <div className="mt-4 flex-auto">
             <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">
@@ -895,8 +943,9 @@ function Paypage() {
               className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"
               onChange={CityChange}
               value={selectedCity}
+              required={true}
             >
-              <option selected={true}>-選擇-</option>
+              <option>-選擇-</option>
               {taiwan_districts.map((item) => (
                 <option key={item.name} value={item.name}>
                   {item.name}
@@ -908,8 +957,8 @@ function Paypage() {
             <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">
               鄉鎮市區
             </label>
-            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950">
-              <option selected={true}>-選擇-</option>
+            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"  required={true}>
+              <option>-選擇-</option>
               {districtsName}
             </select>
           </div>
@@ -925,6 +974,8 @@ function Paypage() {
               className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800"
               type="text"
               name="order[address]"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           <div className="flex-auto pl-10">
@@ -937,6 +988,8 @@ function Paypage() {
               className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800"
               type="text"
               name="order[postcode]"
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
             />
           </div>
         </div>
@@ -949,6 +1002,8 @@ function Paypage() {
           className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800"
           type="text"
           name="order[recipient]"
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
         />
         <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
           連絡電話
@@ -964,6 +1019,8 @@ function Paypage() {
           size={20}
           type="text"
           name="order[phone]"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
         <button
           className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500"
@@ -971,42 +1028,50 @@ function Paypage() {
         >
           立即預購
         </button>
-        <button type="submit" style={{ display: "none" }} />{" "}
+        <button
+          className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500 ml-20"
+          onClick={(e) => handleDemo(e)}
+        >
+          Demo
+        </button>  
+        <button ref={submitButtonRef} type="submit" style={{ display: "none" }}/>
+        </form>
+      
         {/* 隱藏的submit */}
         {/* 確認對話框 */}
         {isConfirming && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-500">
-              <p>將前往結帳頁面，確定要進行購買嗎?</p>
-              <div className="flex justify-center mt-4">
+            <div className="bg-white p-4 rounded shadow-lg dark:bg-slate-400 w-96 h-36">
+              <p className="font-black text-center text-2xl">
+                將前往結帳頁面，確定進行購買嗎?
+              </p>
+              <div className="flex justify-center mt-2">
                 <button
-                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 mr-3"
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500 font-bold mr-5 text-base"
+                  onClick={handleConfirmButtonClick}
+                >
+                  確定
+                </button>
+                <button
+                  className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 font-bold text-base"
                   onClick={handleCancel}
                 >
                   取消
-                </button>
-                <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-green-500"
-                  onClick={handleConfirmButtonClick}
-                >
-                  确定
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
+
     </div>
+    
   );
 
   return (
     <>
-      {/* <header className="py-2 px-4">MuMu</header> */}
       <Projectcard projectData={projectAndproductsData}></Projectcard>
-      {/* 原本是px-4 mb-8有另外的div */}
       <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
-        {/* 條件渲染 PaymentForm */}
-
         <div className="flex mb-10 text-sm -mx-4">
           <div className="px-4 lg:w-1/3 mr-3">{selectedProduct}</div>
           {/* 彈出視窗 */}

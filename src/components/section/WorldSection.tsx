@@ -21,8 +21,8 @@ const WorldSection = () => {
         <TitleText
           title={
             <>
-              Track friends around you and invite them to play together in the
-              same world
+              做為一個專注於促進跨領域合作和創新的募資平台。它不僅提供了募資的功能，還鼓
+              勵不同領域的創作者、專家和投資者共同合作，推動跨界創新項目的發展。
             </>
           }
           textStyles="text-center"

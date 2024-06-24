@@ -36,7 +36,6 @@ import {
   PostDetails,
   Profile,
   Social,
-  UpdateProfile,
 } from "./views/auth/pages";
 import LoggedInLayout from "./views/auth/LoggedInLayout";
 import ServiceRoute from "./views/auth/pages/ServiceRoute";
@@ -51,7 +50,7 @@ import Productpage from "./views/auth/pages/Prodouctpage";
 import CartPage from "./views/auth/pages/CartPage";
 import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
-import StartProject from "./views/root/pages/StartProject";
+// import StartProject from "./views/root/pages/StartProject";
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
@@ -60,13 +59,16 @@ import ReSendEmail from "./views/root/pages/ReSendEmail";
 import { useToast } from "./components/ui/use-toast";
 import axios from "axios";
 import Create from "./views/root/pages/Create";
+import { CartProvider } from "./context/CartContext";
+import EditProject from "./views/root/pages/EditProject";
+
 
 const App = () => {
   const [input, setInput] = useState("");
   const { toast } = useToast();
   const URL = import.meta.env.VITE_BACK_URL;
   const test = async () => {
-    console.log("test");
+    //console.log("test");
     await axios.get(`${URL}/WeatherForecast`);
   };
 
@@ -84,6 +86,7 @@ const App = () => {
 
   return (
     <>
+    <CartProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Routes>
           {/* public routes */}
@@ -99,9 +102,11 @@ const App = () => {
               path="/SearchProject"
               element={<SearchProject input={input} setInput={setInput} />}
             />
+            <Route path="/playground" element={<Playground />} />
 
-            <Route path="/StartProject" element={<StartProject />} />
-            {/* <Route path="/CreateProject" element={<Create />} /> */}
+            {/* <Route path="/StartProject" element={<StartProject />} /> */}
+            <Route path="/CreateProject" element={<Create />} />
+            <Route path="/EditProject/:pid" element={<EditProject />} />
 
             {/* <Route path="/Like" element={<Like/>}/> */}
           </Route>
@@ -132,7 +137,6 @@ const App = () => {
             <Route path="/update-post/:id" element={<EditPost />} />
             <Route path="/posts/:id" element={<PostDetails />} />
             <Route path="/profile/:id/*" element={<Profile />} />
-            <Route path="/update-profile/:id/*" element={<UpdateProfile />} />
           </Route>
 
           <Route
@@ -170,6 +174,7 @@ const App = () => {
 
         <Toaster />
       </ThemeProvider>
+      </CartProvider>
     </>
   );
 };

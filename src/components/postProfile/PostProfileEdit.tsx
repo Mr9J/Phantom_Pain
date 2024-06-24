@@ -25,7 +25,7 @@ import {
 import { useEffect, useState } from "react";
 import FileUploader from "../shared/FileUploader";
 import { Textarea } from "../ui/textarea";
-import street from "@/assets/_shared_img/street.jpg";
+import sea from "@/assets/_shared_img/sea.jpg";
 
 const PostProfileEdit = ({ id }: { id: string }) => {
   const { toast } = useToast();
@@ -92,6 +92,7 @@ const PostProfileEdit = ({ id }: { id: string }) => {
 
   useEffect(() => {
     if (member) {
+      console.log(member);
       form.reset({
         nickname: member ? member?.nickname : "",
         username: member ? member?.username : "",
@@ -108,7 +109,7 @@ const PostProfileEdit = ({ id }: { id: string }) => {
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
-            src={street}
+            src={sea}
             alt="street"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
@@ -154,6 +155,9 @@ const PostProfileEdit = ({ id }: { id: string }) => {
                 onSubmit={form.handleSubmit(handleProfileEdit)}
                 className="mt-8 grid grid-cols-6 gap-6"
               >
+                <div className="col-span-6">
+                  <h2 className="text-2xl font-bold">個人資料編輯</h2>
+                </div>
                 <div className="col-span-6">
                   <FormField
                     control={form.control}
@@ -358,20 +362,20 @@ const PostProfileEdit = ({ id }: { id: string }) => {
                       onChange={(e) => setIsCheck(e.target.checked)}
                     />
 
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm">
                       我同意 Mumu 的服務條款與隱私政策
                     </span>
                   </label>
                 </div>
                 <div className="col-span-6">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm ">
                     By continuing, you agree to our
-                    <a href="#" className="text-gray-700 underline">
+                    <a href="#" className="underline">
                       {" "}
                       Terms and Conditions{" "}
                     </a>
                     and
-                    <a href="#" className="text-gray-700 underline">
+                    <a href="#" className=" underline">
                       {" "}
                       Privacy Policy
                     </a>

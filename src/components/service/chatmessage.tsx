@@ -19,12 +19,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
 
   const highlightText = (text: string, messageIndex: number) => {
     if (!searchTerm) return text;
-
+//(${searchTerm})：表示每次匹配 searchTerm。
+//g：表示搜索整個字符串。i：匹配時不區分大小寫。
     const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
     return (
       <>
         {parts.map((part, index) =>
+        //不區分大小寫
           part.toLowerCase() === searchTerm.toLowerCase() ? (
+            //應用service-highlight樣式 如果當前訊息為搜訊訊息 改用current樣式
             <span key={index} className={`service-highlight ${highlightedIndexes[currentIndex] === messageIndex ? 'service-current-highlight' : ''}`}>{part}</span>
           ) : (
             part

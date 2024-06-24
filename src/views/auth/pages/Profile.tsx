@@ -1,5 +1,6 @@
 import {
   PostProfileEdit,
+  PostProfileEditP,
   PostProfileMain,
   PostProfileReview,
 } from "@/components/postProfile";
@@ -20,7 +21,9 @@ const Profile = () => {
           <TabsList className="w-full">
             <TabsTrigger value="main">主頁</TabsTrigger>
             <TabsTrigger value="review">瀏覽</TabsTrigger>
-            {user.id === id && <TabsTrigger value="edit">編輯</TabsTrigger>}
+            {user.id === id && (
+              <TabsTrigger value="edit">個人資料編輯</TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value="main">
             <PostProfileMain member={member} isLoading={isPending} />
@@ -29,7 +32,11 @@ const Profile = () => {
             <PostProfileReview id={id} />
           </TabsContent>
           <TabsContent value="edit">
-            <PostProfileEdit id={user.id} />
+            {user?.authenticationProvider === "N" ? (
+              <PostProfileEdit id={user.id} />
+            ) : (
+              <PostProfileEditP id={user.id} />
+            )}
           </TabsContent>
         </Tabs>
       </div>

@@ -131,9 +131,12 @@ const Service: React.FC = () => {
   // 搜尋訊息並高亮顯示
   useEffect(() => {
     const indexes = messages
+       //檢查有無包含關鍵字 沒有就返回-1
       .map((message, index) => (message.content.includes(searchTerm) ? index : -1))
+      //過濾-1只返回查詢結果
       .filter(index => index !== -1);
     setHighlightedIndexes(indexes);
+    //如果有查詢到 讓現在所引為最新訊息
     if (indexes.length > 0) {
       setCurrentIndex(indexes.length - 1);
       document.querySelectorAll('.service-chat-message')[indexes[indexes.length - 1]]?.scrollIntoView({ behavior: 'smooth' });
@@ -142,14 +145,15 @@ const Service: React.FC = () => {
     }
   }, [searchTerm, messages]);
 
-  // 處理訊息變更
+  // 處理輸入框訊息變更
   const handleMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
 
-  // 提交訊息
+  // 提交訊息事件
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    //如果訊息有效進行後續操作
     if (message && serviceId && memberId !== null) {
       const newMessage: Message = {
         id: messages.length + 1,
@@ -160,6 +164,7 @@ const Service: React.FC = () => {
         sender: 'user'
       };
       try {
+        //調用後端API
         await createServiceMessage(newMessage.serviceId, {
           messageId: newMessage.id,
           serviceId: newMessage.serviceId,
@@ -168,9 +173,9 @@ const Service: React.FC = () => {
           messageContent: newMessage.content,
           messageDate: newMessage.timestamp.toISOString()
         });
-
+        //清空輸入框
         setMessage('');
-
+        //調用後端SignalR SendMessage方法 達到即時通訊
         connection.invoke("SendMessage", newMessage).catch(err => console.error(err.toString()));
 
       } catch (error) {
@@ -183,12 +188,13 @@ const Service: React.FC = () => {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
     if (!file) return;
-
+  //如果是檔案開始上傳
     setUploading(true);
 
     const reader = new FileReader();
 
     reader.onloadend = async () => {
+      //上傳完後確認是否有效 傳至後端
       setUploading(false);
       if (serviceId && memberId !== null) {
         const newMessage: Message = {
@@ -230,6 +236,7 @@ const Service: React.FC = () => {
     if (currentIndex > 0) {
       const newIndex = currentIndex - 1;
       setCurrentIndex(newIndex);
+      //取所有具有 service-chat-message 類的元素 如果選取的元素不存在 整個表達式將返回 undefined 如果存在會滾動過去
       document.querySelectorAll('.service-chat-message')[highlightedIndexes[newIndex]]?.scrollIntoView({ behavior: 'smooth' });
     }
   };

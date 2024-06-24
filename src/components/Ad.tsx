@@ -2,16 +2,21 @@
 import { useEffect, useState } from "react";
 import { getProjects } from "@/services/projects.service";
 import { ProjectDTO } from "@/types/index";
-const frontUrl = import.meta.env.VITE_FRONT_URL;
+
 
 interface ModalProps {
   id: string;
 }
-const randomIndex = Math.floor(Math.random() * 169);
+const excludedIndexes = [8, 130, 137, 138, 145, 147, 154, 157, 160]; // 排除的索引
+const validIndexes = Array.from({ length: 169 }, (_, i) => i).filter(
+  (index) => !excludedIndexes.includes(index)
+);
+const randomIndex =
+  validIndexes[Math.floor(Math.random() * validIndexes.length)];
 
 const Ad: React.FC<ModalProps> = ({ id }) => {
   const [projects, setProjects] = useState<ProjectDTO[] | null>(null);
-
+  
   //載入api
   useEffect(() => {
     const fetchProjects = async () => {
@@ -38,11 +43,13 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
   const showModal = () => {
     const modal = document.getElementById(id) as HTMLDialogElement;
     if (modal) modal.showModal();
+    document.body.style.overflow = 'hidden';
   };
 
   const closeModal = () => {
     const modal = document.getElementById(id) as HTMLDialogElement;
     if (modal) modal.close();
+    document.body.style.overflow = 'auto';
   };
 
   return (
@@ -61,11 +68,23 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
             </button>
           </form>
           {projects && projects.length > 1 && (
-            <a href={`${frontUrl}/project/${projects[randomIndex].projectId}`}>
-              <img src={projects[randomIndex].thumbnail} alt="" />
+            <a className="z-50" href={`/project/${projects[randomIndex].projectId}`}>
+              <img className="border-4 border-primary aspect-video rounded" src={projects[randomIndex].thumbnail} alt="" />
             </a>
           )}
         </div>
+        
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", 
+            zIndex: -20, 
+          }}
+        />
       </dialog>
     </>
   );

@@ -1,7 +1,6 @@
+import { Group } from "@/components/profile/Group";
 import { LucideProps } from "lucide-react";
 import react from "react";
-import { string } from "zod";
-import { MemberDTO } from "@/types/index";
 
 export type SignUpDTO = {
   nickname: string;
@@ -29,6 +28,7 @@ export type CurrentUserDTO = {
   email: string;
   nickname: string;
   thumbnail: string;
+  authenticationProvider: string;
 };
 
 export type PropsTestType = {
@@ -57,11 +57,19 @@ export type Order = {
   thumbnail: string;
   isEdit?: boolean;
   orderDetails: {
+    orderDetailId: number;
+    orderId: number;
+    thumbnail: string; 
+    projectId: number;
     projectName: string;
-    thumbnail: string;
+    productName: string;
     count: number;
     price: number;
+  }[];
+  coupon: {
+    discount: number;
   };
+  totalAmount:number;
 };
 export type OrderProject = {
   orderId: number;
@@ -178,6 +186,8 @@ export type ICommentPost = {
   postId: string;
   userId: string;
   comment: string;
+  parentId?: string;
+  isReply?: boolean;
 };
 
 export type UserProfile = {
@@ -185,11 +195,16 @@ export type UserProfile = {
   nickname: string;
   username: string;
   email: string;
+  address: string;
+  phone: string;
   description: string;
   avatar: string;
   time: string;
   banner: string;
+  postCount: number;
+  followCount: number;
   projects: Project[];
+  showContactInfo: string;
 };
 
 export type Project = {
@@ -244,4 +259,84 @@ export type UpdateUserProfile = {
   address?: string;
   memberIntroduction?: string;
   phone?: string;
+};
+
+export type CouponDTO = {
+  couponId: number;
+  projectId: number;
+  code: string;
+  discount: number;
+  initialStock?: number;
+  currentStock?: number;
+  deadline: string;
+  statusId: number;
+  projectName?: string;
+  projectThumbnail?: string;
+};
+
+export type IUpdateBanner = {
+  file: File[];
+  userId: string;
+};
+
+export type commentPostType = {
+  postCommentID: number;
+  memberID: number;
+  nickname: string;
+  thumbnail: string;
+  postID: number;
+  comment: string;
+  date: Date;
+  parentCommentID?: number;
+  childComments?: childCommentsType[];
+  postCommentDetail: {
+    likeCount: number;
+    dislikeCount: number;
+    isLiked: boolean;
+    isDisliked: boolean;
+  };
+};
+
+export type childCommentsType = {
+  postCommentID: number;
+  memberID: number;
+  nickname: string;
+  thumbnail: string;
+  postID: number;
+  comment: string;
+  date: Date;
+  parentCommentID?: number;
+  postCommentDetail: {
+    likeCount: number;
+    dislikeCount: number;
+    isLiked: boolean;
+    isDisliked: boolean;
+  };
+};
+
+export type ICommentLike = {
+  commentId: number;
+  status: string;
+};
+
+export type GroupDTO = {
+  groupId?: number;
+  groupName: string;
+  users?: SimpleUserDTO[];
+};
+
+export type SimpleUserDTO = {
+  memberId: number;
+  username: string;
+  nickname: string;
+  thumbnail: string;
+  authStatus: number;
+};
+
+export type IGroupUpdate = {
+  groupId: number;
+  groupName: string;
+  username: string;
+  projectId: number;
+  action: string;
 };

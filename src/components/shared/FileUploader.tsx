@@ -23,9 +23,11 @@ const FileUploader = ({
     (acceptedFiles: FileWithPath[]) => {
       if (acceptedFiles.length > 1 && isSingle) {
         toast({
+          variant: "destructive",
           title: "錯誤",
           description: "只能上傳一張圖片",
         });
+
         return;
       }
 

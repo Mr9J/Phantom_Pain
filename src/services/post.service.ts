@@ -6,6 +6,7 @@ import {
   ICommentPost,
   SearchTerm,
   PostImageDTO,
+  ICommentLike,
 } from "@/types";
 import { S3 } from "@/config/R2";
 import {
@@ -267,6 +268,8 @@ export async function commentPost(comment: ICommentPost) {
   try {
     const jwt = localStorage.getItem("token");
 
+    if (!jwt) throw Error;
+
     const res = await axios.post(`${URL}/Post/comment-post`, comment, {
       headers: { Authorization: jwt },
     });
@@ -280,6 +283,8 @@ export async function commentPost(comment: ICommentPost) {
 }
 
 export async function getCommentsPost(postId: string) {
+  console.log("getCommentsPost is called");
+
   try {
     const jwt = localStorage.getItem("token");
 
@@ -450,6 +455,42 @@ export async function getFollowPost(page: number) {
     if (!jwt) throw Error;
 
     const res = await axios.get(`${URL}/Post/get-follow-posts/${page}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function likeComment(x: ICommentLike) {
+  console.log(x);
+  try {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    const res = await axios.post(`${URL}/post/like-comment`, x, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function searchUsersByKeyword(keyword: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Post/search-users/${keyword}`, {
       headers: { Authorization: jwt },
     });
 

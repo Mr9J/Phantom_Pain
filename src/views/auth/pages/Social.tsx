@@ -18,8 +18,15 @@ const Social = () => {
 
   useEffect(() => {
     if (posts) {
-      setData([...data, ...posts]);
+      const dataMap = new Map(data.map((item) => [item.postId, item]));
+      posts.forEach((post) => {
+        if (!dataMap.has(post.postId)) {
+          dataMap.set(post.postId, post);
+        }
+      });
+      setData(Array.from(dataMap.values()));
     }
+
     refetchPosts();
   }, [posts]);
 
