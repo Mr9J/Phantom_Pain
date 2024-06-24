@@ -19,13 +19,13 @@ const ExploreSection = () => {
         className={`${styles.innerWidth} mx-auto flex flex-col`}
       >
         <TypingText
-          title="| FROM SOFTWARE"
+          title="| Projects Showcase"
           textStyles="text-center font-normal text-[14px] text-secondary-white"
         />
         <TitleText
           title={
             <>
-              Choose the game you like <br className="md:block hidden" /> to
+              Choose the projects you like <br className="md:block hidden" /> to
               explore
             </>
           }

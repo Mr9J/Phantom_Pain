@@ -148,7 +148,7 @@ function Paypage() {
         createOrder(orderData);
         setTimeout(() => {
           navigate(`/ReturnURL`);
-        }, 2000);
+        }, 3000);
       return;
       }
     console.log("確認");
@@ -945,7 +945,7 @@ function Paypage() {
               value={selectedCity}
               required={true}
             >
-              <option selected={true}>-選擇-</option>
+              <option>-選擇-</option>
               {taiwan_districts.map((item) => (
                 <option key={item.name} value={item.name}>
                   {item.name}
@@ -958,7 +958,7 @@ function Paypage() {
               鄉鎮市區
             </label>
             <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"  required={true}>
-              <option selected={true}>-選擇-</option>
+              <option>-選擇-</option>
               {districtsName}
             </select>
           </div>

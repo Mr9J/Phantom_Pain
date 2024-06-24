@@ -131,3 +131,11 @@ export const ProfileEditPValidation = z
       path: ["confirmPassword"],
     }
   );
+
+export const GroupFormValidation = z.object({
+  groupName: z
+    .string()
+    .min(2, { message: "群組名稱不可小於2字" })
+    .max(50, { message: "群組名稱不可大於50字" }),
+  username: z.string().max(24, { message: "帳號長度至多24字" }),
+});

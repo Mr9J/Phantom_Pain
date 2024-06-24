@@ -51,7 +51,6 @@ export const putProductFromCart = (productId:number, memberId:number,incrementOr
 export const getLoadCartPage = (memberId:number)=>{
     return fetch(`${baseUrl}/Cart/${memberId}`)
     .then(response =>{
-        console.log(response)
         if(!response.ok){
             throw new Error('Network response was not ok');
         }

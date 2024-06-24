@@ -22,6 +22,7 @@ import { signOut } from "firebase/auth";
 import { signOutNative } from "@/services/auth.service";
 import { auth } from "@/config/firebase";
 import { useUserContext } from "@/context/AuthContext";
+import { useCartContext } from "@/context/CartContext";
 
 const exploreItems = [
   {
@@ -56,7 +57,7 @@ const exploreItems = [
   },
 ];
 const exploreBottomItems = [
-  { name: "Item6", to: "/", icon: LightbulbIcon },
+  { name: "Playground", to: "/playground", icon: LightbulbIcon },
   { name: "Item7", to: "/", icon: LightbulbIcon },
 ];
 
@@ -72,8 +73,14 @@ const Header = ({
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const { user } = useUserContext();
+  const { cartQuantity, fetchCartQuantity } = useCartContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchCartQuantity();
+  });
 
   const signOutHandler = () => {
     signOutNative();
@@ -204,7 +211,12 @@ const Header = ({
           onClick={() => navigate("/CartPage")}
           className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
         >
-          <ShoppingCart />
+          <ShoppingCart className="h-24 w-24" />
+          <div className="h-2 w-3">
+            <span className="bg-rose-700 text-white text-[12px] text-center m-0 font-black">
+              {cartQuantity == 0 ? "" : cartQuantity}
+            </span>
+          </div>
         </Button>
         {user.id ? (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">

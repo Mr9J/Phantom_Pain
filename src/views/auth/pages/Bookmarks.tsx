@@ -8,15 +8,17 @@ import LoaderSvg from "@/components/shared/LoaderSvg";
 const Bookmarks = () => {
   const [page, setPage] = useState(0);
   const [savedData, setSavedData] = useState([]);
-  const {
-    data: savedPosts,
-    isPending: isPostLoading,
-    isError: isErrorPosts,
-  } = useGetSavedPosts(page);
+  const { data: savedPosts, isPending: isPostLoading } = useGetSavedPosts(page);
 
   useEffect(() => {
     if (savedPosts) {
-      setSavedData([...savedData, ...savedPosts]);
+      const dataMap = new Map(savedData.map((item) => [item.postId, item]));
+      savedPosts.forEach((post) => {
+        if (!dataMap.has(post.postId)) {
+          dataMap.set(post.postId, post);
+        }
+      });
+      setSavedData(Array.from(dataMap.values()));
     }
   }, [savedPosts]);
 

@@ -14,6 +14,7 @@ import TabQA from "@/components/explore/TabQA";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import ViewHistory from "@/components/ViewHistory";
+import { Helmet } from "react-helmet-async";
 
 function ProjectInfo() {
   const { isAuthenticated } = useUserContext();
@@ -86,6 +87,9 @@ function ProjectInfo() {
 
   return (
     <>
+      <Helmet>
+        <title>{project.projectName}</title>
+      </Helmet>
       <div className="w-full pb-32">
         {/* 上半部 */}
         <div className="flex flex-wrap  justify-center py-4">

@@ -1,7 +1,7 @@
 // import './App.css';
 import "@/css/productcard.css";
 // import PropTypes from 'prop-types';
-import { useState, useEffect, MouseEvent, useLayoutEffect } from "react";
+import { useState, useEffect, MouseEvent} from "react";
 // import { getProject } from './api/Project.js';
 import { getProjectfromProductId } from "@/services/projects.service";
 import { addToCart } from "@/services/Cart.service";
@@ -10,6 +10,7 @@ import Projectcard from "@/components/ProjectCard/projectcard.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "@/context/AuthContext";
 import Footer from "@/components/section/Footer";
+import { useCartContext } from "@/context/CartContext";
 
 // import { data } from 'autoprefixer';
 //寫死的參數
@@ -68,6 +69,8 @@ function ProductsComponent({
   pid,
 }: ProductsComponentProps) {
   const { user } = useUserContext();
+  //購物車數量顯示
+  const { fetchCartQuantity } = useCartContext();
   const [productCounts, setProductCounts] = useState<{ [key: string]: number }>(
     {}
   );
@@ -92,32 +95,26 @@ function ProductsComponent({
       ...prevCounts,
       [productId]: updatedCount,
     }));
+     
   };
 
-  const ClickaddToCart = (e: MouseEvent, productId: number) => {
+  const ClickaddToCart = async (e: MouseEvent, productId: number) => {
     console.log(productCounts[productId]);
     //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
     e.stopPropagation();
-
-    addToCart(
+    
+    await addToCart(
       productId,
       productCounts[productId],
       Number(pid),
       Number(user.id)
-    );
-    setPopupVisible(true);
+    ); 
+    fetchCartQuantity();
+   await setPopupVisible(true);
+    //購物車數量顯示
+  
   };
 
-  //測試加入購物車(成功) 不要刪
-  // const ClickaddToCart = (e) =>{
-  //   //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
-  //   e.stopPropagation();
-  //   const productId = e.target.value;
-  //   e.target.style.backgroundColor = 'gray';
-  //   e.target.textContent = '已加入購物車';
-  //   e.target.disabled = true;
-  //   addToCart(productId , testProjectid , testmemberId )
-  // }
 
   const listitem =
     productsData &&
@@ -223,12 +220,6 @@ function ProductsComponent({
                       </button>
                     )}
 
-                    {/* {item.productInCart.includes(pjitem.productId) ? (
-  <button className="float-right mb-1 rounded-full font-bold text-xs py-1 px-2 bg-gray-600 text-center text-neutral-400 leading-none" disabled value={pjitem.productId}>已加入購物車</button>
-  
-) : (
-  <button className="float-right mb-1 rounded-full font-bold text-xs py-1 px-2 bg-orange-600 text-center text-neutral-300 leading-none" value={pjitem.productId} onClick={(e) => ClickaddToCart(e)}>加入購物車</button>
-)} */}
                   </div>
                 </div>
               </div>
@@ -244,6 +235,7 @@ function Productpage() {
   const { pid } = useParams();
   const navigate = useNavigate();
   const { user } = useUserContext();
+  
 
   const ClickProductToPaypage = (productId: number) => {
     // 點擊按鈕後導航到其他路由
@@ -268,6 +260,7 @@ function Productpage() {
   }, [isPopupVisible]);
 
   useEffect(() => {
+    if(Number(user.id)!=0)
     getProjectfromProductId(Number(pid), Number(user.id))
       .then((data) => {
         setProjectData(data);
@@ -291,7 +284,6 @@ function Productpage() {
 
   return (
     <>
-      {/* <header className="py-2 px-4">MuMu</header> */}
     {isPopupVisible && (
           <div className="fixed left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
             <div className="bg-slate-100 p-4 rounded shadow-md w-48 h-30 text-center text-lime-500 font-extrabold text-2xl">        

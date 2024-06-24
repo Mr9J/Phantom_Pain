@@ -17,29 +17,35 @@ const PostProfileMain = ({ member, isLoading }: PostProfileProps) => {
           <div className="flex flex-wrap -mx-4 mt-auto mb-auto lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
             <div className="w-full sm:p-4 px-4 mb-6">
               <h1 className="title-font font-medium text-3xl mb-2 overflow-x-scroll overflow-y-hidden custom-scrollbar">
-                {member?.nickname || "尚未有暱稱"}
+                {member?.nickname || "這裡沒有人"}
               </h1>
               <div className="leading-relaxed text-xl">
-                {member?.description || "尚未有自我介紹"}
+                {member?.description || "無話可說"}
               </div>
             </div>
             <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
               <h2 className="title-font font-medium text-3xl line-clamp-1">
-                {moment.utc(member?.time).fromNow()}
+                {moment.utc(member?.time).fromNow() || "這裡沒有人"}
               </h2>
               <p className="leading-relaxed">加入時間</p>
             </div>
             <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-              <h2 className="title-font font-medium text-3xl">1.8K</h2>
-              <p className="leading-relaxed">Empty1</p>
+              <h2 className="title-font font-medium text-3xl">
+                {member?.projects?.length || "0"}
+              </h2>
+              <p className="leading-relaxed">發布企劃</p>
             </div>
             <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-              <h2 className="title-font font-medium text-3xl">35</h2>
-              <p className="leading-relaxed">Empty2</p>
+              <h2 className="title-font font-medium text-3xl">
+                {member?.postCount || "0"}
+              </h2>
+              <p className="leading-relaxed">發布貼文</p>
             </div>
             <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-              <h2 className="title-font font-medium text-3xl">4</h2>
-              <p className="leading-relaxed">Empty3</p>
+              <h2 className="title-font font-medium text-3xl">
+                {member?.followCount || "0"}
+              </h2>
+              <p className="leading-relaxed">追隨數</p>
             </div>
           </div>
           <div className="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">

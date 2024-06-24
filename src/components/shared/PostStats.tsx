@@ -3,28 +3,26 @@ import {
   useGetCommentPost,
   useLikePost,
   useSavePost,
+  useSearchUsersByKeyword,
 } from "@/lib/react-query/queriesAndMutation";
-import { GetPostDTO } from "@/types";
+import { GetPostDTO, commentPostType } from "@/types";
 import { BookmarkIcon, HeartIcon } from "lucide-react";
 import { useToast } from "../ui/use-toast";
 import { likePostCheck, savePostCheck } from "@/services/post.service";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import moment from "moment";
+import PostComment from "./PostComment";
 import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-  ContextMenuSeparator,
-  ContextMenuSub,
-  ContextMenuSubTrigger,
-  ContextMenuSubContent,
-  ContextMenuShortcut,
-} from "@/components/ui/context-menu";
-import { Link } from "react-router-dom";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type PostStatsProps = {
   post: GetPostDTO;
@@ -41,12 +39,14 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   const { mutateAsync: likePost } = useLikePost();
   const { mutateAsync: savePost } = useSavePost();
   const { toast } = useToast();
+  const [keyword, setKeyword] = useState("");
+  const [showSmartOptions, setShowSmartOptions] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
   const [comment, setComment] = useState("");
-  const [commentData, setCommentData] = useState(null);
+  const [commentData, setCommentData] = useState<commentPostType | null>(null);
   const [visibleComments, setVisibleComments] = useState(5);
   const inputRef = useRef<HTMLInputElement>(null);
   const { mutateAsync: commentPost, isPending: isCommentSubmitting } =
@@ -54,9 +54,9 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
   const {
     data: comments,
     isPending: isCommentLoading,
-    isError: isCommentError,
     refetch: refetchComments,
   } = useGetCommentPost(post?.postId);
+  const { data: userResult } = useSearchUsersByKeyword(keyword);
 
   const checkStatus = async () => {
     const session: likePostCheckType = await likePostCheck(
@@ -83,12 +83,40 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
     setIsCommentOpen(!isCommentOpen);
   };
 
+  const handleChange = (value: string) => {
+    setComment(value);
+
+    if (value.includes("@")) {
+      const parts = value.split("@");
+      const lastPart = parts?.[parts.length - 1] ?? "";
+
+      if (lastPart.length >= 2) {
+        setKeyword(lastPart);
+        setShowSmartOptions(true);
+      }
+    } else {
+      setShowSmartOptions(false);
+    }
+  };
+
   const commentSubmitHandler = async () => {
     try {
+      if (comment === "") {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "留言不得為空。",
+        });
+        return;
+      }
+
+      //inputRef.current?.value 跟 comment 分開
+
       const session = await commentPost({
         postId: post.postId,
         userId,
         comment,
+        isReply: false,
       });
 
       if (!session) {
@@ -99,6 +127,14 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         });
         return;
       }
+      toast({
+        title: "成功",
+        description: "留言已送出",
+      });
+
+      setComment("");
+      if (inputRef.current) inputRef.current.value = "";
+
       refetchComments().then(() => {
         if (comments !== "沒有留言" && comments !== undefined) {
           setCommentData(comments);
@@ -116,7 +152,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
         setCommentData(comments);
       }
     });
-  }, [comments]);
+  }, [comments, refetchComments]);
 
   const likeHandler = async () => {
     try {
@@ -242,7 +278,8 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               onClick={commentHandler}
               disabled={isCommentLoading}
             >
-              查看留言... ({commentData ? commentData.length : 0})
+              查看留言... ({Array.isArray(commentData) ? commentData.length : 0}
+              )
             </Button>
           </div>
           <div
@@ -250,86 +287,95 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               isCommentOpen ? "flex" : "hidden"
             } overflow-hidden`}
           >
-            <ul>
-              {commentData ? (
-                commentData.slice(0, visibleComments).map((com, index) => (
-                  <ContextMenu key={index}>
-                    <ContextMenuTrigger
-                      className="flex items-start gap-4 mt-2 w-full"
-                      key={com.id}
-                    >
-                      <Link
-                        to={`/profile/${com.userId}`}
-                        className="flex gap-2"
-                      >
-                        <img
-                          src={com.thumbnail}
-                          alt="userImg"
-                          className="h-8 w-8 rounded-full"
-                        />
-                        <p className="text-blue-500 w-20 overflow-y-hidden overflow-x-scroll custom-scrollbar">
-                          {com.username}
-                        </p>{" "}
-                      </Link>
-                      <div className="max-w-[480px]">
-                        <p className="break-words">{com.comment}</p>
-                        <p className="text-blue-400">
-                          {moment
-                            .utc(com.time, "YYYY-MM-DD HH:mm:ss")
-                            .fromNow()}
-                        </p>
-                      </div>
-                    </ContextMenuTrigger>
-                    <ContextMenuContent className="w-48">
-                      <ContextMenuItem>
-                        <Link to={`/profile/${com.userId}`}>個人檔案</Link>
-                      </ContextMenuItem>
-                      <ContextMenuItem onClick={() => {}}>追隨</ContextMenuItem>
-                      <ContextMenuSeparator />
-                      <ContextMenuSub>
-                        <ContextMenuSubTrigger inset className="text-red">
-                          檢舉
-                        </ContextMenuSubTrigger>
-                        <ContextMenuSubContent className="w-48">
-                          <ContextMenuItem className="text-red">
-                            不當言論
-                          </ContextMenuItem>
-                          <ContextMenuItem className="text-red">
-                            騷擾或欺凌
-                          </ContextMenuItem>
-                          <ContextMenuSeparator />
-                          <ContextMenuItem className="text-red">
-                            其他
-                          </ContextMenuItem>
-                        </ContextMenuSubContent>
-                      </ContextMenuSub>
-                    </ContextMenuContent>
-                  </ContextMenu>
-                ))
+            <ul className="w-full">
+              {Array.isArray(commentData) && commentData.length !== 0 ? (
+                commentData
+                  .slice(0, visibleComments)
+                  .map((com: commentPostType) => (
+                    <Fragment key={com.postCommentID}>
+                      <PostComment
+                        com={com}
+                        userId={userId}
+                        refetchComments={refetchComments}
+                      />
+                      <Separator />
+                    </Fragment>
+                  ))
               ) : (
                 <p>沒有人留言...</p>
               )}
-              {commentData && commentData.length > visibleComments && (
-                <Button variant="link" onClick={loadMoreComments}>
-                  載入更多...
-                </Button>
-              )}
+              {Array.isArray(commentData) &&
+                commentData.length > visibleComments && (
+                  <Button variant="link" onClick={loadMoreComments}>
+                    載入更多...
+                  </Button>
+                )}
             </ul>
           </div>
           <div className="flex items-center justify-center mt-2 gap-2 w-full">
-            <Input
-              ref={inputRef}
-              type="text"
-              placeholder="comment"
-              onChange={(e) => {
-                setComment(e.currentTarget.value);
-              }}
-            />
+            <div className="relative w-full">
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder="評論貼文..."
+                onChange={(e) => handleChange(e.target.value)}
+              />
+              {showSmartOptions && (
+                <div className="absolute w-full">
+                  <Select
+                    open={showSmartOptions}
+                    onValueChange={(e) => {
+                      const parts = inputRef.current?.value.split("@");
+                      const lastPart = parts?.[parts.length - 1] ?? "";
+                      inputRef.current.value = inputRef.current?.value.replace(
+                        "@" + lastPart,
+                        "@" + e
+                      );
+                      setShowSmartOptions(false);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="搜尋使用者" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Users</SelectLabel>
+                        {userResult?.map((user) => (
+                          <SelectItem
+                            key={user.memberId}
+                            value={user.nickname}
+                            className="p-4 w-full"
+                          >
+                            <div className="flex-row gap-4 flex justify-center items-center w-full">
+                              <div className="flex-shrink-0">
+                                <p className="relative block">
+                                  <img
+                                    alt="profil"
+                                    src={user.thumbnail}
+                                    className="mx-auto object-cover rounded-full h-16 w-16 "
+                                  />
+                                </p>
+                              </div>
+                              <div className=" flex flex-col">
+                                <span className="text-lg font-medium">
+                                  {user.nickname}
+                                </span>
+                                <span className="text-xs text-blue-500">
+                                  @{user.username}
+                                </span>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+
             <Button
-              onClick={() => {
-                commentSubmitHandler();
-                if (inputRef.current) inputRef.current.value = "";
-              }}
+              onClick={commentSubmitHandler}
               disabled={isCommentSubmitting}
             >
               送出

@@ -160,7 +160,7 @@ const Create: React.FC = () => {
       "測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫"
     );
     setProjectPreDetail(
-      '<p style="text-align: center;"><strong><span style="font-size: 36pt;">測試計畫</span></strong></p><p style="text-align: center;"><img src="https://cdn.mumumsit158.com/Test/project-192/Thumbnail.png" width="350" height="361"></p><p style="text-align: center;"><iframe title="YouTube video player" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></p><p style="text-align: center;">測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p><p style="text-align: center;">這是demo<br>これでもです🤡</p>'
+      '<p><strong><span style="font-size: 36pt;">測試計畫</span></strong></p><p><img src="https://cdn.mumumsit158.com/Test/project-192/Thumbnail.png" width="350" height="361"></p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></p><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p><p>這是demo<br>これでもです🤡</p>'
     );
   }
 

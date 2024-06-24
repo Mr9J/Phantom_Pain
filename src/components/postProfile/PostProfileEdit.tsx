@@ -156,6 +156,9 @@ const PostProfileEdit = ({ id }: { id: string }) => {
                 className="mt-8 grid grid-cols-6 gap-6"
               >
                 <div className="col-span-6">
+                  <h2 className="text-2xl font-bold">個人資料編輯</h2>
+                </div>
+                <div className="col-span-6">
                   <FormField
                     control={form.control}
                     name="nickname"
