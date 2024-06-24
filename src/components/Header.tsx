@@ -56,7 +56,7 @@ const exploreItems = [
   },
 ];
 const exploreBottomItems = [
-  { name: "Item6", to: "/", icon: LightbulbIcon },
+  { name: "Playground", to: "/playground", icon: LightbulbIcon },
   { name: "Item7", to: "/", icon: LightbulbIcon },
 ];
 
@@ -193,14 +193,16 @@ const Header = ({
             Search
           </Button>
         </div>
-       
-  
+
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <ModeToggle />
         </div>
-        <Button onClick={() => navigate("/CartPage")} className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14">
-            <ShoppingCart />
-          </Button>
+        <Button
+          onClick={() => navigate("/CartPage")}
+          className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
+        >
+          <ShoppingCart />
+        </Button>
         {user.id ? (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <div className="flex gap-4">
@@ -229,8 +231,7 @@ const Header = ({
               Sign in <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
-        )}   
-        
+        )}
       </nav>
       <Dialog
         className={`lg:hidden`}
