@@ -9,12 +9,12 @@ function Like() {
   const [data, setData] = useState<Like[]>([]);
   const URL = import.meta.env.VITE_API_URL;
 
-  //   //呼叫Hobby使用
-  //   const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
+  //呼叫Hobby使用
+  const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
 
-  //   const closeHobbyList = () => {
-  //     setIsHobbyListOpen(false);
-  //   };
+  const closeHobbyList = () => {
+    setIsHobbyListOpen(false);
+  };
   //  //到此 下面return還有
 
   ////簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部 但是其他地方需要使用 同時又有使用useState無法放在最上方 所以需要使用useCallback確保
@@ -170,7 +170,7 @@ function Like() {
       </body>
 
       {/* 呼叫HobbyList Component*/}
-      {/* {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />} */}
+      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />}
     </>
   );
 }
