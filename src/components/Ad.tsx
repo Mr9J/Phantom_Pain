@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { getProjects } from "@/services/projects.service";
 import { ProjectDTO } from "@/types/index";
-const frontUrl = import.meta.env.VITE_FRONT_URL;
+
 
 interface ModalProps {
   id: string;
@@ -68,7 +68,7 @@ const Ad: React.FC<ModalProps> = ({ id }) => {
             </button>
           </form>
           {projects && projects.length > 1 && (
-            <a className="z-50" href={`${frontUrl}/project/${projects[randomIndex].projectId}`}>
+            <a className="z-50" href={`/project/${projects[randomIndex].projectId}`}>
               <img className="border-4 border-primary aspect-video rounded" src={projects[randomIndex].thumbnail} alt="" />
             </a>
           )}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import numeral from "numeral";
 import { getProjects, getProjectCounts } from "@/services/projects.service";
 const baseUrl = import.meta.env.VITE_API_URL;
-const frontUrl = import.meta.env.VITE_FRONT_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 import { ProjectDTO, ProjectCount } from "@/types/index";
@@ -282,15 +281,16 @@ const Projects: React.FC = () => {
                               className="flex items-center"
                               style={{ width: 600 }}
                             >
-                              <a
-                                href={`${frontUrl}/project/${item.projectId}`}
+                              {/* <a
+                                href={`/project/${item.projectId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                              >
-                                <div className="text-base text-slate-800 dark:text-slate-100 underline">
+                              > */}
+                                {/* <div className="text-base text-slate-800 dark:text-slate-100 underline"> */}
+                                <div className="text-base text-slate-800 dark:text-slate-100">
                                   {item.projectName}
                                 </div>
-                              </a>
+                              {/* </a> */}
                             </div>
                           </td>
                           <td className="p-2 pr-4">

@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import PostStats from "@/components/shared/PostStats";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import GoogleTranslate from "@/config/GoogleTranslate";
+import { useEffect, useState } from "react";
 
 const PostDetails = () => {
   const navigate = useNavigate();
@@ -31,6 +33,17 @@ const PostDetails = () => {
   const { mutateAsync: deletePost, isPending: isDeletingPost } =
     useDeletePost();
   const { user } = useUserContext();
+  const [translateCaption, setTranslateCaption] = useState(post?.caption);
+  const [isTranslate, setIsTranslate] = useState(false);
+
+  const handleTranslate = async () => {
+    if (translateCaption) {
+      await GoogleTranslate(translateCaption, "zh-TW").then((res) => {
+        setIsTranslate(true);
+        setTranslateCaption(res);
+      });
+    }
+  };
 
   const handleDeletePost = async () => {
     const session = await deletePost(post?.postId);
@@ -70,6 +83,10 @@ const PostDetails = () => {
       ),
     });
   };
+
+  useEffect(() => {
+    if (post?.caption) setTranslateCaption(post?.caption);
+  }, [post?.caption]);
 
   return (
     <div className="flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar items-center">
@@ -151,7 +168,13 @@ const PostDetails = () => {
             </div>
             <hr className="border w-full dark:border-dark-4/80 border-slate-300/80" />
             <div className="flex flex-col flex-1 w-full text-[14px] font-medium leading-[140%] lg:text-[16px] whitespace-pre-wrap">
-              <p>{post?.caption}</p>
+              <p>{isTranslate ? translateCaption : post?.caption}</p>
+              <p
+                className="text-blue-500 cursor-pointer"
+                onClick={handleTranslate}
+              >
+                翻譯蒟蒻...
+              </p>
               <ul className="flex gap-1 mt-2">
                 {post?.tags.split(",").map((tag: string, index) => (
                   <li key={index} className="text-light-3">

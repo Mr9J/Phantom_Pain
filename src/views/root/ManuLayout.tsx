@@ -29,7 +29,7 @@ const ManuLayout = () => {
             {/*  Site header */}
             <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
             <Outlet />
-            <Banner />
+            {/* <Banner /> */}
           </div>
         </div>
       )}
