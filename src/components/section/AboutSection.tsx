@@ -23,11 +23,9 @@ const AboutSection = () => {
           variants={fadeIn("up", "tween", 0.2, 1)}
           className="mt-[8px] font-normal sm:text-[32px] text-[20px] text-center text-secondary-white"
         >
-          <span className="font-extrabold text-white">MyGo</span> Lorem ipsum
-          dolor sit amet consectetur, adipisicing elit. Deserunt eaque rem enim
-          eius odio blanditiis provident, quas possimus, iusto assumenda
-          voluptatibus eos ipsum voluptatem recusandae distinctio maxime. Cum,
-          fugit velit?
+          <span className="font-extrabold">Mumu</span>
+          做為一個專注於促進跨領域合作和創新的募資平台。它不僅提供了募資的功能，還鼓
+          勵不同領域的創作者、專家和投資者共同合作，推動跨界創新項目的發展。
         </motion.p>
       </motion.div>
     </section>

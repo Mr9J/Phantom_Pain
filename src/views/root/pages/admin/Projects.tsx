@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import numeral from "numeral";
 import { getProjects, getProjectCounts } from "@/services/projects.service";
 const baseUrl = import.meta.env.VITE_API_URL;
-const frontUrl = import.meta.env.VITE_FRONT_URL;
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
 import { ProjectDTO, ProjectCount } from "@/types/index";
 import SearchBar from "@/components/admin/SearchBar";
 
-type ProjectContext = [number, string, number, number, number];
+type ProjectContext = [number, string, number, number, number, number];
 //計算剩餘天數
 function calculateRemainingDays(expireDate: string, startDate: string): number {
   const endDate: Date = new Date(expireDate);
@@ -27,6 +26,7 @@ const Projects: React.FC = () => {
     0,
     0,
     0,
+    0,
   ]);
   const [projects, setProjects] = useState<ProjectDTO[] | null>(null);
   const [formData, setFormData] = useState({});
@@ -34,6 +34,7 @@ const Projects: React.FC = () => {
   const [projectStatus, setProjectStatus] = useState(-1);
   const [projectCount, setProjectCount] = useState<ProjectCount>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [modalText, setModalText] = useState<string>("");
 
   const filteredProjects: ProjectDTO[] | null =
     projectStatus > 0
@@ -280,15 +281,16 @@ const Projects: React.FC = () => {
                               className="flex items-center"
                               style={{ width: 600 }}
                             >
-                              <a
-                                href={`${frontUrl}/project/${item.projectId}`}
+                              {/* <a
+                                href={`/project/${item.projectId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                              >
-                                <div className="text-base text-slate-800 dark:text-slate-100 underline">
+                              > */}
+                                {/* <div className="text-base text-slate-800 dark:text-slate-100 underline"> */}
+                                <div className="text-base text-slate-800 dark:text-slate-100">
                                   {item.projectName}
                                 </div>
-                              </a>
+                              {/* </a> */}
                             </div>
                           </td>
                           <td className="p-2 pr-4">
@@ -378,7 +380,9 @@ const Projects: React.FC = () => {
                                     item.projectGoal,
                                     item.startDate,
                                     item.endDate,
+                                    3,
                                   ]);
+                                  setModalText("您確定將專案重新審核嗎？");
                                 }}
                                 className="text-slate-50 bg-ban hover:bg-rose-400 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-ban dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
                               >
@@ -390,7 +394,7 @@ const Projects: React.FC = () => {
                                   <path d="M367.2 412.5L99.5 144.8C77.1 176.1 64 214.5 64 256c0 106 86 192 192 192c41.5 0 79.9-13.1 111.2-35.5zm45.3-45.3C434.9 335.9 448 297.5 448 256c0-106-86-192-192-192c-41.5 0-79.9 13.1-111.2 35.5L412.5 367.2zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"></path>
                                 </svg>
                                 <div className="text-base font-semibold">
-                                  下架
+                                  再審核
                                 </div>
                               </button>
                             )}
@@ -405,7 +409,9 @@ const Projects: React.FC = () => {
                                     item.projectGoal,
                                     item.startDate,
                                     item.endDate,
+                                    1,
                                   ]);
+                                  setModalText("您確定要審核通過嗎？");
                                 }}
                                 className="text-slate-50 bg-green-600 hover:bg-rose-400 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-ban dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
                               >
@@ -489,9 +495,13 @@ const Projects: React.FC = () => {
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                     <p>{projectContext[1]}</p>
                     <br />
-                    <p>您確定要審核通過嗎？</p>
+                    <p>{modalText}</p>
                   </h3>
-                  <input type="hidden" required name="statusId" value="1" />
+                  <input
+                    type="hidden"
+                    name="statusId"
+                    value={projectContext[5]}
+                  />
                   <input type="hidden" name="id" value={projectContext[0]} />
                   <input
                     type="hidden"

@@ -8,12 +8,12 @@ import {
   MenuIcon,
   ChevronDownIcon,
   XIcon,
-  CigaretteIcon,
   LogOutIcon,
   LaughIcon,
   ShoppingCart,
   LucideBookHeart,
   CircleDollarSign,
+  HomeIcon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -22,13 +22,14 @@ import { signOut } from "firebase/auth";
 import { signOutNative } from "@/services/auth.service";
 import { auth } from "@/config/firebase";
 import { useUserContext } from "@/context/AuthContext";
+import { useCartContext } from "@/context/CartContext";
 
 const exploreItems = [
   {
     name: "Home",
-    description: "Smoking Area",
+    description: "",
     to: "/Home",
-    icon: CigaretteIcon,
+    icon: HomeIcon,
   },
   {
     name: "Favorites list",
@@ -42,12 +43,12 @@ const exploreItems = [
     to: "/PurchasHistory",
     icon: CircleDollarSign,
   },
-  {
-    name: "m",
-    description: "Just An Item",
-    to: "/",
-    icon: LightbulbIcon,
-  },
+  // {
+  //   name: "m",
+  //   description: "Just An Item",
+  //   to: "/",
+  //   icon: LightbulbIcon,
+  // },
   {
     name: "Manufactor",
     description: "mygo",
@@ -56,7 +57,7 @@ const exploreItems = [
   },
 ];
 const exploreBottomItems = [
-  { name: "Item6", to: "/", icon: LightbulbIcon },
+  { name: "Playground", to: "/playground", icon: LightbulbIcon },
   { name: "Item7", to: "/", icon: LightbulbIcon },
 ];
 
@@ -72,8 +73,14 @@ const Header = ({
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const { user } = useUserContext();
+  const { cartQuantity, fetchCartQuantity } = useCartContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchCartQuantity();
+  });
 
   const signOutHandler = () => {
     signOutNative();
@@ -153,7 +160,7 @@ const Header = ({
                     </div>
                   ))}
                 </div>
-                <div
+                {/* <div
                   className={`grid grid-cols-2 divide-x divide-gray-900/5 dark:divide-gray-50/5 bg-gray-50 dark:bg-slate-800`}
                 >
                   {exploreBottomItems.map((item) => (
@@ -169,11 +176,14 @@ const Header = ({
                       {item.name}
                     </Link>
                   ))}
-                </div>
+                </div> */}
               </Popover.Panel>
             </Transition>
           </Popover>
-          <Link to="/" className={`text-sm font-semibold leading-6`}>
+          <Link
+            to="/createproject"
+            className={`text-sm font-semibold leading-6`}
+          >
             Propose
           </Link>
           <Link to="/social" className={`text-sm font-semibold leading-6`}>
@@ -193,14 +203,21 @@ const Header = ({
             Search
           </Button>
         </div>
-       
-  
+
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <ModeToggle />
         </div>
-        <Button onClick={() => navigate("/CartPage")} className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14">
-            <ShoppingCart />
-          </Button>
+        <Button
+          onClick={() => navigate("/CartPage")}
+          className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
+        >
+          <ShoppingCart className="h-24 w-24" />
+          <div className="h-2 w-3">
+            <span className="bg-rose-700 text-white text-[12px] text-center m-0 font-black">
+              {cartQuantity == 0 ? "" : cartQuantity}
+            </span>
+          </div>
+        </Button>
         {user.id ? (
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <div className="flex gap-4">
@@ -212,7 +229,7 @@ const Header = ({
                 <LogOutIcon />
               </Button>
               <Link
-                to={`/profile/${user.id}`}
+                to={`/users/${user.id}`}
                 className="flex justify-center items-center gap-3"
               >
                 <img
@@ -229,8 +246,7 @@ const Header = ({
               Sign in <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
-        )}   
-        
+        )}
       </nav>
       <Dialog
         className={`lg:hidden`}
@@ -331,7 +347,7 @@ const Header = ({
                       <LogOutIcon />
                     </Button>
                     <Link
-                      to={`/profile/${user.id}`}
+                      to={`/users/${user.id}`}
                       className="flex justify-center items-center gap-3"
                     >
                       <img

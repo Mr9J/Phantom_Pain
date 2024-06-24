@@ -1,39 +1,39 @@
-import AC6 from "./AC6.jpg";
-import DS from "./DS.jpg";
-import DS2 from "./DS2.jpg";
-import DS3 from "./DS3.jpg";
-import Sk from "./SK.jpg";
-import BB from "./BB.jpg";
+import education from "./education.jpg";
+import home from "./home.jpg";
+import tech from "./tech.jpg";
+import fashion from "./fashion.jpg";
+import food from "./food.jpg";
+import perfomance from "./performance.jpg";
 
 export const exploreGames = [
   {
     id: "AC6",
-    imgSource: AC6,
-    title: "Armored Core 6",
+    imgSource: education,
+    title: "教育",
   },
   {
     id: "DS",
-    imgSource: DS,
-    title: "Dark Souls",
+    imgSource: home,
+    title: "居家生活",
   },
   {
     id: "DS2",
-    imgSource: DS2,
-    title: "Dark Souls 2",
+    imgSource: tech,
+    title: "科技",
   },
   {
     id: "DS3",
-    imgSource: DS3,
-    title: "Dark Souls 3",
+    imgSource: fashion,
+    title: "時尚",
   },
   {
     id: "Sk",
-    imgSource: Sk,
-    title: "Sekiro",
+    imgSource: food,
+    title: "飲食",
   },
   {
     id: "BB",
-    imgSource: BB,
-    title: "Bloodborne",
+    imgSource: perfomance,
+    title: "表演",
   },
 ];

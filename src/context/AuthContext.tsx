@@ -8,6 +8,7 @@ const INITIAL_USER = {
   email: "",
   nickname: "",
   thumbnail: "",
+  authenticationProvider: "N",
 };
 
 const INITIAL_STATE = {
@@ -46,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: currentUser.email,
           nickname: currentUser.nickname,
           thumbnail: currentUser.thumbnail,
+          authenticationProvider: currentUser.authenticationProvider,
         });
 
         setIsAuthenticated(true);

@@ -7,24 +7,20 @@ import {
   UserRoundSearchIcon,
 } from "lucide-react";
 
-export const startingFeatures = [
-  "Create a project plan and define your goals",
-  "Identify your target audience and conduct market research",
-  "Develop a compelling project pitch and create a captivating project description",
-];
+export const startingFeatures = ["確立主題", "尋找目標受眾", "與用戶即時互動"];
 
 export const newFeatures = [
   {
     imgSource: "1",
-    title: "A new world",
+    title: "社群共享和合作",
     subtitle:
-      "we have the latest update with new world for you to try never mind",
+      "建立一個強大的社群平台，不僅提供募資功能，還促進創作者、投資者和支持者之間的交流和合作。這可以通過討論區、專家分享、合作計劃等方式實現。",
   },
   {
     imgSource: "2",
-    title: "More realistic",
+    title: "即時互動",
     subtitle:
-      "In the latest update, your eyes are narrow, making the world more realistic than ever",
+      "建立一個即時互動的平台，讓使用者可以參與項目的發展過程，提供意見和建議，並參與投票選擇優秀的項目。這可以增加使用者的參與感和滿意度。",
   },
 ];
 

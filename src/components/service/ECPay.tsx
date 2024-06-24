@@ -106,7 +106,7 @@ React.useEffect(() => {
 
   React.useEffect(() => {
     if (shouldSubmitForm && checksum) {
-      const button = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+      // const button = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
       const form = document.getElementById('paymentForm') as HTMLFormElement | null;
       if (form) {
      
@@ -130,7 +130,7 @@ React.useEffect(() => {
         console.log('Form submitted with data:', formDataObject);
         
       }
-      button&&button.click();
+      // button&&button.click();
     }
   }, [shouldSubmitForm, checksum]);
 
@@ -146,16 +146,12 @@ React. useEffect(() => {
   return () => clearTimeout(timer); 
 }, []); 
 
-  // React.useLayoutEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     const button = submitButtonRef.current;
-  //     button && button.click();
-  //   }, 1000);  
-
-  //   return () => clearTimeout(timer); 
-  // }, [submitButtonRef.current]);
 
   return (
+
+    
+
+
     <form id="paymentForm" onSubmit={handleSubmit}>
       {/* 將檢查碼隱藏在表單中 */}
       {/* {checksum && <input type="hidden" name="CheckMacValue" value={checksum} />} */}
@@ -173,6 +169,7 @@ React. useEffect(() => {
       <input type="hidden" name="EncryptType" value={1} />
       <button ref={submitButtonRef} type="submit" style={{ display: 'none' }}></button>
     </form>
+
   );
 };
 

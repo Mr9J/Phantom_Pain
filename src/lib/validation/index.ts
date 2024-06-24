@@ -1,4 +1,3 @@
-import { Phone } from "lucide-react";
 import { z } from "zod";
 
 const PasswordValidation = z
@@ -84,17 +83,15 @@ export const ProfileEditValidation = z
       .min(8, { message: "帳號長度至少8字" })
       .max(24, { message: "帳號長度至多24字" }),
     thumbnail: z.custom<File[]>(),
-    email: z.string().email({ message: "email格式錯誤" }),
+    email: z.string().email({ message: "email格式錯誤" }).optional(),
     password: ProfilePasswordValidation,
     confirmPassword: z.string().default(""),
     address: z.string().max(200),
     memberIntroduction: z.string(),
     phone: z
       .string()
-      .min(10, { message: "電話號碼長度至少10字" })
-      .max(10, { message: "電話號碼長度至多10字" })
-      .refine((value) => /^[0-9]+$/.test(value), {
-        message: "電話號碼只能包含數字",
+      .refine((value) => value === "" || /^0\d{9}$/.test(value), {
+        message: "電話號碼格式錯誤",
       }),
   })
   .refine(
@@ -104,3 +101,41 @@ export const ProfileEditValidation = z
       path: ["confirmPassword"],
     }
   );
+
+export const ProfileEditPValidation = z
+  .object({
+    nickname: z
+      .string()
+      .min(2, { message: "暱稱長度至少2字" })
+      .max(50, { message: "暱稱長度至多50字" }),
+    username: z
+      .string()
+      .min(8, { message: "帳號長度至少8字" })
+      .max(50, { message: "帳號長度至多24字" }),
+    thumbnail: z.custom<File[]>(),
+    email: z.string(),
+    password: ProfilePasswordValidation,
+    confirmPassword: z.string().default(""),
+    address: z.string().max(200),
+    memberIntroduction: z.string(),
+    phone: z
+      .string()
+      .refine((value) => value === "" || /^0\d{9}$/.test(value), {
+        message: "電話號碼格式錯誤",
+      }),
+  })
+  .refine(
+    (data) => data.password === "" || data.password === data.confirmPassword,
+    {
+      message: "密碼不一致",
+      path: ["confirmPassword"],
+    }
+  );
+
+export const GroupFormValidation = z.object({
+  groupName: z
+    .string()
+    .min(2, { message: "群組名稱不可小於2字" })
+    .max(50, { message: "群組名稱不可大於50字" }),
+  username: z.string().max(24, { message: "帳號長度至多24字" }),
+});

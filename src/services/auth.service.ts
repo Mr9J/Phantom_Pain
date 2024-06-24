@@ -1,6 +1,10 @@
+import { data } from "autoprefixer";
 import { S3 } from "@/config/R2";
 import {
   CurrentUserDTO,
+  GroupDTO,
+  IGroupUpdate,
+  IUpdateBanner,
   IUpdateUserProfile,
   OuterSignIn,
   SignInDTO,
@@ -9,9 +13,6 @@ import {
 } from "@/types";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
-import exp from "constants";
-import { Network } from "lucide-react";
-import { date } from "zod";
 
 const URL = import.meta.env.VITE_API_URL;
 
@@ -42,7 +43,7 @@ export async function signIn(user: SignInDTO) {
 
     if (res.status !== 200) throw Error;
 
-    localStorage.setItem("token", res.data);
+    localStorage.setItem("token", res.data.jwt);
 
     return res.data;
   } catch (error) {
@@ -298,5 +299,129 @@ export async function updateMemberProfile(profile: IUpdateUserProfile) {
     return res.data;
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function updateBanner(x: IUpdateBanner) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const imgId = Date.now() + x.userId;
+
+    const res = await S3.send(
+      new PutObjectCommand({
+        Bucket: "mumu",
+        Key: `Members/MemberID-${x.userId}-Banner-${imgId}.jpg`,
+        Body: x.file[0],
+        ContentType: "image/jpeg",
+      })
+    );
+
+    if (res.$metadata.httpStatusCode !== 200) throw Error;
+
+    const newProfile = {
+      banner: `https://cdn.mumumsit158.com/Members/MemberID-${x.userId}-Banner-${imgId}.jpg`,
+      id: x.userId,
+    };
+
+    const res2 = await axios.patch(
+      `${URL}/Member/update-member-banner`,
+      newProfile,
+      { params: newProfile, headers: { Authorization: jwt } }
+    );
+
+    if (res2.status !== 200) throw Error;
+
+    return res2.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function setContactInfo(status: string) {
+  try {
+    const jwt = localStorage.getItem("token");
+
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/set-contact-info/${status}`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getGroupbyProjectId(projectId: number) {
+  try {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    const res = await axios.get(
+      `${URL}/Member/get-project-group/${projectId}`,
+      {
+        headers: { Authorization: jwt },
+      }
+    );
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function selectGroup() {
+  try {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    const res = await axios.get(`${URL}/Member/select-group`, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function updateGroup(x: IGroupUpdate) {
+  try {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) throw Error;
+
+    console.log(x);
+
+    const res = await axios.post(`${URL}/Member/update-project-group`, x, {
+      headers: { Authorization: jwt },
+    });
+
+    if (res.status !== 200) throw Error;
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    if (error.response.data === "Group not found.") {
+      return "Group not found.";
+    }
+    if (error.response.data === "Member not found.") {
+      return "Member not found.";
+    }
+    if (error.response.data === "User already in the group.") {
+      return "User already in the group.";
+    }
+    if (error.response.data === "請輸入欲刪除的用戶資訊") {
+      return "請輸入欲刪除的用戶資訊";
+    }
   }
 }

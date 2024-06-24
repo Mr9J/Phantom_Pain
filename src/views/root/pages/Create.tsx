@@ -48,6 +48,7 @@ const Create: React.FC = () => {
       console.error(error);
     }
   };
+  
 
   const handleStartDateChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -159,7 +160,7 @@ const Create: React.FC = () => {
       "測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫"
     );
     setProjectPreDetail(
-      '<p style="text-align: center;"><strong><span style="font-size: 36pt;">測試計畫</span></strong></p><p style="text-align: center;"><img src="https://cdn.mumumsit158.com/Test/project-192/Thumbnail.png" width="350" height="361"></p><p style="text-align: center;"><iframe title="YouTube video player" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></p><p style="text-align: center;">測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p><p style="text-align: center;">這是demo<br>これでもです🤡</p>'
+      '<p><strong><span style="font-size: 36pt;">測試計畫</span></strong></p><p><img src="https://cdn.mumumsit158.com/Test/project-192/Thumbnail.png" width="350" height="361"></p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></p><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p><p>這是demo<br>これでもです🤡</p>'
     );
   }
 
@@ -455,12 +456,9 @@ const Create: React.FC = () => {
                   init={{
                     height: 500,
                     menubar: false,
-                    plugins:
-                      "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate  mentions  tableofcontents footnotes mergetags autocorrect typography inlinecss markdown",
-
+                    plugins: "link image lists table wordcount",
                     toolbar:
-                      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments |  align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-
+                      "undo redo | bold italic underline strikethrough | link image | align numlist bullist | removeformat",
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                   }}
