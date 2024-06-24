@@ -174,7 +174,7 @@ const ProfileMain = ({ user, isLoading, refetch }: ProfileMainProps) => {
               </p>
 
               <Link
-                to={`${user?.projects[0]?.projectId}`}
+                to={`/project/${user?.projects[0]?.projectId}`}
                 className="text-indigo-500 inline-flex items-center"
               >
                 Learn More

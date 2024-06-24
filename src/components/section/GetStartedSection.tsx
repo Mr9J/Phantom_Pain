@@ -3,7 +3,7 @@ import styles from "@/styles";
 import { startingFeatures } from "../../constants";
 import { TitleText, TypingText } from "@/components/shared/CustomText";
 import { staggerContainer, fadeIn, planetVariants } from "../../utils/motion";
-import getStart from "@/assets/get_start_img/get-started.png";
+import getStart from "@/assets/_shared_img/Dragon Quest.png";
 import StartSteps from "../shared/StartSteps";
 
 const GetStartedSection = () => {
@@ -34,10 +34,7 @@ const GetStartedSection = () => {
             title="| How Mumu Works"
             textStyles="font-normal text-[14px] text-secondary-white"
           />
-          <TitleText
-            title={<>Get started with just a few clicks</>}
-            textStyles=""
-          />
+          <TitleText title={<>簡單的發布企劃</>} textStyles="" />
           {startingFeatures.map((feature, index) => (
             <StartSteps
               key={feature}

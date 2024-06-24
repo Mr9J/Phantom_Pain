@@ -1,3 +1,4 @@
+import { Group } from "@/components/profile/Group";
 import { LucideProps } from "lucide-react";
 import react from "react";
 
@@ -56,12 +57,19 @@ export type Order = {
   thumbnail: string;
   isEdit?: boolean;
   orderDetails: {
+    orderDetailId: number;
+    orderId: number;
+    thumbnail: string; 
+    projectId: number;
     projectName: string;
-    thumbnail: string;
+    productName: string;
     count: number;
     price: number;
+  }[];
+  coupon: {
+    discount: number;
   };
-  coupon: { discount: number };
+  totalAmount:number;
 };
 export type OrderProject = {
   orderId: number;
@@ -179,6 +187,7 @@ export type ICommentPost = {
   userId: string;
   comment: string;
   parentId?: string;
+  isReply?: boolean;
 };
 
 export type UserProfile = {
@@ -192,6 +201,8 @@ export type UserProfile = {
   avatar: string;
   time: string;
   banner: string;
+  postCount: number;
+  followCount: number;
   projects: Project[];
   showContactInfo: string;
 };
@@ -306,4 +317,26 @@ export type childCommentsType = {
 export type ICommentLike = {
   commentId: number;
   status: string;
+};
+
+export type GroupDTO = {
+  groupId?: number;
+  groupName: string;
+  users?: SimpleUserDTO[];
+};
+
+export type SimpleUserDTO = {
+  memberId: number;
+  username: string;
+  nickname: string;
+  thumbnail: string;
+  authStatus: number;
+};
+
+export type IGroupUpdate = {
+  groupId: number;
+  groupName: string;
+  username: string;
+  projectId: number;
+  action: string;
 };
