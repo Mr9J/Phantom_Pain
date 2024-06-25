@@ -3,6 +3,7 @@ import styles from "@/styles";
 import { footerVariants } from "../../utils/motion";
 import { socials } from "@/assets/footer_img";
 import { RocketIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -22,10 +23,13 @@ const Footer = () => {
             type="button"
             className="flex items-center h-fit py-4 px-6 bg-[#25618B] rounded-[32px] gap-[12px]"
           >
-            <RocketIcon className="w-[24px] h-[24px] object-contain text-white" />
-            <span className="font-normal text-[16px] text-white">
-              Enter MUMU
-            </span>
+            <Link to="/home">
+              <RocketIcon className="w-[24px] h-[24px] object-contain text-white" />
+
+              <span className="font-normal text-[16px] text-white">
+                Enter MUMU
+              </span>
+            </Link>
           </button>
         </div>
 
