@@ -1,8 +1,9 @@
+// src/api/serviceApi.ts
 import axios from 'axios';
 
-// 創建一個 axios 實例，預設基礎 URL 和頭部
+// 創建一個 axios 實例，使用從環境變量讀取的基礎 URL
 const api = axios.create({
-  baseURL: 'https://mumumsit158.azurewebsites.net/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -34,9 +35,8 @@ export const createService = (service: ServiceDTO) => {
   return api.post<ServiceDTO>('/Service', service);
 };
 
-
 export const closeService = (serviceId: number) => {
-  return api.put<void>(`/Service/${serviceId}/close`); // 使用 PUT 方法來關閉服務
+  return api.put<void>(`/Service/${serviceId}/close`);
 };
 
 export const getMessagesByMemberId = (memberId: number) => {
@@ -50,9 +50,11 @@ export const getLatestServiceIdByMemberId = (memberId: number) => {
 export const markMessagesAsRead = (memberId: number) => {
   return api.post<void>(`/Service/mark-as-read/${memberId}`);
 };
+
 export const getUnreadCount = async () => {
   return api.get('/Service/unread-count');
 };
+
 // TypeScript 接口定義
 
 export interface ServiceDTO {
