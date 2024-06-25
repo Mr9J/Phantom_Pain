@@ -110,9 +110,9 @@ function ProjectInfo() {
                 <span className="text-gray-500">提案人 </span>
                 <a
                   className="text-zec-green font-bold"
-                  href={`/users/${project.member.memberId}`}
+                  href={`/users/${project?.member?.memberId}`}
                 >
-                  {project.member.username}
+                  {project?.member?.username}
                 </a>
               </div>
               {/* 專案名稱 */}
