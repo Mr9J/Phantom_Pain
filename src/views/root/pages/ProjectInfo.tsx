@@ -88,7 +88,7 @@ function ProjectInfo() {
   return (
     <>
       <Helmet>
-        <title>{project.projectName}</title>
+        <title>{project?.projectName}</title>
       </Helmet>
       <div className="w-full pb-32">
         {/* 上半部 */}
@@ -97,7 +97,7 @@ function ProjectInfo() {
           <div className=" lg:w-7/12 lg:px-4">
             <img
               className="aspect-video w-full min-w-2xl"
-              src={project.projectThumbnail}
+              src={project?.projectThumbnail}
               alt="Project Thumbnail"
             />
           </div>
@@ -110,27 +110,27 @@ function ProjectInfo() {
                 <span className="text-gray-500">提案人 </span>
                 <a
                   className="text-zec-green font-bold"
-                  href={`/users/${project.member.memberId}`}
+                  href={`/users/${project?.member?.memberId}`}
                 >
-                  {project.member.username}
+                  {project?.member?.username}
                 </a>
               </div>
               {/* 專案名稱 */}
               <h1 className="my-4 text-lg font-bold leading-relaxed tracking-wide">
-                {project.projectName}
+                {project?.projectName}
               </h1>
-              <p>點擊次數: {project.clicked}</p>
+              <p>點擊次數: {project?.clicked}</p>
             </div>
 
             {/* 進度條 */}
             <Progress
-              goal={project.projectGoal}
-              value={project.projectTotal}
-              sponsorCount={project.sponsorCount}
+              goal={project?.projectGoal}
+              value={project?.projectTotal}
+              sponsorCount={project?.sponsorCount}
             ></Progress>
 
             <p className="my-4 text-sm leading-relaxed tracking-wider text-gray-500">
-              {project.projectDescription}
+              {project?.projectDescription}
             </p>
 
             {/* 分隔線以下(募資期間...) */}
@@ -139,7 +139,10 @@ function ProjectInfo() {
                 募資期間
               </h2>
               <h3 className="inline-block text-xs text-gray-500">
-                {`${project.startDate} ~ ${project.endDate}`.replace(/-/g, "/")}
+                {`${project?.startDate} ~ ${project?.endDate}`.replace(
+                  /-/g,
+                  "/"
+                )}
               </h3>
             </div>
 

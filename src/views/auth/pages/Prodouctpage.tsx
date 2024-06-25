@@ -1,7 +1,7 @@
 // import './App.css';
 import "@/css/productcard.css";
 // import PropTypes from 'prop-types';
-import { useState, useEffect, MouseEvent} from "react";
+import { useState, useEffect, MouseEvent } from "react";
 // import { getProject } from './api/Project.js';
 import { getProjectfromProductId } from "@/services/projects.service";
 import { addToCart } from "@/services/Cart.service";
@@ -95,26 +95,23 @@ function ProductsComponent({
       ...prevCounts,
       [productId]: updatedCount,
     }));
-     
   };
 
   const ClickaddToCart = async (e: MouseEvent, productId: number) => {
-    console.log(productCounts[productId]);
+    // console.log(productCounts[productId]);
     //e.stopPropagation 阻止事件向上傳播到外部 click 事件上
     e.stopPropagation();
-    
+
     await addToCart(
       productId,
       productCounts[productId],
       Number(pid),
       Number(user.id)
-    ); 
+    );
     fetchCartQuantity();
-   await setPopupVisible(true);
+    await setPopupVisible(true);
     //購物車數量顯示
-  
   };
-
 
   const listitem =
     productsData &&
@@ -219,7 +216,6 @@ function ProductsComponent({
                         加入購物車
                       </button>
                     )}
-
                   </div>
                 </div>
               </div>
@@ -235,7 +231,6 @@ function Productpage() {
   const { pid } = useParams();
   const navigate = useNavigate();
   const { user } = useUserContext();
-  
 
   const ClickProductToPaypage = (productId: number) => {
     // 點擊按鈕後導航到其他路由
@@ -260,14 +255,14 @@ function Productpage() {
   }, [isPopupVisible]);
 
   useEffect(() => {
-    if(Number(user.id)!=0)
-    getProjectfromProductId(Number(pid), Number(user.id))
-      .then((data) => {
-        setProjectData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching project data:", error);
-      });
+    if (Number(user.id) != 0)
+      getProjectfromProductId(Number(pid), Number(user.id))
+        .then((data) => {
+          setProjectData(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching project data:", error);
+        });
   }, [user, pid]);
 
   // useEffect(() => {
@@ -284,13 +279,13 @@ function Productpage() {
 
   return (
     <>
-    {isPopupVisible && (
-          <div className="fixed left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
-            <div className="bg-slate-100 p-4 rounded shadow-md w-48 h-30 text-center text-lime-500 font-extrabold text-2xl">        
-                加入購物車成功!
-            </div>
+      {isPopupVisible && (
+        <div className="fixed left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
+          <div className="bg-slate-100 p-4 rounded shadow-md w-48 h-30 text-center text-lime-500 font-extrabold text-2xl">
+            加入購物車成功!
           </div>
-        )}
+        </div>
+      )}
       <Projectcard projectData={projectAndproductsData}></Projectcard>
       {/* 原本是px-4 mb-8有另外的div */}
       <div className="container my-8 px-4 mb-8 ml-60">
@@ -310,11 +305,9 @@ function Productpage() {
             productsData={projectAndproductsData}
             getSelectProductId={ClickProductToPaypage}
             setPopupVisible={setPopupVisible}
-            pid = {pid}
-
+            pid={pid}
           ></ProductsComponent>
         </div>
-    
       </div>
       <Footer />
     </>

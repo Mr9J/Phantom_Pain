@@ -5,24 +5,29 @@ const API_URL =
   "https://language.googleapis.com/v1beta2/documents:analyzeEntitySentiment";
 
 const GoogleAnalize = async (text: string) => {
-  console.log(text);
-
-  const response = await axios.post(`${API_URL}?key=${API_KEY}`, {
+  let validate = true;
+  const res = await axios.post(`${API_URL}?key=${API_KEY}`, {
     document: {
       type: "PLAIN_TEXT",
       content: text,
     },
   });
 
-  response.data.entities.map((data) => {
-    if (data.sentiment.score < 0) {
-      console.log("false");
-      return false;
-    }
+  console.log(res.data.entities);
+  console.log(res.data.entities.length);
 
-    console.log("false");
-    return true;
+  if (res.data.entities.length === 0) {
+    validate = true;
+    return validate;
+  }
+
+  res.data.entities.forEach((entity) => {
+    if (entity.sentiment.score < 0) {
+      validate = false;
+    }
   });
+
+  return validate;
 };
 
 export default GoogleAnalize;

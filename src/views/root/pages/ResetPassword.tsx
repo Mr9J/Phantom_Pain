@@ -59,7 +59,17 @@ const ResetPassword = () => {
             歡迎回到 Mumu
           </h2>
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
-            Empower your dreams, build our future
+            Empower your dreams,{" "}
+            <span
+              onClick={() => {
+                form.reset({
+                  password: "Msit158Team4!",
+                  confirmPassword: "Msit158Team4!",
+                });
+              }}
+            >
+              build our future
+            </span>
           </p>
           <form
             onSubmit={form.handleSubmit(handleResetPassword)}

@@ -37,7 +37,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import GoogleAnalize from "@/config/GoogleAnalize";
 import GoogleTranslate from "@/config/GoogleTranslate";
-import { set } from "date-fns";
 
 export type PostFormProps = {
   post?: {
@@ -60,10 +59,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [validate, setValidate] = useState(false);
-  const validation = async (text: string) => {
+  const validation = async (text) => {
     const translatedText = await GoogleTranslate(text, "en");
-    const result = await GoogleAnalize(translatedText);
+    const res = await GoogleAnalize(translatedText);
+    return res;
   };
 
   const deletePostHandler = async () => {
@@ -107,7 +106,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
   };
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
@@ -136,17 +134,15 @@ const PostForm = ({ post, action }: PostFormProps) => {
         description: "請稍後... ",
       });
 
-      await validation(values.caption);
+      const res = await validation(values.caption);
 
-      console.log(validate);
-
-      if (!validate) {
+      if (res === false) {
         toast({
           variant: "destructive",
-          title: "發布失敗",
-          description: "內文不符合規定，請檢查內文是否合乎規範",
+          title: "更新警告",
+          description:
+            "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
         });
-        return;
       }
 
       const session = await updatePost({
@@ -154,6 +150,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         userId: user.id,
         id: post.imgUrl,
         postId: post.postId,
+        isAlert: res === true ? "N" : "Y",
       });
 
       if (!session) {
@@ -183,26 +180,26 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
 
     toast({
-      title: "更新中...",
+      title: "發布中...",
       description: "請稍後... ",
     });
 
-    await validation(values.caption);
-    console.log(validate);
+    const res = await validation(values.caption);
 
-    if (!validate) {
+    if (res === false) {
       toast({
         variant: "destructive",
-        title: "發布失敗",
-        description: "內文不符合規定，請檢查內文是否合乎規範",
+        title: "發布警告",
+        description:
+          "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
       });
-      return;
     }
 
     const newPost = await createPost({
       ...values,
       userId: user.id,
       id: Date.now().toString() + user.id,
+      isAlert: res === true ? "N" : "Y",
     });
 
     if (!newPost) {
@@ -236,6 +233,18 @@ const PostForm = ({ post, action }: PostFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
+        <span
+          onClick={() => {
+            form.reset({
+              caption:
+                "Today, I am honored to present our project at the MSIT158 Final Presentation in the Microsoft C# Engineer Training Program at the Information Technology Training and Information Center. Our project is a crowdfunding platform. As a platform dedicated to promoting interdisciplinary collaboration and innovation, it not only provides crowdfunding functions, but also encourages creators, experts, and investors from different fields to collaborate and promote the development of cross-border innovative projects.",
+              location: "資展國際-原資策會教研所",
+              tags: "資策會, 資展國際, MSIT158",
+            });
+          }}
+        >
+          Demo
+        </span>
         <FormField
           control={form.control}
           name="caption"

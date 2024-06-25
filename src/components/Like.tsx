@@ -3,44 +3,55 @@ import { useCallback, useEffect, useState } from "react";
 import type { Like } from "@/types/index";
 import { Link } from "react-router-dom";
 import HobbyList from "./HobbyList";
+import axios from "axios";
 
 function Like() {
   const { user } = useUserContext();
   const [data, setData] = useState<Like[]>([]);
   const URL = import.meta.env.VITE_API_URL;
+  const userid = user.id;
 
-  //呼叫Hobby使用
-  const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
+    //呼叫Hobby使用
+    const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
 
-  const closeHobbyList = () => {
-    setIsHobbyListOpen(false);
-  };
-  //  //到此 下面return還有
+    const closeHobbyList = () => {
+      setIsHobbyListOpen(false);
+    };
+    useEffect(() => {
+      const fetchHobbyStatus = async () => {
+        try {
+          const response = await axios.get(`${URL}/Hobby/${userid}`);
+          setIsHobbyListOpen(response.data === false);
+        } catch (error) {
+          console.error('獲取興趣列表狀態時發生錯誤:', error);
+        }
+      };
+  
+      fetchHobbyStatus();
+    }, [URL, userid]);
+
+
+   //到此 下面return還有
 
   ////簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部 但是其他地方需要使用 同時又有使用useState無法放在最上方 所以需要使用useCallback確保
   // fetchData 函數現在被定義為 useCallback 鉤子，這樣可以保證它的身份在渲染之間是穩定的
   const fetchData = useCallback(async () => {
-    const userid = user.id;
+    
     try {
       const response = await fetch(`${URL}/Like/${userid}`);
       const data = await response.json();
-      console.log(data);
-      console.log(userid);
+      // console.log(data);
+      // console.log(userid);
       setData(data);
     } catch (error) {
       console.log(error);
     }
-  }, [URL, user.id, setData]); // 將 URL, user.id 和 setData 加入依賴數組
+  }, [URL, userid]); // 將 URL, user.id 和 setData 加入依賴數組
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  //可以考慮是否把列表獨立出來
-
-  // if (!data) {
-  //   return <div>目前沒有關注的專案</div>;
-  // }
 
   const deleteItem = async (prjId: number) => {
     try {
@@ -170,7 +181,7 @@ function Like() {
       </body>
 
       {/* 呼叫HobbyList Component*/}
-      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />}
+      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />} 
     </>
   );
 }
