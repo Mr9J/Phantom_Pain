@@ -13,9 +13,6 @@ const GoogleAnalize = async (text: string) => {
     },
   });
 
-  console.log(res.data.entities);
-  console.log(res.data.entities.length);
-
   if (res.data.entities.length === 0) {
     validate = true;
     return validate;

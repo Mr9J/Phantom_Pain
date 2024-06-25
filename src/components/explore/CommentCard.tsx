@@ -30,14 +30,14 @@ function CommentCard({ c, projectId }: { c: typeComment; projectId: number }) {
           <p className="font-bold">{c.sender.username}</p>
           <div className="flex">
             <p className="text-xs">{DateTimeToString(c.date)}</p>
-            <Button
+            {/* <Button
               variant="ghost"
               className="p-2 h-4 text-xs cursor-pointer ml-1"
               onClick={() => alert("hi")}
             >
               <ThumbsUp width={10} className="mr-1" />
               {c.liked}
-            </Button>
+            </Button> */}
             <Button
               variant="ghost"
               className="p-2 h-4 text-xs text-gray-400 ml-1"

@@ -130,7 +130,7 @@ function TabComments({ pid }: { pid: number }) {
           <SelectContent>
             <SelectItem value="nto">由新到舊</SelectItem>
             <SelectItem value="otn">由舊到新</SelectItem>
-            <SelectItem value="hot">熱門留言</SelectItem>
+            {/* <SelectItem value="hot">熱門留言</SelectItem> */}
           </SelectContent>
         </Select>
       </div>
@@ -196,14 +196,14 @@ function TabComments({ pid }: { pid: number }) {
                               <p className="text-xs">
                                 {DateTimeToString(sc.date)}
                               </p>
-                              <Button
+                              {/* <Button
                                 variant="ghost"
                                 className="p-2 h-4 text-xs cursor-pointer ml-1"
                                 onClick={() => alert("hi")}
                               >
                                 <ThumbsUp width={10} className="mr-1" />
                                 {sc.liked}
-                              </Button>
+                              </Button> */}
                               {/* <Button
                                 variant="ghost"
                                 className="p-2 h-4 text-xs text-gray-400 ml-1"
