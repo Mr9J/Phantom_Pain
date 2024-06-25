@@ -24,7 +24,7 @@ const WhatNewSection = () => {
             title="| Whats new?"
             textStyles="font-normal text-[14px] text-secondary-white"
           />
-          <TitleText title={<>What's new about Mumu?</>} textStyles="" />
+          <TitleText title={<>Mumu的特色?</>} textStyles="" />
           <div className="mt-[48px] flex flex-wrap justify-between gap-[24px]">
             {newFeatures.map((feature) => (
               <NewFeatures key={feature.title} {...feature} />

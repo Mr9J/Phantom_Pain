@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/motion";
 import styles from "@/styles";
 import { PlayIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type ExploreCardProps = {
   id: string;
@@ -39,11 +40,13 @@ const ExploreCard = ({
         </h3>
       ) : (
         <div className="absolute bottom-0 p-8 flex justify-start w-full flex-col bg-[rgba(0,0,0,0.5)] rounded-b-[24px]">
-          <div
-            className={`${styles.flexCenter} w-[60px] h-[30px] rounded-[24px] glassmorphism mb-[16px]`}
-          >
-            <PlayIcon className="w-1/2 h-1/2 object-contain" />
-          </div>
+          <Link to="/home">
+            <div
+              className={`${styles.flexCenter} w-[60px] h-[30px] rounded-[24px] glassmorphism mb-[16px]`}
+            >
+              <PlayIcon className="w-1/2 h-1/2 object-contain" />
+            </div>
+          </Link>
           <p className="font-normal text-[16px] leading-[20.16px] text-white uppercase">
             Empower your dreams
           </p>

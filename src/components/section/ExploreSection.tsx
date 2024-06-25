@@ -25,8 +25,7 @@ const ExploreSection = () => {
         <TitleText
           title={
             <>
-              Choose the projects you like <br className="md:block hidden" /> to
-              explore
+              選擇您感興趣的類別 <br className="md:block hidden" /> 開始探索
             </>
           }
           textStyles="text-center"

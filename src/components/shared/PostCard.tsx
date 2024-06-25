@@ -46,7 +46,13 @@ const PostCard = ({ post }: PostCardProps) => {
   if (!post.userId) return null;
 
   return (
-    <div className=" bg-slate-50 dark:bg-dark-2 rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm">
+    <div
+      className={`${
+        post?.isAnonymous === "Y"
+          ? "bg-red-600 text-white"
+          : "bg-slate-50 dark:bg-dark-2"
+      }  rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm`}
+    >
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Link to={`/profile/${post.userId}`}>
