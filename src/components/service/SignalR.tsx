@@ -2,7 +2,7 @@
 import * as signalR from "@microsoft/signalr";
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7150/ChatHub")
+    .withUrl("https://mumumsit158.azurewebsites.net/ChatHub")
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
