@@ -105,11 +105,11 @@ const CouponModal = ({ setVisibleCouponModal, handleFormSubmit }) => {
                   type="button"
                   className="bg-gray-100 text-gray-900 text-base p-1 border border-gray-400"
                   onClick={() => {
-                    setCouponDemo([1, "mygo", 9527, 20, "2024-07-30"]);
+                    setCouponDemo([1, "mygo", 9000, 20, "2024-07-30"]);
                     setCode("mygo");
                   }}
                 >
-                  でも
+                  Demo
                 </button>
               </div>
               <div className="mb-3 flex items-center">
