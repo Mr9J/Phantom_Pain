@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 創建一個 axios 實例，預設基礎 URL 和頭部
 const api = axios.create({
-  baseURL: 'https://localhost:7150/api',
+  baseURL: 'https://mumumsit158.azurewebsites.net/api',
   headers: {
     'Content-Type': 'application/json'
   }
