@@ -39,11 +39,11 @@ const Create: React.FC = () => {
 
   const getProjectInfo = async () => {
     try {
-      // const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
-      const res = await axios.get(
-        `https://localhost:7150/api/Home/GetEditProject/${pid}`
-      );
-      console.log(res.data);
+      const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
+      // const res = await axios.get(
+      //   `https://localhost:7150/api/Home/GetEditProject/${pid}`
+      // );
+      // console.log(res.data);
 
       setStartDate(res.data[0]["startDate"]);
       setEndDate(res.data[0]["endDate"]);
@@ -113,15 +113,7 @@ const Create: React.FC = () => {
     }
   };
 
-  useEffect(() => {});
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
-    //event.preventDefault(); // 阻止表單默認的提交行為
-
-    const formData = new FormData(event.currentTarget); // 收集表單數據
-    formData.append("projectDetail", projectDetail);
-    if (pid) formData.append("projectId", pid);
-
+  useEffect(() => {
     if (selectedImage && selectedImage.file instanceof File) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -131,7 +123,18 @@ const Create: React.FC = () => {
       };
       reader.readAsDataURL(selectedImage.file);
     }
-    console.log(pic);
+  },[selectedImage]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    //event.preventDefault(); // 阻止表單默認的提交行為
+
+    const formData = new FormData(event.currentTarget); // 收集表單數據
+    formData.append("projectDetail", projectDetail);
+    if (pid) formData.append("projectId", pid);
+
+  
+    //console.log(pic);
+    if(pic)
     formData.append("thumbnail", pic as string);
 
     const jsonData: Record<string, string> = {};
@@ -140,14 +143,14 @@ const Create: React.FC = () => {
     });
 
     const jwt = localStorage.getItem("token");
-    // const url = pid
-    //   ? `${baseUrl}/Home/EditProject`
-    //   : `${baseUrl}/Home/CreateProject`;
     const url = pid
-      ? `https://localhost:7150/api/Home/EditProject`
-      : `https://localhost:7150/api/Home/CreateProject`;
+      ? `${baseUrl}/Home/EditProject`
+      : `${baseUrl}/Home/CreateProject`;
+    // const url = pid
+    //   ? `https://localhost:7150/api/Home/EditProject`
+    //   : `https://localhost:7150/api/Home/CreateProject`;
     const method = pid ? "PUT" : "POST";
-    console.log(JSON.stringify(jsonData));
+    // console.log(JSON.stringify(jsonData));
     fetch(url, {
       method: method,
       body: JSON.stringify(jsonData),
