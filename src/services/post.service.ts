@@ -286,8 +286,6 @@ export async function commentPost(comment: ICommentPost) {
 }
 
 export async function getCommentsPost(postId: string) {
-  console.log("getCommentsPost is called");
-
   try {
     const jwt = localStorage.getItem("token");
 
@@ -322,6 +320,8 @@ export async function getSavedPosts(page: number) {
 
 export async function getPostImg(imgUrl: string) {
   try {
+    if (imgUrl === "") return null;
+
     const imgArr = await S3.send(
       new ListObjectsV2Command({
         Bucket: "mumu",
