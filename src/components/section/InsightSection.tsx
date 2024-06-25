@@ -19,7 +19,7 @@ const InsightSection = () => {
           title="| Insight"
           textStyles="text-center font-normal text-[14px] text-secondary-white"
         />
-        <TitleText title={<>Insight about mumu</>} textStyles="text-center" />
+        <TitleText title={<>關於Mumu</>} textStyles="text-center" />
         <div className="mt-[50px] flex flex-col gap-[30px]">
           {insights.map((item, index) => (
             <InsightCard key={`insight-${index}`} {...item} index={index + 1} />

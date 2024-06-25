@@ -21,7 +21,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import GoogleTranslate from "@/config/GoogleTranslate";
 import { useEffect, useState } from "react";
-import { set } from "date-fns";
 
 const PostDetails = () => {
   const navigate = useNavigate();

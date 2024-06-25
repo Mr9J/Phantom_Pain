@@ -26,6 +26,7 @@ export async function createPost(post: PostDTO) {
       tags: post.tags,
       file: post.userId + "/" + post.id,
       userId: post.userId,
+      isAlert: post.isAlert,
     };
 
     const jwt = localStorage.getItem("token");
@@ -204,6 +205,7 @@ export async function updatePost(post: UpdatePostDTO) {
       file: post.id,
       userId: post.userId,
       postId: parseInt(post.postId),
+      isAlert: post.isAlert,
     };
 
     if (isNewImg) {

@@ -73,7 +73,7 @@ const FileUploader = ({
           <p className="text-[14px] font-normal leading-[140%] mb-6">
             SVG, PNG, JPG
           </p>
-          <Button className="shad-button_dark_4">選擇圖片</Button>
+          <p className="p-4 bg-black text-white rounded-lg">選擇圖片</p>
         </div>
       )}
     </div>

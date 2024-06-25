@@ -4,7 +4,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { useUserContext } from "@/context/AuthContext";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
+// import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
 import axios from "axios";
 
 const Create: React.FC = () => {
@@ -19,10 +19,17 @@ const Create: React.FC = () => {
   const [projectPreDetail, setProjectPreDetail] = useState<string>();
   const [projectDetail, setProjectDetail] = useState("");
   const [statusID, setStatusID] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(
+    null
+  );
   const { user, checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
+  const [pic, setPic] = useState<string | null>(null);
   const navigate = useNavigate();
+  interface SelectedImage {
+    file: File;
+    preview: string | ArrayBuffer | null | undefined;
+  }
   useEffect(() => {
     if (pid) getProjectInfo();
     checkAuthUser().then((res) => {
@@ -33,7 +40,10 @@ const Create: React.FC = () => {
   const getProjectInfo = async () => {
     try {
       const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
-      console.log(res.data);
+      // const res = await axios.get(
+      //   `https://localhost:7150/api/Home/GetEditProject/${pid}`
+      // );
+      // console.log(res.data);
 
       setStartDate(res.data[0]["startDate"]);
       setEndDate(res.data[0]["endDate"]);
@@ -48,7 +58,6 @@ const Create: React.FC = () => {
       console.error(error);
     }
   };
-  
 
   const handleStartDateChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -104,23 +113,50 @@ const Create: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (selectedImage && selectedImage.file instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = (reader.result as string).split(",")[1]; // 獲取 Base64 編碼的圖片數據
+        setPic(base64Image);
+        // 將 Base64 圖片數據添加到 formData 中
+      };
+      reader.readAsDataURL(selectedImage.file);
+    }
+  },[selectedImage]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     //event.preventDefault(); // 阻止表單默認的提交行為
 
     const formData = new FormData(event.currentTarget); // 收集表單數據
     formData.append("projectDetail", projectDetail);
     if (pid) formData.append("projectId", pid);
+
+  
+    //console.log(pic);
+    if(pic)
+    formData.append("thumbnail", pic as string);
+
+    const jsonData: Record<string, string> = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value as string;
+    });
+
     const jwt = localStorage.getItem("token");
     const url = pid
       ? `${baseUrl}/Home/EditProject`
       : `${baseUrl}/Home/CreateProject`;
+    // const url = pid
+    //   ? `https://localhost:7150/api/Home/EditProject`
+    //   : `https://localhost:7150/api/Home/CreateProject`;
     const method = pid ? "PUT" : "POST";
-
+    // console.log(JSON.stringify(jsonData));
     fetch(url, {
       method: method,
-      body: formData,
+      body: JSON.stringify(jsonData),
       headers: {
         Authorization: jwt as string,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {
@@ -143,8 +179,8 @@ const Create: React.FC = () => {
   };
   const TINYAPIKEY = import.meta.env.VITE_TINY_MCE_KEY as string;
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
-  const log = (e: EventHandler<unknown>) => {
-    setProjectPreDetail(e.target.value);
+  const log = () => {
+    //setProjectPreDetail(e.target.value);
     if (editorRef.current) {
       setProjectDetail(editorRef.current.getContent());
       //console.log(editorRef.current.getContent());
@@ -424,13 +460,16 @@ const Create: React.FC = () => {
                   placeholder=""
                   accept=".jpeg,.jpg,.png"
                   onChange={handleFileChange}
-                  name="thumbnail"
+                  name=""
                   required={!pid}
                   // disabled
                 />
                 {selectedImage ? (
                   <img
-                    src={selectedImage.preview || selectedImage}
+                    src={
+                      (selectedImage.preview as string) ||
+                      (selectedImage as unknown as string)
+                    }
                     alt="Selected"
                     className="aspect-video"
                   />
@@ -462,7 +501,10 @@ const Create: React.FC = () => {
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                   }}
-                  onChange={log}
+                  onChange={(e) => {
+                    setProjectPreDetail(e.target.value);
+                    log();
+                  }}
                 />
 
                 <p>
