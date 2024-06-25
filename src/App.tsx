@@ -160,7 +160,7 @@ const App = () => {
                 path="/manu/order/:projectId"
                 element={<OrderList projectId={0} />}
               />
-              <Route path="/manu" element={<Dashboard />} />
+              <Route path="/manu" element={<Navigate to="/manu/dashboard" />} />
             </Route>
             <Route element={<AdminLayout />}>
               <Route path="/admin/service" element={<ServiceRoute />} />
