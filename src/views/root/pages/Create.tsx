@@ -4,7 +4,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import { useUserContext } from "@/context/AuthContext";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
+// import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
 import axios from "axios";
 
 const Create: React.FC = () => {
@@ -19,10 +19,14 @@ const Create: React.FC = () => {
   const [projectPreDetail, setProjectPreDetail] = useState<string>();
   const [projectDetail, setProjectDetail] = useState("");
   const [statusID, setStatusID] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<SelectedImage|null>(null);
   const { user, checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
   const navigate = useNavigate();
+  interface SelectedImage {
+    file: File;
+    preview: string | ArrayBuffer | null |undefined;
+  }
   useEffect(() => {
     if (pid) getProjectInfo();
     checkAuthUser().then((res) => {
@@ -33,6 +37,7 @@ const Create: React.FC = () => {
   const getProjectInfo = async () => {
     try {
       const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
+      //const res = await axios.get(`https://localhost:7150/api/Home/GetEditProject/${pid}`);
       console.log(res.data);
 
       setStartDate(res.data[0]["startDate"]);
@@ -114,8 +119,11 @@ const Create: React.FC = () => {
     const url = pid
       ? `${baseUrl}/Home/EditProject`
       : `${baseUrl}/Home/CreateProject`;
+    // const url = pid
+    //   ? `https://localhost:7150/api/Home/EditProject`
+    //   : `https://localhost:7150/api/Home/CreateProject`;
     const method = pid ? "PUT" : "POST";
-
+    console.log(formData);
     fetch(url, {
       method: method,
       body: formData,
@@ -143,8 +151,8 @@ const Create: React.FC = () => {
   };
   const TINYAPIKEY = import.meta.env.VITE_TINY_MCE_KEY as string;
   const editorRef = useRef<TinyMCEEditor | null>(null); // 註記 editorRef 的型別為 Editor | null
-  const log = (e: EventHandler<unknown>) => {
-    setProjectPreDetail(e.target.value);
+  const log = () => {
+    //setProjectPreDetail(e.target.value);
     if (editorRef.current) {
       setProjectDetail(editorRef.current.getContent());
       //console.log(editorRef.current.getContent());
@@ -430,7 +438,7 @@ const Create: React.FC = () => {
                 />
                 {selectedImage ? (
                   <img
-                    src={selectedImage.preview || selectedImage}
+                    src={selectedImage.preview as string || selectedImage as unknown as string}
                     alt="Selected"
                     className="aspect-video"
                   />
@@ -462,7 +470,7 @@ const Create: React.FC = () => {
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                   }}
-                  onChange={log}
+                  onChange={(e)=>{setProjectPreDetail(e.target.value);log();}}
                 />
 
                 <p>
