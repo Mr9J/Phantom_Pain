@@ -83,7 +83,8 @@ function ProjectInfo() {
   };
 
   // 請先登入
-  const GotoLogIn = () => alert("阿你要按讚要先登入阿");
+  const GotoLogIn = () =>
+    toast({ variant: "destructive", description: "請先登入" });
 
   return (
     <>

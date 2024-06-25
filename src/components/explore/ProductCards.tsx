@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { typeProductCards, typeProduct } from "./types";
+import { toast } from "../ui/use-toast";
 // 輸入商品陣列
 
 function ProductCards({
@@ -29,7 +30,12 @@ function ProductCards({
               }
               onClick={
                 item.currentStock === 0
-                  ? () => alert("商品已售完，請選擇其他商品")
+                  ? // ? () => alert("商品已售完，請選擇其他商品")
+                    () =>
+                      toast({
+                        variant: "destructive",
+                        description: "商品已售完，請選擇其他商品",
+                      })
                   : () =>
                       navigate(
                         `/payPage?project=${projectId}&product=${item.productId}`
