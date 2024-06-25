@@ -120,7 +120,7 @@ const SignUpForm = () => {
         form.reset();
         toast({
           title: "註冊成功",
-          description: "歡迎加入Mumu，已自動登入，您將被導向首頁",
+          description: "歡迎加入Mumu，驗證信已送出，您將被導向首頁",
         });
         navigate("/");
       } else {
@@ -154,10 +154,12 @@ const SignUpForm = () => {
             Empower your dreams,{" "}
             <span
               onClick={() => {
-                form.setValue({
+                form.reset({
                   nickname: "Msit158Team4",
                   username: "Msit158Team4",
-                  email: "",
+                  email: "msit158mumuguest@gmail.com",
+                  password: "Msit158Team4!",
+                  confirmPassword: "Msit158Team4!",
                 });
               }}
             >

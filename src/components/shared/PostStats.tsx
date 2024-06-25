@@ -85,6 +85,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
   const handleChange = (value: string) => {
     setComment(value);
+    return;
 
     if (value.includes("@")) {
       const parts = value.split("@");
