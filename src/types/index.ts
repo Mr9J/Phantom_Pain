@@ -59,7 +59,7 @@ export type Order = {
   orderDetails: {
     orderDetailId: number;
     orderId: number;
-    thumbnail: string; 
+    thumbnail: string;
     projectId: number;
     projectName: string;
     productName: string;
@@ -69,7 +69,7 @@ export type Order = {
   coupon: {
     discount: number;
   };
-  totalAmount:number;
+  totalAmount: number;
 };
 export type OrderProject = {
   orderId: number;
@@ -140,6 +140,7 @@ export type PostDTO = {
   tags: string;
   userId: string;
   id: string;
+  isAlert: string;
 };
 
 export type UpdatePostDTO = {
@@ -150,6 +151,7 @@ export type UpdatePostDTO = {
   tags: string;
   userId: string;
   id: string;
+  isAlert: string;
 };
 
 export type NewUpdatePostDTO = {
@@ -159,6 +161,7 @@ export type NewUpdatePostDTO = {
   tags: string;
   userId: string;
   postId: number;
+  isAlert: string;
 };
 
 export type NewPostDTO = {
@@ -167,6 +170,7 @@ export type NewPostDTO = {
   location: string;
   tags: string;
   userId: string;
+  isAlert: string;
 };
 
 export type GetPostDTO = {
