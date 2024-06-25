@@ -23,7 +23,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { ToastAction } from "../ui/toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +35,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import GoogleAnalize from "@/config/GoogleAnalize";
+import GoogleTranslate from "@/config/GoogleTranslate";
 
 export type PostFormProps = {
   post?: {
@@ -57,6 +59,12 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [alert, setAlert] = useState("N");
+  const validation = async (text) => {
+    const translatedText = await GoogleTranslate(text, "en");
+    const res = await GoogleAnalize(translatedText);
+    return res;
+  };
 
   const deletePostHandler = async () => {
     if (post && action === "update") {
@@ -99,7 +107,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
   };
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
@@ -121,19 +128,33 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
   }, [post]);
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof PostValidation>) {
+  const onSubmit = async (values: z.infer<typeof PostValidation>) => {
     if (post && action === "update") {
+      toast({
+        title: "更新中...",
+        description: "請稍後... ",
+      });
+
+      const res = await validation(values.caption);
+
+      if (res === false) {
+        toast({
+          variant: "destructive",
+          title: "更新警告",
+          description:
+            "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
+        });
+        setAlert("Y");
+      }
+
+      if (res === true) setAlert("N");
+
       const session = await updatePost({
         ...values,
         userId: user.id,
         id: post.imgUrl,
         postId: post.postId,
-      });
-
-      toast({
-        title: "更新中...",
-        description: "請稍後... ",
+        isAlert: alert,
       });
 
       if (!session) {
@@ -141,6 +162,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
           variant: "destructive",
           title: "更新失敗, 請再試一次",
         });
+        return;
       }
 
       toast({
@@ -163,12 +185,29 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
     toast({
       title: "發布中...",
+      description: "請稍後... ",
     });
+
+    const res = await validation(values.caption);
+
+    if (res === false) {
+      toast({
+        variant: "destructive",
+        title: "發布警告",
+        description:
+          "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
+      });
+
+      setAlert("Y");
+    }
+
+    if (res === true) setAlert("N");
 
     const newPost = await createPost({
       ...values,
       userId: user.id,
       id: Date.now().toString() + user.id,
+      isAlert: alert,
     });
 
     if (!newPost) {
@@ -194,7 +233,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         </ToastAction>
       ),
     });
-  }
+  };
 
   return (
     <Form {...form}>

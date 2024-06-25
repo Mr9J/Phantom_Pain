@@ -20,7 +20,7 @@ const NewFeatures = ({ imgSource, title, subtitle }: NewFeaturesProps) => {
         <p className="text-white">{imgSource}</p>
       </div>
       <h1 className="mt-[26px] font-bold text-[24px] leading-[30.24px] text-black dark:text-white">
-        Title {title}
+        {title}
       </h1>
       <p className="flex-1 mt-[16px] font-normal text-[18px] text-black dark:text-[#B0B0B0] leading-[32.4px]">
         {subtitle}

@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import { Hobby } from "@/types";
 import { useUserContext } from "@/context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function HobbyList({ onClose }) {
   const URL = import.meta.env.VITE_API_URL;
   const [data, setData] = useState<Hobby[]>([]);
   const [selectedHobbies, setSelectedHobbies] = useState<number[]>([]);
   const { user } = useUserContext();
+  const navigate = useNavigate();
 
- 
-//簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部
+  //簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部
   useEffect(() => {
     const fetchData = async () => {
       try {
