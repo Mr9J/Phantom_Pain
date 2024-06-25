@@ -46,7 +46,7 @@ function PurchasHistory() {
             if(response.ok){
                 const result =  response.json();
                 setPurchasHistoryData(await result);
-                console.log(result);
+                // console.log(result);
             }
         })
         .catch(error => {

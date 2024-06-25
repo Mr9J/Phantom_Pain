@@ -9,7 +9,7 @@ import taiwan_districts from "@/constants/taiwan_districts.json";
 import { getProjectfromProductId } from "@/services/projects.service";
 import { createOrder, checkProductInventory } from "@/services/orders.service";
 import Projectcard from "@/components/ProjectCard/projectcard.jsx";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PaymentForm from "@/components/service/ECPay";
 import { useUserContext } from "@/context/AuthContext";
 import { getCoupons } from "@/services/coupons.service";
@@ -55,7 +55,7 @@ interface ProductCardDTO {
 function Paypage() {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const { user } = useUserContext();
- const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
   const location = useLocation();
@@ -65,11 +65,8 @@ function Paypage() {
   const fromCartPage = searchParams.get("fromCartPage") === "true";
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
- 
-
 
   const testmemberId = 6;
-
 
   const [selectedCity, setSelectedCity] = useState<string>(""); // 存城市名稱
   const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 存區域名稱
@@ -104,25 +101,25 @@ function Paypage() {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   //Demo
   const navigate = useNavigate();
-  const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => { 
+  const handleConfirm = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     e.preventDefault();
     const button = submitButtonRef.current;
     button && button.click(); //模擬表單提交資料驗證
-    const form = document.querySelector('form');
-    if (selectedCity === '' || selectedCity === '-選擇-') {
-      alert('請選擇縣市');
+    const form = document.querySelector("form");
+    if (selectedCity === "" || selectedCity === "-選擇-") {
+      alert("請選擇縣市");
       return;
     }
     if (parseFloat(inputDonateValue) < 0) {
-      alert('加碼贊助金額有誤');
+      alert("加碼贊助金額有誤");
       return;
     }
     if (form && !form.reportValidity()) {
       // 如果表單無效直接返回
       return;
     }
-    console.log(orderData.productdata);
+    // console.log(orderData.productdata);
     const response = await checkProductInventory(orderData.productdata); //檢查商品庫存
     if (response === "ok") {
       setIsConfirming(true);
@@ -133,25 +130,24 @@ function Paypage() {
     }
   };
 
-  const handleSubmit = (e) =>{
+  const handleSubmit = (e) => {
     e.stopPropagation();
     e.preventDefault();
-  }
+  };
 
   const handleCancel = () => {
     setIsConfirming(false);
   };
 
   const handleConfirmButtonClick = async () => {
-    if(totalAmount==0||totalAmount>300000)
-      {
-        createOrder(orderData);
-        setTimeout(() => {
-          navigate(`/ReturnURL`);
-        }, 3000);
+    if (totalAmount == 0 || totalAmount > 300000) {
+      createOrder(orderData);
+      setTimeout(() => {
+        navigate(`/ReturnURL`);
+      }, 3000);
       return;
-      }
-    console.log("確認");
+    }
+    // console.log("確認");
     setShowPaymentForm(true);
     setIsConfirming(false);
     await createOrder(orderData);
@@ -181,10 +177,10 @@ function Paypage() {
   };
 
   //觀察orderData變化用
-  useEffect(() => {
-    console.log(orderData);
-    console.log(buttonDisabled);
-  }, [orderData, buttonDisabled]);
+  // useEffect(() => {
+  //   console.log(orderData);
+  //   console.log(buttonDisabled);
+  // }, [orderData, buttonDisabled]);
 
   // 加購商品，加入集合及左方金額顯示變化
   const AddToPurchase = async (
@@ -238,7 +234,7 @@ function Paypage() {
   //測試購物車傳入頁面先行載入資訊，fromCartPage判斷是從哪個頁面進入
   useLayoutEffect(() => {
     if (!fromCartPage) return;
-    console.log("執行幾次");
+    // console.log("執行幾次");
     if (
       JSON.stringify(projectAndproductsData) !==
       JSON.stringify(previousProjectAndproductsData.current)
@@ -253,7 +249,7 @@ function Paypage() {
             );
           }
         });
-      console.log(buttonRefs.current);
+      // console.log(buttonRefs.current);
     }
   }, [fromCartPage, projectAndproductsData]);
 
@@ -313,10 +309,9 @@ function Paypage() {
         value == "" ? "0" : value,
         Number(projectId)
       );
-      console.log("Input value:", value);
+      // console.log("Input value:", value);
       if (discount == "0") {
         await setDiscount(Number(discount));
-
 
         await setshowNotFoundCoupons(true);
         await setshowCoupons(false);
@@ -464,7 +459,6 @@ function Paypage() {
     discount,
   ]);
 
-
   const poductlist =
     projectAndproductsData &&
     projectAndproductsData.map((item) => (
@@ -490,12 +484,10 @@ function Paypage() {
                     className="mr-4"
                     type="checkbox"
                     value={pjitem.productId}
-
                     disabled={
                       productCounts[pjitem.productId] == undefined ||
                       productCounts[pjitem.productId] == 0
                     }
-
                     onChange={(e) => AddToPurchase(e, pjitem.productPrice)}
                   />
                   選擇
@@ -616,11 +608,11 @@ function Paypage() {
         {item.products &&
           item.products.map((pjitem) => {
             const totalAmount =
-                    pjitem.productPrice * selectedProductCount +
-                    addToPurchase +
-                    donationInfo.donationAmount -
-                    discount; 
-                   
+              pjitem.productPrice * selectedProductCount +
+              addToPurchase +
+              donationInfo.donationAmount -
+              discount;
+
             if (pjitem.productId.toString() == selectedproductId)
               return (
                 <div key={pjitem.productId}>
@@ -823,12 +815,8 @@ function Paypage() {
                         總價
                       </div>
                       <div className="whitespace-nowrap text-right font-extrabold text-2xl">
-                        {/* 金額正規化顯示.toLocaleString() */} 
-                        NT${" "}
-                        {
-                          totalAmount 
-                        <0?0:
-                        totalAmount .toLocaleString()}
+                        {/* 金額正規化顯示.toLocaleString() */}
+                        NT$ {totalAmount < 0 ? 0 : totalAmount.toLocaleString()}
                         {/* 條件渲染 PaymentForm */}
                         {showPaymentForm && (
                           <PaymentForm
@@ -851,7 +839,6 @@ function Paypage() {
     ));
 
   const payment = (
-    
     <div
       className={`px-4 lg:w-2/3 overflow-x-auto ${
         isHidden ? "inline-block" : "hidden"
@@ -910,133 +897,140 @@ function Paypage() {
               您了解您的贊助是支持創意專案的一種方式，也了解創意實踐過程中充滿變數，專案不一定能確保回饋。
             </li>
           </ul>
-        </div> 
+        </div>
         <form onSubmit={handleSubmit}>
-        <div className="mb-2 mt-4 dark:text-slate-300">
-          <label className="font-bold text-sm text-black mb-4 dark:text-slate-300 ">
-            加碼贊助
+          <div className="mb-2 mt-4 dark:text-slate-300">
+            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300 ">
+              加碼贊助
+            </label>
+            （選擇）
+          </div>
+
+          <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
+            <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap ">
+              NT $
+            </div>
+            <input
+              className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent dark:bg-slate-800"
+              type="number"
+              name="price"
+              value={inputDonateValue}
+              onChange={DonateChange}
+              onKeyDown={EnterToDonate}
+              min={0}
+            />
+          </div>
+
+          <div className="flex">
+            <div className="mt-4 flex-auto">
+              <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">
+                縣市
+              </label>
+              <select
+                className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"
+                onChange={CityChange}
+                value={selectedCity}
+                required={true}
+              >
+                <option>-選擇-</option>
+                {taiwan_districts.map((item) => (
+                  <option key={item.name} value={item.name}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mt-4 flex-auto pl-4">
+              <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">
+                鄉鎮市區
+              </label>
+              <select
+                className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"
+                required={true}
+              >
+                <option>-選擇-</option>
+                {districtsName}
+              </select>
+            </div>
+          </div>
+          <div className="flex mt-4">
+            <div className="flex-auto">
+              <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
+                地址
+              </label>
+              <input
+                required={true}
+                autoComplete="street-address"
+                className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800"
+                type="text"
+                name="order[address]"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </div>
+            <div className="flex-auto pl-10">
+              <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
+                郵遞區號
+              </label>
+              <input
+                required={true}
+                autoComplete="postal-code"
+                className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800"
+                type="text"
+                name="order[postcode]"
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+              />
+            </div>
+          </div>
+          <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
+            收件人
           </label>
-          （選擇）
-        </div>
-       
-        <div className="flex rounded border border-neutral-200 focus-within:ring-1 mb-3">
-          <div className="inline-flex items-center text-lg text-gray-500 rounded-l p-3 whitespace-nowrap ">
-            NT $
-          </div>
           <input
-            className="w-full flex-1 text-lg pr-2 mb-0 rounded border-transparent dark:bg-slate-800"
-            type="number"
-            name="price"
-            value={inputDonateValue}
-            onChange={DonateChange}
-            onKeyDown={EnterToDonate}
-            min={0}
+            required={true}
+            placeholder="請輸入真實姓名，以利出貨作業進行"
+            className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800"
+            type="text"
+            name="order[recipient]"
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
           />
-        </div>
-        
-        <div className="flex">
-          <div className="mt-4 flex-auto">
-            <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">
-              縣市
-            </label>
-            <select
-              className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"
-              onChange={CityChange}
-              value={selectedCity}
-              required={true}
-            >
-              <option>-選擇-</option>
-              {taiwan_districts.map((item) => (
-                <option key={item.name} value={item.name}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mt-4 flex-auto pl-4">
-            <label className="font-bold text-sm text-black mb-6 dark:text-slate-300">
-              鄉鎮市區
-            </label>
-            <select className="h-12 px-2 mb-0 w-full rounded border-gray-300 bg-zinc-100 dark:bg-slate-300 dark:text-slate-950"  required={true}>
-              <option>-選擇-</option>
-              {districtsName}
-            </select>
-          </div>
-        </div>
-        <div className="flex mt-4">
-          <div className="flex-auto">
-            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
-              地址
-            </label>
-            <input
-              required={true}
-              autoComplete="street-address"
-              className="my-2 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800"
-              type="text"
-              name="order[address]"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </div>
-          <div className="flex-auto pl-10">
-            <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
-              郵遞區號
-            </label>
-            <input
-              required={true}
-              autoComplete="postal-code"
-              className="my-3 h-9 text-base mb-4 w-full rounded border border-gray-300 focus:outline-none focus:ring-1 dark:bg-slate-800"
-              type="text"
-              name="order[postcode]"
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-            />
-          </div>
-        </div>
-        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
-          收件人
-        </label>
-        <input
-          required={true}
-          placeholder="請輸入真實姓名，以利出貨作業進行"
-          className="my-3 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800"
-          type="text"
-          name="order[recipient]"
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-        />
-        <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
-          連絡電話
-        </label>
-        <input
-          required={true}
-          placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨"
-          maxLength={20}
-          minLength={8}
-          pattern="[+]{0,1}[0-9]+"
-          autoComplete="tel-national"
-          className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800"
-          size={20}
-          type="text"
-          name="order[phone]"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <button
-          className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500"
-          onClick={(e) => handleConfirm(e)}
-        >
-          立即預購
-        </button>
-        <button
-          className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500 ml-20"
-          onClick={(e) => handleDemo(e)}
-        >
-          Demo
-        </button>  
-        <button ref={submitButtonRef} type="submit" style={{ display: "none" }}/>
+          <label className="font-bold text-sm text-black mb-4 dark:text-slate-300">
+            連絡電話
+          </label>
+          <input
+            required={true}
+            placeholder="請填寫真實手機號碼，以利取貨或聯繫收貨"
+            maxLength={20}
+            minLength={8}
+            pattern="[+]{0,1}[0-9]+"
+            autoComplete="tel-national"
+            className="my-2 h-9 text-base w-full rounded border border-gray-300 focus:outline-none focus:ring-1 placeholder-gray-500 dark:bg-slate-800"
+            size={20}
+            type="text"
+            name="order[phone]"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <button
+            className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500"
+            onClick={(e) => handleConfirm(e)}
+          >
+            立即預購
+          </button>
+          <button
+            className="block lg:inline-block font-bold border-2 mt-4 rounded px-16 py-2  hover:text-white hover:bg-sky-500 ml-20"
+            onClick={(e) => handleDemo(e)}
+          >
+            Demo
+          </button>
+          <button
+            ref={submitButtonRef}
+            type="submit"
+            style={{ display: "none" }}
+          />
         </form>
-      
+
         {/* 隱藏的submit */}
         {/* 確認對話框 */}
         {isConfirming && (
@@ -1063,9 +1057,7 @@ function Paypage() {
           </div>
         )}
       </div>
-
     </div>
-    
   );
 
   return (
