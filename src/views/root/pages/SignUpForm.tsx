@@ -120,7 +120,7 @@ const SignUpForm = () => {
         form.reset();
         toast({
           title: "註冊成功",
-          description: "歡迎加入Mumu，已自動登入，您將被導向首頁",
+          description: "歡迎加入Mumu，驗證信已送出，您將被導向首頁",
         });
         navigate("/");
       } else {
@@ -151,7 +151,20 @@ const SignUpForm = () => {
             註冊一個新帳號
           </h2>
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
-            Empower your dreams, build our future
+            Empower your dreams,{" "}
+            <span
+              onClick={() => {
+                form.reset({
+                  nickname: "Msit158Team4",
+                  username: "Msit158Team4",
+                  email: "msit158mumuguest@gmail.com",
+                  password: "Msit158Team4!",
+                  confirmPassword: "Msit158Team4!",
+                });
+              }}
+            >
+              build our future
+            </span>
           </p>
           <form
             onSubmit={form.handleSubmit(handleSignUp)}
@@ -231,7 +244,12 @@ const SignUpForm = () => {
               )}
             />
             {/* 正式版 */}
-            {/* <Turnstile siteKey="0x4AAAAAAAc5s8I5PK0pJEjH" /> */}
+            {/* <Turnstile
+              siteKey="0x4AAAAAAAc5s8I5PK0pJEjH"
+              onSuccess={(e) => {
+                if (e) setIsVerify(true);
+              }}
+            /> */}
             {/* 測試版 */}
             <Turnstile
               siteKey="3x00000000000000000000FF"

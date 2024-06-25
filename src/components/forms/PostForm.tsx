@@ -59,7 +59,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [alert, setAlert] = useState("N");
   const validation = async (text) => {
     const translatedText = await GoogleTranslate(text, "en");
     const res = await GoogleAnalize(translatedText);
@@ -144,17 +143,14 @@ const PostForm = ({ post, action }: PostFormProps) => {
           description:
             "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
         });
-        setAlert("Y");
       }
-
-      if (res === true) setAlert("N");
 
       const session = await updatePost({
         ...values,
         userId: user.id,
         id: post.imgUrl,
         postId: post.postId,
-        isAlert: alert,
+        isAlert: res === true ? "N" : "Y",
       });
 
       if (!session) {
@@ -197,17 +193,13 @@ const PostForm = ({ post, action }: PostFormProps) => {
         description:
           "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
       });
-
-      setAlert("Y");
     }
-
-    if (res === true) setAlert("N");
 
     const newPost = await createPost({
       ...values,
       userId: user.id,
       id: Date.now().toString() + user.id,
-      isAlert: alert,
+      isAlert: res === true ? "N" : "Y",
     });
 
     if (!newPost) {
@@ -241,6 +233,18 @@ const PostForm = ({ post, action }: PostFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
+        <span
+          onClick={() => {
+            form.reset({
+              caption:
+                "Today, I am honored to present our project at the MSIT158 Final Presentation in the Microsoft C# Engineer Training Program at the Information Technology Training and Information Center. Our project is a crowdfunding platform. As a platform dedicated to promoting interdisciplinary collaboration and innovation, it not only provides crowdfunding functions, but also encourages creators, experts, and investors from different fields to collaborate and promote the development of cross-border innovative projects.",
+              location: "資展國際-原資策會教研所",
+              tags: "資策會, 資展國際, MSIT158",
+            });
+          }}
+        >
+          Demo
+        </span>
         <FormField
           control={form.control}
           name="caption"
