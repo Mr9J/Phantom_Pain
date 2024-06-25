@@ -117,7 +117,7 @@ const Create: React.FC = () => {
     if (selectedImage && selectedImage.file instanceof File) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result.split(",")[1]; // 獲取 Base64 編碼的圖片數據
+        const base64Image = (reader.result as string).split(",")[1]; // 獲取 Base64 編碼的圖片數據
         setPic(base64Image);
         // 將 Base64 圖片數據添加到 formData 中
       };
