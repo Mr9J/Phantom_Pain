@@ -54,7 +54,7 @@ function ProjectInfo() {
     if (project) setIsLiked(project.isLiked);
   }, [project]);
 
-  if (!project) return <NotFound></NotFound>;
+  // if (!project) return <NotFound></NotFound>;
   const handleLikeClick = async () => {
     if (!isAuthenticated) return GotoLogIn();
 
@@ -124,11 +124,16 @@ function ProjectInfo() {
             </div>
 
             {/* 進度條 */}
-            <Progress
-              goal={project?.projectGoal}
-              value={project?.projectTotal}
-              sponsorCount={project?.sponsorCount}
-            ></Progress>
+
+            {project ? (
+              <Progress
+                goal={project?.projectGoal}
+                value={project?.projectTotal}
+                sponsorCount={project?.sponsorCount}
+              ></Progress>
+            ) : (
+              <Progress goal={0} value={0} sponsorCount={0}></Progress>
+            )}
 
             <p className="my-4 text-sm leading-relaxed tracking-wider text-gray-500">
               {project?.projectDescription}
@@ -292,7 +297,9 @@ function ProjectInfo() {
               <TabsContent value="details">
                 <div className="p-4">
                   <h2 className="text-xl font-bold mb-2">專案內容</h2>
-                  <TabDetail detailContents={project.projectDetail}></TabDetail>
+                  <TabDetail
+                    detailContents={project?.projectDetail}
+                  ></TabDetail>
                 </div>
               </TabsContent>
               <TabsContent value="qa">
@@ -309,8 +316,8 @@ function ProjectInfo() {
           {/* 下右半 */}
           <div className="lg:w-3/12 lg:px-4">
             <ProductCards
-              productsData={project.products}
-              projectId={project.projectId}
+              productsData={project?.products}
+              projectId={project?.projectId}
             />
           </div>
         </div>
