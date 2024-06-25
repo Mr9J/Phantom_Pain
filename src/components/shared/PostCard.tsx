@@ -17,8 +17,7 @@ import {
   useGetPostImg,
 } from "@/lib/react-query/queriesAndMutation";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { addHours, getHours } from "date-fns";
+import { Fragment, useEffect, useState } from "react";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -26,11 +25,15 @@ type PostCardProps = {
 
 const PostCard = ({ post }: PostCardProps) => {
   const { user } = useUserContext();
+  const [ensure, setEnsure] = useState(false);
   const { data: postImg } = useGetPostImg(post.imgUrl);
   const { mutateAsync: followUser, isPending: isFollowLoading } =
     useFollowUser();
   const { mutateAsync: followUserCheck } = useFollowCheck();
   const [isFollowed, setIsFollowed] = useState(false);
+  const handleEnsure = () => {
+    setEnsure(!ensure);
+  };
   const checkStatus = async () => {
     const res = await followUserCheck({
       followerId: user?.id || "",
@@ -48,11 +51,12 @@ const PostCard = ({ post }: PostCardProps) => {
 
   return (
     <div
-      className={`${
-        post?.isAnonymous === "Y"
-          ? "bg-red-600 text-white"
-          : "bg-slate-50 dark:bg-dark-2"
-      }  rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm`}
+      className={`
+        ${
+          post?.isAnonymous === "Y"
+            ? "bg-red-600 text-white"
+            : "bg-slate-50 dark:bg-dark-2"
+        }  rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm`}
     >
       <div className={`flex justify-between items-center`}>
         <div className="flex items-center gap-3">
@@ -112,41 +116,48 @@ const PostCard = ({ post }: PostCardProps) => {
         </Link>
       </div>
 
-      <Link to={`/posts/${post.postId}`}>
-        <div className="text-[14px] font-medium leading-[140%] lg:text-[16px] py-5">
-          <p className="whitespace-pre-wrap">{post.caption}</p>
-          <ul className="flex gap-1 mt-2">
-            {post.tags &&
-              post.tags.split(",").map((tag: string, index) => (
-                <li key={index} className="text-light-3">
-                  #{tag}
-                </li>
-              ))}
-          </ul>
-        </div>
-      </Link>
-
-      <Carousel className="max-w-screen-sm md:w-full w-[350px]">
-        <CarouselContent>
-          {postImg?.map((img, index) => {
-            return (
-              <CarouselItem key={index}>
-                <div className="p-1">
-                  <Card>
-                    <CardContent className="flex aspect-square items-center justify-center">
-                      <img
-                        src={`https://cdn.mumumsit158.com/${img.Key}`}
-                        alt="post"
-                        className="object-contain select-none w-full h-full"
-                      />
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            );
-          })}
-        </CarouselContent>
-      </Carousel>
+      {post?.isAnonymous === "Y" && !ensure ? (
+        <Button className="text-white w-full my-6" onClick={handleEnsure}>
+          該則貼文被列為警告，請點及確認是否查看
+        </Button>
+      ) : (
+        <Fragment>
+          <Link to={`/posts/${post.postId}`}>
+            <div className="text-[14px] font-medium leading-[140%] lg:text-[16px] py-5 relative">
+              <p className="whitespace-pre-wrap">{post.caption}</p>
+              <ul className="flex gap-1 mt-2">
+                {post.tags &&
+                  post.tags.split(",").map((tag: string, index) => (
+                    <li key={index} className="text-light-3">
+                      #{tag}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </Link>
+          <Carousel className="max-w-screen-sm md:w-full w-[350px]">
+            <CarouselContent>
+              {postImg?.map((img, index) => {
+                return (
+                  <CarouselItem key={index}>
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center">
+                          <img
+                            src={`https://cdn.mumumsit158.com/${img.Key}`}
+                            alt="post"
+                            className="object-contain select-none w-full h-full"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+          </Carousel>
+        </Fragment>
+      )}
 
       <PostStats post={post} userId={user.id} commentDisplay={true} />
     </div>

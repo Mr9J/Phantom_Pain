@@ -211,20 +211,22 @@ const PostForm = ({ post, action }: PostFormProps) => {
       return;
     }
 
-    toast({
-      title: "發布成功",
-      description: "您的貼文已經成功發布！",
-      action: (
-        <ToastAction
-          altText="success"
-          onClick={() => {
-            navigate("/social");
-          }}
-        >
-          查看
-        </ToastAction>
-      ),
-    });
+    if (res === true) {
+      toast({
+        title: "發布成功",
+        description: "您的貼文已經成功發布！",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
+      });
+    }
   };
 
   return (
