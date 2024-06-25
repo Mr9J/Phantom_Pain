@@ -417,7 +417,12 @@ const SignInForm = () => {
               )}
             />
             {/* 正式版 */}
-            {/* <Turnstile siteKey="0x4AAAAAAAc5s8I5PK0pJEjH" /> */}
+            {/* <Turnstile
+              siteKey="0x4AAAAAAAc5s8I5PK0pJEjH"
+              onSuccess={(e) => {
+                if (e) setIsVerify(true);
+              }}
+            /> */}
             {/* 測試版 */}
             <Turnstile
               siteKey="3x00000000000000000000FF"
