@@ -62,7 +62,6 @@ import Create from "./views/root/pages/Create";
 import { CartProvider } from "./context/CartContext";
 import EditProject from "./views/root/pages/EditProject";
 
-
 const App = () => {
   const [input, setInput] = useState("");
   const { toast } = useToast();
@@ -86,94 +85,97 @@ const App = () => {
 
   return (
     <>
-    <CartProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Routes>
-          {/* public routes */}
-          <Route element={<RootLayout input={input} setInput={setInput} />}>
-            <Route index element={<Homepage />} />
-            <Route path="/home" element={<SubHome />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/explore" element={<Explore />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/users/:id/*" element={<Users />} />
-            <Route path="/project/:pid" element={<ProjectInfo />} />
+      <CartProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <Routes>
+            {/* public routes */}
+            <Route element={<RootLayout input={input} setInput={setInput} />}>
+              <Route index element={<Homepage />} />
+              <Route path="/home" element={<SubHome />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/explore" element={<Explore />} />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/users/:id/*" element={<Users />} />
+              <Route path="/project/:pid" element={<ProjectInfo />} />
+              <Route
+                path="/SearchProject"
+                element={<SearchProject input={input} setInput={setInput} />}
+              />
+              <Route path="/playground" element={<Playground />} />
+
+              {/* <Route path="/StartProject" element={<StartProject />} /> */}
+              <Route path="/CreateProject" element={<Create />} />
+              <Route path="/EditProject/:pid" element={<EditProject />} />
+
+              {/* <Route path="/Like" element={<Like/>}/> */}
+            </Route>
+            <Route path="/playground" element={<Playground />}></Route>
+
+            {/* 修改的部分 */}
+            <Route element={<FormsLayout />}>
+              <Route path="/resend-email" element={<ReSendEmail />} />
+              <Route path="/sign-in" element={<SignInForm />} />
+              <Route path="/sign-up" element={<SignUpForm />} />
+              <Route path="/reset-password/:jwt" element={<ResetPassword />} />
+              <Route path="/send-reset-email" element={<SendResetEmail />} />
+            </Route>
+            {/* public routes */}
+            {/* private routes */}
+            <Route element={<LoggedInLayout />}>
+              <Route
+                path="/email-verify/:username/:Eid/*"
+                element={<EmailVerify />}
+              />
+            </Route>
+            <Route element={<AuthLayout />}>
+              <Route path="/social" element={<Social />} />
+              <Route path="/browser" element={<Browser />} />
+              <Route path="/all-users" element={<AllUsers />} />
+              <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/update-post/:id" element={<EditPost />} />
+              <Route path="/posts/:id" element={<PostDetails />} />
+              <Route path="/profile/:id/*" element={<Profile />} />
+            </Route>
+
             <Route
-              path="/SearchProject"
-              element={<SearchProject input={input} setInput={setInput} />}
-            />
-            <Route path="/playground" element={<Playground />} />
+              element={<AuthDefaultLayout input={input} setInput={setInput} />}
+            >
+              <Route path="/Like" element={<Like />} />
+              <Route path="/Productpage/:pid" element={<Productpage />} />
+              <Route path="/Paypage" element={<Paypage />} />
+              <Route path="/CartPage" element={<CartPage />} />
+              <Route path="/PurchasHistory" element={<PurchasHistory />} />
+            </Route>
 
-            {/* <Route path="/StartProject" element={<StartProject />} /> */}
-            <Route path="/CreateProject" element={<Create />} />
-            <Route path="/EditProject/:pid" element={<EditProject />} />
+            <Route element={<ManuLayout />}>
+              <Route path="/manu/coupons" element={<Coupons />} />
+              <Route path="/manu/test" element={<Test />} />
+              <Route path="/manu/dashboard" element={<Dashboard />} />
+              <Route path="/manu/projects" element={<Projects />} />
+              <Route path="/manu/staffs" element={<Staffs />} />
+              <Route path="/manu/orders" element={<Orders />} />
+              <Route path="/manu/service" element={<ServiceRoute />} />
+              <Route
+                path="/manu/order/:projectId"
+                element={<OrderList projectId={0} />}
+              />
+              <Route path="/manu" element={<Dashboard />} />
+            </Route>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/service" element={<ServiceRoute />} />
+              <Route path="/admin/projects" element={<AdminProjects />} />
+              <Route path="/admin/staffs" element={<AdminStaffs />} />
+              <Route
+                path="/admin"
+                element={<Navigate to="/admin/projects" />}
+              />
+            </Route>
+            <Route path="/ReturnURL" element={<ReturnURL />} />
+          </Routes>
 
-            {/* <Route path="/Like" element={<Like/>}/> */}
-          </Route>
-          <Route path="/playground" element={<Playground />}></Route>
-
-          {/* 修改的部分 */}
-          <Route element={<FormsLayout />}>
-            <Route path="/resend-email" element={<ReSendEmail />} />
-            <Route path="/sign-in" element={<SignInForm />} />
-            <Route path="/sign-up" element={<SignUpForm />} />
-            <Route path="/reset-password/:jwt" element={<ResetPassword />} />
-            <Route path="/send-reset-email" element={<SendResetEmail />} />
-          </Route>
-          {/* public routes */}
-          {/* private routes */}
-          <Route element={<LoggedInLayout />}>
-            <Route
-              path="/email-verify/:username/:Eid/*"
-              element={<EmailVerify />}
-            />
-          </Route>
-          <Route element={<AuthLayout />}>
-            <Route path="/social" element={<Social />} />
-            <Route path="/browser" element={<Browser />} />
-            <Route path="/all-users" element={<AllUsers />} />
-            <Route path="/bookmarks" element={<Bookmarks />} />
-            <Route path="/create-post" element={<CreatePost />} />
-            <Route path="/update-post/:id" element={<EditPost />} />
-            <Route path="/posts/:id" element={<PostDetails />} />
-            <Route path="/profile/:id/*" element={<Profile />} />
-          </Route>
-
-          <Route
-            element={<AuthDefaultLayout input={input} setInput={setInput} />}
-          >
-            <Route path="/Like" element={<Like />} />
-            <Route path="/Productpage/:pid" element={<Productpage />} />
-            <Route path="/Paypage" element={<Paypage />} />
-            <Route path="/CartPage" element={<CartPage />} />
-            <Route path="/PurchasHistory" element={<PurchasHistory />} />
-          </Route>
-
-          <Route element={<ManuLayout />}>
-            <Route path="/manu/coupons" element={<Coupons />} />
-            <Route path="/manu/test" element={<Test />} />
-            <Route path="/manu/dashboard" element={<Dashboard />} />
-            <Route path="/manu/projects" element={<Projects />} />
-            <Route path="/manu/staffs" element={<Staffs />} />
-            <Route path="/manu/orders" element={<Orders />} />
-            <Route path="/manu/service" element={<ServiceRoute />} />
-            <Route
-              path="/manu/order/:projectId"
-              element={<OrderList projectId={0} />}
-            />
-            <Route path="/manu" element={<Remind />} />
-          </Route>
-          <Route element={<AdminLayout />}>
-            <Route path="/admin/service" element={<ServiceRoute />} />
-            <Route path="/admin/projects" element={<AdminProjects />} />
-            <Route path="/admin/staffs" element={<AdminStaffs />} />
-            <Route path="/admin" element={<Navigate to="/admin/projects" />} />
-          </Route>
-          <Route path="/ReturnURL" element={<ReturnURL />} />
-        </Routes>
-
-        <Toaster />
-      </ThemeProvider>
+          <Toaster />
+        </ThemeProvider>
       </CartProvider>
     </>
   );
