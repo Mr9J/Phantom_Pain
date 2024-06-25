@@ -7,6 +7,7 @@ import {
 } from "@/services/Cart.service";
 import { useUserContext } from "@/context/AuthContext";
 import { useCartContext } from "@/context/CartContext";
+import Footer from "@/components/section/Footer";
 
 interface CartDetailDTO {
   projectId: number;
@@ -31,13 +32,13 @@ function CartPage() {
   const navigate = useNavigate();
   const { fetchCartQuantity } = useCartContext();
 
-  // useEffect(()=>{
-  //     fetchShoppingCart();
-  // },[user])
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     fetchShoppingCart();
   }, []);
+
+  //   useLayoutEffect(() => {
+  //     fetchShoppingCart();
+  //   }, []);
 
   const goToPayPage = (
     projectId: number,
@@ -275,6 +276,7 @@ function CartPage() {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </>
   );
 }
