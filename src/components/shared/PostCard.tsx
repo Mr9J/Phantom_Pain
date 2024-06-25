@@ -18,6 +18,7 @@ import {
 } from "@/lib/react-query/queriesAndMutation";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
+import { addHours, getHours } from "date-fns";
 
 type PostCardProps = {
   post: GetPostDTO;
@@ -53,7 +54,7 @@ const PostCard = ({ post }: PostCardProps) => {
           : "bg-slate-50 dark:bg-dark-2"
       }  rounded-3xl border dark:border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm`}
     >
-      <div className="flex justify-between items-center">
+      <div className={`flex justify-between items-center`}>
         <div className="flex items-center gap-3">
           <Link to={`/profile/${post.userId}`}>
             <img
@@ -70,7 +71,7 @@ const PostCard = ({ post }: PostCardProps) => {
               <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
                 {moment.utc(post.postTime, "YYYY-MM-DD HH:mm:ss").fromNow()}
               </p>
-              -
+              {/* moment(post.postTime).add(8, "hours").fromNow() */}-
               <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
                 {post.location}
               </p>
