@@ -59,7 +59,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [alert, setAlert] = useState("N");
   const validation = async (text) => {
     const translatedText = await GoogleTranslate(text, "en");
     const res = await GoogleAnalize(translatedText);
@@ -144,17 +143,14 @@ const PostForm = ({ post, action }: PostFormProps) => {
           description:
             "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
         });
-        setAlert("Y");
       }
-
-      if (res === true) setAlert("N");
 
       const session = await updatePost({
         ...values,
         userId: user.id,
         id: post.imgUrl,
         postId: post.postId,
-        isAlert: alert,
+        isAlert: res === true ? "N" : "Y",
       });
 
       if (!session) {
@@ -197,17 +193,13 @@ const PostForm = ({ post, action }: PostFormProps) => {
         description:
           "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
       });
-
-      setAlert("Y");
     }
-
-    if (res === true) setAlert("N");
 
     const newPost = await createPost({
       ...values,
       userId: user.id,
       id: Date.now().toString() + user.id,
-      isAlert: alert,
+      isAlert: res === true ? "N" : "Y",
     });
 
     if (!newPost) {

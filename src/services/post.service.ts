@@ -20,6 +20,7 @@ const URL = import.meta.env.VITE_API_URL;
 
 export async function createPost(post: PostDTO) {
   try {
+    console.log(post);
     const newPost: NewPostDTO = {
       caption: post.caption,
       location: post.location,
