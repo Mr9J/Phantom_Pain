@@ -36,6 +36,22 @@ const GroupForm = ({
   const { mutateAsync: updateGroup } = useUpdateGroup();
   const { toast } = useToast();
   const [deleteUser, setDeleteUser] = useState<string>("F");
+  const [showSmartOptions, setShowSmartOptions] = useState(false);
+  const [keyword, setKeyword] = useState("");
+
+  const handleChange = (value: string) => {
+    if (value.includes("@")) {
+      const parts = value.split("@");
+      const lastPart = parts?.[parts.length - 1] ?? "";
+
+      if (lastPart.length >= 2) {
+        setKeyword(lastPart);
+        setShowSmartOptions(true);
+      }
+    } else {
+      setShowSmartOptions(false);
+    }
+  };
 
   const form = useForm<z.infer<typeof GroupFormValidation>>({
     resolver: zodResolver(GroupFormValidation),

@@ -85,6 +85,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
 
   const handleChange = (value: string) => {
     setComment(value);
+    return;
 
     if (value.includes("@")) {
       const parts = value.split("@");
@@ -277,6 +278,7 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
               variant="link"
               onClick={commentHandler}
               disabled={isCommentLoading}
+              className={`${post?.isAnonymous === "Y" ? "text-white" : ""}`}
             >
               查看留言... ({Array.isArray(commentData) ? commentData.length : 0}
               )
@@ -319,6 +321,9 @@ const PostStats = ({ post, userId, commentDisplay }: PostStatsProps) => {
                 type="text"
                 placeholder="評論貼文..."
                 onChange={(e) => handleChange(e.target.value)}
+                className={`${
+                  post?.isAnonymous === "Y" ? "dark:text-white text-black" : ""
+                }`}
               />
               {showSmartOptions && (
                 <div className="absolute w-full">
