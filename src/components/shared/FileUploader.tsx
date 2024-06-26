@@ -4,6 +4,8 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import { useToast } from "../ui/use-toast";
 import { useGetPostImg } from "@/lib/react-query/queriesAndMutation";
 import GoogleImgAnalize from "@/config/GoogleImgAnalize";
+import AzureImgAnalyze from "@/config/AzureImgAnalyze";
+import axios from "axios";
 
 type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
@@ -20,17 +22,22 @@ const FileUploader = ({
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState([mediaUrl]);
   const { data: media } = useGetPostImg(mediaUrl || "");
+  // const [base64Images, setBase64Images] = useState(null);
 
-  const getBase64 = async (imgUrl) => {
-    const response = await fetch(imgUrl);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
+  // const getImage = async (imageUrls) => {
+  //   const promises = imageUrls.map(async (url) => {
+  //     const response = await axios.get(url, { responseType: "blob" });
+  //     return new Promise((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => resolve(reader.result.split(",")[1]);
+  //       reader.onerror = reject;
+  //       reader.readAsDataURL(response.data);
+  //     });
+  //   });
+
+  //   const images = await Promise.all(promises);
+  //   setBase64Images(images);
+  // };
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -76,13 +83,17 @@ const FileUploader = ({
     }
   }, [media]);
 
-  useEffect(() => {
-    if (fileUrl) {
-      const res = getBase64(fileUrl[0]).then((res) => {
-        console.log(res);
-      });
-    }
-  }, [fileUrl]);
+  // useEffect(() => {
+  //   if (fileUrl[0] !== "") {
+  //     getImage(fileUrl);
+  //   }
+  // }, [fileUrl]);
+
+  // useEffect(() => {
+  //   if (base64Images !== null) {
+  //     AzureImgAnalyze(base64Images);
+  //   }
+  // }, [base64Images]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
