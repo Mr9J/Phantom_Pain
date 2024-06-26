@@ -6,7 +6,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 // import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
 import axios from "axios";
-
+import { Helmet } from "react-helmet-async";
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
   const { pid } = useParams();
@@ -43,8 +43,8 @@ const Create: React.FC = () => {
       // const res = await axios.get(
       //   `https://localhost:7150/api/Home/GetEditProject/${pid}`
       // );
-      // console.log(res.data);
-
+      //console.log(res.data);
+      if (!res.data[0]) navigate("/notfound");
       setStartDate(res.data[0]["startDate"]);
       setEndDate(res.data[0]["endDate"]);
       setProjectGoal(res.data[0]["projectGoal"]);
@@ -123,7 +123,7 @@ const Create: React.FC = () => {
       };
       reader.readAsDataURL(selectedImage.file);
     }
-  },[selectedImage]);
+  }, [selectedImage]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     //event.preventDefault(); // 阻止表單默認的提交行為
@@ -132,10 +132,8 @@ const Create: React.FC = () => {
     formData.append("projectDetail", projectDetail);
     if (pid) formData.append("projectId", pid);
 
-  
     //console.log(pic);
-    if(pic)
-    formData.append("thumbnail", pic as string);
+    if (pic) formData.append("thumbnail", pic as string);
 
     const jsonData: Record<string, string> = {};
     formData.forEach((value, key) => {
@@ -196,13 +194,16 @@ const Create: React.FC = () => {
       "2024/7/20 13:00入場13:30開始 這是耕心16屆的最後一場表演《致•16歲的青春》，我們將盡所能，以這次的成果發表會為高中社團生涯畫上句號，歡迎大家一起共襄盛舉🎉"
     );
     setProjectPreDetail(
-'<div class="js-expand-project-content maxh7 mb-4 overflow-hidden relative maxh-none-ns mv-child-0 xs:overflow-visible"><table class="w-full" style="table-layout: fixed; border-spacing: 0;"><tbody><tr><td><iframe width="560" height="315" src="https://www.youtube.com/embed/mrulGtvNB9c?si=l8NI4LUUST-AtkTq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><p><u></u>大家好，我們是興大附農耕心吉他社16屆，我們即將在七月中旬舉辦我們的成果發表會。</p><p>這是我們高中社團的最後一個表演，讓這兩年的回憶畫上一個句點。從一開始少少人，到現在8個人，從素不相識變到無話不談，兩年來，一起從零開始學習吉他，爬格子、音階、節奏練習，慢慢地開始些簡單的曲子，再到可以一起合奏、或甚至是一個人帶著一把吉他在台上獨當一面。我們一起辦了大大小小的活動、一起做了許許多多有趣的事、一起參加了多場不同的演出。</p><h4 class="hide-child relative"><a name="h-716d6371" class="-mt-32 absolute"></a>這是倒數100天的時候🌟<br><img alt="" data-src="https://cdn.mumumsit158.com/Projects/project-998/Thumbnail.png" class="lazy entered loaded" data-ll-status="loaded" src="https://cdn.mumumsit158.com/Projects/project-998/Thumbnail.png"></h4><p><br></p><p>從小高一開始、每個禮拜大家一起社練，每一點基本功、技巧的建立，每一場活動、表演經驗的累積，都是為著這一天做的準備。</p><p>最後，我們耕心吉他16屆，即將迎來最後一場演出，希望我們盡所有努力辦好最後一場表演，傳承最珍貴的精神給學弟妹們，給予大家最寶貴的回憶。</p><p>為了完成這個追逐許久的目標，因此，需要大家的幫助，有你們的參與，我們會離這個目標更進一步。</p><p><br></p><p>相關資訊ℹ️</p><p>地點：興大附農 活水堂</p><p>時間：113/7/20 &nbsp; &nbsp;13:00入場13:30開始</p><p>免費入場🌟</p><div class="-mt-32"><div class="pt-32" id="project_risk"></div></div><h3 class="mt-8">風險與挑戰</h3><div class="prose"><p>本團隊將以如期演出、出貨為宗旨，但仍可能因不可抗力因素延期、取消演出或是物流延後、延遲出貨等等，如果您贊助此次計劃，則代表您同意承擔此風險。同時，團隊也會盡力保障各位贊助者們的權益。</p></div><div class="-mt-32"><div class="pt-32" id="project_return"></div></div><h3 class="mt-8">退換貨規則</h3><div class="prose"><p>回饋品項為同學所設計之印刷物品及創意客製小物。由於是演出當天領取，須於領取當下檢查商品是否有瑕疵，一旦離開領取區域，則當作您同意商品沒有問題，恕不接受退換貨。若因故無法到場觀看演出，耕心吉他社將於演出完後，與您聯絡寄送回饋商品相關事宜。</p><p>依照《消費者保護法》的規定，您享有商品貨到次日起七天猶豫期（包含例假日）之權益，超過七天後則無法退換貨，請於期限內主動聯絡客服，並提供以下資訊申請退換貨，待確認收到商品後，將由系統人員處理發貨。<br>換貨時請將回饋品保持原始的狀態，並以電子郵件聯絡辦理換貨，若缺少其中一項物品將不受理換貨</p></div><div class="-mt-32"><div class="pt-32" id="project_contact"></div></div><h3 class="mt-8">客服聯絡方式</h3><div class="prose"><p>集資金額將由荊煒洲收取控管<br>聯絡之電子郵件為 <a href="mailto:z0958953723@gmail.com">z0958953723@gmail.com</a><br>歡迎有任何問題嘖嘖站內訊息可以私訊我們哦<br>IG:gengxin_guitar</p><p><a href="https://www.instagram.com/gengxin_guitar?igsh=eDJ5cDFseDN1bzV2">https://www.instagram.com/gengxin_guitar?igsh=eDJ5cDFseDN1bzV2</a></p></div></td></tr></tbody></table></div>'   
-);
+      '<div class="js-expand-project-content maxh7 mb-4 overflow-hidden relative maxh-none-ns mv-child-0 xs:overflow-visible"><table class="w-full" style="table-layout: fixed; border-spacing: 0;"><tbody><tr><td><iframe width="560" height="315" src="https://www.youtube.com/embed/mrulGtvNB9c?si=l8NI4LUUST-AtkTq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><p><u></u>大家好，我們是興大附農耕心吉他社16屆，我們即將在七月中旬舉辦我們的成果發表會。</p><p>這是我們高中社團的最後一個表演，讓這兩年的回憶畫上一個句點。從一開始少少人，到現在8個人，從素不相識變到無話不談，兩年來，一起從零開始學習吉他，爬格子、音階、節奏練習，慢慢地開始些簡單的曲子，再到可以一起合奏、或甚至是一個人帶著一把吉他在台上獨當一面。我們一起辦了大大小小的活動、一起做了許許多多有趣的事、一起參加了多場不同的演出。</p><h4 class="hide-child relative"><a name="h-716d6371" class="-mt-32 absolute"></a>這是倒數100天的時候🌟<br><img alt="" data-src="https://cdn.mumumsit158.com/Projects/project-998/Thumbnail.png" class="lazy entered loaded" data-ll-status="loaded" src="https://cdn.mumumsit158.com/Projects/project-998/Thumbnail.png"></h4><p><br></p><p>從小高一開始、每個禮拜大家一起社練，每一點基本功、技巧的建立，每一場活動、表演經驗的累積，都是為著這一天做的準備。</p><p>最後，我們耕心吉他16屆，即將迎來最後一場演出，希望我們盡所有努力辦好最後一場表演，傳承最珍貴的精神給學弟妹們，給予大家最寶貴的回憶。</p><p>為了完成這個追逐許久的目標，因此，需要大家的幫助，有你們的參與，我們會離這個目標更進一步。</p><p><br></p><p>相關資訊ℹ️</p><p>地點：興大附農 活水堂</p><p>時間：113/7/20 &nbsp; &nbsp;13:00入場13:30開始</p><p>免費入場🌟</p><div class="-mt-32"><div class="pt-32" id="project_risk"></div></div><h3 class="mt-8">風險與挑戰</h3><div class="prose"><p>本團隊將以如期演出、出貨為宗旨，但仍可能因不可抗力因素延期、取消演出或是物流延後、延遲出貨等等，如果您贊助此次計劃，則代表您同意承擔此風險。同時，團隊也會盡力保障各位贊助者們的權益。</p></div><div class="-mt-32"><div class="pt-32" id="project_return"></div></div><h3 class="mt-8">退換貨規則</h3><div class="prose"><p>回饋品項為同學所設計之印刷物品及創意客製小物。由於是演出當天領取，須於領取當下檢查商品是否有瑕疵，一旦離開領取區域，則當作您同意商品沒有問題，恕不接受退換貨。若因故無法到場觀看演出，耕心吉他社將於演出完後，與您聯絡寄送回饋商品相關事宜。</p><p>依照《消費者保護法》的規定，您享有商品貨到次日起七天猶豫期（包含例假日）之權益，超過七天後則無法退換貨，請於期限內主動聯絡客服，並提供以下資訊申請退換貨，待確認收到商品後，將由系統人員處理發貨。<br>換貨時請將回饋品保持原始的狀態，並以電子郵件聯絡辦理換貨，若缺少其中一項物品將不受理換貨</p></div><div class="-mt-32"><div class="pt-32" id="project_contact"></div></div><h3 class="mt-8">客服聯絡方式</h3><div class="prose"><p>集資金額將由荊煒洲收取控管<br>聯絡之電子郵件為 <a href="mailto:z0958953723@gmail.com">z0958953723@gmail.com</a><br>歡迎有任何問題嘖嘖站內訊息可以私訊我們哦<br>IG:gengxin_guitar</p><p><a href="https://www.instagram.com/gengxin_guitar?igsh=eDJ5cDFseDN1bzV2">https://www.instagram.com/gengxin_guitar?igsh=eDJ5cDFseDN1bzV2</a></p></div></td></tr></tbody></table></div>'
+    );
   }
 
   return (
     <>
       {!isAuth && <Navigate to="/sign-in" />}
+      <Helmet>
+        <title>{pid?'Mumu | 編輯計畫':'Mumu | 發起計畫'}</title>
+      </Helmet>
       <div className="container mx-auto px-4 md:px-0">
         <div className="text-center">
           <h2 className="text-2xl font-bold my-16 inline-block after:h-1 after:block after:bg-teal-500 after:rounded after:mt-1">
