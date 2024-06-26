@@ -1,31 +1,30 @@
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useEffect, useState } from "react";
-import { Hobby } from "@/types";
-import { useUserContext } from "@/context/AuthContext";
 import axios from "axios";
+import { useUserContext } from "@/context/AuthContext";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Hobby } from "@/types";
 
 interface HobbyListProps {
   onClose: () => void;
+  fetchProjectCards: () => void;
 }
-function HobbyList({ onClose }:HobbyListProps) {
+
+const HobbyList: React.FC<HobbyListProps> = ({ onClose, fetchProjectCards }) => {
+  const { user } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [data, setData] = useState<Hobby[]>([]);
   const [selectedHobbies, setSelectedHobbies] = useState<number[]>([]);
-  const { user } = useUserContext();
 
-
-  //簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${URL}/Hobby`);
-        const data = await response.json();
-        setData(data);
-        // console.log(data);
+        const response = await axios.get<Hobby[]>(`${URL}/Hobby`);
+        setData(response.data);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching hobbies:", error);
       }
     };
+
     fetchData();
   }, [URL]);
 
@@ -48,10 +47,11 @@ function HobbyList({ onClose }:HobbyListProps) {
       });
 
       if (response.status === 200) {
-        onClose?.();
+        onClose?.(); // 提交成功後關閉興趣選擇界面
+        fetchProjectCards(); // 更新推薦專案數據
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error submitting hobbies:", error);
     }
   };
 
@@ -63,13 +63,13 @@ function HobbyList({ onClose }:HobbyListProps) {
           {data && data.length > 0 ? (
             data.map((item) => (
               <ToggleGroupItem
+                key={item.hobbyId}
                 className={`text-2xl py-2 px-4 rounded-md transition-colors duration-300 bg-transparent border-2 ${
                   selectedHobbies.includes(item.hobbyId)
                     ? "bg-gray-800 text-white border-gray-600"
                     : "border-transparent hover:bg-gray-700 hover:text-white hover:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500"
                 }`}
-                key={item.hobbyId}
-                value={item.hobbyName}
+                value={item.hobbyId.toString()} // 這裡確保 value 是字串型態
                 aria-label={item.hobbyName}
                 onClick={() => handleSelection(item.hobbyId)}
               >
@@ -89,6 +89,6 @@ function HobbyList({ onClose }:HobbyListProps) {
       </div>
     </div>
   );
-}
+};
 
 export default HobbyList;

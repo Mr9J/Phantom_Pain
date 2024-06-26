@@ -16,21 +16,20 @@ import ProjectCardVertical from "./ProjectCardVertical";
 function Like() {
   const { user } = useUserContext();
   const [data, setData] = useState<Like[]>([]);
-  
+  const [isHobbyListOpen, setIsHobbyListOpen] = useState<boolean>(false);
+  const [projectCards, setProjectCards] = useState<ProjectCardDTO[]>([]);
+
   const URL = import.meta.env.VITE_API_URL;
   const userid = user.id;
-
-  //呼叫Hobby使用 預設為false才不會閃
-  const [isHobbyListOpen, setIsHobbyListOpen] = useState(false);
-  const [projectCards, setProjectCards] = useState([]);
 
   const closeHobbyList = () => {
     setIsHobbyListOpen(false);
   };
+
   useEffect(() => {
     const fetchHobbyStatus = async () => {
       try {
-        const response = await axios.get(`${URL}/Hobby/${userid}`);
+        const response = await axios.get<boolean>(`${URL}/Hobby/${userid}`);
         setIsHobbyListOpen(response.data === false);
       } catch (error) {
         console.error("獲取興趣列表狀態時發生錯誤:", error);
@@ -39,6 +38,24 @@ function Like() {
 
     fetchHobbyStatus();
   }, [URL, userid]);
+
+  const fetchProjectCards = useCallback(async () => {
+    try {
+      const response = await axios.get<ProjectCardDTO[]>(`${URL}/Hobby/getMemHobby/${userid}`);
+      const data = response.data;
+      // 隨機排序
+      data.sort(() => Math.random() - 0.5);
+      setProjectCards(data);
+    } catch (error) {
+      console.error("Error fetching project cards:", error);
+    }
+  }, [URL, userid]);
+
+  useEffect(() => {
+    fetchProjectCards();
+  }, [fetchProjectCards]);
+
+  
 
   //到此 下面return還有
 
@@ -74,7 +91,7 @@ function Like() {
       }
     };
     fetchProjectCards();
-  }, [URL, userid]);
+  }, [URL, fetchData, userid]);
 
   const deleteItem = async (prjId: number) => {
     try {
@@ -165,7 +182,7 @@ function Like() {
       </body>
 
       {/* 呼叫HobbyList Component*/}
-      {isHobbyListOpen === true && <HobbyList onClose={closeHobbyList} />}
+      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} fetchProjectCards={fetchProjectCards} />}
 
     </>
   );
