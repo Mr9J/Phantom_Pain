@@ -80,19 +80,34 @@ const FileUploader = ({
       <input {...getInputProps()} className="cursor-pointer" />
       {fileUrl ? (
         <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 py-4">
-            {fileUrl.map((url, index) => (
-              <img
-                key={index}
-                className="object-cover object-center w-full h-40 max-w-full rounded-lg"
-                src={url}
-                alt="gallery-photo"
-              />
-            ))}
-          </div>
-          <p className="text-light-4 text-center text-[14px] font-normal leading-[140%] w-full p-4 border-t border-t-dark-4">
-            拖曳或點擊更換圖片
-          </p>
+          {fileUrl.length === 1 ? (
+            <>
+              <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
+                <img
+                  src={fileUrl[0]}
+                  alt="image"
+                  className="file_uploader-img"
+                />
+              </div>
+              <p className="file_uploader-label">拖曳或點擊更換圖片</p>
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 py-4">
+                {fileUrl.map((url, index) => (
+                  <img
+                    key={index}
+                    className="object-cover object-center w-full h-40 max-w-full rounded-lg"
+                    src={url}
+                    alt="gallery-photo"
+                  />
+                ))}
+              </div>
+              <p className="text-light-4 text-center text-[14px] font-normal leading-[140%] w-full p-4 border-t border-t-dark-4">
+                拖曳或點擊更換圖片
+              </p>
+            </>
+          )}
         </>
       ) : (
         <div className="flex justify-center items-center flex-col p-7 h-80 lg:h-[612px]">
