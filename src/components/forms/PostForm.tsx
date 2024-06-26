@@ -189,10 +189,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
       description: "請稍後... ",
     });
 
-    console.log(values);
-
-    return;
-
     const res = await validation(values.caption);
 
     if (res === false) {
