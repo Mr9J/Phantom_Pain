@@ -78,15 +78,15 @@ const FileUploader = ({
       className="flex justify-center items-center flex-col rounded-xl cursor-pointer bg-gray-100 dark:bg-dark-3 py-4"
     >
       <input {...getInputProps()} className="cursor-pointer" />
-      {fileUrl ? (
+      {fileUrl && fileUrl[0] !== "" ? (
         <>
-          {fileUrl.length === 1 ? (
+          {fileUrl.length === 1 && fileUrl[0] !== "" ? (
             <>
               <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
                 <img
                   src={fileUrl[0]}
                   alt="image"
-                  className="file_uploader-img"
+                  className="file_uploader-img rounded-lg"
                 />
               </div>
               <p className="file_uploader-label">拖曳或點擊更換圖片</p>
