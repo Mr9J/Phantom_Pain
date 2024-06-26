@@ -20,7 +20,7 @@ import PostStats from "@/components/shared/PostStats";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import GoogleTranslate from "@/config/GoogleTranslate";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 const PostDetails = () => {
   const navigate = useNavigate();
@@ -35,6 +35,10 @@ const PostDetails = () => {
   const { user } = useUserContext();
   const [translateCaption, setTranslateCaption] = useState(post?.caption);
   const [isTranslate, setIsTranslate] = useState(false);
+  const [ensure, setEnsure] = useState(false);
+  const handleEnsure = () => {
+    setEnsure(!ensure);
+  };
 
   const handleTranslate = async () => {
     if (translateCaption) {
@@ -89,104 +93,128 @@ const PostDetails = () => {
   }, [post?.caption]);
 
   return (
-    <div className="flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar items-center">
+    <div
+      className={`flex flex-col flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar items-center`}
+    >
       {isPending ? (
         <LoaderSvg />
       ) : (
-        <div className="bg-slate-50 dark:bg-dark-2 w-full max-w-5xl rounded-[30px] flex-col flex xl:flex-row border dark:border-dark-4 border-slate-200 xl:rounded-l-[24px]">
-          <Carousel className="h-80 lg:h-[480px] xl:w-[48%] rounded-t-[30px] xl:rounded-l-[24px] xl:rounded-tr-none flex">
-            <CarouselContent>
-              {isPostImgLoading ? (
-                <LoaderSvg />
-              ) : (
-                postImg?.map((img, index) => {
-                  return (
-                    <CarouselItem key={index}>
-                      <div className="p-1">
-                        <Card>
-                          <CardContent className="flex xl:aspect-square items-center justify-center">
-                            <img
-                              src={`https://cdn.mumumsit158.com/${img.Key}`}
-                              alt="post"
-                              className="object-contain select-none w-full h-full"
-                            />
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  );
-                })
-              )}
-            </CarouselContent>
-          </Carousel>
-          <div className="dark:bg-dark-2 bg-slate-50 flex flex-col gap-5 lg:gap-7 flex-1 items-start p-8 rounded-[30px]">
-            <div className="flex justify-between items-center w-full">
-              <Link
-                to={`/users/${post?.userId}`}
-                className="flex items-center gap-3"
+        <div
+          className={`${
+            post?.isAnonymous === "Y" ? "bg-red-600 text-white" : "bg-slate-50"
+          }  dark:bg-dark-2 w-full max-w-5xl rounded-[30px] flex-col flex xl:flex-row border dark:border-dark-4 border-slate-200 xl:rounded-l-[24px]`}
+        >
+          {post?.isAnonymous === "Y" && !ensure ? (
+            <Button onClick={handleEnsure} className="w-full">
+              該則貼文被列為警告，請點及確認是否查看
+            </Button>
+          ) : (
+            <Fragment>
+              <Carousel className="h-80 lg:h-[480px] xl:w-[48%] rounded-t-[30px] xl:rounded-l-[24px] xl:rounded-tr-none flex">
+                <CarouselContent>
+                  {isPostImgLoading ? (
+                    <LoaderSvg />
+                  ) : (
+                    postImg?.map((img, index) => {
+                      return (
+                        <CarouselItem key={index}>
+                          <div className="p-1">
+                            <Card>
+                              <CardContent className="flex xl:aspect-square items-center justify-center">
+                                <img
+                                  src={`https://cdn.mumumsit158.com/${img.Key}`}
+                                  alt="post"
+                                  className="object-contain select-none w-full h-full"
+                                />
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      );
+                    })
+                  )}
+                </CarouselContent>
+              </Carousel>
+              <div
+                className={`${
+                  post?.isAnonymous === "Y"
+                    ? "bg-red-600"
+                    : "dark:bg-dark-2 bg-slate-50"
+                }  flex flex-col gap-5 lg:gap-7 flex-1 items-start p-8 rounded-[30px]`}
               >
-                <img
-                  src={post?.userImg || userThumbnail}
-                  alt="creator"
-                  className="rounded-full w-8 h-8 lg:w-12 lg:h-12"
-                />
-                <div className="flex flex-col">
-                  <p className="text-[16px] font-medium leading-[140%] lg:text-[18px]">
-                    {post?.username}
-                  </p>
-                  <div className="flex justify-center items-center gap-2 text-light-3">
-                    <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
-                      {moment
-                        .utc(post?.postTime, "YYYY-MM-DD HH:mm:ss")
-                        .fromNow()}
-                    </p>
-                    -
-                    <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
-                      {post?.location}
-                    </p>
+                <div className="flex justify-between items-center w-full">
+                  <Link
+                    to={`/users/${post?.userId}`}
+                    className="flex items-center gap-3"
+                  >
+                    <img
+                      src={post?.userImg || userThumbnail}
+                      alt="creator"
+                      className="rounded-full w-8 h-8 lg:w-12 lg:h-12"
+                    />
+                    <div className="flex flex-col">
+                      <p className="text-[16px] font-medium leading-[140%] lg:text-[18px]">
+                        {post?.username}
+                      </p>
+                      <div className="flex justify-center items-center gap-2 text-light-3">
+                        <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
+                          {moment
+                            .utc(post?.postTime, "YYYY-MM-DD HH:mm:ss")
+                            .fromNow()}
+                        </p>
+                        -
+                        <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
+                          {post?.location}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="flex justify-center items-center">
+                    <Link
+                      to={`/update-post/${post?.postId}`}
+                      className={`${user.id !== post?.userId && "hidden"}`}
+                    >
+                      <FilePenLineIcon width={24} height={24} />
+                    </Link>
+                    <Button
+                      onClick={handleDeletePost}
+                      variant="ghost"
+                      disabled={isDeletingPost}
+                      className={`${
+                        user.id !== post?.userId && "hidden"
+                      } ghost_details-delete_btn`}
+                    >
+                      <TrashIcon stroke="red" width={24} height={24} />
+                    </Button>
                   </div>
                 </div>
-              </Link>
-              <div className="flex justify-center items-center">
-                <Link
-                  to={`/update-post/${post?.postId}`}
-                  className={`${user.id !== post?.userId && "hidden"}`}
-                >
-                  <FilePenLineIcon width={24} height={24} />
-                </Link>
-                <Button
-                  onClick={handleDeletePost}
-                  variant="ghost"
-                  disabled={isDeletingPost}
-                  className={`${
-                    user.id !== post?.userId && "hidden"
-                  } ghost_details-delete_btn`}
-                >
-                  <TrashIcon stroke="red" width={24} height={24} />
-                </Button>
+                <hr className="border w-full dark:border-dark-4/80 border-slate-300/80" />
+                <div className="flex flex-col flex-1 w-full text-[14px] font-medium leading-[140%] lg:text-[16px] whitespace-pre-wrap">
+                  <p>{isTranslate ? translateCaption : post?.caption}</p>
+                  <p
+                    className="text-blue-500 cursor-pointer"
+                    onClick={handleTranslate}
+                  >
+                    翻譯蒟蒻...
+                  </p>
+                  <ul className="flex gap-1 mt-2">
+                    {post?.tags.split(",").map((tag: string, index) => (
+                      <li key={index} className="text-light-3">
+                        #{tag}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="w-full">
+                  <PostStats
+                    post={post}
+                    userId={user.id}
+                    commentDisplay={true}
+                  />
+                </div>
               </div>
-            </div>
-            <hr className="border w-full dark:border-dark-4/80 border-slate-300/80" />
-            <div className="flex flex-col flex-1 w-full text-[14px] font-medium leading-[140%] lg:text-[16px] whitespace-pre-wrap">
-              <p>{isTranslate ? translateCaption : post?.caption}</p>
-              <p
-                className="text-blue-500 cursor-pointer"
-                onClick={handleTranslate}
-              >
-                翻譯蒟蒻...
-              </p>
-              <ul className="flex gap-1 mt-2">
-                {post?.tags.split(",").map((tag: string, index) => (
-                  <li key={index} className="text-light-3">
-                    #{tag}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="w-full">
-              <PostStats post={post} userId={user.id} commentDisplay={true} />
-            </div>
-          </div>
+            </Fragment>
+          )}
         </div>
       )}
     </div>

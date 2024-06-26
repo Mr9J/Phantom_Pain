@@ -91,20 +91,43 @@ const ProductModal = ({
                 <div className="mb-3 flex items-center">
                   <button
                     type="button"
-                    className="bg-gray-100 text-gray-900 text-base p-1 border border-gray-400"
+                    className="bg-gray-100 text-gray-900 text-base p-1 border border-gray-400 pr-2"
                     onClick={() => {
                       setProductDemo([
-                        "Marco的爬蟲課",
-                        "把這邊拍下來",
+                        "就甘心餒",
+                        `如果贊助200元，會獲得：
+❶電子郵件感謝函*1
+❷ 活動演出紀念限定明信片*1
+❸誠摯邀請您前來看表演，一同見證我們的發光時刻🌟`,
                         2,
-                        8000,
+                        200,
                         10,
                         "2024-06-01",
                         "2024-09-30",
                       ]);
                     }}
                   >
-                    由於時間的關係我們這邊使用Demo鍵
+                    Demo1
+                  </button>
+                  <button
+                    type="button"
+                    className="bg-gray-100 text-gray-900 text-base p-1 border border-gray-400"
+                    onClick={() => {
+                      setProductDemo([
+                        "致•最親愛的你",
+                        `如果贊助500元，會獲得：
+❶電子郵件感謝函*1
+❷ 活動演出紀念限定明信片*1
+❸誠摯邀請您前來看表演，一同見證我們的發光時刻🌟`,
+                        2,
+                        500,
+                        20,
+                        "2024-06-01",
+                        "2024-09-30",
+                      ]);
+                    }}
+                  >
+                    Demo2
                   </button>
                 </div>
               )}
@@ -178,19 +201,23 @@ const ProductModal = ({
                   className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              {alterText&& (<div className="mb-3 flex items-center">
-                <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
-                  剩餘量
-                </span>
-                <input
-                  type="number"
-                  min="0"
-                  required
-                  name="currentStock"
-                  defaultValue={alterText ? productContext[8] : productDemo[4]}
-                  className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>)}
+              {alterText && (
+                <div className="mb-3 flex items-center">
+                  <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">
+                    剩餘量
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    required
+                    name="currentStock"
+                    defaultValue={
+                      alterText ? productContext[8] : productDemo[4]
+                    }
+                    className="flex-1 p-1 border border-gray-300 text-black rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              )}
 
               <div className="mb-3 flex items-center">
                 <span className="w-1/4 p-1 pl-3 bg-gray-100 border border-gray-300 rounded-l-md text-gray-900">

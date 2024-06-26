@@ -20,6 +20,7 @@ const URL = import.meta.env.VITE_API_URL;
 
 export async function createPost(post: PostDTO) {
   try {
+    console.log(post);
     const newPost: NewPostDTO = {
       caption: post.caption,
       location: post.location,
@@ -285,8 +286,6 @@ export async function commentPost(comment: ICommentPost) {
 }
 
 export async function getCommentsPost(postId: string) {
-  console.log("getCommentsPost is called");
-
   try {
     const jwt = localStorage.getItem("token");
 
@@ -321,6 +320,8 @@ export async function getSavedPosts(page: number) {
 
 export async function getPostImg(imgUrl: string) {
   try {
+    if (imgUrl === "") return null;
+
     const imgArr = await S3.send(
       new ListObjectsV2Command({
         Bucket: "mumu",

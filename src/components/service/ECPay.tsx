@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 // const frontUrl = import.meta.env.VITE_FRONT_URL;
-const frontUrl = "https://mumumsit158.com";
+const frontUrl = `${location.origin}`;
+// location.host == "localhost:5173"
+//   ? `http://${location.host}`
+//   : `https://${location.host}`;
 const baseUrl = import.meta.env.VITE_API_URL;
 const ngrok =
   "https://7fdc-1-160-7-136.ngrok-free.app/api/Order/ECPayResponseMessage";
@@ -56,19 +59,19 @@ const PaymentForm: React.FC<ECPayComponentProps> = ({
         setChecksum(data.checksum); // 修正為大寫的 Checksum
         setShouldSubmitForm(true); // 設置為應該提交表單
 
-        console.log(tempMerchantTradeNo);
-        console.log(tempMerchantTradeDate);
-        console.log(data);
+        // console.log(tempMerchantTradeNo);
+        // console.log(tempMerchantTradeDate);
+        // console.log(data);
       } catch (error) {
         console.error("Error calculating checksum:", error);
       }
     }
   };
 
-  React.useEffect(() => {
-    console.log(merchantTradeNo);
-    console.log(merchantTradeDate);
-  }, [merchantTradeNo, merchantTradeDate]);
+  // React.useEffect(() => {
+  //   console.log(merchantTradeNo);
+  //   console.log(merchantTradeDate);
+  // }, [merchantTradeNo, merchantTradeDate]);
 
   const generateMerchantTradeNo = () => {
     // 取得目前的日期時間

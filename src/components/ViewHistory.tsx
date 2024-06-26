@@ -103,8 +103,8 @@ function ViewHistory() {
           ))}
         </CarouselContent>
         {/* Carousel的導航按鈕 */}
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="hidden sm:flex"/>
+        <CarouselNext className="hidden sm:flex"/>
       </Carousel>
     </>
   );

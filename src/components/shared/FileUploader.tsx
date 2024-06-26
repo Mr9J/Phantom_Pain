@@ -1,8 +1,8 @@
 import { ImageIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
+import { useGetPostImg } from "@/lib/react-query/queriesAndMutation";
 
 type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
@@ -17,10 +17,25 @@ const FileUploader = ({
 }: FileUploaderProps) => {
   const { toast } = useToast();
   const [file, setFile] = useState<File[]>([]);
-  const [fileUrl, setFileUrl] = useState(mediaUrl);
+  const [fileUrl, setFileUrl] = useState([mediaUrl]);
+  const { data: media } = useGetPostImg(mediaUrl || "");
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
+      let totalSize = 0;
+      acceptedFiles.forEach((file) => {
+        totalSize += file.size; // 計算所有文件的總大小
+      });
+
+      if (totalSize > 100 * 1024 * 1024) {
+        toast({
+          variant: "destructive",
+          title: "錯誤",
+          description: "所有文件的總大小超過100MB",
+        });
+        return;
+      }
+
       if (acceptedFiles.length > 1 && isSingle) {
         toast({
           variant: "destructive",
@@ -30,39 +45,70 @@ const FileUploader = ({
 
         return;
       }
+      console.log(acceptedFiles);
 
+      const urls = acceptedFiles.map((file) => URL.createObjectURL(file));
       setFile(acceptedFiles);
       fieldChange(acceptedFiles);
-      setFileUrl(URL.createObjectURL(acceptedFiles[0]));
+      // setFileUrl(URL.createObjectURL(acceptedFiles[0]));
+      setFileUrl(urls);
     },
     [file]
   );
+
+  useEffect(() => {
+    if (media) {
+      const postUrl = media.map(
+        (url) => "https://cdn.mumumsit158.com/" + url.Key
+      );
+      setFileUrl(postUrl);
+    }
+  }, [media]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       "image/*": [".png", ".jpg", ".jpeg", ".svg"],
     },
+    maxSize: 1024 * 1024 * 100,
   });
 
   return (
     <div
       {...getRootProps()}
-      className="flex justify-center items-center flex-col rounded-xl cursor-pointer bg-gray-100 dark:bg-dark-3"
+      className="flex justify-center items-center flex-col rounded-xl cursor-pointer bg-gray-100 dark:bg-dark-3 py-4"
     >
       <input {...getInputProps()} className="cursor-pointer" />
-      {fileUrl ? (
+      {fileUrl && fileUrl[0] !== "" ? (
         <>
-          <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
-            <img
-              src={fileUrl}
-              alt="image"
-              className="h-80 lg:h-[480px] w-full rounded-[24px] object-cover object-top"
-            />
-          </div>
-          <p className="text-light-4 text-center text-[14px] font-normal leading-[140%] w-full p-4 border-t border-t-dark-4">
-            拖曳或點擊更換圖片
-          </p>
+          {fileUrl.length === 1 && fileUrl[0] !== "" ? (
+            <>
+              <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
+                <img
+                  src={fileUrl[0]}
+                  alt="image"
+                  className="file_uploader-img rounded-lg"
+                />
+              </div>
+              <p className="file_uploader-label">拖曳或點擊更換圖片</p>
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 py-4">
+                {fileUrl.map((url, index) => (
+                  <img
+                    key={index}
+                    className="object-cover object-center w-full h-40 max-w-full rounded-lg"
+                    src={url}
+                    alt="gallery-photo"
+                  />
+                ))}
+              </div>
+              <p className="text-light-4 text-center text-[14px] font-normal leading-[140%] w-full p-4 border-t border-t-dark-4">
+                拖曳或點擊更換圖片
+              </p>
+            </>
+          )}
         </>
       ) : (
         <div className="flex justify-center items-center flex-col p-7 h-80 lg:h-[612px]">

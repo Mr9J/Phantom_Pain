@@ -1,29 +1,30 @@
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useEffect, useState } from "react";
-import { Hobby } from "@/types";
-import { useUserContext } from "@/context/AuthContext";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useUserContext } from "@/context/AuthContext";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Hobby } from "@/types";
 
-function HobbyList({ onClose }) {
+interface HobbyListProps {
+  onClose: () => void;
+  fetchProjectCards: () => void;
+}
+
+function HobbyList({ onClose,fetchProjectCards }:HobbyListProps) {
+  const { user } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [data, setData] = useState<Hobby[]>([]);
   const [selectedHobbies, setSelectedHobbies] = useState<number[]>([]);
-  const { user } = useUserContext();
-  const navigate = useNavigate();
 
-  //簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${URL}/Hobby`);
-        const data = await response.json();
-        setData(data);
-        console.log(data);
+        const response = await axios.get<Hobby[]>(`${URL}/Hobby`);
+        setData(response.data);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching hobbies:", error);
       }
     };
+
     fetchData();
   }, [URL]);
 
@@ -46,42 +47,45 @@ function HobbyList({ onClose }) {
       });
 
       if (response.status === 200) {
-        onClose?.();
+        onClose?.(); // 提交成功後關閉興趣選擇界面
+        fetchProjectCards(); // 更新推薦專案數據
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error submitting hobbies:", error);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="relative bg-white p-6 rounded shadow-lg border-2 border-gray-800 max-w-3xl mx-auto pb-16 text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-        請問您對以下哪些類別有興趣?
-        <ToggleGroup variant="outline" type="multiple">
-          {data && data.length > 0 ? (
-            data.map((item) => (
-              <ToggleGroupItem
-                className="text-2xl"
-                key={item.hobbyId}
-                value={item.hobbyName}
-                aria-label={item.hobbyName}
-                onClick={() => handleSelection(item.hobbyId)}
-              >
-                {item.hobbyName}
-              </ToggleGroupItem>
-            ))
-          ) : (
-            <p>沒有可顯示的愛好。</p>
-          )}
-        </ToggleGroup>
-        <button
-          className="absolute bottom-0 right-0 p-2 text-xl bg-blue-500 text-white rounded"
-          onClick={handleSubmit}
-        >
-          送出
-        </button>
-      </div>
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
+  <div className="relative bg-white p-4 sm:p-6 rounded shadow-lg border-2 border-gray-800 w-full max-w-3xl mx-auto pb-16 text-base sm:text-xl md:text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600 overflow-y-auto max-h-[90vh]">
+    <h2 className="mb-4 text-lg sm:text-xl md:text-2xl font-semibold">請問您對以下哪些類別有興趣?</h2>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
+      {data && data.length > 0 ? (
+        data.map((item) => (
+          <button
+            key={item.hobbyId}
+            className={`text-sm sm:text-base md:text-lg py-2 px-3 rounded-md transition-colors duration-300 bg-transparent border-2 ${
+              selectedHobbies.includes(item.hobbyId)
+                ? "bg-gray-800 text-white border-gray-600"
+                : "border-transparent hover:bg-gray-700 hover:text-white hover:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500"
+            }`}
+            onClick={() => handleSelection(item.hobbyId)}
+          >
+            {item.hobbyName}
+          </button>
+        ))
+      ) : (
+        <p className="col-span-full">沒有可顯示的愛好。</p>
+      )}
     </div>
+    <button
+      className="absolute bottom-4 right-4 p-2 text-base sm:text-lg bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300"
+      onClick={handleSubmit}
+    >
+      送出
+    </button>
+  </div>
+</div>
   );
 }
 

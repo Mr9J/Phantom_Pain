@@ -6,7 +6,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 // import { EventHandler } from "@tinymce/tinymce-react/lib/cjs/main/ts/Events";
 import axios from "axios";
-
+import { Helmet } from "react-helmet-async";
 const Create: React.FC = () => {
   //const [formData, setFormData] = useState({});
   const { pid } = useParams();
@@ -19,13 +19,16 @@ const Create: React.FC = () => {
   const [projectPreDetail, setProjectPreDetail] = useState<string>();
   const [projectDetail, setProjectDetail] = useState("");
   const [statusID, setStatusID] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState<SelectedImage|null>(null);
+  const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(
+    null
+  );
   const { user, checkAuthUser } = useUserContext();
   const [isAuth, setIsAuth] = useState(true);
+  const [pic, setPic] = useState<string | null>(null);
   const navigate = useNavigate();
   interface SelectedImage {
     file: File;
-    preview: string | ArrayBuffer | null |undefined;
+    preview: string | ArrayBuffer | null | undefined;
   }
   useEffect(() => {
     if (pid) getProjectInfo();
@@ -37,9 +40,11 @@ const Create: React.FC = () => {
   const getProjectInfo = async () => {
     try {
       const res = await axios.get(`${baseUrl}/Home/GetEditProject/${pid}`);
-      //const res = await axios.get(`https://localhost:7150/api/Home/GetEditProject/${pid}`);
-      console.log(res.data);
-
+      // const res = await axios.get(
+      //   `https://localhost:7150/api/Home/GetEditProject/${pid}`
+      // );
+      //console.log(res.data);
+      if (!res.data[0]) navigate("/notfound");
       setStartDate(res.data[0]["startDate"]);
       setEndDate(res.data[0]["endDate"]);
       setProjectGoal(res.data[0]["projectGoal"]);
@@ -53,7 +58,6 @@ const Create: React.FC = () => {
       console.error(error);
     }
   };
-  
 
   const handleStartDateChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -109,12 +113,33 @@ const Create: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (selectedImage && selectedImage.file instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Image = (reader.result as string).split(",")[1]; // 獲取 Base64 編碼的圖片數據
+        setPic(base64Image);
+        // 將 Base64 圖片數據添加到 formData 中
+      };
+      reader.readAsDataURL(selectedImage.file);
+    }
+  }, [selectedImage]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     //event.preventDefault(); // 阻止表單默認的提交行為
 
     const formData = new FormData(event.currentTarget); // 收集表單數據
     formData.append("projectDetail", projectDetail);
     if (pid) formData.append("projectId", pid);
+
+    //console.log(pic);
+    if (pic) formData.append("thumbnail", pic as string);
+
+    const jsonData: Record<string, string> = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value as string;
+    });
+
     const jwt = localStorage.getItem("token");
     const url = pid
       ? `${baseUrl}/Home/EditProject`
@@ -123,12 +148,13 @@ const Create: React.FC = () => {
     //   ? `https://localhost:7150/api/Home/EditProject`
     //   : `https://localhost:7150/api/Home/CreateProject`;
     const method = pid ? "PUT" : "POST";
-    console.log(formData);
+    // console.log(JSON.stringify(jsonData));
     fetch(url, {
       method: method,
-      body: formData,
+      body: JSON.stringify(jsonData),
       headers: {
         Authorization: jwt as string,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {
@@ -160,21 +186,24 @@ const Create: React.FC = () => {
   };
   function demo(): undefined {
     setStartDate("2024-06-28");
-    setEndDate("2024-07-08");
+    setEndDate("2024-07-18");
     setProjectGoal(10000);
-    setProjectTypeId("1");
-    setProjectName("測試計畫");
+    setProjectTypeId("6");
+    setProjectName("興大附農耕心吉他社16屆大型成果發表會");
     setProjectDescription(
-      "測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫"
+      "2024/7/20 13:00入場13:30開始 這是耕心16屆的最後一場表演《致•16歲的青春》，我們將盡所能，以這次的成果發表會為高中社團生涯畫上句號，歡迎大家一起共襄盛舉🎉"
     );
     setProjectPreDetail(
-      '<p><strong><span style="font-size: 36pt;">測試計畫</span></strong></p><p><img src="https://cdn.mumumsit158.com/Test/project-192/Thumbnail.png" width="350" height="361"></p><p><iframe title="YouTube video player" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=zgYsm342lAyhowjd" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="allowfullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe></p><p>測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫測試計畫</p><p>這是demo<br>これでもです🤡</p>'
+      '<div class="js-expand-project-content maxh7 mb-4 overflow-hidden relative maxh-none-ns mv-child-0 xs:overflow-visible"><table class="w-full" style="table-layout: fixed; border-spacing: 0;"><tbody><tr><td><iframe width="560" height="315" src="https://www.youtube.com/embed/mrulGtvNB9c?si=l8NI4LUUST-AtkTq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><p><u></u>大家好，我們是興大附農耕心吉他社16屆，我們即將在七月中旬舉辦我們的成果發表會。</p><p>這是我們高中社團的最後一個表演，讓這兩年的回憶畫上一個句點。從一開始少少人，到現在8個人，從素不相識變到無話不談，兩年來，一起從零開始學習吉他，爬格子、音階、節奏練習，慢慢地開始些簡單的曲子，再到可以一起合奏、或甚至是一個人帶著一把吉他在台上獨當一面。我們一起辦了大大小小的活動、一起做了許許多多有趣的事、一起參加了多場不同的演出。</p><h4 class="hide-child relative"><a name="h-716d6371" class="-mt-32 absolute"></a>這是倒數100天的時候🌟<br><img alt="" data-src="https://cdn.mumumsit158.com/Projects/project-998/Thumbnail.png" class="lazy entered loaded" data-ll-status="loaded" src="https://cdn.mumumsit158.com/Projects/project-998/Thumbnail.png"></h4><p><br></p><p>從小高一開始、每個禮拜大家一起社練，每一點基本功、技巧的建立，每一場活動、表演經驗的累積，都是為著這一天做的準備。</p><p>最後，我們耕心吉他16屆，即將迎來最後一場演出，希望我們盡所有努力辦好最後一場表演，傳承最珍貴的精神給學弟妹們，給予大家最寶貴的回憶。</p><p>為了完成這個追逐許久的目標，因此，需要大家的幫助，有你們的參與，我們會離這個目標更進一步。</p><p><br></p><p>相關資訊ℹ️</p><p>地點：興大附農 活水堂</p><p>時間：113/7/20 &nbsp; &nbsp;13:00入場13:30開始</p><p>免費入場🌟</p><div class="-mt-32"><div class="pt-32" id="project_risk"></div></div><h3 class="mt-8">風險與挑戰</h3><div class="prose"><p>本團隊將以如期演出、出貨為宗旨，但仍可能因不可抗力因素延期、取消演出或是物流延後、延遲出貨等等，如果您贊助此次計劃，則代表您同意承擔此風險。同時，團隊也會盡力保障各位贊助者們的權益。</p></div><div class="-mt-32"><div class="pt-32" id="project_return"></div></div><h3 class="mt-8">退換貨規則</h3><div class="prose"><p>回饋品項為同學所設計之印刷物品及創意客製小物。由於是演出當天領取，須於領取當下檢查商品是否有瑕疵，一旦離開領取區域，則當作您同意商品沒有問題，恕不接受退換貨。若因故無法到場觀看演出，耕心吉他社將於演出完後，與您聯絡寄送回饋商品相關事宜。</p><p>依照《消費者保護法》的規定，您享有商品貨到次日起七天猶豫期（包含例假日）之權益，超過七天後則無法退換貨，請於期限內主動聯絡客服，並提供以下資訊申請退換貨，待確認收到商品後，將由系統人員處理發貨。<br>換貨時請將回饋品保持原始的狀態，並以電子郵件聯絡辦理換貨，若缺少其中一項物品將不受理換貨</p></div><div class="-mt-32"><div class="pt-32" id="project_contact"></div></div><h3 class="mt-8">客服聯絡方式</h3><div class="prose"><p>集資金額將由荊煒洲收取控管<br>聯絡之電子郵件為 <a href="mailto:z0958953723@gmail.com">z0958953723@gmail.com</a><br>歡迎有任何問題嘖嘖站內訊息可以私訊我們哦<br>IG:gengxin_guitar</p><p><a href="https://www.instagram.com/gengxin_guitar?igsh=eDJ5cDFseDN1bzV2">https://www.instagram.com/gengxin_guitar?igsh=eDJ5cDFseDN1bzV2</a></p></div></td></tr></tbody></table></div>'
     );
   }
 
   return (
     <>
       {!isAuth && <Navigate to="/sign-in" />}
+      <Helmet>
+        <title>{pid?'Mumu | 編輯計畫':'Mumu | 發起計畫'}</title>
+      </Helmet>
       <div className="container mx-auto px-4 md:px-0">
         <div className="text-center">
           <h2 className="text-2xl font-bold my-16 inline-block after:h-1 after:block after:bg-teal-500 after:rounded after:mt-1">
@@ -183,12 +212,12 @@ const Create: React.FC = () => {
           </h2>
         </div>
         {/* 保護區 */}
-        <button
+        {/* <button
           onClick={demo}
           className="bg-secondary text-primary rounded border bottom-7"
         >
           demo
-        </button>
+        </button> */}
         <div className="px-4 border border-gray-300 mb-16 rounded">
           <form
             onSubmit={(e) => {
@@ -202,7 +231,7 @@ const Create: React.FC = () => {
                 <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
                   <div className="md:col-span-1 mt-1">
                     <h2>
-                      <label className="font-bold text-lg">使用者名稱</label>
+                      <label className="font-bold text-lg" onClick={demo}>使用者名稱</label>
                     </h2>
                   </div>
                   <div className="mt-4 md:mt-0 md:col-span-3">
@@ -432,13 +461,16 @@ const Create: React.FC = () => {
                   placeholder=""
                   accept=".jpeg,.jpg,.png"
                   onChange={handleFileChange}
-                  name="thumbnail"
+                  name=""
                   required={!pid}
                   // disabled
                 />
                 {selectedImage ? (
                   <img
-                    src={selectedImage.preview as string || selectedImage as unknown as string}
+                    src={
+                      (selectedImage.preview as string) ||
+                      (selectedImage as unknown as string)
+                    }
                     alt="Selected"
                     className="aspect-video"
                   />
@@ -470,7 +502,10 @@ const Create: React.FC = () => {
                     content_style:
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                   }}
-                  onChange={(e)=>{setProjectPreDetail(e.target.value);log();}}
+                  onChange={(e) => {
+                    setProjectPreDetail(e.target.value);
+                    log();
+                  }}
                 />
 
                 <p>
