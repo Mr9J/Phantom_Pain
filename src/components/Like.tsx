@@ -89,8 +89,8 @@ function Like() {
 
   return (
     <>
-      <body className="intent-mouse">
-        <div className="container px-4 lg:px-0 mt-4 mb-6 ">
+      <body className="intent-mouse ">
+        <div className="container px-4 lg:px-0 pt-8 mb-6 h-full ">
           <h2 className="flex text-2xl">追蹤計畫</h2>
         </div>
         <div className="container pb-16">
