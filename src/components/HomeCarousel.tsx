@@ -77,7 +77,7 @@ export function HomeCarousel() {
                 >
                   <div className="p-1">
                     <Card>
-                      <CardContent className="flex aspect-video items-center justify-center p-6 ">
+                      <CardContent className="flex aspect-video items-center justify-center p-0 sm:p-6 ">
                         <img
                           src={item.thumbnail}
                           className="aspect-video rounded group-hover:scale-105 transition-all duration-500 ease-out border w-full"
@@ -86,7 +86,7 @@ export function HomeCarousel() {
                       {/* <div className="m-3 mt-0 ml-5 text-pretty line-clamp-1">
                       <p>{item.projectName}</p>
                     </div> */}
-                      <div className="flex items-center relative py-3 md:py-4 md:px-6 leading-loose md:space-x-6">
+                      <div className="flex flex-col md:flex-row items-center relative py-3 md:py-4 md:px-6 leading-loose md:space-x-6 sm:text-sm">
                         <h2 className="font-semibold text-primary md:text-xl line-clamp-2 md:line-clamp-1 md:flex-1 w-full md:w-auto px-4 md:px-0">
                           {item.projectName}
                         </h2>
@@ -109,8 +109,8 @@ export function HomeCarousel() {
               </CarouselItem>
             ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="ml-3 sm:ml-0"/>
+        <CarouselNext className="mr-3 sm:mr-0"/>
       </Carousel>
 
       <div className="container px-4 md:px-0 py-8 grid grid-cols-4 gap-6">
