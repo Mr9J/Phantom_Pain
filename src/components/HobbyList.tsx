@@ -9,7 +9,7 @@ interface HobbyListProps {
   fetchProjectCards: () => void;
 }
 
-const HobbyList: React.FC<HobbyListProps> = ({ onClose, fetchProjectCards }) => {
+function HobbyList({ onClose,fetchProjectCards }:HobbyListProps) {
   const { user } = useUserContext();
   const URL = import.meta.env.VITE_API_URL;
   const [data, setData] = useState<Hobby[]>([]);
