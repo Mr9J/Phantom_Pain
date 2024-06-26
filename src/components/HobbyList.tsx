@@ -55,18 +55,18 @@ function HobbyList({ onClose,fetchProjectCards }:HobbyListProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
-  <div className="relative bg-white p-4 sm:p-6 rounded shadow-lg border-2 border-gray-800 w-full max-w-3xl mx-auto pb-16 text-base sm:text-xl md:text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600 overflow-y-auto max-h-[90vh]">
+<div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
+  <div className="relative bg-white p-4 sm:p-6 rounded shadow-lg border-2 border-gray-800 w-full max-w-3xl mx-auto pb-16 text-base sm:text-xl md:text-2xl text-gray-800 dark:text-white dark:bg-gray-800 dark:border-gray-600 overflow-y-auto max-h-[90vh]">
     <h2 className="mb-4 text-lg sm:text-xl md:text-2xl font-semibold">請問您對以下哪些類別有興趣?</h2>
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
       {data && data.length > 0 ? (
         data.map((item) => (
           <button
             key={item.hobbyId}
-            className={`text-sm sm:text-base md:text-lg py-2 px-3 rounded-md transition-colors duration-300 bg-transparent border-2 ${
+            className={`text-sm sm:text-base md:text-lg py-2 px-3 rounded-md transition-colors duration-300 border-2 ${
               selectedHobbies.includes(item.hobbyId)
-                ? "bg-gray-800 text-white border-gray-600"
-                : "border-transparent hover:bg-gray-700 hover:text-white hover:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500"
+                ? "bg-blue-500 text-white border-blue-600 hover:bg-blue-600"
+                : "bg-transparent text-gray-800 border-gray-300 hover:bg-gray-100 hover:border-gray-400 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500"
             }`}
             onClick={() => handleSelection(item.hobbyId)}
           >
