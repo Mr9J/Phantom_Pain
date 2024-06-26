@@ -19,15 +19,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
 
   const highlightText = (text: string, messageIndex: number) => {
     if (!searchTerm) return text;
-//(${searchTerm})：表示每次匹配 searchTerm。
-//g：表示搜索整個字符串。i：匹配時不區分大小寫。
     const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
     return (
       <>
         {parts.map((part, index) =>
-        //不區分大小寫
           part.toLowerCase() === searchTerm.toLowerCase() ? (
-            //應用service-highlight樣式 如果當前訊息為搜訊訊息 改用current樣式
             <span key={index} className={`service-highlight ${highlightedIndexes[currentIndex] === messageIndex ? 'service-current-highlight' : ''}`}>{part}</span>
           ) : (
             part
@@ -49,7 +45,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
   return (
     <div className="service-chat-messages">
       {messages.map((message, index) => (
-        <div key={`${message.id}-${index}`} className={`service-chat-message ${message.sender}`} ref={el => messageRefs.current[index] = el}>
+        <div key={`${message.id}-${index}`} className={`service-chat-message ${message.sender || 'unknown'}`} ref={el => messageRefs.current[index] = el}>
           <div className="service-message-bubble">
             {message.content.startsWith('data:image') ? (
               <div className="relative">
@@ -65,7 +61,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, searchTerm, highl
             ) : (
               <div>{highlightText(message.content, index)}</div>
             )}
-            <div className={`service-timestamp ${message.sender}`}>
+            <div className={`service-timestamp ${message.sender || 'unknown'}`}>
               {formatTime(message.timestamp)}
             </div>
           </div>
