@@ -40,7 +40,7 @@ export const SignInValidation = z.object({
 });
 
 export const PostValidation = z.object({
-  caption: z.string().min(2).max(2200),
+  caption: z.string().min(2, { message: "主文不可少於2字" }).max(2200),
   file: z.custom<File[]>(),
   location: z.string().max(30),
   tags: z.string(),
