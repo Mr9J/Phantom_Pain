@@ -84,15 +84,15 @@ function SearchProject({
       </Helmet>
       <div className="opacity-100 container">
         <div className="container lg:py-8 py-4 lg:px-0 px-4">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between space-y-2">
             <div className="flex-grow">
               <SearchComboBox
                 onValueChange={handleValueChange}
               ></SearchComboBox>
             </div>
-            <div className="flex items-center w-full xs:w-auto xs:flex-row justify-end">
+            <div className="flex items-center w-full xs:w-auto xs:flex-row justify-center sm:justify-end">
               <div className="inline-block align-middle xs:w-auto grow mb-2 xs:mb-0 max-w-72">
-                <div className="flex">
+                <div className="flex mb-2">
                   <Input
                     className="pl-8 rounded w-full mt-0"
                     type="text"
