@@ -73,7 +73,8 @@ const ServiceAdmin = () => {
           return {
             id: message.memberId,
             name: member ? member.nickname : `廠商 ${message.memberId}`,
-            image: member ? `https://cdn.mumumsit158.com/Members/MemberID-${memberId}-ThumbNail.jpg` : 'https://via.placeholder.com/150',
+            // image: member ? `https://cdn.mumumsit158.com/Members/MemberID-${memberId}-ThumbNail.jpg` : 'https://via.placeholder.com/150',
+            image: member ? member.thumbnail : 'https://via.placeholder.com/150',
             messageCount: message.messageCount,
             lastMessage: message.messageContent.startsWith('data:image') ? '已傳送圖片' : message.messageContent,
             lastMessageDate: displayDate,
