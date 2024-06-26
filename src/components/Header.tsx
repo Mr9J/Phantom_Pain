@@ -9,7 +9,7 @@ import {
   ChevronDownIcon,
   XIcon,
   LogOutIcon,
-  LaughIcon,
+  WarehouseIcon,
   ShoppingCart,
   LucideBookHeart,
   CircleDollarSign,
@@ -51,9 +51,9 @@ const exploreItems = [
   // },
   {
     name: "Manufactor",
-    description: "mygo",
+    //description: "mygo",
     to: "/manu",
-    icon: LaughIcon,
+    icon: WarehouseIcon,
   },
 ];
 const exploreBottomItems = [
