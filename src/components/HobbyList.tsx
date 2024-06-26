@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUserContext } from "@/context/AuthContext";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Hobby } from "@/types";
 
 interface HobbyListProps {
