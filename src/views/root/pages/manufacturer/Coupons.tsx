@@ -58,9 +58,9 @@ const Coupons: React.FC = () => {
     const method = "POST";
 
     //debug用
-    console.log("URL:", url);
-    console.log("Method:", method);
-    console.log("Data being sent:", formData);
+    //console.log("URL:", url);
+    //console.log("Method:", method);
+    //console.log("Data being sent:", formData);
 
     axios({
       method: method,
