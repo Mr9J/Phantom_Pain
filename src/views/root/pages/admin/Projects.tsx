@@ -6,6 +6,7 @@ import "@/css/style.css";
 import "@/css/backstageStyle.css";
 import { ProjectDTO, ProjectCount } from "@/types/index";
 import SearchBar from "@/components/admin/SearchBar";
+import { Helmet } from "react-helmet-async";
 
 type ProjectContext = [number, string, number, number, number, number];
 //計算剩餘天數
@@ -136,6 +137,9 @@ const Projects: React.FC = () => {
   };
   return (
     <>
+      <Helmet>
+        <title>Mumu | 管理者後台</title>
+      </Helmet>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
         <div className="col-span-full xl:col-span-8 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
           <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
@@ -286,10 +290,10 @@ const Projects: React.FC = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               > */}
-                                {/* <div className="text-base text-slate-800 dark:text-slate-100 underline"> */}
-                                <div className="text-base text-slate-800 dark:text-slate-100">
-                                  {item.projectName}
-                                </div>
+                              {/* <div className="text-base text-slate-800 dark:text-slate-100 underline"> */}
+                              <div className="text-base text-slate-800 dark:text-slate-100">
+                                {item.projectName}
+                              </div>
                               {/* </a> */}
                             </div>
                           </td>

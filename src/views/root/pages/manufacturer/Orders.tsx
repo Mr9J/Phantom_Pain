@@ -4,6 +4,7 @@ import { getUserProjectCounts } from "@/services/projects.service";
 import { OrderProject } from "@/types/index";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import { Helmet } from "react-helmet-async";
 
 const Orders = () => {
   const [orderProjects, setOrderProjects] = useState<OrderProject[] | null>(
@@ -60,6 +61,9 @@ const Orders = () => {
   }, []);
   return (
     <>
+      <Helmet>
+        <title>Mumu | 訂單總覽</title>
+      </Helmet>
       <div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none ">
@@ -70,7 +74,7 @@ const Orders = () => {
                   type="button"
                   className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                 >
-                  全部({Number(projectCount[0])-Number(projectCount[3])})
+                  全部({Number(projectCount[0]) - Number(projectCount[3])})
                 </button>
               ) : (
                 <button
@@ -81,7 +85,7 @@ const Orders = () => {
                     setProjectStatus(-1);
                   }}
                 >
-                  全部({Number(projectCount[0])-Number(projectCount[3])})
+                  全部({Number(projectCount[0]) - Number(projectCount[3])})
                 </button>
               )}
               {orderType === 2 ? (

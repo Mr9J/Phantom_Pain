@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { CouponDTO } from "@/types";
 import CouponUsedListModal from "./CouponUsedListModal";
+import CouponModal from "@/components/admin/CouponModal";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 
 type CouponTicketProps = {
   coupon: CouponDTO & { isEdit: boolean };
@@ -9,6 +11,8 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
   const [visibleConponUsedListModal, setvisibleConponUsedListModal] =
     useState(false);
   const [couponID, setcouponID] = useState(0);
+  const [visibleModifyModal, setVisibleModifyModal] = useState(false);
+  const [visibleConfirmModal, setvisibleConfirmModal] = useState(false);
   return (
     <>
       <div className="flex items-center justify-center from-red-100 via-red-300 to-blue-500 bg-gradient-to-br pb-5">
@@ -134,6 +138,18 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
         onClose={() => setvisibleConponUsedListModal(false)}
         couponId={couponID}
       />
+      {/* {visibleModifyModal && (
+        <CouponModal
+          setVisibleCouponModal={setVisibleModifyModal}
+          handleFormSubmit={handleFormSubmit}
+        />
+      )}
+      <ConfirmModal
+        isVisible={visibleConfirmModal}
+        onClose={() => setvisibleConfirmModal(false)}
+        onConfirm={handleConfirmSubmit}
+        modalText={modalText}
+      /> */}
     </>
   );
 };

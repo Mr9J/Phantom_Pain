@@ -8,6 +8,7 @@ import SearchBar from "@/components/admin/SearchBar";
 import axios from "axios";
 import CouponTicket from "@/components/admin/CouponTicket";
 import { CouponDTO } from "@/types";
+import { Helmet } from "react-helmet-async";
 const baseUrl = import.meta.env.VITE_API_URL;
 
 const Coupons: React.FC = () => {
@@ -96,6 +97,9 @@ const Coupons: React.FC = () => {
       : couponList;
   return (
     <>
+      <Helmet>
+        <title>Mumu | 折價券管理</title>
+      </Helmet>
       <div>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none ">
