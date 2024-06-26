@@ -381,12 +381,12 @@ const SignInForm = () => {
           </h2>
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             <span
-              onClick={() => {
-                form.reset({
-                  username: "Test1234!",
-                  password: "Test1234!",
-                });
-              }}
+            // onClick={() => {
+            //   form.reset({
+            //     username: "Test1234!",
+            //     password: "Test1234!",
+            //   });
+            // }}
             >
               Empower
             </span>
