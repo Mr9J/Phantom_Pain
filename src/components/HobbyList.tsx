@@ -57,13 +57,17 @@ function HobbyList({ onClose }:HobbyListProps) {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="relative bg-white p-6 rounded shadow-lg border-2 border-gray-800 max-w-3xl mx-auto pb-16 text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+      <div className="relative bg-white p-6 rounded shadow-lg border-2 border-gray-800 max-w-3xl mx-auto pb-16 text-2xl dark:bg-gray-800 dark:text-white dark:border-gray-600">
         請問您對以下哪些類別有興趣?
         <ToggleGroup variant="outline" type="multiple">
           {data && data.length > 0 ? (
             data.map((item) => (
               <ToggleGroupItem
-                className="text-2xl"
+                className={`text-2xl py-2 px-4 rounded-md transition-colors duration-300 bg-transparent border-2 ${
+                  selectedHobbies.includes(item.hobbyId)
+                    ? "bg-gray-800 text-white border-gray-600"
+                    : "border-transparent hover:bg-gray-700 hover:text-white hover:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500"
+                }`}
                 key={item.hobbyId}
                 value={item.hobbyName}
                 aria-label={item.hobbyName}
