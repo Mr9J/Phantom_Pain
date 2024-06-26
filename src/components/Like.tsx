@@ -1,42 +1,67 @@
 import { useUserContext } from "@/context/AuthContext";
 import { useCallback, useEffect, useState } from "react";
-import type { Like } from "@/types/index";
+import type { Like, ProjectCardDTO } from "@/types/index";
 import { Link } from "react-router-dom";
 import HobbyList from "./HobbyList";
 import axios from "axios";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "./ui/carousel";
+import ProjectCardVertical from "./ProjectCardVertical";
 
 function Like() {
   const { user } = useUserContext();
   const [data, setData] = useState<Like[]>([]);
+  const [isHobbyListOpen, setIsHobbyListOpen] = useState<boolean>(false);
+  const [projectCards, setProjectCards] = useState<ProjectCardDTO[]>([]);
+
   const URL = import.meta.env.VITE_API_URL;
   const userid = user.id;
 
-    //呼叫Hobby使用
-    const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
+  const closeHobbyList = () => {
+    setIsHobbyListOpen(false);
+  };
 
-    const closeHobbyList = () => {
-      setIsHobbyListOpen(false);
+  useEffect(() => {
+    const fetchHobbyStatus = async () => {
+      try {
+        const response = await axios.get<boolean>(`${URL}/Hobby/${userid}`);
+        setIsHobbyListOpen(response.data === false);
+      } catch (error) {
+        console.error("獲取興趣列表狀態時發生錯誤:", error);
+      }
     };
-    useEffect(() => {
-      const fetchHobbyStatus = async () => {
-        try {
-          const response = await axios.get(`${URL}/Hobby/${userid}`);
-          setIsHobbyListOpen(response.data === false);
-        } catch (error) {
-          console.error('獲取興趣列表狀態時發生錯誤:', error);
-        }
-      };
+
+    fetchHobbyStatus();
+  }, [URL, userid]);
+
+  const fetchProjectCards = useCallback(async () => {
+    try {
+      const response = await axios.get<ProjectCardDTO[]>(`${URL}/Hobby/getMemHobby/${userid}`);
+      const data = response.data;
+      // 隨機排序
+      data.sort(() => Math.random() - 0.5);
+      setProjectCards(data);
+    } catch (error) {
+      console.error("Error fetching project cards:", error);
+    }
+  }, [URL, userid]);
+
+  useEffect(() => {
+    fetchProjectCards();
+  }, [fetchProjectCards]);
+
   
-      fetchHobbyStatus();
-    }, [URL, userid]);
 
-
-   //到此 下面return還有
+  //到此 下面return還有
 
   ////簡單來說React為了避免你的方法引用參數被改變 會建議你寫在內部 但是其他地方需要使用 同時又有使用useState無法放在最上方 所以需要使用useCallback確保
   // fetchData 函數現在被定義為 useCallback 鉤子，這樣可以保證它的身份在渲染之間是穩定的
   const fetchData = useCallback(async () => {
-    
     try {
       const response = await fetch(`${URL}/Like/${userid}`);
       const data = await response.json();
@@ -52,6 +77,21 @@ function Like() {
     fetchData();
   }, [fetchData]);
 
+  useEffect(() => {
+    const fetchProjectCards = async () => {
+      try {
+        const response = await axios.get(`${URL}/Hobby/getMemHobby/${userid}`);
+        const data = response.data;
+        // 隨機排序
+        data.sort(() => Math.random() - 0.5);
+        setProjectCards(data);
+        //console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching project cards:", error);
+      }
+    };
+    fetchProjectCards();
+  }, [URL, fetchData, userid]);
 
   const deleteItem = async (prjId: number) => {
     try {
@@ -70,12 +110,12 @@ function Like() {
 
   return (
     <>
-      <body className="intent-mouse">
-        <div className="container px-4 lg:px-0 mt-4 mb-6">
+      <body className="intent-mouse ">
+        <div className="container px-4 lg:px-0 pt-8 mb-6 h-full ">
           <h2 className="flex text-2xl">追蹤計畫</h2>
         </div>
         <div className="container pb-16">
-          <div className="flex lg:-mx-4  flex-wrap">
+          <div className="flex lg:-mx-4  flex-wrap ">
             {data ? (
               data.map((item: Like, index: number) => (
                 <div key={index} className="px-4 py-4 w-full xs:w-1/2 lg:w-1/4">
@@ -113,75 +153,37 @@ function Like() {
             )}
           </div>
         </div>
-        <div
-          className="border-t bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-          style={{
-            position: "fixed",
-            bottom: "0",
-            width: "100%",
-            height: "20vh",
-          }}
-        >
-          <footer className="max-w-xs md:max-w-5xl py-10 mx-auto flex flex-wrap px-3 justify-between">
-            <section className="w-full md:w-auto pb-10 md:pb-0">
-              <img
-                className="h-10 w-auto"
-                src="src/assets/_shared_img/logo.png"
-              />
-            </section>
-            <section>
-              <h2 className="text-sm font-semibold mb-4 ">幫助</h2>
-              <h3 className="text-sm mb-3">
-                <a className="text-gray-600 hover:text-zec-blue" href="/faq">
-                  常見問題
-                </a>
-              </h3>
-              <h3 className="text-sm mb-3">
-                <a
-                  className="text-gray-600 hover:text-zec-blue"
-                  href="/docs/terms_of_service"
-                >
-                  使用條款
-                </a>
-              </h3>
-              <h3 className="text-sm mb-3">
-                <a
-                  className="text-gray-600 hover:text-zec-blue"
-                  href="/docs/privacy"
-                >
-                  隱私權政策
-                </a>
-              </h3>
-            </section>
-            <section>
-              <h2 className="text-sm font-semibold mb-4">關於</h2>
-              <h3 className="text-sm mb-3">
-                <a className="text-gray-600 hover:text-zec-blue" href="/about">
-                  關於我們
-                </a>
-              </h3>
-              <h3 className="text-sm mb-3">
-                <a className="text-gray-600 hover:text-zec-blue" href="/brand">
-                  商標資源
-                </a>
-              </h3>
-              <h3 className="text-sm mb-3">
-                <a
-                  className="text-gray-600 hover:text-zec-blue"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  href="https://kkfarm.zeczec.com"
-                >
-                  KKFARM 音樂創生
-                </a>
-              </h3>
-            </section>
-          </footer>
+        <div className="container px-4 lg:px-0 mt-4 mb-6">
+          <h2 className="flex text-2xl">您的專屬推薦</h2>
+          <Carousel className="w-full">
+            <CarouselContent className="-ml-1">
+              {projectCards.length > 0 &&
+                projectCards.map(
+                  (item: ProjectCardDTO, index: number) =>
+                    item && ( // 確保item不是undefined
+                      <CarouselItem
+                        key={index}
+                        className="pl-1 md:basis-1/2 lg:basis-1/4"
+                      >
+                        <div className="p-1">
+                          {/* 渲染每個Project卡片 */}
+                          <ProjectCardVertical prj={item}></ProjectCardVertical>
+                        </div>
+                      </CarouselItem>
+                    )
+                )}
+            </CarouselContent>
+            {/* Carousel的導航按鈕 */}
+            <CarouselPrevious className="hidden sm:flex"/>
+            <CarouselNext className="hidden sm:flex"/>
+          </Carousel>
         </div>
+        
       </body>
 
       {/* 呼叫HobbyList Component*/}
-      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />} 
+      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} fetchProjectCards={fetchProjectCards} />}
+
     </>
   );
 }
