@@ -101,7 +101,6 @@ const App = () => {
                 path="/SearchProject"
                 element={<SearchProject input={input} setInput={setInput} />}
               />
-              <Route path="/playground" element={<Playground />} />
 
               {/* <Route path="/StartProject" element={<StartProject />} /> */}
               <Route path="/CreateProject" element={<Create />} />
