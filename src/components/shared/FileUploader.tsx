@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { useToast } from "../ui/use-toast";
 import { useGetPostImg } from "@/lib/react-query/queriesAndMutation";
+import GoogleImgAnalize from "@/config/GoogleImgAnalize";
 
 type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
@@ -19,6 +20,17 @@ const FileUploader = ({
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState([mediaUrl]);
   const { data: media } = useGetPostImg(mediaUrl || "");
+
+  const getBase64 = async (imgUrl) => {
+    const response = await fetch(imgUrl);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -45,7 +57,6 @@ const FileUploader = ({
 
         return;
       }
-      console.log(acceptedFiles);
 
       const urls = acceptedFiles.map((file) => URL.createObjectURL(file));
       setFile(acceptedFiles);
@@ -64,6 +75,14 @@ const FileUploader = ({
       setFileUrl(postUrl);
     }
   }, [media]);
+
+  useEffect(() => {
+    if (fileUrl) {
+      const res = getBase64(fileUrl[0]).then((res) => {
+        console.log(res);
+      });
+    }
+  }, [fileUrl]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

@@ -121,7 +121,7 @@ const PostCard = ({ post }: PostCardProps) => {
           該則貼文被列為警告，請點及確認是否查看
         </Button>
       ) : (
-        <Fragment>
+        <div className="flex w-full flex-col justify-center items-center">
           <Link to={`/posts/${post.postId}`}>
             <div className="text-[14px] font-medium leading-[140%] lg:text-[16px] py-5 relative">
               <p className="whitespace-pre-wrap">{post.caption}</p>
@@ -135,7 +135,9 @@ const PostCard = ({ post }: PostCardProps) => {
               </ul>
             </div>
           </Link>
-          <Carousel className="max-w-screen-sm md:w-full w-[350px]">
+          {/* max-w-screen-sm md:w-full w-[350px] */}
+
+          <Carousel className="w-[300px] lg:w-full">
             <CarouselContent>
               {postImg?.map((img, index) => {
                 return (
@@ -156,7 +158,7 @@ const PostCard = ({ post }: PostCardProps) => {
               })}
             </CarouselContent>
           </Carousel>
-        </Fragment>
+        </div>
       )}
 
       <PostStats post={post} userId={user.id} commentDisplay={true} />

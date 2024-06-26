@@ -4,6 +4,7 @@ import {
   useGetPostById,
   useGetPostImg,
 } from "@/lib/react-query/queriesAndMutation";
+import { useRef } from "react";
 import LoaderSvg from "@/components/shared/LoaderSvg";
 import moment from "moment";
 import userThumbnail from "@/assets/admin_img/mygo/6.jpg";
@@ -13,7 +14,14 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
-import { FilePenLineIcon, TrashIcon } from "lucide-react";
+import {
+  FilePenLineIcon,
+  TrashIcon,
+  Copy,
+  Twitter,
+  Facebook,
+  ShareIcon,
+} from "lucide-react";
 import { useUserContext } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import PostStats from "@/components/shared/PostStats";
@@ -21,8 +29,21 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import GoogleTranslate from "@/config/GoogleTranslate";
 import { Fragment, useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const PostDetails = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { toast } = useToast();
@@ -144,7 +165,7 @@ const PostDetails = () => {
               >
                 <div className="flex justify-between items-center w-full">
                   <Link
-                    to={`/users/${post?.userId}`}
+                    to={`/profile/${post?.userId}`}
                     className="flex items-center gap-3"
                   >
                     <img
@@ -186,6 +207,77 @@ const PostDetails = () => {
                     >
                       <TrashIcon stroke="red" width={24} height={24} />
                     </Button>
+                  </div>
+                  <div className="flex justify-center items-center gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        window.open(
+                          `https://twitter.com/share?text=${post?.caption}&url=https://mumumsit158.com/posts/${id}`,
+                          "_blank"
+                        )
+                      }
+                    >
+                      <Twitter className="w-[16px] h-[16px]" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        window.open(
+                          `https://www.facebook.com/sharer/sharer.php?u=https://mumumsit158.com/posts/${id}`,
+                          "_blank"
+                        )
+                      }
+                    >
+                      <Facebook className="w-[16px] h-[16px]" />
+                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline">
+                          <ShareIcon className="w-[16px] h-[16px]" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Share link</DialogTitle>
+                          <DialogDescription>
+                            Anyone who has this link will be able to view this.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="flex items-center space-x-2">
+                          <div className="grid flex-1 gap-2">
+                            <Label htmlFor="link" className="sr-only">
+                              Link
+                            </Label>
+                            <Input
+                              ref={inputRef}
+                              id="link"
+                              defaultValue={`https://mumumsit158.com/posts/${id}`}
+                              readOnly
+                            />
+                          </div>
+                          <Button
+                            type="submit"
+                            size="sm"
+                            className="px-3"
+                            onClick={async () => {
+                              const link = inputRef?.current?.value;
+                              await navigator.clipboard.writeText(link || "");
+                            }}
+                          >
+                            <span className="sr-only">Copy</span>
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <DialogFooter className="sm:justify-start">
+                          <DialogClose asChild>
+                            <Button type="button" variant="secondary">
+                              Close
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
                 <hr className="border w-full dark:border-dark-4/80 border-slate-300/80" />

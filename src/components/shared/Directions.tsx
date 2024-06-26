@@ -38,7 +38,7 @@ const Directions = ({ address, origin }: DirectionsProps) => {
         directionsRenderer.setDirections(response);
         setRoutes(response.routes);
       });
-  }, [directionsService, directionsRenderer]);
+  }, [directionsService, directionsRenderer, origin]);
 
   useEffect(() => {
     if (!directionsRenderer) return;
