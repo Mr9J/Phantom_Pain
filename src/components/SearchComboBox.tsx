@@ -42,7 +42,7 @@ export function SearchComboBox({ onValueChange }: SearchComboBoxProps) {
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="選一個主題" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent ref={(ref) => { if (!ref) return; ref.ontouchstart = (e) => { e.preventDefault(); }; }} >
         <SelectGroup >
           <SelectLabel>主題分類</SelectLabel>
           <SelectItem value="0">全部</SelectItem>
