@@ -23,7 +23,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { ToastAction } from "../ui/toast";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -236,14 +236,14 @@ const PostForm = ({ post, action }: PostFormProps) => {
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
         <span
-          onClick={() => {
-            form.reset({
-              caption:
-                "Today, I am honored to present our project at the MSIT158 Final Presentation in the Microsoft C# Engineer Training Program at the Information Technology Training and Information Center. Our project is a crowdfunding platform. As a platform dedicated to promoting interdisciplinary collaboration and innovation, it not only provides crowdfunding functions, but also encourages creators, experts, and investors from different fields to collaborate and promote the development of cross-border innovative projects.",
-              location: "資展國際-原資策會教研所",
-              tags: "資策會, 資展國際, MSIT158",
-            });
-          }}
+        // onClick={() => {
+        //   form.reset({
+        //     caption:
+        //       "Today, I am honored to present our project at the MSIT158 Final Presentation in the Microsoft C# Engineer Training Program at the Information Technology Training and Information Center. Our project is a crowdfunding platform. As a platform dedicated to promoting interdisciplinary collaboration and innovation, it not only provides crowdfunding functions, but also encourages creators, experts, and investors from different fields to collaborate and promote the development of cross-border innovative projects.",
+        //     location: "資展國際-原資策會教研所",
+        //     tags: "資策會, 資展國際, MSIT158",
+        //   });
+        // }}
         >
           Demo
         </span>

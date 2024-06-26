@@ -382,12 +382,12 @@ const SignInForm = () => {
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             Empower your dreams,{" "}
             <span
-              onClick={() => {
-                form.reset({
-                  username: "Msit158Team4",
-                  password: "Msit158Team4!",
-                });
-              }}
+            // onClick={() => {
+            //   form.reset({
+            //     username: "Msit158Team4",
+            //     password: "Msit158Team4!",
+            //   });
+            // }}
             >
               build our future
             </span>
@@ -476,7 +476,7 @@ const SignInForm = () => {
           </form>
 
           <div className="flex justify-center items-center flex-col w-full mt-4 gap-4">
-            <Button
+            {/* <Button
               onClick={() =>
                 form.reset({
                   username: "Test123456!",
@@ -485,7 +485,7 @@ const SignInForm = () => {
               }
             >
               Admin DEMO
-            </Button>
+            </Button> */}
             <button
               onClick={googleHandler}
               type="button"

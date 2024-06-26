@@ -153,15 +153,15 @@ const SignUpForm = () => {
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             Empower your dreams,{" "}
             <span
-              onClick={() => {
-                form.reset({
-                  nickname: "Msit158Team4",
-                  username: "Msit158Team4",
-                  email: "msit158mumuguest@gmail.com",
-                  password: "Msit158Team4!",
-                  confirmPassword: "Msit158Team4!",
-                });
-              }}
+            // onClick={() => {
+            //   form.reset({
+            //     nickname: "Msit158Team4",
+            //     username: "Msit158Team4",
+            //     email: "msit158mumuguest@gmail.com",
+            //     password: "Msit158Team4!",
+            //     confirmPassword: "Msit158Team4!",
+            //   });
+            // }}
             >
               build our future
             </span>
