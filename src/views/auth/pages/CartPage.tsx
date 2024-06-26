@@ -138,7 +138,10 @@ function CartPage() {
                                 src={item.thumbnail?.toString()}
                                 alt="projectImage"
                               />
-                              <a href={`/project/${item.projectId}`}>
+                              <a
+                                href={`/project/${item.projectId}`}
+                                className="line-clamp-2 sm:line-clamp-none"
+                              >
                                 {item.projectName}
                               </a>
                             </div>
@@ -151,7 +154,7 @@ function CartPage() {
                               return (
                                 <div
                                   key={product.productId}
-                                  className="border-b-[2px] border-b-gray-100 p-4 flex gap-5 bg-slate-100 rounded-lg my-1 dark:bg-slate-700"
+                                  className="h-60 sm:h-auto border-b-[2px] border-b-gray-100 p-4 flex flex-col sm:flex-row gap-5 bg-slate-100 rounded-lg my-1 dark:bg-slate-700"
                                 >
                                   <div className="float-left w-64">
                                     <img
@@ -162,7 +165,7 @@ function CartPage() {
                                   </div>
                                   <div className="w-4/5 flex flex-col -mt-5">
                                     <br />
-                                    <h2 className="text-[25px] font-medium -mt-2">
+                                    <h2 className="text-[18px] sm:text-[25px] font-medium -mt-2">
                                       {product.productName}
                                     </h2>
                                     <div className="flex items-center">
