@@ -77,6 +77,8 @@ function SearchProject({
     fetchSearchProjects(); //console.log(Date());
   }, [input, page, selectedValue, orderBy]); //後面陣列的參數有變動就會重新render useEffect
 
+  
+
   return (
     <>
       <Helmet>
@@ -104,10 +106,10 @@ function SearchProject({
                   ></Input>
                   <div className="relative ml-2 min-w-28">
                     <Select onValueChange={handleOrderByChange}>
-                      <SelectTrigger className="">
-                        <SelectValue placeholder="排序" />
+                      <SelectTrigger>
+                        <SelectValue placeholder="排序"/>
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent ref={(ref) => { if (!ref) return; ref.ontouchstart = (e) => { e.preventDefault(); }; }} >
                         <SelectGroup>
                           <SelectLabel>排序方式</SelectLabel>
                           <SelectItem value="all">預設排序</SelectItem>

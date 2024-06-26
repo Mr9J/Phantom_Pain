@@ -280,7 +280,7 @@ function Productpage() {
   return (
     <>
       {isPopupVisible && (
-        <div className="fixed left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
+        <div className="fixed -left-32 sm:left-0 w-full h-full flex items-center justify-center bg-gray-700 bg-opacity-25 z-50">
           <div className="bg-slate-100 p-4 rounded shadow-md w-48 h-30 text-center text-lime-500 font-extrabold text-2xl">
             加入購物車成功!
           </div>

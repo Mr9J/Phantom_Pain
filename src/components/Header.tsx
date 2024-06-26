@@ -9,7 +9,7 @@ import {
   ChevronDownIcon,
   XIcon,
   LogOutIcon,
-  LaughIcon,
+  WarehouseIcon,
   ShoppingCart,
   LucideBookHeart,
   CircleDollarSign,
@@ -51,9 +51,9 @@ const exploreItems = [
   // },
   {
     name: "Manufactor",
-    description: "mygo",
+    //description: "mygo",
     to: "/manu",
-    icon: LaughIcon,
+    icon: WarehouseIcon,
   },
 ];
 const exploreBottomItems = [
@@ -356,6 +356,17 @@ const Header = ({
                         className="h-10 w-10 rounded-full"
                       />
                     </Link>
+                    <Button
+                      onClick={() => navigate("/CartPage")}
+                      className="ml-1 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
+                    >
+                      <ShoppingCart className="h-24 w-24" />
+                      <div className="h-2 w-3">
+                        <span className="bg-rose-700 text-white text-[12px] text-center m-0 font-black">
+                          {cartQuantity == 0 ? "" : cartQuantity}
+                        </span>
+                      </div>
+                    </Button>
                   </div>
                 ) : (
                   <div className="py-6">
