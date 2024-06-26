@@ -23,7 +23,7 @@ const Users = () => {
   } = useGetUserInfo(id || "");
 
   return (
-    <>
+    <div className=" overflow-hidden">
       <section className="overflow-hidden">
         <ProfileMain
           user={userData}
@@ -31,22 +31,22 @@ const Users = () => {
           refetch={refetch}
         />
 
-        <Tabs defaultValue="proposed" className="w-full min-h-[50vh]">
+        <Tabs defaultValue="proposed" className="w-full">
           <TabsList className="flex justify-center items-center">
-            <TabsTrigger value="proposed" className="text-3xl">
+            <TabsTrigger value="proposed">
               <HistoryIcon className="w-[30px] h-[30px] pr-1" />
               發起計畫
             </TabsTrigger>
-            <TabsTrigger value="sponsored" className="text-3xl">
+            <TabsTrigger value="sponsored">
               <HeartHandshakeIcon className="w-[30px] h-[30px] pr-1" />
               贊助計畫
             </TabsTrigger>
-            <TabsTrigger value="contact" className="text-3xl">
+            <TabsTrigger value="contact">
               <PhoneCallIcon className="w-[30px] h-[30px] pr-1" />
               聯絡方式
             </TabsTrigger>
             {user?.id === id && (
-              <TabsTrigger value="group" className="text-3xl">
+              <TabsTrigger value="group">
                 <PenToolIcon className="w-[30px] h-[30px] pr-1" />
                 權限管理
               </TabsTrigger>
@@ -67,10 +67,9 @@ const Users = () => {
             </TabsContent>
           )}
         </Tabs>
-
-        <Footer />
       </section>
-    </>
+      <Footer />
+    </div>
   );
 };
 

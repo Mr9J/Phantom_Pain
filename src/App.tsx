@@ -54,7 +54,7 @@ import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
-import Playground from "./views/root/pages/Playground";
+// import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
 import { useToast } from "./components/ui/use-toast";
 import axios from "axios";
@@ -101,7 +101,7 @@ const App = () => {
                 path="/SearchProject"
                 element={<SearchProject input={input} setInput={setInput} />}
               />
-              <Route path="/playground" element={<Playground />} />
+              {/* <Route path="/playground" element={<Playground />} /> */}
 
               {/* <Route path="/StartProject" element={<StartProject />} /> */}
               <Route path="/CreateProject" element={<Create />} />
@@ -109,7 +109,7 @@ const App = () => {
 
               {/* <Route path="/Like" element={<Like/>}/> */}
             </Route>
-            <Route path="/playground" element={<Playground />}></Route>
+            {/* <Route path="/playground" element={<Playground />}></Route> */}
 
             {/* 修改的部分 */}
             <Route element={<FormsLayout />}>

@@ -19,7 +19,7 @@ const AuthLayout = () => {
     <>
       {!isAuth && <Navigate to="/sign-in" />}
       {isAuth && (
-        <div className="flex h-screen">
+        <div className="flex h-screen w-full overflow-hidden">
           <section className="w-full md:flex">
             <Topbar />
             <LeftSidebar />
