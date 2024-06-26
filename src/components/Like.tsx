@@ -16,11 +16,12 @@ import ProjectCardVertical from "./ProjectCardVertical";
 function Like() {
   const { user } = useUserContext();
   const [data, setData] = useState<Like[]>([]);
+  
   const URL = import.meta.env.VITE_API_URL;
   const userid = user.id;
 
-  //呼叫Hobby使用
-  const [isHobbyListOpen, setIsHobbyListOpen] = useState(true);
+  //呼叫Hobby使用 預設為false才不會閃
+  const [isHobbyListOpen, setIsHobbyListOpen] = useState(false);
   const [projectCards, setProjectCards] = useState([]);
 
   const closeHobbyList = () => {
@@ -63,8 +64,11 @@ function Like() {
     const fetchProjectCards = async () => {
       try {
         const response = await axios.get(`${URL}/Hobby/getMemHobby/${userid}`);
-        setProjectCards(response.data);
-        console.log(response.data);
+        const data = response.data;
+        // 隨機排序
+        data.sort(() => Math.random() - 0.5);
+        setProjectCards(data);
+        //console.log(response.data);
       } catch (error) {
         console.error("Error fetching project cards:", error);
       }
@@ -161,7 +165,8 @@ function Like() {
       </body>
 
       {/* 呼叫HobbyList Component*/}
-      {isHobbyListOpen && <HobbyList onClose={closeHobbyList} />}
+      {isHobbyListOpen === true && <HobbyList onClose={closeHobbyList} />}
+
     </>
   );
 }
