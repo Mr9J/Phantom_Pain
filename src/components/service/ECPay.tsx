@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 // const frontUrl = import.meta.env.VITE_FRONT_URL;
-const frontUrl =
-  location.host == "localhost:5173"
-    ? `http://${location.host}`
-    : `https://${location.host}`;
+const frontUrl = `${location.origin}`;
+// location.host == "localhost:5173"
+//   ? `http://${location.host}`
+//   : `https://${location.host}`;
 const baseUrl = import.meta.env.VITE_API_URL;
 const ngrok =
   "https://7fdc-1-160-7-136.ngrok-free.app/api/Order/ECPayResponseMessage";
