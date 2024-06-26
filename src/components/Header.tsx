@@ -73,16 +73,14 @@ const Header = ({
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
- 
 
   const { user } = useUserContext();
   const { cartQuantity, fetchCartQuantity } = useCartContext();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-   useEffect(() => {
+  useEffect(() => {
     fetchCartQuantity();
-   });
-
+  });
 
   const signOutHandler = () => {
     signOutNative();
@@ -213,10 +211,11 @@ const Header = ({
           onClick={() => navigate("/CartPage")}
           className="hidden lg:flex lg:flex-2 ml-10 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
         >
-
-          <ShoppingCart className="h-24 w-24"/>
+          <ShoppingCart className="h-24 w-24" />
           <div className="h-2 w-3">
-          <span className="bg-rose-700 text-white text-[12px] text-center m-0 font-black">{cartQuantity==0?"":cartQuantity}</span>
+            <span className="bg-rose-700 text-white text-[12px] text-center m-0 font-black">
+              {cartQuantity == 0 ? "" : cartQuantity}
+            </span>
           </div>
         </Button>
         {user.id ? (
@@ -357,6 +356,17 @@ const Header = ({
                         className="h-10 w-10 rounded-full"
                       />
                     </Link>
+                    <Button
+                      onClick={() => navigate("/CartPage")}
+                      className="ml-1 bg-slate-100 text-slate-800 dark:hover:bg-slate-500 dark:bg-slate-800 dark:text-slate-200 hover:bg-transparent hover:text-gray-500 w-14"
+                    >
+                      <ShoppingCart className="h-24 w-24" />
+                      <div className="h-2 w-3">
+                        <span className="bg-rose-700 text-white text-[12px] text-center m-0 font-black">
+                          {cartQuantity == 0 ? "" : cartQuantity}
+                        </span>
+                      </div>
+                    </Button>
                   </div>
                 ) : (
                   <div className="py-6">

@@ -34,7 +34,7 @@ function CartPage() {
 
   useEffect(() => {
     fetchShoppingCart();
-  }, []);
+  }, [user]);
 
   //   useLayoutEffect(() => {
   //     fetchShoppingCart();
