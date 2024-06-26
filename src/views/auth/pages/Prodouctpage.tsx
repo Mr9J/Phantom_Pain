@@ -287,8 +287,8 @@ function Productpage() {
         </div>
       )}
       <Projectcard projectData={projectAndproductsData}></Projectcard>
-      {/* 原本是px-4 mb-8有另外的div */}
-      <div className="container my-8 px-4 mb-8 ml-60">
+      {/* 原本是my-60 */}
+      <div className="container my-8 px-4 mb-8">
         {/* 這邊有hidden */}
         <div className="h-10 text-center text-xs rounded bg-zinc-100 p-2 font-bold tracking-widest dark:bg-slate-700 dark:text-white">
           {/* material-icons*/}

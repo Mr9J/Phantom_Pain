@@ -1063,8 +1063,9 @@ function Paypage() {
   return (
     <>
       <Projectcard projectData={projectAndproductsData}></Projectcard>
-      <div className="container my-8 px-4 mb-8 ml-60 flex-col lg:flex-row">
-        <div className="flex mb-10 text-sm -mx-4">
+      {/* ml-60 */}
+      <div className="container my-8 px-4 mb-8 flex-col lg:flex-row">
+        <div className="flex flex-col sm:flex-row mb-10 text-sm -mx-4">
           <div className="px-4 lg:w-1/3 mr-3">{selectedProduct}</div>
           {/* 彈出視窗 */}
           {showModal && (
