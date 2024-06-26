@@ -66,7 +66,7 @@ function Paypage() {
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const testmemberId = 6;
+  // const testmemberId = 6;
 
   const [selectedCity, setSelectedCity] = useState<string>(""); // 存城市名稱
   const [districtsName, setDistrictsName] = useState<JSX.Element[]>([]); // 存區域名稱
@@ -334,33 +334,67 @@ function Paypage() {
     }
   };
 
-  //按下斗內
+  const handleDonation = (value: string) => {
+    if (value === "" || parseFloat(value) === 0) {
+      setDonationInfo({
+        hasDonate: false,
+        donationAmount: 0,
+      });
+      setOrderData((prevFormData) => ({
+        ...prevFormData,
+        donate: 0, //如果沒有設置金額 返回0
+      }));
+    } else {
+      const donate = parseFloat(value);
+      setOrderData((prevFormData) => ({
+        ...prevFormData,
+        donate: donate, //更新斗內
+      }));
+      setDonationInfo({
+        hasDonate: true,
+        donationAmount: donate,
+      });
+    }
+  };
+
   const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      const value = event.currentTarget.value;
-      if (value === "" || parseFloat(value) === 0) {
-        setDonationInfo({
-          hasDonate: false,
-          donationAmount: 0,
-        });
-        setOrderData((prevFormData) => ({
-          ...prevFormData,
-          donate: 0, //如果沒有設置金額 返回0
-        }));
-      } else {
-        const donate = parseFloat(value);
-        setOrderData((prevFormData) => ({
-          ...prevFormData,
-          donate: donate, //更新斗內
-        }));
-        setDonationInfo({
-          hasDonate: true,
-          donationAmount: donate,
-        });
-      }
+      handleDonation(event.currentTarget.value);
     }
   };
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    handleDonation(event.currentTarget.value);
+  };
+
+  //按下斗內
+  // const EnterToDonate = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (event.key === "Enter") {
+  //     event.preventDefault();
+  //     const value = event.currentTarget.value;
+  //     if (value === "" || parseFloat(value) === 0) {
+  //       setDonationInfo({
+  //         hasDonate: false,
+  //         donationAmount: 0,
+  //       });
+  //       setOrderData((prevFormData) => ({
+  //         ...prevFormData,
+  //         donate: 0, //如果沒有設置金額 返回0
+  //       }));
+  //     } else {
+  //       const donate = parseFloat(value);
+  //       setOrderData((prevFormData) => ({
+  //         ...prevFormData,
+  //         donate: donate, //更新斗內
+  //       }));
+  //       setDonationInfo({
+  //         hasDonate: true,
+  //         donationAmount: donate,
+  //       });
+  //     }
+  //   }
+  // };
   //斗內輸入變化
   const DonateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const parsedValue = parseFloat(e.target.value);
@@ -917,6 +951,7 @@ function Paypage() {
               value={inputDonateValue}
               onChange={DonateChange}
               onKeyDown={EnterToDonate}
+              onBlur={handleBlur}
               min={0}
             />
           </div>

@@ -103,9 +103,9 @@ function CartPage() {
     <>
       {/* {!isAuth && <Navigate to="/sign-in" />} */}
       <div className="container px-4 mb-8">
-        <div className="flex flex-col-reverse lgl:flex-row gap-5">
-          <div className="w-[92%] lgl:w-[74%] flex flex-col gap-6  lgl:my-10 mx-auto lgl:ml-5">
-            <div className="w-full  bg-white py-7 px-5 dark:bg-slate-800">
+        <div className="flex flex-row sm:flex-col-reverse gap-5">
+          <div className="w-full sm:w-[92%] flex flex-col gap-6 mx-1 sm:mx-auto">
+            <div className="w-full  bg-white py-7 sm:py-7 sm:px-5 dark:bg-slate-800">
               <h1 className="text-4xl font-semibold mb-1">Mumu 購物車</h1>
               <hr />
               <div className="bg-white h-20 dark:bg-slate-900"></div>
@@ -158,7 +158,7 @@ function CartPage() {
                                 >
                                   <div className="float-left w-64">
                                     <img
-                                      className="mx-auto"
+                                      className="mx-auto size-4/5 sm:size-max"
                                       src={product.thumbnail?.toString()}
                                       alt="productImage"
                                     />
@@ -168,7 +168,7 @@ function CartPage() {
                                     <h2 className="text-[18px] sm:text-[25px] font-medium -mt-2">
                                       {product.productName}
                                     </h2>
-                                    <div className="flex items-center">
+                                    <div className="flex flex-wrap items-center">
                                       {product.count! >=
                                       product.currentStock ? (
                                         <span className="text-orange-800 font-semibold text-[16px] flex-2 mr-5">
@@ -222,7 +222,7 @@ function CartPage() {
                                         </button>
                                       </div>
                                       <div className="grow h-14"></div>
-                                      <div className="flex flex-row justify-between mt-2">
+                                      <div className="flex flex-row justify-between mt-0 sm:mt-2">
                                         <span className="float-end mx-6 my-0">
                                           NT${" "}
                                           {(
