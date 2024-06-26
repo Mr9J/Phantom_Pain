@@ -5,6 +5,7 @@ import axios from "axios";
 import { Order } from "@/types/index";
 import "@/css/style.css";
 import "@/css/backstageStyle.css";
+import { Helmet } from "react-helmet-async";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -51,6 +52,9 @@ const OrderList: React.FC<OrderListProps> = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Mumu | 訂單詳細</title>
+      </Helmet>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
         <div className="col-span-full xl:col-span-6 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
           <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
@@ -121,15 +125,21 @@ const OrderList: React.FC<OrderListProps> = () => {
                           </div>
                         </td>
                         <td className="p-2 whitespace-nowrap">
-                        {item.orderDetails.map((od, index) => (
-                          <div key={index} className="text-left font-medium pb-2">
-                            {od.projectName} X{" "}
-                            {od.count}
-                          </div>))}
+                          {item.orderDetails.map((od, index) => (
+                            <div
+                              key={index}
+                              className="text-left font-medium pb-2"
+                            >
+                              {od.projectName} X {od.count}
+                            </div>
+                          ))}
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           {item.orderDetails.map((od, index) => (
-                            <div key={index} className="text-left font-medium  pb-2">
+                            <div
+                              key={index}
+                              className="text-left font-medium  pb-2"
+                            >
                               {numeral(od.price).format("0,0")}
                             </div>
                           ))}

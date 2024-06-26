@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/context/AuthContext";
 import "@/css/style.css";
+import { Helmet } from "react-helmet-async";
 const memberPowerBIText = [
   {
     title: "M1",
@@ -43,13 +44,18 @@ const Dashboard: React.FC = () => {
     return <div>Loading...</div>;
   }
   return (
-    <iframe
-      title={memberPowerBI.title}
-      width="1600"
-      height="850"
-      src={memberPowerBI.link}
-      allowFullScreen
-    ></iframe>
+    <>
+      <Helmet>
+        <title>Mumu | 儀錶板</title>
+      </Helmet>
+      <iframe
+        title={memberPowerBI.title}
+        width="1600"
+        height="850"
+        src={memberPowerBI.link}
+        allowFullScreen
+      ></iframe>
+    </>
   );
 };
 

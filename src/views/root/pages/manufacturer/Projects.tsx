@@ -10,6 +10,7 @@ import SearchBar from "@/components/admin/SearchBar";
 import ProjectModal from "@/components/admin/ProjectModal";
 import ProductModal from "@/components/admin/ProductModal";
 import ConfirmModal from "@/components/admin/ConfirmModal";
+import { Helmet } from "react-helmet-async";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -223,6 +224,9 @@ const Projects = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Mumu | 訂單管理</title>
+      </Helmet>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
         <div className="col-span-full xl:col-span-8 bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">
           <header className="px-5 py-4 border-b border-slate-100 dark:border-slate-700">
