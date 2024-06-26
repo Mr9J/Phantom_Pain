@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { Helmet } from "react-helmet-async";
 function SearchProject({
   input,
   setInput,
@@ -23,7 +23,7 @@ function SearchProject({
   setInput: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const params = new URLSearchParams(window.location.search).get("orderby");
-  
+
   type SearchProjectDTO = {
     projectData: ProjectCardDTO[];
     totalPage: number;
@@ -74,12 +74,14 @@ function SearchProject({
       }
     };
 
-    fetchSearchProjects();//console.log(Date());
-
+    fetchSearchProjects(); //console.log(Date());
   }, [input, page, selectedValue, orderBy]); //後面陣列的參數有變動就會重新render useEffect
 
   return (
     <>
+      <Helmet>
+        <title>Mumu | 查詢計畫</title>
+      </Helmet>
       <div className="opacity-100 container">
         <div className="container lg:py-8 py-4 lg:px-0 px-4">
           <div className="flex items-center justify-between space-y-2">
