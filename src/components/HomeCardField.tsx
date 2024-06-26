@@ -83,8 +83,8 @@ export default function HomeCardField() {
                 </CarouselItem>
               ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="ml-6 sm:flex"/>
+          <CarouselNext className="mr-6 sm:flex"/>
         </Carousel>
       </div>
 
@@ -117,8 +117,8 @@ export default function HomeCardField() {
                 </CarouselItem>
               ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="ml-6 sm:flex"/>
+          <CarouselNext className="mr-6 sm:flex"/>
         </Carousel>
       </div>
     </div>

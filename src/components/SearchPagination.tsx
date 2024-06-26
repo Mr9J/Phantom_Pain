@@ -32,7 +32,7 @@ export const SearchPagination: React.FC<Props> = ({
           />
         </PaginationItem>
         {pages.map((page) => (
-          <PaginationItem key={page}>
+          <PaginationItem key={page} className="hidden sm:flex">
             <PaginationLink
               onClick={() => onPageChange(page)}
               isActive={page === currentPage}

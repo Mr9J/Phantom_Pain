@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { CouponDTO } from "@/types";
 import CouponUsedListModal from "./CouponUsedListModal";
+const baseUrl = import.meta.env.VITE_API_URL;
 
+type CouponContext = [
+  number,
+  number,
+  string,
+  number,
+  number,
+  number,
+  string,
+  number
+];
 type CouponTicketProps = {
   coupon: CouponDTO & { isEdit: boolean };
 };
@@ -9,6 +20,59 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
   const [visibleConponUsedListModal, setvisibleConponUsedListModal] =
     useState(false);
   const [couponID, setcouponID] = useState(0);
+  const [visibleBanCouponModal, setBanCouponModal] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [CouponContext, setCouponContext] = useState<CouponContext>([
+    0,
+    0,
+    "",
+    0,
+    0,
+    0,
+    "",
+    0,
+  ]);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    //event.preventDefault(); // 阻止表單默認的提交行為
+
+    const formData = new FormData(event.currentTarget); // 收集表單數據
+
+    const jsonData: Record<string, string> = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value as string;
+    });
+    setFormData(jsonData);
+
+    const url = `${baseUrl}/coupon/${jsonData.id}`;
+    const method = "PUT";
+    //debug用
+    console.log("URL:", url);
+    console.log("Method:", method);
+    console.log("Data being sent:", jsonData);
+
+    fetch(url, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json", // 指定 Content-Type 為 application/json
+      },
+      body: JSON.stringify(jsonData), // 轉換數據為 JSON 字符串並作為請求體
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(text);
+          });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("成功提交數據：", data);
+        setBanCouponModal(false); // 確認表單
+      })
+      .catch((error) => {
+        console.error("提交數據時發生錯誤：", error);
+      });
+  };
   return (
     <>
       <div className="flex items-center justify-center from-red-100 via-red-300 to-blue-500 bg-gradient-to-br pb-5">
@@ -22,12 +86,26 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
           <div className="sm:w-8/12 pl-0 p-5">
             <div className="space-y-2">
               <div className="space-y-4">
-                <h4 className="text-md font-semibold text-cyan-900 text-justify">
-                  {coupon.discount}元折價券
-                </h4>
-                <h4 className="text-md font-semibold text-cyan-900 text-justify">
-                  折扣碼:{coupon.code}
-                </h4>
+                {coupon.statusId === 9 && (
+                  <h4 className="text-md font-semibold text-cyan-900 text-justify">
+                    {coupon.discount}元折價券
+                  </h4>
+                )}
+                {coupon.statusId === 10 && (
+                  <h4 className="text-md font-semibold text-cyan-900 text-justify text-decoration-line: line-through">
+                    {coupon.discount}元折價券
+                  </h4>
+                )}
+                {coupon.statusId === 9 && (
+                  <h4 className="text-md font-semibold text-cyan-900 text-justify">
+                    折扣碼:{coupon.code}
+                  </h4>
+                )}
+                {coupon.statusId === 10 && (
+                  <h4 className="text-md font-semibold text-cyan-900 text-justify text-decoration-line: line-through">
+                    折扣碼:{coupon.code}
+                  </h4>
+                )}
               </div>
               <div className="flex items-center space-x-4 justify-between">
                 <div className="flex gap-3 space-y-1 w-8/12">
@@ -108,21 +186,46 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
                   >
                     <span>使用者列表</span>
                   </button>
-                  <div className="bg-ban shadow-lg shadow- shadow-red-600 text-white cursor-pointer px-3 py-1 text-center justify-center items-center rounded-xl flex space-x-2 flex-row">
-                    <svg
-                      stroke="currentColor"
-                      fill="currentColor"
-                      stroke-width="0"
-                      viewBox="0 0 1024 1024"
-                      className="text-xl"
-                      height="1em"
-                      width="1em"
-                      xmlns="http://www.w3.org/2000/svg"
+                  {coupon.statusId === 9 && (
+                    <button
+                      className="bg-ban shadow-lg shadow-red-600 text-white cursor-pointer px-3 py-1 text-center justify-center items-center rounded-xl flex space-x-2 flex-row"
+                      onClick={() => {
+                        setBanCouponModal(!visibleBanCouponModal);
+                        setCouponContext([
+                          coupon.couponId,
+                          coupon.projectId,
+                          coupon.code,
+                          coupon.discount,
+                          coupon.initialStock || 0,
+                          coupon.currentStock || 0,
+                          coupon.deadline,
+                          coupon.statusId,
+                        ]);
+                      }}
                     >
-                      <path d="M885.9 490.3c3.6-12 5.4-24.4 5.4-37 0-28.3-9.3-55.5-26.1-77.7 3.6-12 5.4-24.4 5.4-37 0-28.3-9.3-55.5-26.1-77.7 3.6-12 5.4-24.4 5.4-37 0-51.6-30.7-98.1-78.3-118.4a66.1 66.1 0 0 0-26.5-5.4H144c-17.7 0-32 14.3-32 32v364c0 17.7 14.3 32 32 32h129.3l85.8 310.8C372.9 889 418.9 924 470.9 924c29.7 0 57.4-11.8 77.9-33.4 20.5-21.5 31-49.7 29.5-79.4l-6-122.9h239.9c12.1 0 23.9-3.2 34.3-9.3 40.4-23.5 65.5-66.1 65.5-111 0-28.3-9.3-55.5-26.1-77.7zM184 456V172h81v284h-81zm627.2 160.4H496.8l9.6 198.4c.6 11.9-4.7 23.1-14.6 30.5-6.1 4.5-13.6 6.8-21.1 6.7a44.28 44.28 0 0 1-42.2-32.3L329 459.2V172h415.4a56.85 56.85 0 0 1 33.6 51.8c0 9.7-2.3 18.9-6.9 27.3l-13.9 25.4 21.9 19a56.76 56.76 0 0 1 19.6 43c0 9.7-2.3 18.9-6.9 27.3l-13.9 25.4 21.9 19a56.76 56.76 0 0 1 19.6 43c0 9.7-2.3 18.9-6.9 27.3l-14 25.5 21.9 19a56.76 56.76 0 0 1 19.6 43c0 19.1-11 37.5-28.8 48.4z"></path>
-                    </svg>
-                    <span>23</span>
-                  </div>
+                      <span>下架</span>
+                    </button>
+                  )}
+                  {coupon.statusId === 10 && (
+                    <button
+                      className="bg-green-500 shadow-lg shadow-green-600 text-white cursor-pointer px-3 py-1 text-center justify-center items-center rounded-xl flex space-x-2 flex-row"
+                      onClick={() => {
+                        setBanCouponModal(!visibleBanCouponModal);
+                        setCouponContext([
+                          coupon.couponId,
+                          coupon.projectId,
+                          coupon.code,
+                          coupon.discount,
+                          coupon.initialStock || 0,
+                          coupon.currentStock || 0,
+                          coupon.deadline,
+                          coupon.statusId,
+                        ]);
+                      }}
+                    >
+                      <span>上架</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -134,6 +237,96 @@ const CouponTicket: React.FC<CouponTicketProps> = ({ coupon }) => {
         onClose={() => setvisibleConponUsedListModal(false)}
         couponId={couponID}
       />
+      {visibleBanCouponModal && (
+        <div
+          id="popup-modal"
+          tabIndex={-1}
+          aria-hidden="true"
+          className="fixed inset-0 flex justify-center items-center w-full h-[calc(100%-1rem)] max-h-full overflow-y-auto overflow-x-hidden bg-gray-800 bg-opacity-75"
+        >
+          <div className="relative p-4 w-full max-w-md max-h-full">
+            <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+              <button
+                type="button"
+                onClick={() => setBanCouponModal(false)}
+                className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                data-modal-hide="popup-modal"
+              >
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span className="sr-only">Close modal</span>
+              </button>
+              <form className="space-y-4" onSubmit={(e) => handleSubmit(e)}>
+                <div className="p-4 md:p-5 text-center">
+                  <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                    {CouponContext[7] === 9 && <p>您確定將折價券下架嗎？</p>}
+                    {CouponContext[7] === 10 && <p>您確定將折價券上架嗎？</p>}
+                  </h3>
+                  <input
+                    type="hidden"
+                    name="statusId"
+                    {...(CouponContext[7] === 9 && { value: "10" })}
+                    {...(CouponContext[7] === 10 && { value: "9" })}
+                  />
+                  <input type="hidden" name="id" value={CouponContext[0]} />
+                  <input
+                    type="hidden"
+                    name="projectId"
+                    value={CouponContext[1]}
+                  />
+                  <input type="hidden" name="code" value={CouponContext[2]} />
+                  <input
+                    type="hidden"
+                    name="discount"
+                    value={CouponContext[3]}
+                  />
+                  <input
+                    type="hidden"
+                    name="initialStock"
+                    value={CouponContext[4]}
+                  />
+                  <input
+                    type="hidden"
+                    name="currentStock"
+                    value={CouponContext[5]}
+                  />
+                  <input
+                    type="hidden"
+                    name="deadline"
+                    value={CouponContext[6]}
+                  />
+                  <button
+                    type="submit"
+                    className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                  >
+                    確認
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setBanCouponModal(false)}
+                    className="py-2.5 px-5 ms-3 text-white bg-rose-600 hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 dark:focus:ring-rose-800 font-medium rounded-lg text-sm inline-flex items-center text-center"
+                  >
+                    取消
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
