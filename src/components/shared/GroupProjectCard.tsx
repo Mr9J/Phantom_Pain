@@ -67,7 +67,7 @@ const GroupProjectCard = ({ project }: GroupProjectCardProps) => {
           <div className="flex justify-between items-center">
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="mt-4 bg-black text-white hover:text-dark-2">
+                <Button className="mt-4 bg-black text-white dark:hover:text-dark-2">
                   {projectGroups?.groupId ? "編輯" : "建立專案群組"}
                 </Button>
               </DialogTrigger>
@@ -86,7 +86,7 @@ const GroupProjectCard = ({ project }: GroupProjectCardProps) => {
                 />
               </DialogContent>
             </Dialog>
-            <Button className="mt-4 bg-black text-white hover:text-dark-2">
+            <Button className="mt-4 bg-black text-white dark:hover:text-dark-2">
               <Link to={`/project/${project?.projectId}`}>前往專案</Link>
             </Button>
           </div>
