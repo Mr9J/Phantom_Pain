@@ -188,7 +188,7 @@ const Create: React.FC = () => {
     setStartDate("2024-06-28");
     setEndDate("2024-07-18");
     setProjectGoal(10000);
-    setProjectTypeId("1");
+    setProjectTypeId("6");
     setProjectName("興大附農耕心吉他社16屆大型成果發表會");
     setProjectDescription(
       "2024/7/20 13:00入場13:30開始 這是耕心16屆的最後一場表演《致•16歲的青春》，我們將盡所能，以這次的成果發表會為高中社團生涯畫上句號，歡迎大家一起共襄盛舉🎉"
@@ -212,12 +212,12 @@ const Create: React.FC = () => {
           </h2>
         </div>
         {/* 保護區 */}
-        <button
+        {/* <button
           onClick={demo}
           className="bg-secondary text-primary rounded border bottom-7"
         >
           demo
-        </button>
+        </button> */}
         <div className="px-4 border border-gray-300 mb-16 rounded">
           <form
             onSubmit={(e) => {
@@ -231,7 +231,7 @@ const Create: React.FC = () => {
                 <div className="md:grid md:grid-cols-4 md:gap-4 py-4 md:py-8 border-b border-gray-300">
                   <div className="md:col-span-1 mt-1">
                     <h2>
-                      <label className="font-bold text-lg">使用者名稱</label>
+                      <label className="font-bold text-lg" onClick={demo}>使用者名稱</label>
                     </h2>
                   </div>
                   <div className="mt-4 md:mt-0 md:col-span-3">
