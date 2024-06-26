@@ -143,7 +143,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <section className="flex flex-1 items-center flex-col py-10 justify-center overflow-auto">
+    <section className="flex flex-1 items-center flex-col py-10 justify-center overflow-auto custom-scrollbar">
       <Form {...form}>
         <div className="sm:w-[560px] flex justify-center items-center flex-col m-4 sm:m-0">
           <img src={logo} alt="logo" className="h-[64px]" />
