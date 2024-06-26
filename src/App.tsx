@@ -54,7 +54,7 @@ import PurchasHistory from "./views/auth/pages/PurchasHistory";
 
 import Like from "./components/Like";
 import AuthDefaultLayout from "./views/auth/AuthDefaultLayout";
-import Playground from "./views/root/pages/Playground";
+// import Playground from "./views/root/pages/Playground";
 import ReSendEmail from "./views/root/pages/ReSendEmail";
 import { useToast } from "./components/ui/use-toast";
 import axios from "axios";

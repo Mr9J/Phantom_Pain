@@ -51,6 +51,7 @@ export type PostFormProps = {
 };
 
 const PostForm = ({ post, action }: PostFormProps) => {
+  // const [imgTag, setImgTag] = useState([]);
   const { mutateAsync: createPost, isPending } = useCreatePost();
   const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
     useUpdatePost();

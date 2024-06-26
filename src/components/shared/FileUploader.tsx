@@ -45,6 +45,7 @@ const FileUploader = ({
 
         return;
       }
+      console.log(acceptedFiles);
 
       const urls = acceptedFiles.map((file) => URL.createObjectURL(file));
       setFile(acceptedFiles);
@@ -86,7 +87,7 @@ const FileUploader = ({
                 <img
                   src={fileUrl[0]}
                   alt="image"
-                  className="file_uploader-img"
+                  className="file_uploader-img rounded-lg"
                 />
               </div>
               <p className="file_uploader-label">拖曳或點擊更換圖片</p>
