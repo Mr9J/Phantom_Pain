@@ -208,7 +208,7 @@ const PostDetails = () => {
                       <TrashIcon stroke="red" width={24} height={24} />
                     </Button>
                   </div>
-                  <div className="flex justify-center items-center gap-3">
+                  <div className="flex justify-center items-center gap-2 flex-col lg:flex-row">
                     <Button
                       variant="outline"
                       onClick={() =>
@@ -218,7 +218,11 @@ const PostDetails = () => {
                         )
                       }
                     >
-                      <Twitter className="w-[16px] h-[16px]" />
+                      <Twitter
+                        className={`w-[16px] h-[16px] ${
+                          post?.isAnonymous === "Y" ? "text-black" : ""
+                        }`}
+                      />
                     </Button>
                     <Button
                       variant="outline"
@@ -229,12 +233,20 @@ const PostDetails = () => {
                         )
                       }
                     >
-                      <Facebook className="w-[16px] h-[16px]" />
+                      <Facebook
+                        className={`w-[16px] h-[16px] ${
+                          post?.isAnonymous === "Y" ? "text-black" : ""
+                        }`}
+                      />
                     </Button>
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="outline">
-                          <ShareIcon className="w-[16px] h-[16px]" />
+                          <ShareIcon
+                            className={`w-[16px] h-[16px] ${
+                              post?.isAnonymous === "Y" ? "text-black" : ""
+                            }`}
+                          />
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-md">
