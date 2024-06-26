@@ -89,6 +89,6 @@ function HobbyList({ onClose,fetchProjectCards }:HobbyListProps) {
       </div>
     </div>
   );
-};
+}
 
 export default HobbyList;
