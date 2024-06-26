@@ -45,6 +45,7 @@ const FileUploader = ({
 
         return;
       }
+      console.log(acceptedFiles);
 
       const urls = acceptedFiles.map((file) => URL.createObjectURL(file));
       setFile(acceptedFiles);
