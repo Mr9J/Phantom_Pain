@@ -35,8 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import GoogleAnalize from "@/config/GoogleAnalize";
-import GoogleTranslate from "@/config/GoogleTranslate";
+import AzureTextAnalyze from "@/config/AzureTextAnalyze";
 
 export type PostFormProps = {
   post?: {
@@ -61,8 +60,11 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const validation = async (text) => {
-    const translatedText = await GoogleTranslate(text, "en");
-    const res = await GoogleAnalize(translatedText);
+    // const translatedText = await GoogleTranslate(text, "en");
+    // const res = await GoogleAnalize(translatedText);
+    // return res;
+
+    const res = AzureTextAnalyze(text);
     return res;
   };
 
@@ -162,20 +164,22 @@ const PostForm = ({ post, action }: PostFormProps) => {
         return;
       }
 
-      toast({
-        title: "發布成功",
-        description: "您的貼文已經成功更新！",
-        action: (
-          <ToastAction
-            altText="success"
-            onClick={() => {
-              navigate("/social");
-            }}
-          >
-            查看
-          </ToastAction>
-        ),
-      });
+      if (res === true) {
+        toast({
+          title: "發布成功",
+          description: "您的貼文已經成功更新！",
+          action: (
+            <ToastAction
+              altText="success"
+              onClick={() => {
+                navigate("/social");
+              }}
+            >
+              查看
+            </ToastAction>
+          ),
+        });
+      }
 
       return;
     }
@@ -184,6 +188,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
       title: "發布中...",
       description: "請稍後... ",
     });
+
+    console.log(values);
+
+    return;
 
     const res = await validation(values.caption);
 

@@ -14,6 +14,7 @@ import {
   LucideBookHeart,
   CircleDollarSign,
   HomeIcon,
+  MailIcon,
 } from "lucide-react";
 import { ModeToggle } from "@/components/dark-theme/mode-toggle";
 import { ModeSwitch } from "./dark-theme/mode-switch";
@@ -26,19 +27,19 @@ import { useCartContext } from "@/context/CartContext";
 
 const exploreItems = [
   {
-    name: "Home",
+    name: "首頁",
     description: "",
     to: "/Home",
     icon: HomeIcon,
   },
   {
-    name: "Favorites list",
+    name: "喜好清單",
     description: "",
     to: "/like",
     icon: LucideBookHeart,
   },
   {
-    name: "Buying list",
+    name: "購買清單",
     description: "",
     to: "/PurchasHistory",
     icon: CircleDollarSign,
@@ -50,15 +51,15 @@ const exploreItems = [
   //   icon: LightbulbIcon,
   // },
   {
-    name: "Manufactor",
-    //description: "mygo",
+    name: "管理頁面",
+    description: "mygo",
     to: "/manu",
     icon: WarehouseIcon,
   },
 ];
 const exploreBottomItems = [
-  { name: "Playground", to: "/playground", icon: LightbulbIcon },
-  { name: "Item7", to: "/", icon: LightbulbIcon },
+  { name: "重設Email", to: "/resend-email", icon: MailIcon },
+  { name: "好運推薦", to: "/", icon: LightbulbIcon },
 ];
 
 function classNames(...classes: string[]) {
@@ -117,7 +118,7 @@ const Header = ({
             <Popover.Button
               className={`flex items-center gap-x-1 text-sm font-semibold leading-6`}
             >
-              Explore
+              探索
               <ChevronDownIcon
                 className="h-5 w-5 flex-none"
                 aria-hidden="true"
@@ -160,7 +161,7 @@ const Header = ({
                     </div>
                   ))}
                 </div>
-                {/* <div
+                <div
                   className={`grid grid-cols-2 divide-x divide-gray-900/5 dark:divide-gray-50/5 bg-gray-50 dark:bg-slate-800`}
                 >
                   {exploreBottomItems.map((item) => (
@@ -176,7 +177,7 @@ const Header = ({
                       {item.name}
                     </Link>
                   ))}
-                </div> */}
+                </div>
               </Popover.Panel>
             </Transition>
           </Popover>
@@ -184,10 +185,10 @@ const Header = ({
             to="/createproject"
             className={`text-sm font-semibold leading-6`}
           >
-            Propose
+            提案
           </Link>
           <Link to="/social" className={`text-sm font-semibold leading-6`}>
-            Social
+            社群
           </Link>
           {/* <Link to="/service" className={`text-sm font-semibold leading-6`}>
             Service
@@ -280,7 +281,7 @@ const Header = ({
                         <Disclosure.Button
                           className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                         >
-                          Explore
+                          探索
                           <ChevronDownIcon
                             className={classNames(
                               open ? "rotate-180" : "",
@@ -308,16 +309,16 @@ const Header = ({
                     )}
                   </Disclosure>
                   <Link
-                    to="/"
+                    to="/createproject"
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                   >
-                    Propose
+                    提案
                   </Link>
                   <Link
                     to="/social"
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-50 dark:hover:bg-slate-800`}
                   >
-                    Social
+                    社群
                   </Link>
                 </div>
                 <div className="py-6 w-full items-center space-y-2">
