@@ -52,7 +52,7 @@ const exploreItems = [
   // },
   {
     name: "管理頁面",
-    description: "mygo",
+    //description: "mygo",
     to: "/manu",
     icon: WarehouseIcon,
   },
