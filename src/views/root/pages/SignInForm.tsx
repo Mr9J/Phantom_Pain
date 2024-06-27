@@ -381,23 +381,23 @@ const SignInForm = () => {
           </h2>
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             <span
-              onClick={() => {
-                form.reset({
-                  username: "Test1234!",
-                  password: "Test1234!",
-                });
-              }}
+            // onClick={() => {
+            //   form.reset({
+            //     username: "Test1234!",
+            //     password: "Test1234!",
+            //   });
+            // }}
             >
               Empower
             </span>
             your dreams,{" "}
             <span
-              onClick={() => {
-                form.reset({
-                  username: "Msit158Team4",
-                  password: "Msit158Team4!",
-                });
-              }}
+            // onClick={() => {
+            //   form.reset({
+            //     username: "Msit158Team4",
+            //     password: "Msit158Team4!",
+            //   });
+            // }}
             >
               build our future
             </span>
@@ -437,19 +437,19 @@ const SignInForm = () => {
               )}
             />
             {/* 正式版 */}
-            {/* <Turnstile
+            <Turnstile
               siteKey="0x4AAAAAAAc5s8I5PK0pJEjH"
               onSuccess={(e) => {
                 if (e) setIsVerify(true);
               }}
-            /> */}
+            />
             {/* 測試版 */}
-            <Turnstile
+            {/* <Turnstile
               siteKey="3x00000000000000000000FF"
               onSuccess={(e) => {
                 if (e) setIsVerify(true);
               }}
-            />
+            /> */}
             <Button
               type="submit"
               className="shad-button_primary"
@@ -486,7 +486,7 @@ const SignInForm = () => {
           </form>
 
           <div className="flex justify-center items-center flex-col w-full mt-4 gap-4">
-            <Button
+            {/* <Button
               onClick={() =>
                 form.reset({
                   username: "Test123456!",
@@ -495,7 +495,7 @@ const SignInForm = () => {
               }
             >
               Admin DEMO
-            </Button>
+            </Button> */}
             <button
               onClick={googleHandler}
               type="button"

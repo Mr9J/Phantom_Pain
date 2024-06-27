@@ -11,33 +11,31 @@ type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
   mediaUrl: string;
   isSingle: boolean;
+  setImgValid: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const FileUploader = ({
   fieldChange,
   mediaUrl,
   isSingle,
+  setImgValid,
 }: FileUploaderProps) => {
   const { toast } = useToast();
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState([mediaUrl]);
   const { data: media } = useGetPostImg(mediaUrl || "");
-  // const [base64Images, setBase64Images] = useState(null);
+  const [base64Image, setBase64Image] = useState("");
+  const getImage = async (imageUrl) => {
+    const response = await axios.get(imageUrl, { responseType: "blob" });
+    const image = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(response.data);
+    });
 
-  // const getImage = async (imageUrls) => {
-  //   const promises = imageUrls.map(async (url) => {
-  //     const response = await axios.get(url, { responseType: "blob" });
-  //     return new Promise((resolve, reject) => {
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => resolve(reader.result.split(",")[1]);
-  //       reader.onerror = reject;
-  //       reader.readAsDataURL(response.data);
-  //     });
-  //   });
-
-  //   const images = await Promise.all(promises);
-  //   setBase64Images(images);
-  // };
+    setBase64Image(image);
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -83,17 +81,19 @@ const FileUploader = ({
     }
   }, [media]);
 
-  // useEffect(() => {
-  //   if (fileUrl[0] !== "") {
-  //     getImage(fileUrl);
-  //   }
-  // }, [fileUrl]);
+  useEffect(() => {
+    if (fileUrl[0] !== "") {
+      getImage(fileUrl[0]);
+    }
+  }, [fileUrl]);
 
-  // useEffect(() => {
-  //   if (base64Images !== null) {
-  //     AzureImgAnalyze(base64Images);
-  //   }
-  // }, [base64Images]);
+  useEffect(() => {
+    if (base64Image !== "") {
+      AzureImgAnalyze(base64Image).then((res) => {
+        setImgValid(res);
+      });
+    }
+  }, [base64Image]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

@@ -59,6 +59,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [imgValid, setImgValid] = useState(false);
   const validation = async (text) => {
     // const translatedText = await GoogleTranslate(text, "en");
     // const res = await GoogleAnalize(translatedText);
@@ -145,6 +146,35 @@ const PostForm = ({ post, action }: PostFormProps) => {
           title: "更新警告",
           description:
             "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
+          action: (
+            <ToastAction
+              altText="success"
+              onClick={() => {
+                navigate("/social");
+              }}
+            >
+              查看
+            </ToastAction>
+          ),
+        });
+      }
+
+      if (imgValid === false) {
+        toast({
+          variant: "destructive",
+          title: "更新警告",
+          description:
+            "圖片不符合規定，請檢查圖片是否合乎規範，否則貼文將列入警示狀態",
+          action: (
+            <ToastAction
+              altText="success"
+              onClick={() => {
+                navigate("/social");
+              }}
+            >
+              查看
+            </ToastAction>
+          ),
         });
       }
 
@@ -153,7 +183,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         userId: user.id,
         id: post.imgUrl,
         postId: post.postId,
-        isAlert: res === true ? "N" : "Y",
+        isAlert: res === true && imgValid === true ? "N" : "Y",
       });
 
       if (!session) {
@@ -197,6 +227,35 @@ const PostForm = ({ post, action }: PostFormProps) => {
         title: "發布警告",
         description:
           "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
+      });
+    }
+
+    if (imgValid === false) {
+      toast({
+        variant: "destructive",
+        title: "更新警告",
+        description:
+          "圖片不符合規定，請檢查圖片是否合乎規範，否則貼文將列入警示狀態",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
       });
     }
 
@@ -204,7 +263,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       ...values,
       userId: user.id,
       id: Date.now().toString() + user.id,
-      isAlert: res === true ? "N" : "Y",
+      isAlert: res === true && imgValid === true ? "N" : "Y",
     });
 
     if (!newPost) {
@@ -240,7 +299,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
-        <span
+        {/* <span
           onClick={() => {
             form.reset({
               caption:
@@ -251,7 +310,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
           }}
         >
           Demo
-        </span>
+        </span> */}
         <FormField
           control={form.control}
           name="caption"
@@ -279,6 +338,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                   fieldChange={field.onChange}
                   mediaUrl={post ? post.imgUrl : ""}
                   isSingle={false}
+                  setImgValid={setImgValid}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
