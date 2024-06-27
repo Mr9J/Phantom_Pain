@@ -73,7 +73,10 @@ const PostCard = ({ post }: PostCardProps) => {
             </p>
             <div className="flex justify-center items-center gap-2 text-light-3">
               <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
-                {moment.utc(post.postTime, "YYYY-MM-DD HH:mm:ss").fromNow()}
+                {/* {moment.utc(post.postTime, "YYYY-MM-DD HH:mm:ss").fromNow()} */}
+                {moment(moment.utc("2024-06-27 01:03:32.400"))
+                  .local()
+                  .fromNow()}
               </p>
               {/* moment(post.postTime).add(8, "hours").fromNow() */}-
               <p className="text-[12px] font-semibold leading-[140%] lg:text-[14px] lg:font-normal">
