@@ -153,15 +153,15 @@ const SignUpForm = () => {
           <p className="text-blue-500 text-lg md:text-xl font-poetsen">
             Empower your dreams,{" "}
             <span
-            // onClick={() => {
-            //   form.reset({
-            //     nickname: "Msit158Team4",
-            //     username: "Msit158Team4",
-            //     email: "msit158mumuguest@gmail.com",
-            //     password: "Msit158Team4!",
-            //     confirmPassword: "Msit158Team4!",
-            //   });
-            // }}
+              onClick={() => {
+                form.reset({
+                  nickname: "Msit158Team4",
+                  username: "Msit158Team4",
+                  email: "msit158mumuguest@gmail.com",
+                  password: "Msit158Team4!",
+                  confirmPassword: "Msit158Team4!",
+                });
+              }}
             >
               build our future
             </span>
@@ -244,19 +244,19 @@ const SignUpForm = () => {
               )}
             />
             {/* 正式版 */}
-            <Turnstile
+            {/* <Turnstile
               siteKey="0x4AAAAAAAc5s8I5PK0pJEjH"
               onSuccess={(e) => {
                 if (e) setIsVerify(true);
               }}
-            />
+            /> */}
             {/* 測試版 */}
-            {/* <Turnstile
+            <Turnstile
               siteKey="3x00000000000000000000FF"
               onSuccess={(e) => {
                 if (e) setIsVerify(true);
               }}
-            /> */}
+            />
             <Button
               type="submit"
               className="shad-button_primary"
