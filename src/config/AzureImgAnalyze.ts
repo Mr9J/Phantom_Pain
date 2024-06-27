@@ -10,7 +10,6 @@ const AzureImgAnalyze = async (text: string) => {
       image: {
         content: text,
       },
-      categories: ["Hate"],
     },
     {
       headers: {
@@ -20,18 +19,23 @@ const AzureImgAnalyze = async (text: string) => {
     }
   );
 
-  if (res.data.categoriesAnalysis[0].severity >= 2) {
+  if (res.data.categoriesAnalysis[0].severity > 4) {
+    console.log(res.data.categoriesAnalysis[0].severity);
     return false;
   }
 
-  if (res.data.categoriesAnalysis[1].severity >= 2) {
+  if (res.data.categoriesAnalysis[1].severity > 4) {
+    console.log(res.data.categoriesAnalysis[1].severity);
+
     return false;
   }
 
-  if (res.data.categoriesAnalysis[2].severity >= 2) {
+  if (res.data.categoriesAnalysis[2].severity > 4) {
+    console.log(res.data.categoriesAnalysis[2].severity);
     return false;
   }
-  if (res.data.categoriesAnalysis[3].severity >= 2) {
+  if (res.data.categoriesAnalysis[3].severity > 4) {
+    console.log(res.data.categoriesAnalysis[3].severity);
     return false;
   }
 

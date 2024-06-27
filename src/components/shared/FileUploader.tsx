@@ -2,8 +2,10 @@ import { ImageIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { useToast } from "../ui/use-toast";
-import { useGetPostImg } from "@/lib/react-query/queriesAndMutation";
-import GoogleImgAnalize from "@/config/GoogleImgAnalize";
+import {
+  useGetPostImg,
+  useImgAnalyze,
+} from "@/lib/react-query/queriesAndMutation";
 import AzureImgAnalyze from "@/config/AzureImgAnalyze";
 import axios from "axios";
 
@@ -11,29 +13,31 @@ type FileUploaderProps = {
   fieldChange: (FILES: File[]) => void;
   mediaUrl: string;
   isSingle: boolean;
+  setImgValid: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const FileUploader = ({
   fieldChange,
   mediaUrl,
   isSingle,
+  setImgValid,
 }: FileUploaderProps) => {
   const { toast } = useToast();
   const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState([mediaUrl]);
-  const { data: media } = useGetPostImg(mediaUrl || "");
-  // const [base64Image, setBase64Image] = useState("");
-  // const getImage = async (imageUrl) => {
-  //   const response = await axios.get(imageUrl, { responseType: "blob" });
-  //   const image = await new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => resolve(reader.result.split(",")[1]);
-  //     reader.onerror = reject;
-  //     reader.readAsDataURL(response.data);
-  //   });
+  const { data: media, isPending } = useGetPostImg(mediaUrl || "");
+  const [base64Image, setBase64Image] = useState("");
+  const getImage = async (imageUrl) => {
+    const response = await axios.get(imageUrl, { responseType: "blob" });
+    const image = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(response.data);
+    });
 
-  //   setBase64Image(image);
-  // };
+    setBase64Image(image);
+  };
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -79,19 +83,22 @@ const FileUploader = ({
     }
   }, [media]);
 
-  // useEffect(() => {
-  //   if (fileUrl[0] !== "") {
-  //     getImage(fileUrl[0]);
-  //   }
-  // }, [fileUrl]);
+  useEffect(() => {
+    if (isPending) return;
 
-  // useEffect(() => {
-  //   if (base64Image !== "") {
-  //     AzureImgAnalyze(base64Image).then((res) => {
-  //       setImgValid(res);
-  //     });
-  //   }
-  // }, [base64Image]);
+    if (fileUrl[0] === "") return;
+
+    if (!fileUrl[0].includes("https://cdn.mumumsit158.com/"))
+      getImage(fileUrl[0]);
+  }, [fileUrl]);
+
+  useEffect(() => {
+    if (base64Image !== "") {
+      AzureImgAnalyze(base64Image).then((res) => {
+        setImgValid(res);
+      });
+    }
+  }, [base64Image]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,

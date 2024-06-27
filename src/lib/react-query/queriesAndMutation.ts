@@ -58,6 +58,7 @@ import {
   searchUsersByKeyword,
 } from "@/services/post.service";
 import { getUserInfo } from "@/services/members.service";
+import AzureImgAnalyze from "@/config/AzureImgAnalyze";
 
 export const useCreateUserAccount = () => {
   return useMutation({

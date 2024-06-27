@@ -59,11 +59,8 @@ const PostForm = ({ post, action }: PostFormProps) => {
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [imgValid, setImgValid] = useState(true);
   const validation = async (text) => {
-    // const translatedText = await GoogleTranslate(text, "en");
-    // const res = await GoogleAnalize(translatedText);
-    // return res;
-
     const res = AzureTextAnalyze(text);
     return res;
   };
@@ -139,12 +136,46 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
       const res = await validation(values.caption);
 
-      if (res === false) {
+      if (!res && !imgValid) {
+        toast({
+          variant: "destructive",
+          title: "更新警告",
+          description:
+            "內文與圖片皆不符合規定，請檢查內文與圖片是否合乎規範，否則貼文將列入警示狀態",
+          action: (
+            <ToastAction
+              altText="success"
+              onClick={() => {
+                navigate("/social");
+              }}
+            >
+              查看
+            </ToastAction>
+          ),
+        });
+      } else if (!res) {
         toast({
           variant: "destructive",
           title: "更新警告",
           description:
             "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
+          action: (
+            <ToastAction
+              altText="success"
+              onClick={() => {
+                navigate("/social");
+              }}
+            >
+              查看
+            </ToastAction>
+          ),
+        });
+      } else if (!imgValid) {
+        toast({
+          variant: "destructive",
+          title: "更新警告",
+          description:
+            "圖片不符合規定，請檢查圖片是否合乎規範，否則貼文將列入警示狀態",
           action: (
             <ToastAction
               altText="success"
@@ -163,7 +194,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         userId: user.id,
         id: post.imgUrl,
         postId: post.postId,
-        isAlert: res === true ? "N" : "Y",
+        isAlert: res && imgValid ? "N" : "Y",
       });
 
       if (!session) {
@@ -174,7 +205,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         return;
       }
 
-      if (res === true) {
+      if (res && imgValid) {
         toast({
           title: "發布成功",
           description: "您的貼文已經成功更新！",
@@ -201,12 +232,46 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
     const res = await validation(values.caption);
 
-    if (res === false) {
+    if (!res && !imgValid) {
       toast({
         variant: "destructive",
-        title: "發布警告",
+        title: "更新警告",
+        description:
+          "內文與圖片皆不符合規定，請檢查內文與圖片是否合乎規範，否則貼文將列入警示狀態",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
+      });
+    } else if (!res) {
+      toast({
+        variant: "destructive",
+        title: "更新警告",
         description:
           "內文不符合規定，請檢查內文是否合乎規範，否則貼文將列入警示狀態",
+        action: (
+          <ToastAction
+            altText="success"
+            onClick={() => {
+              navigate("/social");
+            }}
+          >
+            查看
+          </ToastAction>
+        ),
+      });
+    } else if (!imgValid) {
+      toast({
+        variant: "destructive",
+        title: "更新警告",
+        description:
+          "圖片不符合規定，請檢查圖片是否合乎規範，否則貼文將列入警示狀態",
         action: (
           <ToastAction
             altText="success"
@@ -224,7 +289,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       ...values,
       userId: user.id,
       id: Date.now().toString() + user.id,
-      isAlert: res === true ? "N" : "Y",
+      isAlert: res && imgValid ? "N" : "Y",
     });
 
     if (!newPost) {
@@ -236,7 +301,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       return;
     }
 
-    if (res === true) {
+    if (res && imgValid) {
       toast({
         title: "發布成功",
         description: "您的貼文已經成功發布！",
@@ -299,6 +364,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                   fieldChange={field.onChange}
                   mediaUrl={post ? post.imgUrl : ""}
                   isSingle={false}
+                  setImgValid={setImgValid}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
