@@ -127,17 +127,17 @@ const PostProfileEdit = ({ id }: { id: string }) => {
             <p className="mt-4 leading-relaxed text-white/90 font-bold">
               您可以在這裡分享您的
               <span
-                onClick={() => {
-                  form.reset({
-                    nickname: "我愛木鬚龍",
-                    username: "Msit158Team4",
-                    email: "msit158mumuguest@gmail.com",
-                    address: "106台北市大安區復興南路一段390號2樓",
-                    memberIntroduction:
-                      "我是MSIT158 Team4的一員，我們是一個熱愛程式設計的團隊，歡迎來到我們的網站！",
-                    phone: "0266316588",
-                  });
-                }}
+              // onClick={() => {
+              //   form.reset({
+              //     nickname: "我愛木鬚龍",
+              //     username: "Msit158Team4",
+              //     email: "msit158mumuguest@gmail.com",
+              //     address: "106台北市大安區復興南路一段390號2樓",
+              //     memberIntroduction:
+              //       "我是MSIT158 Team4的一員，我們是一個熱愛程式設計的團隊，歡迎來到我們的網站！",
+              //     phone: "0266316588",
+              //   });
+              // }}
               >
                 生活點滴
               </span>
