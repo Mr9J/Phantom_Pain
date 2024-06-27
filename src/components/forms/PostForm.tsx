@@ -325,7 +325,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-9 w-full max-w-5xl"
       >
-        <span
+        {/* <span
           onClick={() => {
             form.reset({
               caption:
@@ -336,7 +336,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
           }}
         >
           Demo
-        </span>
+        </span> */}
         <FormField
           control={form.control}
           name="caption"
