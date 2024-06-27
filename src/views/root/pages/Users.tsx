@@ -34,20 +34,20 @@ const Users = () => {
         <Tabs defaultValue="proposed" className="w-full">
           <TabsList className="flex justify-center items-center">
             <TabsTrigger value="proposed">
-              <HistoryIcon className="w-[30px] h-[30px] pr-1" />
+              <HistoryIcon className="w-[30px] h-[30px] pr-1 hidden lg:block" />
               發起計畫
             </TabsTrigger>
             <TabsTrigger value="sponsored">
-              <HeartHandshakeIcon className="w-[30px] h-[30px] pr-1" />
+              <HeartHandshakeIcon className="w-[30px] h-[30px] pr-1 hidden lg:block" />
               贊助計畫
             </TabsTrigger>
             <TabsTrigger value="contact">
-              <PhoneCallIcon className="w-[30px] h-[30px] pr-1" />
+              <PhoneCallIcon className="w-[30px] h-[30px] pr-1 hidden lg:block" />
               聯絡方式
             </TabsTrigger>
             {user?.id === id && (
               <TabsTrigger value="group">
-                <PenToolIcon className="w-[30px] h-[30px] pr-1" />
+                <PenToolIcon className="w-[30px] h-[30px] pr-1 hidden lg:block" />
                 權限管理
               </TabsTrigger>
             )}

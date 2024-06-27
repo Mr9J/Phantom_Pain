@@ -117,13 +117,16 @@ const PostCard = ({ post }: PostCardProps) => {
       </div>
 
       {post?.isAnonymous === "Y" && !ensure ? (
-        <Button className="text-white w-full my-6" onClick={handleEnsure}>
+        <Button
+          className="text-white dark:text-dark-blue w-full my-6"
+          onClick={handleEnsure}
+        >
           該則貼文被列為警告，請點及確認是否查看
         </Button>
       ) : (
-        <div className="flex w-full flex-col justify-center items-center">
+        <div className="flex w-full flex-col justify-center items-center lg:justify-normal lg:items-start">
           <Link to={`/posts/${post.postId}`}>
-            <div className="text-[14px] font-medium leading-[140%] lg:text-[16px] py-5 relative">
+            <div className="text-[14px] font-medium leading-[140%] lg:text-[16px] py-5">
               <p className="whitespace-pre-wrap">{post.caption}</p>
               <ul className="flex gap-1 mt-2">
                 {post.tags &&
