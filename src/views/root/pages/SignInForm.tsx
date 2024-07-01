@@ -486,16 +486,16 @@ const SignInForm = () => {
           </form>
 
           <div className="flex justify-center items-center flex-col w-full mt-4 gap-4">
-            {/* <Button
+            <Button
               onClick={() =>
                 form.reset({
-                  username: "Test123456!",
-                  password: "Test1234!",
+                  username: "MumuMsit158Team4",
+                  password: "MumuMsit158Team4!",
                 })
               }
             >
-              Admin DEMO
-            </Button> */}
+              測試用帳號
+            </Button>
             <button
               onClick={googleHandler}
               type="button"

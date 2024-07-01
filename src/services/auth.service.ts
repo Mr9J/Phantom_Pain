@@ -14,7 +14,8 @@ import {
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import axios from "axios";
 
-const URL = process.env.VITE_API_URL;
+const URL = import.meta.env.VITE_API_URL;
+// const URL = process.env.VITE_API_URL;
 
 export async function signUp(user: SignUpDTO) {
   try {
