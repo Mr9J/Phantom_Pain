@@ -59,7 +59,7 @@ const exploreItems = [
 ];
 const exploreBottomItems = [
   { name: "重設Email", to: "/resend-email", icon: MailIcon },
-  { name: "好運推薦", to: "/", icon: LightbulbIcon },
+  { name: "團隊介紹", to: "/about", icon: LightbulbIcon },
 ];
 
 function classNames(...classes: string[]) {

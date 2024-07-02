@@ -11,7 +11,7 @@ const HeroParallaxSection = () => {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const backgroundM = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const backgroundMT = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "200%"]);
 
   return (
     <section
@@ -20,11 +20,9 @@ const HeroParallaxSection = () => {
     >
       <motion.div
         style={{ y: textY }}
-        className="text-white text-7xl md:text-[200px] font-extrabold relative z-20 text-center "
+        className="text-gray-100 text-7xl md:text-[200px] font-extrabold relative z-20 text-center "
       >
         MUMU
-        <br />
-        EMPOWER YOUR DREAMS
       </motion.div>
       <motion.div
         className="absolute inset-0 z-0"
